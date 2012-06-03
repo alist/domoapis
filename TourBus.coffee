@@ -1,4 +1,4 @@
-tbApp = require('zappa') ->
+tbApp = require('zappa').app ->
   @get '/': 'time to tour'
 
 port = if process.env.PORT > 0 then process.env.PORT else 3000
