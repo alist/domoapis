@@ -3,17 +3,18 @@
   {
 	"concertID":11129128,
 	"uri":"http://www.songkick.com/concerts/11129128-wild-flag-at-fillmore?utm_source=PARTNER_ID&utm_medium=partner",
-	"imageURI":"http://www.vampireweekend.com/images/vw_packshot.jpg",
+	"imageURI":"http://http://wildflagmusic.jpg.to",
 	"datetime":"2012-04-18T20:00:00-0800",
 	"rating":4.1,
-	"headliner": "wild flag",
+	"headliner": "Wild Flag",
 	"openers": "",
 	"artists":[
 			   {"uri":"http://www.songkick.com/artists/29835-wild-flag?utm_source=PARTNER_ID&utm_medium=partner",
-			   "imageURI":"http://www.vampireweekend.com/images/vw_packshot.jpg",
+			   "imageURI":"http://http://wildflagmusic.jpg.to",
 			   "displayName":"Wild Flag",
 			   "artistID":29835,
-			   "rating":4.2
+			   "rating":4.2,
+			   "ratingCount":3
 			   }
 				 
 			 ],
@@ -32,26 +33,29 @@
 	"concertID":3037536,
 	"datetime":"2010-02-16T19:30:00+0000",
 	"rating":4.9,
-	"headliner": "vampire weekend",
+	"headliner": "Vampire Weekend",
 	"openers": "fan death, wild flag",
 	 "artists":[
-					{"uri":"http://www.songkick.com/artists/288696-vampire-weekend?utm_source=PARTNER_ID&utm_medium=partner",
+					{"uri":"http://vampireweekendmusic.jpg.to",
 					"displayName":"Vampire Weekend",
 					"imageURI":"http://www.vampireweekend.com/images/vw_packshot.jpg",
 					"artistID":288696,
-					"rating":4.9
+					"rating":4.9,
+				    "ratingCount":1
 					},					
 					{"uri":"http://www.songkick.com/artists/2357033-fan-death?utm_source=PARTNER_ID&utm_medium=partner",
-					"imageURI":"http://www.vampireweekend.com/images/vw_packshot.jpg",
+					"imageURI":"http://fandeathmusic.jpg.to",
 					"displayName":"Fan Death",
 					"artistID":2357033,
 					"rating":4.0
+				    "ratingCount":1
 					},
 					{"uri":"http://www.songkick.com/artists/29835-wild-flag?utm_source=PARTNER_ID&utm_medium=partner",
-					"imageURI":"http://www.vampireweekend.com/images/vw_packshot.jpg",
+					"imageURI":"http://wildflagmusic.jpg.to",
 					"displayName":"Wild Flag",
 					"artistID":29835,
-					"rating":4.2
+					"rating":4.2,
+				    "ratingCount":3
 					}
 					],
 	 "venue":{
