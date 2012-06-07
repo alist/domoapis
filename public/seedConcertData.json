@@ -47,15 +47,15 @@
 					"imageURI":"http://fandeathmusic.jpg.to",
 					"displayName":"Fan Death",
 					"artistID":2357033,
-					"rating":4.0
-				    "ratingCount":1
+					"rating":4.0,
+				    	"ratingCount":1
 					},
 					{"uri":"http://www.songkick.com/artists/29835-wild-flag?utm_source=PARTNER_ID&utm_medium=partner",
 					"imageURI":"http://wildflagmusic.jpg.to",
 					"displayName":"Wild Flag",
 					"artistID":29835,
 					"rating":4.2,
-				    "ratingCount":3
+				    	"ratingCount":3
 					}
 					],
 	 "venue":{
