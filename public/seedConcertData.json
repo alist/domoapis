@@ -3,7 +3,7 @@
   {
 	"concertID":11129128,
 	"uri":"http://www.songkick.com/concerts/11129128-wild-flag-at-fillmore?utm_source=PARTNER_ID&utm_medium=partner",
-	"imageURI":"http://topimage.herokuapp.com/wild%20flag%20music"
+	"imageURI":"http://topimage.herokuapp.com/wild%20flag%20music",
 	"datetime":"2012-04-18T20:00:00-0800",
 	"rating":4.1,
 	"headliner": "Wild Flag",
