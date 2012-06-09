@@ -44,6 +44,8 @@ tbApp = require('zappa').app ->
     if req.query.longitude? and req.query.latitude?
       areaNearestLocation req.query, (area, error) =>
         console.log error, area
+        if area.concertsLastUpdated? == false || new Date().getTime() - area.concertsLastUpdated.getTime() > 1000*60*60*24
+          console.log "updating concerts at metroID #{area.metroID}"
     @response.contentType 'text/json'
     @response.sendfile 'public/seedConcertData.json'
 
@@ -60,6 +62,7 @@ tbApp = require('zappa').app ->
         if docs?[0]?
           console.log docs
           areaAtLocation = docs[0]
+          callback areaAtLocation, null
     
         #songkick request
         if areaAtLocation == null
