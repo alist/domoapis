@@ -84,9 +84,12 @@ tbApp = require('zappa').app ->
         
         skVenue = skEvent.venue
 
+        concertImageURI = "http://topimage.herokuapp.com/#{artistHeadlining}"
+        concertImageURI = concertImageURI.replace /\ /g, "-"
+
         savingVenue = {venueID: skVenue.id, displayname: skVenue.displayName, location: [skVenue.lng, skVenue.lat], uri: skVenue.uri, metroAreaID: skVenue.metroArea?.id}
 
-        savingConcert = new Concert {concertID: skEvent.id, uri: skEvent.uri, imageURI: "http://topimage.herokuapp.com/#{artistHeadlining}", headliner: artistHeadlining, openers: openers, artistsIDs: artistsIDs, venue: savingVenue, startDateTime: skEvent.start?.datetime}
+        savingConcert = new Concert {concertID: skEvent.id, uri: skEvent.uri, imageURI: concertImageURI,  headliner: artistHeadlining, openers: openers, artistsIDs: artistsIDs, venue: savingVenue, startDateTime: skEvent.start?.datetime}
         
         if concertIter == concerts.length - 1
           savingConcert.save (err) ->
