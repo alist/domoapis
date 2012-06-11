@@ -12,7 +12,7 @@ AreaLocationSchema.index { location: '2d' }
 
 AreaSchema = new Schema {
   locations : [AreaLocationSchema] #long, lat
-  metroID : {type: Number, index: {unique: true}}
+  metroAreaID : {type: Number, index: {unique: true}}
   concertsLastUpdated : Date
 }
 
@@ -20,7 +20,7 @@ VenueDef = {
   venueID: {type: Number, index: {unique: false}}
   location: [Number, Number]
   venueDisplayName: {type: String, index: {unique: false}}
-  metroID: {type: Number, index: {unique: false}}
+  metroAreaID: {type: Number, index: {unique: false}}
   uri: String
 }
 
@@ -52,9 +52,9 @@ tbApp = require('zappa').app ->
       areaNearestLocation req.query, (area, error) =>
         console.log error, area
         concertsNearArea area, (concerts, error) =>
-          console.log "found concerts count# #{concerts.length} near id #{area.metroID} with error #{ error}"
+          console.log "found concerts count# #{concerts.length} near id #{area.metroAreaID} with error #{ error}"
           @response.contentType 'text/json'
-          @response.send concerts
+          @response.send {concerts: concerts}
 
  
   #integrates the concerts updated from songkick with the existing server data 
@@ -84,9 +84,9 @@ tbApp = require('zappa').app ->
         
         skVenue = skEvent.venue
 
-        savingVenue = {venueID: skVenue.id, displayname: skVenue.displayName, location: [skVenue.lng, skVenue.lat], uri: skVenue.uri, metroID: skVenue.metroArea?.id}
+        savingVenue = {venueID: skVenue.id, displayname: skVenue.displayName, location: [skVenue.lng, skVenue.lat], uri: skVenue.uri, metroAreaID: skVenue.metroArea?.id}
 
-        savingConcert = new Concert {concertID: skEvent.id, uri: skEvent.uri, imageURI: "http://topimage.herokuapp.com/#{}", headliner: artistHeadlining, openers: openers, artistsIDs: artistsIDs, venue: savingVenue, startDateTime: skEvent.start?.datetime}
+        savingConcert = new Concert {concertID: skEvent.id, uri: skEvent.uri, imageURI: "http://topimage.herokuapp.com/#{artistHeadlining}", headliner: artistHeadlining, openers: openers, artistsIDs: artistsIDs, venue: savingVenue, startDateTime: skEvent.start?.datetime}
         
         if concertIter == concerts.length - 1
           savingConcert.save (err) ->
@@ -102,8 +102,8 @@ tbApp = require('zappa').app ->
   #get concerts for area (wherein we update from server as necessary)
   concertsNearArea = (area, callback) -> #callback (concerts, error)
     if area.concertsLastUpdated? == false || new Date().getTime() - area.concertsLastUpdated.getTime() > 1000*60*60*24
-      console.log "Updating concerts for metroID #{area.metroID} beginning #{new Date()}"
-      requestURL = "https://api.songkick.com/api/3.0/metro_areas/#{area.metroID}/calendar.json?apikey=B7tlwR9tyOXNG2qw"
+      console.log "Updating concerts for metroAreaID #{area.metroAreaID} beginning #{new Date()}"
+      requestURL = "https://api.songkick.com/api/3.0/metro_areas/#{area.metroAreaID}/calendar.json?apikey=B7tlwR9tyOXNG2qw"
       console.log requestURL
       request requestURL, (error, response, body) ->
        if response.statusCode == 200
@@ -112,7 +112,7 @@ tbApp = require('zappa').app ->
           resCount =  resPage.totalEntries
           resPages = Math.ceil (resCount / resPage.perPage) #page 1 is first page, not zero.
           console.log resCount, resPage.totalEntries, resPages
-          console.log "beginning fetch/integration of #{resPages} pages for metroID #{area.metroID}"
+          console.log "beginning fetch/integration of #{resPages} pages for metroAreaID #{area.metroAreaID}"
           
           firstEvents = resObjects?.resultsPage?.results?.event
 
@@ -122,7 +122,7 @@ tbApp = require('zappa').app ->
             
             for page in [2..resPages]
               do (page) ->
-                requestURL = "https://api.songkick.com/api/3.0/metro_areas/#{area.metroID}/calendar.json?apikey=B7tlwR9tyOXNG2qw&page=#{page}"
+                requestURL = "https://api.songkick.com/api/3.0/metro_areas/#{area.metroAreaID}/calendar.json?apikey=B7tlwR9tyOXNG2qw&page=#{page}"
                 console.log requestURL
                 request requestURL, (error, response, body) =>
                   pageIn = page
@@ -135,9 +135,9 @@ tbApp = require('zappa').app ->
                       integrateEvents events, resPages, (error, page) ->
                         console.log "integrated page# #{page}"
                         if error?
-                          console.log "integration error on page #{page} #{error}, metroID #{area.metroID} update aborted"
+                          console.log "integration error on page #{page} #{error}, metroAreaID #{area.metroAreaID} update aborted"
                         else
-                          console.log "finished updating concerts for metroID #{area.metroID} @ #{new Date()}"
+                          console.log "finished updating concerts for metroAreaID #{area.metroAreaID} @ #{new Date()}"
                           area.concertsLastUpdated = new Date()
                           area.save (error) =>
                             if error?
@@ -154,7 +154,7 @@ tbApp = require('zappa').app ->
           else if resPages == 1
             integrateEvents firstEvents, 1, (error, page) ->
               if error?
-                console.log "integration error on page #{page} #{error}, metroID #{area.metroID} update aborted"
+                console.log "integration error on page #{page} #{error}, metroAreaID #{area.metroAreaID} update aborted"
               else
                 area.concertsLastUpdated = new Date()
                 area.save (error) =>
@@ -168,7 +168,7 @@ tbApp = require('zappa').app ->
          retErr = "bad response for URL #{requestURL}"
          callback null, retErr
     else
-      Concert.find {'venue.metroID' : area.metroID}, (err, docs) =>
+      Concert.find {'venue.metroAreaID' : area.metroAreaID}, null, {limit: 200}, (err, docs) =>
         if err?
           retErr =  "ConcertsNearArea retrieval error #{err}"
           callback null, retErr
@@ -205,12 +205,12 @@ tbApp = require('zappa').app ->
               console.log firstArea
               
               newLocation = new AreaLocation {location: [location.longitude, location.latitude]}
-              Area.findOne { "metroID" : firstArea.id}, (err, oldArea) =>
+              Area.findOne { "metroAreaID" : firstArea.id}, (err, oldArea) =>
                 if oldArea?
                   oldArea.locations.splice 0,0, newLocation
                   areaAtLocation = oldArea
                 else
-                  newArea = new Area {locations: [newLocation], metroID: firstArea.id}
+                  newArea = new Area {locations: [newLocation], metroAreaID: firstArea.id}
                   areaAtLocation = newArea
                 
                 areaAtLocation.save (error) =>
