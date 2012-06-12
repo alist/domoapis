@@ -24,6 +24,24 @@ VenueDef = {
   uri: String
 }
 
+ReviewSchema = new Schema {
+  reviewID: {type: Number, index: {unique: true}}
+  creationDate: Date
+  creatorDisplayName: String
+  creatorID: {type: Number, index: {unique: false}}
+  concertDate: {type: Date, index: {unique: false}}
+  concertID: {type: Number, index: {unique: false}}
+  rating: Number
+  reviewText: String
+}
+
+ArtistSchema = new Schema {
+  artistID: {type: Number, index: {unique: true }}
+  displayName: String
+  rating: Number
+  reviews: [ReviewSchema]
+}
+
 ConcertSchema = new Schema {
   concertID : {type: Number, index: { unique: true } }
   headliner : {type: String}
@@ -33,7 +51,7 @@ ConcertSchema = new Schema {
   startDateTime: Date
   uri : String
   venue : VenueDef
-  artistsIDs: [{type: Number, index: {unique: false }}]
+  artists: [{uri: String, imageURI: String, displayName: String, artistID: {type: Number, index: {unique: false}}}]
 }
 ConcertSchema.index { 'venue.location': '2d' }
 
@@ -70,26 +88,29 @@ tbApp = require('zappa').app ->
           err = "messed up skevent ##{concertIter}..abort"
           callback err, page
           return
-        #this concert will be rejected if it already exists because of unique concertIDs, this is needed!
+        #this concert will be rejected if it already exists because of unique concertIDs, this is needed funct.!
         artists = skEvent.performance
-        artistsIDs = []
-        for artist in artists
-          artistsIDs.push artist.id
         artistHeadlining = artists?[0]?.displayName
+        
         if artists.length > 1
           openers = ""
           numbersOfArtists = artists.length
           for artIt in [1..artists.length - 1]
             openers = openers.concat "#{artists[artIt]?.displayName} "
         
+        savingArtists = []
+        for artist in artists
+          artistImageURI = "http://topimage.herokuapp.com/#{artist.displayName}"
+          artistImageURI = artistImageURI.replace /\ /g, "-"
+          savingArtists.push {displayName: artist.displayName, uri: artist.uri, imageURI: artistImageURI, artistID: artist.id}
+        
         skVenue = skEvent.venue
-
         concertImageURI = "http://topimage.herokuapp.com/#{artistHeadlining}"
         concertImageURI = concertImageURI.replace /\ /g, "-"
 
         savingVenue = {venueID: skVenue.id, displayname: skVenue.displayName, location: [skVenue.lng, skVenue.lat], uri: skVenue.uri, metroAreaID: skVenue.metroArea?.id}
 
-        savingConcert = new Concert {concertID: skEvent.id, uri: skEvent.uri, imageURI: concertImageURI,  headliner: artistHeadlining, openers: openers, artistsIDs: artistsIDs, venue: savingVenue, startDateTime: skEvent.start?.datetime}
+        savingConcert = new Concert {concertID: skEvent.id, uri: skEvent.uri, imageURI: concertImageURI,  headliner: artistHeadlining, openers: openers, artists: savingArtists, venue: savingVenue, startDateTime: skEvent.start?.datetime}
         
         if concertIter == concerts.length - 1
           savingConcert.save (err) ->
