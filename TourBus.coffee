@@ -38,6 +38,8 @@ ReviewSchema = new Schema {
 ArtistSchema = new Schema {
   artistID: {type: Number, index: {unique: true }}
   displayName: String
+  uri: String
+  imageURI: String,
   rating: Number
   reviews: [ReviewSchema]
 }
@@ -48,13 +50,15 @@ ConcertSchema = new Schema {
   imageURI: String
   openers: String
   rating: Number
-  startDateTime: Date
+  startDateTime: {type: Date, index: {unique: false}}
   uri : String
   venue : VenueDef
   artists: [{uri: String, imageURI: String, displayName: String, artistID: {type: Number, index: {unique: false}}}]
 }
 ConcertSchema.index { 'venue.location': '2d' }
 
+Artist = mongoose.model 'Artist', ArtistSchema
+Review = mongoose.model 'Artist.reviews', ReviewSchema
 Area = mongoose.model 'Area', AreaSchema
 AreaLocation = mongoose.model 'Area.locations', AreaLocationSchema
 Concert = mongoose.model 'Concert', ConcertSchema
@@ -70,11 +74,38 @@ tbApp = require('zappa').app ->
       areaNearestLocation req.query, (area, error) =>
         console.log error, area
         concertsNearArea area, (concerts, error) =>
-          console.log "found concerts count# #{concerts.length} near id #{area.metroAreaID} with error #{ error}"
-          @response.contentType 'text/json'
-          @response.send {concerts: concerts}
+          console.log "found concerts count# #{concerts?.length} near id #{area.metroAreaID} with error #{ error}"
+          getArtistsRelevantToConcerts concerts, (artists, error) =>
+            console.log "found rated artists count ##{artists?.length} for concerts with error #{error}"
+            @response.contentType 'text/json'
+            @response.send {concerts: concerts, artists: artists}
+  
+  @get '/artists', (req, res) ->
+    @response.send 'working on it'
+  
+  @get '/artists/:id', (req, res) ->
+    @response.send "gotcha id #{@params.id}, wokring on it!"
 
- 
+  @post '/artists', (req, res) ->
+    console.log req.query
+    @response.send 'post!: working on it'
+
+  #gets the Artists that match the artistIDs included in the Concert collection
+  getArtistsRelevantToConcerts = (concerts, callback) -> #callback (error, artists)
+    if concerts? == false
+      err = "bad concerts data provided to get concerts"
+      callback err, null
+      return
+    
+    #grab artist IDs
+    allArtistIDs = []
+    for concert in concerts
+      for artist in concert.artists
+        allArtistIDs.push artist?.artistID
+    
+    Artist.find {artistID: {$in: allArtistIDs}}, null, null, (err, docs) =>
+      callback err, docs
+
   #integrates the concerts updated from songkick with the existing server data 
   integrateEvents = (concerts, page, callback) -> #callback (error, page)
     if concerts? == false || concerts.length == 0
@@ -92,6 +123,10 @@ tbApp = require('zappa').app ->
         artists = skEvent.performance
         artistHeadlining = artists?[0]?.displayName
         
+        if artistHeadlining? == false || artistHeadlining == ""
+          err = "no artists for skevent ##{concertIter} on page ##{page}"
+          return
+
         if artists.length > 1
           openers = ""
           numbersOfArtists = artists.length
@@ -99,18 +134,25 @@ tbApp = require('zappa').app ->
             openers = openers.concat "#{artists[artIt]?.displayName} "
         
         savingArtists = []
-        for artist in artists
+        for artistB in artists
+          artist = artistB.artist
           artistImageURI = "http://topimage.herokuapp.com/#{artist.displayName}"
           artistImageURI = artistImageURI.replace /\ /g, "-"
           savingArtists.push {displayName: artist.displayName, uri: artist.uri, imageURI: artistImageURI, artistID: artist.id}
-        
+
         skVenue = skEvent.venue
         concertImageURI = "http://topimage.herokuapp.com/#{artistHeadlining}"
         concertImageURI = concertImageURI.replace /\ /g, "-"
 
-        savingVenue = {venueID: skVenue.id, displayname: skVenue.displayName, location: [skVenue.lng, skVenue.lat], uri: skVenue.uri, metroAreaID: skVenue.metroArea?.id}
+        if skVenue.lng? && skVenue.lat?
+          location = [skVenue.lng, skVenue.lat]
 
-        savingConcert = new Concert {concertID: skEvent.id, uri: skEvent.uri, imageURI: concertImageURI,  headliner: artistHeadlining, openers: openers, artists: savingArtists, venue: savingVenue, startDateTime: skEvent.start?.datetime}
+        dateTime = skEvent.start?.datetime
+        if dateTime? == false
+          dateTime = skEvent.start?.date
+        savingVenue = {venueID: skVenue.id, displayname: skVenue.displayName, location: location, uri: skVenue.uri, metroAreaID: skVenue.metroArea?.id}
+
+        savingConcert = new Concert {concertID: skEvent.id, uri: skEvent.uri, imageURI: concertImageURI,  headliner: artistHeadlining, openers: openers, artists: savingArtists, venue: savingVenue, startDateTime: dateTime}
         
         if concertIter == concerts.length - 1
           savingConcert.save (err) ->
@@ -120,7 +162,7 @@ tbApp = require('zappa').app ->
         else
           savingConcert.save (err) ->
             if err?
-              console.log "noting save error obj# #{concertIter} for page # #{page}"
+              console.log "noting save error #{err} for obj# #{concertIter} for page # #{page}"
               #console.log err
   
   #get concerts for area (wherein we update from server as necessary)
@@ -154,7 +196,7 @@ tbApp = require('zappa').app ->
                     resObjects = JSON.parse body
                     resPage = resObjects.resultsPage
                     events = resPage?.results?.event
-                    console.log "#{events.length} events to integrate for page #{pageIn}"
+                    console.log "#{events?.length} events to integrate for page #{pageIn}"
                     if page == resPages
                       integrateEvents events, resPages, (error, page) ->
                         console.log "integrated page# #{page}"
@@ -192,7 +234,7 @@ tbApp = require('zappa').app ->
          retErr = "bad response for URL #{requestURL}"
          callback null, retErr
     else
-      Concert.find {'venue.metroAreaID' : area.metroAreaID}, null, {limit: 200}, (err, docs) =>
+      Concert.find {'venue.metroAreaID' : area.metroAreaID, startDateTime: {$gt: 0}}, null, {limit:500, sort: {startDateTime: 1}}, (err, docs) =>
         if err?
           retErr =  "ConcertsNearArea retrieval error #{err}"
           callback null, retErr
