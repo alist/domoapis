@@ -19,19 +19,25 @@ AreaSchema = new Schema {
 VenueDef = {
   venueID: {type: Number, index: {unique: false}}
   location: [Number, Number]
-  venueDisplayName: {type: String, index: {unique: false}}
+  displayName: {type: String, index: {unique: false}}
   metroAreaID: {type: Number, index: {unique: false}}
   uri: String
 }
 
-ReviewSchema = new Schema {
-  reviewID: {type: Number, index: {unique: true}}
+RatingSchema = new Schema {
+  ratingID: {type: Number, index: {unique: true}}
   creationDate: Date
   creatorDisplayName: String
-  creatorID: {type: Number, index: {unique: false}}
+  author: {
+    authorID: {type: Number, index: {unique: false}}
+    authorDisplayName: String
+  }
   concertDate: {type: Date, index: {unique: false}}
   concertID: {type: Number, index: {unique: false}}
-  rating: Number
+  overalQRating: {type: Number, index: {unique: false}}
+  stagePRating: Number
+  soundQRating: Number
+  visualsEffectsRating: Number
   reviewText: String
 }
 
@@ -40,8 +46,8 @@ ArtistSchema = new Schema {
   displayName: String
   uri: String
   imageURI: String,
-  rating: Number
-  reviews: [ReviewSchema]
+  averageRating: Number
+  ratings: [RatingSchema]
 }
 
 ConcertSchema = new Schema {
@@ -58,7 +64,7 @@ ConcertSchema = new Schema {
 ConcertSchema.index { 'venue.location': '2d' }
 
 Artist = mongoose.model 'Artist', ArtistSchema
-Review = mongoose.model 'Artist.reviews', ReviewSchema
+Rating = mongoose.model 'Artist.ratings', RatingSchema
 Area = mongoose.model 'Area', AreaSchema
 AreaLocation = mongoose.model 'Area.locations', AreaLocationSchema
 Concert = mongoose.model 'Concert', ConcertSchema
@@ -68,10 +74,10 @@ tbApp = require('zappa').app ->
   @use 'bodyparser', 'static', 'cookies', 'cookieparser'
   @get '/': 'time to tour'
   
-  @get '/concerts', (req,res) ->
+  @get '/apiv1/concerts', (req,res) ->
     console.log req.query
     if req.query.longitude? and req.query.latitude?
-      areaNearestLocation req.query, (area, error) =>
+      areaNearestLocation [req.query.longitude, req.query.latitude], (area, error) =>
         console.log error, area
         concertsNearArea area, (concerts, error) =>
           console.log "found concerts count# #{concerts?.length} near id #{area.metroAreaID} with error #{ error}"
@@ -83,12 +89,43 @@ tbApp = require('zappa').app ->
   @get '/artists', (req, res) ->
     @response.send 'working on it'
   
-  @get '/artists/:id', (req, res) ->
+  @get '/artists/:id/ratings', (req, res) ->
     @response.send "gotcha id #{@params.id}, wokring on it!"
 
-  @post '/artists', (req, res) ->
+  @post '/artists/:id/ratings', (req, res) ->
     console.log req.query
     @response.send 'post!: working on it'
+
+  @get '/apiv1/happening', (req, res) ->
+    console.log req.query
+    if req.query.longitude? and req.query.latitude?
+      getHappeningConcertsNearLocation [req.query.longitude, req.query.latitude], (concerts, error) =>
+        console.log "found happening concerts count# #{concerts?.length} near loc #{req.query} with error #{ error}"
+        getArtistsRelevantToConcerts concerts, (artists, error) =>
+          console.log "found rated artists count ##{artists?.length} for concerts with error #{error}"
+          @response.contentType 'text/json'
+          @response.send {concerts: concerts, artists: artists}
+
+  getHappeningConcertsNearLocation = (location, callback) -> #callback (error, concerts)
+    #maxDistanceRadial = 20 1/6378 #in radial coord km/radiusEarth *ONLY WORKS ON EARTH*
+    #Concert.find {'venue.location' : {$nearSphere : location, $maxDistance: maxDistanceRadial} , startDateTime: {$gt: 0}}, null, {limit:100}, (err, docs) =>
+    areaNearestLocation location, (area, error) =>
+      if area.concertsLastUpdated? == false || new Date().getTime() - area.concertsLastUpdated.getTime() > 1000*60*60*24
+        console.log "need to implement happeningConcerts updates"
+        #but until later, don't need to update concerts here too...
+      
+      console.log error, area
+      pastDate = new Date (new Date().getTime()-6*60*60*1000)
+      futureDate = new Date (new Date().getTime()+6*60*60*1000)
+      Concert.find {'venue.metroAreaID' : area.metroAreaID, startDateTime: {$gte: pastDate, $lt: futureDate}}, null, {limit:500, sort: {startDateTime: 1}}, (err, docs) =>
+        if err?
+          retErr =  "happening ConcertsNearLoc retrieval error #{err}"
+          callback null, retErr
+        else if docs?
+          callback docs, null
+        else
+          retErr = "No happening concerts, but no retrieval errors"
+          callback null, retErr
 
   #gets the Artists that match the artistIDs included in the Concert collection
   getArtistsRelevantToConcerts = (concerts, callback) -> #callback (error, artists)
@@ -150,7 +187,7 @@ tbApp = require('zappa').app ->
         dateTime = skEvent.start?.datetime
         if dateTime? == false
           dateTime = skEvent.start?.date
-        savingVenue = {venueID: skVenue.id, displayname: skVenue.displayName, location: location, uri: skVenue.uri, metroAreaID: skVenue.metroArea?.id}
+        savingVenue = {venueID: skVenue.id, displayName: skVenue.displayName, location: location, uri: skVenue.uri, metroAreaID: skVenue.metroArea?.id}
 
         savingConcert = new Concert {concertID: skEvent.id, uri: skEvent.uri, imageURI: concertImageURI,  headliner: artistHeadlining, openers: openers, artists: savingArtists, venue: savingVenue, startDateTime: dateTime}
         
@@ -249,7 +286,7 @@ tbApp = require('zappa').app ->
     maxDistanceRadial = 5 * 1/6378 #in radial coord km/radiusEarth *ONLY WORKS ON EARTH*
     areaAtLocation = null
     if location?
-      Area.find { "locations.location" : { $nearSphere : [location.longitude,location.latitude], $maxDistance : maxDistanceRadial }}, (err, docs) =>
+      Area.find { "locations.location" : { $nearSphere : location, $maxDistance : maxDistanceRadial }}, (err, docs) =>
         if err?
           console.log "error on area location lookup #{err}"
           callback err, null
