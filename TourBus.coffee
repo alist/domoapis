@@ -298,7 +298,7 @@ tbApp = require('zappa').app ->
     
         #songkick request
         if areaAtLocation == null
-          requestURL = "https://api.songkick.com/api/3.0/search/locations.json?apikey=B7tlwR9tyOXNG2qw&location=geo:#{location.latitude},#{location.longitude}"
+          requestURL = "https://api.songkick.com/api/3.0/search/locations.json?apikey=B7tlwR9tyOXNG2qw&location=geo:#{location[0]},#{location[1]}"
           console.log requestURL
           request requestURL, (error,response,body) =>
             
@@ -307,7 +307,7 @@ tbApp = require('zappa').app ->
               firstArea = resObjects?.resultsPage?.results?.location?[0]?.metroArea
               console.log firstArea
               
-              newLocation = new AreaLocation {location: [location.longitude, location.latitude]}
+              newLocation = new AreaLocation {location: location}
               Area.findOne { "metroAreaID" : firstArea.id}, (err, oldArea) =>
                 if oldArea?
                   oldArea.locations.splice 0,0, newLocation
