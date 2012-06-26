@@ -16,16 +16,8 @@ AreaSchema = new Schema {
   concertsLastUpdated : Date
 }
 
-VenueDef = {
-  venueID: {type: Number, index: {unique: false}}
-  location: [Number, Number]
-  displayName: {type: String, index: {unique: false}}
-  metroAreaID: {type: Number, index: {unique: false}}
-  uri: String
-}
-
+#ratings use non-int IDs
 RatingSchema = new Schema {
-  ratingID: {type: Number, index: {unique: true}}
   creationDate: Date
   creatorDisplayName: String
   author: {
@@ -40,6 +32,17 @@ RatingSchema = new Schema {
   visualsEffectsRating: Number
   reviewText: String
 }
+RatingSchema.virtual('ratingID').get ->
+  return this._id
+
+#authors use non-int ids
+AuthorSchema = new Schema {
+  authorDisplayName: String
+  imageURI: String
+}
+RatingSchema.virtual('authorID').get ->
+  return this._id
+
 
 ArtistSchema = new Schema {
   artistID: {type: Number, index: {unique: true }}
@@ -48,6 +51,14 @@ ArtistSchema = new Schema {
   imageURI: String,
   averageRating: Number
   ratings: [RatingSchema]
+}
+
+VenueDef = {
+  venueID: {type: Number, index: {unique: false}}
+  location: [Number, Number]
+  displayName: {type: String, index: {unique: false}}
+  metroAreaID: {type: Number, index: {unique: false}}
+  uri: String
 }
 
 ConcertSchema = new Schema {
@@ -60,9 +71,11 @@ ConcertSchema = new Schema {
   uri : String
   venue : VenueDef
   artists: [{uri: String, imageURI: String, displayName: String, artistID: {type: Number, index: {unique: false}}}]
+  authorsCheckedIn: [{artistID: Number}]
 }
 ConcertSchema.index { 'venue.location': '2d' }
 
+Author = mongoose.model 'Author', AuthorSchema
 Artist = mongoose.model 'Artist', ArtistSchema
 Rating = mongoose.model 'Artist.ratings', RatingSchema
 Area = mongoose.model 'Area', AreaSchema
@@ -71,7 +84,7 @@ Concert = mongoose.model 'Concert', ConcertSchema
 
 tbApp = require('zappa').app ->
   mongoose.connect(secrets.mongoDBConnectURLSecret)
-  @use 'bodyparser', 'static', 'cookies', 'cookieparser'
+  @use 'bodyParser', 'static', 'cookies', 'cookieparser'
   @get '/': 'time to tour'
   
   @get '/apiv1/concerts', (req,res) ->
@@ -86,15 +99,44 @@ tbApp = require('zappa').app ->
             @response.contentType 'text/json'
             @response.send {concerts: concerts, artists: artists}
   
-  @get '/artists', (req, res) ->
-    @response.send 'working on it'
-  
-  @get '/artists/:id/ratings', (req, res) ->
+  @get '/apiv1/concerts/:id', (req, res) ->
     @response.send "gotcha id #{@params.id}, wokring on it!"
 
-  @post '/artists/:id/ratings', (req, res) ->
-    console.log req.query
-    @response.send 'post!: working on it'
+  @get '/apiv1/artists/:id', (req, res) ->
+    if @params.id
+      getArtistForIDGenerateIfNone @params.id, (error, artist) =>
+        console.log error, artist
+        if artist
+          @response.send {artists: artist}
+        else
+          @response.send {}
+    else
+      @response.send {}
+
+  
+  @get '/apiv1/artists/:id/ratings', (req, res) ->
+    if @params.id
+      getArtistForIDGenerateIfNone @params.id, (error, artist) =>
+        console.log error, artist
+        if artist
+          @response.send {artists: artist}
+        else
+          @response.send {}
+    else
+      @response.send {}
+
+  @post '/apiv1/artists/:id/ratings', (req, res) ->
+    console.log req.body
+    if @params.id
+      getArtistForIDGenerateIfNone @params.id, (error, artist) =>
+        #add review, recalculate rating, save
+        console.log error, artist
+        if artist
+          @response.send {artists: artist}
+        else
+          @response.send {}
+    else
+      @response.send {}
 
   @get '/apiv1/happening', (req, res) ->
     console.log req.query
@@ -105,6 +147,34 @@ tbApp = require('zappa').app ->
           console.log "found rated artists count ##{artists?.length} for concerts with error #{error}"
           @response.contentType 'text/json'
           @response.send {concerts: concerts, artists: artists}
+
+  @get '/apiv1/happening/:id', (req, res) ->
+    @response.send "happening id #{@params.id}, wokring on it!"
+
+  getArtistForIDGenerateIfNone = (aID, callback) -> #callback (error, artist)
+    id = parseInt(aID)
+    Artist.find {artistID: id}, null, null, (err, docs) =>
+      if docs?[0]? == false
+        console.log "Generating new artist entry based on concert data with id #{id}"
+        Concert.find {'artists.artistID': id}, null, {limit:1}, (err, docs) =>
+          #not going to songkick means that if we ever delete old artists, we risk trashing a user's old data
+          if docs?[0]?
+            copyFromArtist = null
+            for itArtist in docs[0].artists
+              if itArtist.artistID == id
+                copyFromArtist = itArtist
+            console.log "instantiating artist from concert w/ subArtist", copyFromArtist
+            artist = new Artist copyFromArtist
+            artist.save (err) ->
+              if err?
+                callback err, null
+              else
+                callback null, artist
+          else
+            error = "could not create artist: no artist info ever encountered, or no concerts available for artistID #{id}"
+            callback error, null
+      else
+        callback null, docs[0]
 
   getHappeningConcertsNearLocation = (location, callback) -> #callback (error, concerts)
     #maxDistanceRadial = 20 1/6378 #in radial coord km/radiusEarth *ONLY WORKS ON EARTH*
