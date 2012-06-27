@@ -19,14 +19,13 @@ AreaSchema = new Schema {
 #ratings use non-int IDs
 RatingSchema = new Schema {
   creationDate: Date
-  creatorDisplayName: String
   author: {
     authorID: {type: Number, index: {unique: false}}
     authorDisplayName: String
   }
   concertDate: {type: Date, index: {unique: false}}
   concertID: {type: Number, index: {unique: false}}
-  overalQRating: {type: Number, index: {unique: false}}
+  overallRating: {type: Number, index: {unique: false}}
   stagePRating: Number
   soundQRating: Number
   visualsEffectsRating: Number
@@ -39,8 +38,9 @@ RatingSchema.virtual('ratingID').get ->
 AuthorSchema = new Schema {
   authorDisplayName: String
   imageURI: String
+  ratingCount: Number
 }
-RatingSchema.virtual('authorID').get ->
+AuthorSchema.virtual('authorID').get ->
   return this._id
 
 
@@ -49,8 +49,9 @@ ArtistSchema = new Schema {
   displayName: String
   uri: String
   imageURI: String,
-  averageRating: Number
+  averageRating: {type: Number, index: {unique: false}}
   ratings: [RatingSchema]
+  ratingCount: Number
 }
 
 VenueDef = {
@@ -94,7 +95,7 @@ tbApp = require('zappa').app ->
         console.log error, area
         concertsNearArea area, (concerts, error) =>
           console.log "found concerts count# #{concerts?.length} near id #{area.metroAreaID} with error #{ error}"
-          getArtistsRelevantToConcerts concerts, (artists, error) =>
+          getArtistsRelevantToConcerts concerts, (error, artists) =>
             console.log "found rated artists count ##{artists?.length} for concerts with error #{error}"
             @response.contentType 'text/json'
             @response.send {concerts: concerts, artists: artists}
@@ -107,7 +108,7 @@ tbApp = require('zappa').app ->
       getArtistForIDGenerateIfNone @params.id, (error, artist) =>
         console.log error, artist
         if artist
-          @response.send {artists: artist}
+          @response.send {artists: [artist]}
         else
           @response.send {}
     else
@@ -119,31 +120,64 @@ tbApp = require('zappa').app ->
       getArtistForIDGenerateIfNone @params.id, (error, artist) =>
         console.log error, artist
         if artist
-          @response.send {artists: artist}
+          @response.send {artists: [artist]}
         else
           @response.send {}
     else
       @response.send {}
 
   @post '/apiv1/artists/:id/ratings', (req, res) ->
-    console.log req.body
+    console.log "new review from author#{ req.body.authorID}"
     if @params.id
-      getArtistForIDGenerateIfNone @params.id, (error, artist) =>
-        #add review, recalculate rating, save
-        console.log error, artist
-        if artist
-          @response.send {artists: artist}
+      saveRatingWithPostData @params.id, req.body, (err, rating, artist) =>
+        console.log err, rating, artist
+        if err? == false
+          @response.send {artists: [artist]}
         else
           @response.send {}
-    else
-      @response.send {}
+
+  saveRatingWithPostData = (artistID, ratingPOST, callback) -> #(err, rating, artist) ->
+    getArtistForIDGenerateIfNone artistID, (error, artist) =>
+      #add review, recalculate rating, save
+      if artist?
+        Concert.findOne {concertID: ratingPOST.concertID}, (err, concert) =>
+          if concert?
+            try
+              authorObjID = mongoose.mongo.BSONPure.ObjectID.fromString(ratingPOST.authorID)
+            catch err
+              callback "objID err: #{err} from id #{ratingPOST.authorID}"
+              return
+            Author.findOne {_id: authorObjID}, (err, author) =>
+              if author?
+                authorInfo = {authorID: author.authorID, authorDisplayName: author.authorDisplayName, ratingCount: author.ratingCount}
+                rating = new Rating {author: authorInfo, concertDate: concert.startDateTime, concertID: concert.concertID, overallRating: ratingPOST.overallRating, stagePRating: ratingPOST.stagePRating, soundQRating: ratingPOST.soundQRating, visualsEffectsRating: ratingPOST.visualsEffectsRating, reviewText: ratingPOST.reviewText,creationDate: new Date()}
+                artist.ratings.push rating
+                cumRating = 0
+                for ratVal in artist.ratings
+                  console.log ratVal
+                  console.log "rating #{ratVal.overallRating}"
+                  cumRating += parseInt(ratVal.overallRating)
+                artist.averageRating = cumRating/ artist.ratings.length
+                artist.ratingCount = artist.ratings.length
+                
+                artist.save (err) =>
+                  if err?
+                    callback err
+                  else
+                    callback null, rating, artist
+              else
+                callback "author error: #{err}"
+          else
+            callback "concert error: #{err}"
+      else
+        callback "artist error: #{error}"
 
   @get '/apiv1/happening', (req, res) ->
     console.log req.query
     if req.query.longitude? and req.query.latitude?
       getHappeningConcertsNearLocation [req.query.longitude, req.query.latitude], (concerts, error) =>
         console.log "found happening concerts count# #{concerts?.length} near loc #{req.query} with error #{ error}"
-        getArtistsRelevantToConcerts concerts, (artists, error) =>
+        getArtistsRelevantToConcerts concerts, (error, artists) =>
           console.log "found rated artists count ##{artists?.length} for concerts with error #{error}"
           @response.contentType 'text/json'
           @response.send {concerts: concerts, artists: artists}
