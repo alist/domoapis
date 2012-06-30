@@ -20,9 +20,10 @@ AreaSchema = new Schema {
 RatingSchema = new Schema {
   creationDate: Date
   author: {
-    authorID: {type: Number, index: {unique: false}}
+    authorID: {type: String, index: {unique: false}}
     authorDisplayName: String
   }
+  artistID: Number #just because I need it here
   concertDate: {type: Date, index: {unique: false}}
   concertID: {type: Number, index: {unique: false}}
   overallRating: {type: Number, index: {unique: false}}
@@ -130,7 +131,7 @@ tbApp = require('zappa').app ->
     console.log "new review from author#{ req.body.authorID}"
     if @params.id
       saveRatingWithPostData @params.id, req.body, (err, rating, artist) =>
-        console.log err, rating, artist
+        console.log err, rating, artist, rating.author
         if err? == false
           @response.send {artists: [artist]}
         else
@@ -149,8 +150,9 @@ tbApp = require('zappa').app ->
               return
             Author.findOne {_id: authorObjID}, (err, author) =>
               if author?
-                authorInfo = {authorID: author.authorID, authorDisplayName: author.authorDisplayName, ratingCount: author.ratingCount}
-                rating = new Rating {author: authorInfo, concertDate: concert.startDateTime, concertID: concert.concertID, overallRating: ratingPOST.overallRating, stagePRating: ratingPOST.stagePRating, soundQRating: ratingPOST.soundQRating, visualsEffectsRating: ratingPOST.visualsEffectsRating, reviewText: ratingPOST.reviewText,creationDate: new Date()}
+                console.log "authorID", authorObjID, author.authorID
+                authorInfo = {authorID: author.authorID.toString(), authorDisplayName: author.authorDisplayName, ratingCount: author.ratingCount}
+                rating = new Rating {author: authorInfo, artistID: artistID, concertDate: concert.startDateTime, concertID: concert.concertID, overallRating: ratingPOST.overallRating, stagePRating: ratingPOST.stagePRating, soundQRating: ratingPOST.soundQRating, visualsEffectsRating: ratingPOST.visualsEffectsRating, reviewText: ratingPOST.reviewText,creationDate: new Date()}
                 artist.ratings.push rating
                 cumRating = 0
                 for ratVal in artist.ratings
