@@ -18,10 +18,11 @@ AreaSchema = new Schema {
 
 #ratings use non-int IDs
 RatingSchema = new Schema {
-  creationDate: Date
+  modifiedDate: Date
   author: {
     authorID: {type: String, index: {unique: false}}
     authorDisplayName: String
+    imageURI: String
   }
   artistID: Number #just because I need it here
   concertDate: {type: Date, index: {unique: false}}
@@ -37,6 +38,7 @@ RatingSchema.virtual('ratingID').get ->
 
 #authors use non-int ids
 AuthorSchema = new Schema {
+  modifiedDate: {type: Date, index: {unique: false}}
   authorDisplayName: String
   imageURI: String
   ratingCount: Number
@@ -53,6 +55,7 @@ ArtistSchema = new Schema {
   averageRating: {type: Number, index: {unique: false}}
   ratings: [RatingSchema]
   ratingCount: Number
+  modifiedDate: {type: Date, index: {unique: false}}
 }
 
 VenueDef = {
@@ -63,7 +66,22 @@ VenueDef = {
   uri: String
 }
 
+FeedItemSchema = new Schema {
+  ratingID: String #maybe none
+  comment: String #maybe none
+  modifiedDate: {type: Date, index: {unique: false}}
+  author: {
+    authorID: String
+    authorDisplayName: String
+    imageURI: String
+  }
+}
+FeedItemSchema.virtual('feedItemID').get ->
+  return this._id
+
+
 ConcertSchema = new Schema {
+  modifiedDate: {type: Date, index: {unique: false}}
   concertID : {type: Number, index: { unique: true } }
   headliner : {type: String}
   imageURI: String
@@ -73,6 +91,7 @@ ConcertSchema = new Schema {
   uri : String
   venue : VenueDef
   artists: [{uri: String, imageURI: String, displayName: String, artistID: {type: Number, index: {unique: false}}}]
+  feed: [FeedItemSchema]
   authorsCheckedIn: [{artistID: Number}]
 }
 ConcertSchema.index { 'venue.location': '2d' }
@@ -82,6 +101,7 @@ Artist = mongoose.model 'Artist', ArtistSchema
 Rating = mongoose.model 'Artist.ratings', RatingSchema
 Area = mongoose.model 'Area', AreaSchema
 AreaLocation = mongoose.model 'Area.locations', AreaLocationSchema
+FeedItem = mongoose.model 'Concert.feed', FeedItemSchema
 Concert = mongoose.model 'Concert', ConcertSchema
 
 tbApp = require('zappa').app ->
@@ -102,8 +122,43 @@ tbApp = require('zappa').app ->
             @response.send {concerts: concerts, artists: artists}
   
   @get '/apiv1/concerts/:id', (req, res) ->
-    @response.send "gotcha id #{@params.id}, wokring on it!"
+    lastUpdate = req.query.lastUpdateDate
+    #see if we can do a fetch for ratings meeting a certain age criteria, in the future
+    Concert.findOne {concertID: @params.id},{feed: {$slice:-20}}, (err, concert) =>
+      if concert?
+        getArtistsRelevantToConcerts [concert], (error, artists) =>
+          @response.contentType 'text/json'
+          @response.send {concerts: [concert], artists: artists}
+      else
+        @response.send {}
 
+  @get '/apiv1/concerts/:id/feed', (req, res) ->
+    lastUpdate = req.query.lastUpdateDate
+    feedItemsConcertWithConcertID @params.id, lastUpdate, (error, concertWithFeed) =>
+      console.log "sending relevant response for feed after error #{error}",  concertWithFeed
+      if concertWithFeed
+        @response.send concertWithFeed
+      else
+        @response.send {}
+  
+  @post '/apiv1/concerts/:id/feed', (req, res) ->
+    lastUpdate = req.query.lastUpdateDate
+    console.log "new feedItem from author#{ req.body.authorID}"
+    if @params.id?
+      Concerts.update {concertID: @params.id}, {$push : {}}, 0, 0, (err) =>
+        if err?
+          console.log "adding feedItem failed w/ error #{err}"
+          @response.send {}
+        else
+          feedItemsConcertWithConcertID @params.id, lastUpdate, (error, concertWithFeed) =>
+            console.log "sending relevant response for feedpost after error #{error}", concertWithFeed
+            if concertWithFeed
+              @response.send concertWithFeed
+            else
+              @response.send {}
+    else
+      @response.send {}
+  
   @get '/apiv1/artists/:id', (req, res) ->
     if @params.id
       getArtistForIDGenerateIfNone @params.id, (error, artist) =>
@@ -137,6 +192,28 @@ tbApp = require('zappa').app ->
         else
           @response.send {}
 
+  feedItemsConcertWithConcertID = (concertID, lastUpdate, callback) -> #callback (error, concertWithFeed)
+    if lastUpdate == 0 || lastUpdate? == false
+      Concert.findOne {concertID: concertID},{concertID: 1, feed: {$slice:-40}}, (err, concert) =>
+        if concert?
+          concert.venue = undefined
+          callback null, {concerts:[concert]}
+        else
+          callback "failed to get concert w. error #{err}"
+    else
+      Concert.findOne {concertID: concertID},{concertID: 1, feed:1}, (err, concert) =>
+        if concert?
+          feedItems = []
+          for i in [concert.feed.length .. 0]
+            if concert.feed?[i - 1]?.modifiedDate.getTime() < lastUpdate
+              feedItems = concert.feed.slice(concert.feed.length - (i - 1))
+              break
+          response = {concerts:[{concertID:concert.concertID, feed:feedItems}]}
+          callback null, response
+        else
+          callback "failed to get concert w. error #{err}"
+
+
   saveRatingWithPostData = (artistID, ratingPOST, callback) -> #(err, rating, artist) ->
     getArtistForIDGenerateIfNone artistID, (error, artist) =>
       #add review, recalculate rating, save
@@ -152,7 +229,7 @@ tbApp = require('zappa').app ->
               if author?
                 console.log "authorID", authorObjID, author.authorID
                 authorInfo = {authorID: author.authorID.toString(), authorDisplayName: author.authorDisplayName, ratingCount: author.ratingCount}
-                rating = new Rating {author: authorInfo, artistID: artistID, concertDate: concert.startDateTime, concertID: concert.concertID, overallRating: ratingPOST.overallRating, stagePRating: ratingPOST.stagePRating, soundQRating: ratingPOST.soundQRating, visualsEffectsRating: ratingPOST.visualsEffectsRating, reviewText: ratingPOST.reviewText,creationDate: new Date()}
+                rating = new Rating {author: authorInfo, artistID: artistID, concertDate: concert.startDateTime, concertID: concert.concertID, overallRating: ratingPOST.overallRating, stagePRating: ratingPOST.stagePRating, soundQRating: ratingPOST.soundQRating, visualsEffectsRating: ratingPOST.visualsEffectsRating, reviewText: ratingPOST.reviewText,modifiedDate: new Date()}
                 artist.ratings.push rating
                 cumRating = 0
                 for ratVal in artist.ratings
@@ -192,7 +269,7 @@ tbApp = require('zappa').app ->
     Artist.find {artistID: id}, null, null, (err, docs) =>
       if docs?[0]? == false
         console.log "Generating new artist entry based on concert data with id #{id}"
-        Concert.find {'artists.artistID': id}, null, {limit:1}, (err, docs) =>
+        Concert.find {'artists.artistID': id}, {feed: 0}, {limit:1}, (err, docs) =>
           #not going to songkick means that if we ever delete old artists, we risk trashing a user's old data
           if docs?[0]?
             copyFromArtist = null
@@ -223,7 +300,7 @@ tbApp = require('zappa').app ->
       console.log error, area
       pastDate = new Date (new Date().getTime()-6*60*60*1000)
       futureDate = new Date (new Date().getTime()+6*60*60*1000)
-      Concert.find {'venue.metroAreaID' : area.metroAreaID, startDateTime: {$gte: pastDate, $lt: futureDate}}, null, {limit:500, sort: {startDateTime: 1}}, (err, docs) =>
+      Concert.find {'venue.metroAreaID' : area.metroAreaID, startDateTime: {$gte: pastDate, $lt: futureDate}}, {feed: 0}, {limit:500, sort: {startDateTime: 1}}, (err, docs) =>
         if err?
           retErr =  "happening ConcertsNearLoc retrieval error #{err}"
           callback null, retErr
@@ -295,7 +372,7 @@ tbApp = require('zappa').app ->
           dateTime = skEvent.start?.date
         savingVenue = {venueID: skVenue.id, displayName: skVenue.displayName, location: location, uri: skVenue.uri, metroAreaID: skVenue.metroArea?.id}
 
-        savingConcert = new Concert {concertID: skEvent.id, uri: skEvent.uri, imageURI: concertImageURI,  headliner: artistHeadlining, openers: openers, artists: savingArtists, venue: savingVenue, startDateTime: dateTime}
+        savingConcert = new Concert {concertID: skEvent.id, uri: skEvent.uri, imageURI: concertImageURI,  headliner: artistHeadlining, openers: openers, artists: savingArtists, venue: savingVenue, startDateTime: dateTime, modifiedDate: new Date()}
         
         if concertIter == concerts.length - 1
           savingConcert.save (err) ->
@@ -377,7 +454,7 @@ tbApp = require('zappa').app ->
          retErr = "bad response for URL #{requestURL}"
          callback null, retErr
     else
-      Concert.find {'venue.metroAreaID' : area.metroAreaID, startDateTime: {$gt: 0}}, null, {limit:500, sort: {startDateTime: 1}}, (err, docs) =>
+      Concert.find {'venue.metroAreaID' : area.metroAreaID, startDateTime: {$gt: new Date()}}, {feed: 0}, {limit:500, sort: {startDateTime: 1}}, (err, docs) =>
         if err?
           retErr =  "ConcertsNearArea retrieval error #{err}"
           callback null, retErr
