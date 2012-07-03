@@ -141,24 +141,38 @@ tbApp = require('zappa').app ->
         @response.send concertWithFeed
       else
         @response.send {}
+ 
+  getAuthorWithIDAndAuthorizeToken = (authorID, authorToken, callback) -> #callback(err, author, abreviatedInfo, isAuthorizedAuthor)
+    authorObjID = null
+    try
+      authorObjID = mongoose.mongo.BSONPure.ObjectID.fromString(authorID)
+    catch err
+      callback "objID err: #{err} from id #{authorID}"
+    Author.findOne {_id: authorObjID}, (err, author) =>
+      if err?
+        callback err
+      else
+        authorInfo = {imageURI: author.imageURI, authorID: author.authorID.toString(), authorDisplayName: author.authorDisplayName, ratingCount: author.ratingCount}
+        callback null, author, authorInfo, false
   
   @post '/apiv1/concerts/:id/feed', (req, res) ->
     lastUpdate = req.query.lastUpdateDate
-    console.log "new feedItem from author#{ req.body.authorID}"
-    if @params.id?
-      Concerts.update {concertID: @params.id}, {$push : {}}, 0, (err) =>
-        if err?
-          console.log "adding feedItem failed w/ error #{err}"
-          @response.send {}
-        else
-          feedItemsConcertWithConcertID @params.id, lastUpdate, (error, concertWithFeed) =>
-            console.log "sending relevant response for feedpost after error #{error}", concertWithFeed
-            if concertWithFeed
-              @response.send concertWithFeed
-            else
-              @response.send {}
-    else
-      @response.send {}
+    getAuthorWithIDAndAuthorizeToken req.body.authorID, null, (err, author,authorInfo, isAuthed) =>
+      console.log "new feedItem from author#{ author.authorID}"
+      if @params.id?
+        Concert.update {concertID: @params.id}, {$push : {feedItems: {modifiedDate: new Date(), author: authorInfo, comment: req.body.comment} }}, 0, (err) =>
+          if err?
+            console.log "adding feedItem failed w/ error #{err}"
+            @response.send {}
+          else
+            feedItemsConcertWithConcertID @params.id, lastUpdate, (error, concertWithFeed) =>
+              console.log "sending relevant response for feedpost after error #{error}", concertWithFeed
+              if concertWithFeed
+                @response.send concertWithFeed
+              else
+                @response.send {}
+      else
+        @response.send {}
   
   @get '/apiv1/artists/:id', (req, res) ->
     if @params.id
@@ -221,15 +235,10 @@ tbApp = require('zappa').app ->
       if artist?
         Concert.findOne {concertID: ratingPOST.concertID}, (err, concert) =>
           if concert?
-            try
-              authorObjID = mongoose.mongo.BSONPure.ObjectID.fromString(ratingPOST.authorID)
-            catch err
-              callback "objID err: #{err} from id #{ratingPOST.authorID}"
-              return
-            Author.findOne {_id: authorObjID}, (err, author) =>
+
+            getAuthorWithIDAndAuthorizeToken ratingPOST.authorID, null, (err, author, authorInfo, isAuthed) =>
               if author?
-                console.log "authorID", authorObjID, author.authorID
-                authorInfo = {authorID: author.authorID.toString(), authorDisplayName: author.authorDisplayName, ratingCount: author.ratingCount}
+                console.log "authorID", author.authorID
                 rating = new Rating {author: authorInfo, artistID: artistID, concertDate: concert.startDateTime, concertID: concert.concertID, overallRating: ratingPOST.overallRating, stagePRating: ratingPOST.stagePRating, soundQRating: ratingPOST.soundQRating, visualsEffectsRating: ratingPOST.visualsEffectsRating, reviewText: ratingPOST.reviewText,modifiedDate: new Date()}
                 rating.ratingID = rating._id
                 artist.ratings.push rating
