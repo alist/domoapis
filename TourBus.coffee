@@ -36,6 +36,7 @@ RatingSchema = new Schema {
 RatingSchema.virtual('ratingID').get ->
   return this._id
 
+
 #authors use non-int ids
 AuthorSchema = new Schema {
   modifiedDate: {type: Date, index: {unique: false}}
@@ -162,7 +163,7 @@ tbApp = require('zappa').app ->
   @get '/apiv1/artists/:id', (req, res) ->
     if @params.id
       getArtistForIDGenerateIfNone @params.id, (error, artist) =>
-        console.log error, artist
+        console.log "got artist for id #{@params.id} with error #{error}"
         if artist
           @response.send {artists: [artist]}
         else
@@ -174,7 +175,7 @@ tbApp = require('zappa').app ->
   @get '/apiv1/artists/:id/ratings', (req, res) ->
     if @params.id
       getArtistForIDGenerateIfNone @params.id, (error, artist) =>
-        console.log error, artist
+        console.log "got artist for id #{@params.id} with error #{error}"
         if artist
           @response.send {artists: [artist]}
         else
@@ -186,7 +187,7 @@ tbApp = require('zappa').app ->
     console.log "new review from author#{ req.body.authorID}"
     if @params.id
       saveRatingWithPostData @params.id, req.body, (err, rating, artist) =>
-        console.log "post rating error #{err}", rating, artist, rating.author
+        console.log "post rating error #{err}", rating, artist, rating?.author
         if err? == false
           @response.send {artists: [artist]}
         else
@@ -230,11 +231,10 @@ tbApp = require('zappa').app ->
                 console.log "authorID", authorObjID, author.authorID
                 authorInfo = {authorID: author.authorID.toString(), authorDisplayName: author.authorDisplayName, ratingCount: author.ratingCount}
                 rating = new Rating {author: authorInfo, artistID: artistID, concertDate: concert.startDateTime, concertID: concert.concertID, overallRating: ratingPOST.overallRating, stagePRating: ratingPOST.stagePRating, soundQRating: ratingPOST.soundQRating, visualsEffectsRating: ratingPOST.visualsEffectsRating, reviewText: ratingPOST.reviewText,modifiedDate: new Date()}
+                rating.ratingID = rating._id
                 artist.ratings.push rating
                 cumRating = 0
                 for ratVal in artist.ratings
-                  console.log ratVal
-                  console.log "rating #{ratVal.overallRating}"
                   cumRating += parseInt(ratVal.overallRating)
                 artist.averageRating = cumRating/ artist.ratings.length
                 artist.ratingCount = artist.ratings.length
@@ -245,6 +245,18 @@ tbApp = require('zappa').app ->
                     callback err
                   else
                     savedRatingID = savedArt?.ratings?.slice(-1)?[0]?.ratingID
+                    ###
+                    Artist.update {authorID: artistID, 'ratings._id': savedRatingID}, {$set: {"ratings.$.ratingID": savedRatingID}},0,0, (err) ->
+                      if err?
+                        console.log "error adding ratingID to artist id##{artistID} rating #{savedRatingID}"
+                        callback err
+                      else
+                        console.log "should have updated artist with ratingID #{savedRatingID}"
+
+                    savedArt?.ratings?[savedArt.ratings.length - 1 ]?.ratingID = savedRatingID
+                    ###
+                    callback null, rating, savedArt
+                    
                     feedItem = new FeedItem {dateModified: new Date(), author: authorInfo, ratingID: savedRatingID}
                     console.log "saved artist, now posting feedItem with ratingID #{savedRatingID}"
                     Concert.update {concertID: concert.concertID},{$push: { feedItems: feedItem }},0, (err) ->
@@ -252,7 +264,6 @@ tbApp = require('zappa').app ->
                         console.log "Error posting rating id #{savedRatingID} to feed #{err}"
                       else
                         console.log "posted rating id #{savedRatingID} to concert id #{concert.concertID} feed"
-                    callback null, rating, artist
               else
                 callback "author error: #{err}"
           else
