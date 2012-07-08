@@ -108,6 +108,7 @@ Concert = mongoose.model 'Concert', ConcertSchema
 tbApp = require('zappa').app ->
   mongoose.connect(secrets.mongoDBConnectURLSecret)
   @use 'bodyParser', 'static', 'cookies', 'cookieparser'
+  
   @get '/': 'time to tour'
   
   @get '/apiv1/concerts', (req,res) ->
@@ -142,19 +143,6 @@ tbApp = require('zappa').app ->
       else
         @response.send {}
  
-  getAuthorWithIDAndAuthorizeToken = (authorID, authorToken, callback) -> #callback(err, author, abreviatedInfo, isAuthorizedAuthor)
-    authorObjID = null
-    try
-      authorObjID = mongoose.mongo.BSONPure.ObjectID.fromString(authorID)
-    catch err
-      callback "objID err: #{err} from id #{authorID}"
-    Author.findOne {_id: authorObjID}, (err, author) =>
-      if err?
-        callback err
-      else
-        authorInfo = {imageURI: author.imageURI, authorID: author.authorID.toString(), authorDisplayName: author.authorDisplayName, ratingCount: author.ratingCount}
-        callback null, author, authorInfo, false
-  
   @post '/apiv1/concerts/:id/feed', (req, res) ->
     lastUpdate = req.query.lastUpdateDate
     getAuthorWithIDAndAuthorizeToken req.body.authorID, null, (err, author,authorInfo, isAuthed) =>
@@ -206,7 +194,34 @@ tbApp = require('zappa').app ->
           @response.send {artists: [artist]}
         else
           @response.send {}
+  @get '/apiv1/happening', (req, res) ->
+    console.log req.query
+    if req.query.longitude? and req.query.latitude?
+      getHappeningConcertsNearLocation [req.query.longitude, req.query.latitude], (concerts, error) =>
+        console.log "found happening concerts count# #{concerts?.length} near loc #{req.query} with error #{ error}"
+        getArtistsRelevantToConcerts concerts, (error, artists) =>
+          console.log "found rated artists count ##{artists?.length} for concerts with error #{error}"
+          @response.contentType 'text/json'
+          @response.send {concerts: concerts, artists: artists}
 
+  @get '/apiv1/happening/:id', (req, res) ->
+    @response.send "happening id #{@params.id}, wokring on it!"
+
+
+  ## DONE FUNCTIONS ##
+  getAuthorWithIDAndAuthorizeToken = (authorID, authorToken, callback) -> #callback(err, author, abreviatedInfo, isAuthorizedAuthor)
+    authorObjID = null
+    try
+      authorObjID = mongoose.mongo.BSONPure.ObjectID.fromString(authorID)
+    catch err
+      callback "objID err: #{err} from id #{authorID}"
+    Author.findOne {_id: authorObjID}, (err, author) =>
+      if err?
+        callback err
+      else
+        authorInfo = {imageURI: author.imageURI, authorID: author.authorID.toString(), authorDisplayName: author.authorDisplayName, ratingCount: author.ratingCount}
+        callback null, author, authorInfo, false
+ 
   feedItemsConcertWithConcertID = (concertID, lastUpdate, callback) -> #callback (error, concertWithFeed)
     if lastUpdate == 0 || lastUpdate? == false
       Concert.findOne {concertID: concertID},{concertID: 1, feedItems: {$slice:-40}}, (err, concert) =>
@@ -254,7 +269,7 @@ tbApp = require('zappa').app ->
                     callback err
                   else
                     savedRatingID = savedArt?.ratings?.slice(-1)?[0]?.ratingID
-                    ###
+                    ### #here I'm adding the artist's artistID
                     Artist.update {authorID: artistID, 'ratings._id': savedRatingID}, {$set: {"ratings.$.ratingID": savedRatingID}},0,0, (err) ->
                       if err?
                         console.log "error adding ratingID to artist id##{artistID} rating #{savedRatingID}"
@@ -279,19 +294,6 @@ tbApp = require('zappa').app ->
             callback "concert error: #{err}"
       else
         callback "artist error: #{error}"
-
-  @get '/apiv1/happening', (req, res) ->
-    console.log req.query
-    if req.query.longitude? and req.query.latitude?
-      getHappeningConcertsNearLocation [req.query.longitude, req.query.latitude], (concerts, error) =>
-        console.log "found happening concerts count# #{concerts?.length} near loc #{req.query} with error #{ error}"
-        getArtistsRelevantToConcerts concerts, (error, artists) =>
-          console.log "found rated artists count ##{artists?.length} for concerts with error #{error}"
-          @response.contentType 'text/json'
-          @response.send {concerts: concerts, artists: artists}
-
-  @get '/apiv1/happening/:id', (req, res) ->
-    @response.send "happening id #{@params.id}, wokring on it!"
 
   getArtistForIDGenerateIfNone = (aID, callback) -> #callback (error, artist)
     id = parseInt(aID)
@@ -531,16 +533,16 @@ tbApp = require('zappa').app ->
                   newArea = new Area {locations: [newLocation], metroAreaID: firstArea.id}
                   areaAtLocation = newArea
                 
-                areaAtLocation.save (error) =>
+                areaatlocation.save (error) =>
                   if error? == false
-                    callback areaAtLocation, null
+                    callback areaatlocation, null
                   else
                     console.log error
           
-                  if areaAtLocation == null
-                    errorMsg = "no location found for #{location}"
-                    console.log errorMsg
-                    callback null, errorMsg
+                  if areaatlocation == null
+                    errormsg = "no location found for #{location}"
+                    console.log errormsg
+                    callback null, errormsg
 
 port = if process.env.PORT > 0 then process.env.PORT else 3000
 tbApp.app.listen port

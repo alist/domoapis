@@ -1,1 +1,1 @@
-web: coffee TourBus.coffee
+web: coffee tourBus.coffee
