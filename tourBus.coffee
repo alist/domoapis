@@ -43,10 +43,11 @@ AuthorSchema = new Schema {
   authorDisplayName: String
   imageURI: String
   ratingCount: Number
+  metroAreaDisplayName: String #todo: update this with rating
 }
+
 AuthorSchema.virtual('authorID').get ->
   return this._id
-
 
 ArtistSchema = new Schema {
   artistID: {type: Number, index: {unique: true }}
@@ -64,6 +65,7 @@ VenueDef = {
   location: [Number, Number]
   displayName: {type: String, index: {unique: false}}
   metroAreaID: {type: Number, index: {unique: false}}
+  metroAreaDisplayName: String
   uri: String
 }
 
@@ -110,7 +112,46 @@ tbApp = require('zappa').app ->
   @use 'bodyParser', 'static', 'cookies', 'cookieparser'
   
   @get '/': 'time to tour'
+
+  @get '/apiv1/authors': 'not at REST'
   
+  @get '/apiv1/authors/:id', (req, res) ->
+    getAuthorAndAuthorsWithRatingsAndConcertsForRatingsWithAuthorID @params.id, (err, author, artistsWithRatings, concerts) =>
+      console.log "got stuff for authorID #{@params.id} with err #{err}: artists ct: #{artistsWithRatings.length} concert ct: #{concerts.length}"
+      if err?
+        @response.send {}
+      else
+        @response.send {authors: [author], concerts: concerts, artists: artistsWithRatings}
+
+  getAuthorAndAuthorsWithRatingsAndConcertsForRatingsWithAuthorID = (authorID, callback) -> #callback (err, author, artistsWithRatings, concertsForRatings)
+    getAuthorWithIDAndAuthorizeToken authorID, null, (err, author, authorInfo, isAuthed) =>
+      if author? == false || error?
+        callback "error getAuthorAndRatings: #{err}"
+        return
+      else
+        #here authorID it is a string-- intende?
+        Artist.find {'ratings.author.authorID': "#{authorID}"}, null, null, (err, artists) =>
+          if err?
+            callback "fetch artists with author ratings err"
+          else
+            #todo: trim the artists reviewed here
+            getConcertsRelevantToRatingsInArtistsWithAuthor artists, author, (err, concerts) =>
+              if err?
+                callback "fetch concerts relevant to artists and author err #{err}"
+              else
+                callback null, author, artists, concerts
+  
+  getConcertsRelevantToRatingsInArtistsWithAuthor = (artists, author, callback) -> #callback(err, concerts)
+    authorID = author.authorID.toString()
+    relevantConcertIDs = []
+    for artist in artists
+      for rating in artist.ratings
+        if rating.author.authorID == authorID
+          relevantConcertIDs.push rating.concertID
+    #console.log "authorID #{authorID} has relevant concertIDs #{relevantConcertIDs}"
+    Concert.find {concertID: {$in: relevantConcertIDs}}, {feedItems: 0}, null, (err, docs) =>
+      callback err, docs
+
   @get '/apiv1/concerts', (req,res) ->
     console.log req.query
     if req.query.longitude? and req.query.latitude?
@@ -215,11 +256,12 @@ tbApp = require('zappa').app ->
       authorObjID = mongoose.mongo.BSONPure.ObjectID.fromString(authorID)
     catch err
       callback "objID err: #{err} from id #{authorID}"
+      return
     Author.findOne {_id: authorObjID}, (err, author) =>
       if err?
         callback err
       else
-        authorInfo = {imageURI: author.imageURI, authorID: author.authorID.toString(), authorDisplayName: author.authorDisplayName, ratingCount: author.ratingCount}
+        authorInfo = {imageURI: author.imageURI, authorID: author.authorID.toString(), metroAreaDisplayName: author.metroAreaDisplayName, authorDisplayName: author.authorDisplayName, ratingCount: author.ratingCount}
         callback null, author, authorInfo, false
  
   feedItemsConcertWithConcertID = (concertID, lastUpdate, callback) -> #callback (error, concertWithFeed)
@@ -370,7 +412,7 @@ tbApp = require('zappa').app ->
           err = "messed up skevent ##{concertIter}..abort"
           callback err, page
           return
-        #this concert will be rejected if it already exists because of unique concertIDs, this is needed funct.!
+        #this concert will be rejected if it already exists because of unique concertIDs, this is needed funct
         artists = skEvent.performance
         artistHeadlining = artists?[0]?.displayName
         
@@ -401,7 +443,7 @@ tbApp = require('zappa').app ->
         dateTime = skEvent.start?.datetime
         if dateTime? == false
           dateTime = skEvent.start?.date
-        savingVenue = {venueID: skVenue.id, displayName: skVenue.displayName, location: location, uri: skVenue.uri, metroAreaID: skVenue.metroArea?.id}
+        savingVenue = {venueID: skVenue.id, displayName: skVenue.displayName, metroAreaDisplayName: skVenue.metroArea?.displayName, location: location, uri: skVenue.uri, metroAreaID: skVenue.metroArea?.id}
 
         savingConcert = new Concert {concertID: skEvent.id, uri: skEvent.uri, imageURI: concertImageURI,  headliner: artistHeadlining, openers: openers, artists: savingArtists, venue: savingVenue, startDateTime: dateTime, modifiedDate: new Date()}
         
