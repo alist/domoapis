@@ -41,6 +41,7 @@ RatingSchema.virtual('ratingID').get ->
 AuthorSchema = new Schema {
   modifiedDate: {type: Date, index: {unique: false}}
   authorDisplayName: String
+  twitterHandle: String
   imageURI: String
   ratingCount: Number
   metroAreaDisplayName: String #todo: update this with rating
@@ -305,6 +306,12 @@ tbApp = require('zappa').app ->
                 artist.averageRating = cumRating/ artist.ratings.length
                 artist.ratingCount = artist.ratings.length
                 
+                toSet = { ratingCount: (author.ratingCount + 1) }
+                if concert.venue?.metroAreaDisplayName? == true
+                  toSet.metroAreaDisplayName = concert.venue?.metroAreaDisplayName
+                Author.update {_id: author._id}, {$set: toSet},0, (err) ->
+                  console.log "updated author w. display name #{author.displayName} to rating count #{author.ratingCount + 1 } with error #{err}"
+  
                 #perhaps we should replace this with push when we get high load, but it takes only a few hundred miliseconds-- I can't imagine too many places with that kind of volume
                 artist.save (err, savedArt) =>
                   if err?
@@ -575,13 +582,13 @@ tbApp = require('zappa').app ->
                   newArea = new Area {locations: [newLocation], metroAreaID: firstArea.id}
                   areaAtLocation = newArea
                 
-                areaatlocation.save (error) =>
+                areaAtLocation.save (error) =>
                   if error? == false
-                    callback areaatlocation, null
+                    callback areaAtLocation, null
                   else
                     console.log error
           
-                  if areaatlocation == null
+                  if areaAtLocation == null
                     errormsg = "no location found for #{location}"
                     console.log errormsg
                     callback null, errormsg
