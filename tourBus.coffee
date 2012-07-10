@@ -160,6 +160,10 @@ tbApp = require('zappa').app ->
         console.log error, area
         concertsNearArea area, (concerts, error) =>
           console.log "found concerts count# #{concerts?.length} near id #{area.metroAreaID} with error #{ error}"
+          if error?
+            @response.contentType 'text/json'
+            @response.send {}
+            return
           getArtistsRelevantToConcerts concerts, (error, artists) =>
             console.log "found rated artists count ##{artists?.length} for concerts with error #{error}"
             @response.contentType 'text/json'
@@ -529,7 +533,9 @@ tbApp = require('zappa').app ->
                     callback null, retErr
                   else
                     concertsNearArea area, callback #we'll just get all recursive on it!
-          
+          else #respages == 0
+            retErr = "no concerts nearby for URL: #{requestURL}"
+            callback null, retErr
        else
          retErr = "bad response for URL #{requestURL}"
          callback null, retErr

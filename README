@@ -4,7 +4,11 @@ Run the app locally with the following
 coffee tourBus.coffee 
 
 Use node-inspector for realtime debugging of the server
-coffee --nodejs --debug server.coffee
+coffee --nodejs --debug tourBus.coffee
+
+run 
+node-inspector 
+in a new bash
 
 ->then open your browser to 
 http://0.0.0.0:8080/debug?port=5858
