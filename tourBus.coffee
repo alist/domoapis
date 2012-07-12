@@ -45,10 +45,10 @@ AuthorSchema = new Schema {
   imageURI: String
   ratingCount: Number
   metroAreaDisplayName: String #todo: update this with rating
+  authorID: {type: String, index: {unique: true}}
+  accessToken: {type: String}
+  facebookID: {type: Number, index: {unique: true}}
 }
-
-AuthorSchema.virtual('authorID').get ->
-  return this._id
 
 ArtistSchema = new Schema {
   artistID: {type: Number, index: {unique: true }}
@@ -116,6 +116,52 @@ tbApp = require('zappa').app ->
 
   @get '/apiv1/authors': 'not at REST'
   
+  @post '/apiv1/authors', (req, res) ->
+    fbID = req.body.facebookID
+    accessToken = req.body.facebookAccessToken
+    authCurrentAuthorWithIDAndToken fbID, accessToken, (err, author,authorInfo) =>
+      if err?
+        @response.send {}
+      else
+        @response.send {authors: [author]}
+ 
+  authCurrentAuthorWithIDAndToken = (authorID, token, callback) -> #callback(err, author, abreviatedInfo)
+    if token? == false
+      callback "no token included for authorID auth id##{authorID}"
+      return
+
+    Author.findOne {authorID: authorID},{}, (err, author) =>
+      if err? || author? == false
+        authUserWithFacebookOfIDAndToken authorID, token, (err, fbResponse) =>
+          if err?
+            callback "could not find author with id #{authorID} with error #{err}"
+          else
+            console.log "create the author!"
+            callback "aahhhH!"
+      else
+        if author.accessToken != token
+          callback "access token invalid for user id #{authorID}"
+        else
+          authorInfo = {imageURI: author.imageURI, authorID: author.authorID.toString(), metroAreaDisplayName: author.metroAreaDisplayName, authorDisplayName: author.authorDisplayName, ratingCount: author.ratingCount}
+          callback null, author, authorInfo
+  
+  authUserWithFacebookOfIDAndToken = (fbID, fbToken, callback) -> #callback (err, responseData) #with err if invalid token
+    if fbID? == false || fbToken? == false
+      callback "missing info for fb req"
+      return
+    requestURL = "https://graph.facebook.com/me?access_token=#{fbToken}"
+    console.log "doing request to fb with url: #{requestURL}"
+    request requestURL, (error, response, body) ->
+      if error? || response.statusCode != 200
+        callback "fbreq err #{error} with code #{response.statusCode}"
+        return
+      resObjects = JSON.parse body
+      if resObjects?.id != fbID
+        callback "fbreq mismatched fbID from req #{fbID} from server #{resObjects?.id}"
+        console.log "dumping response: ", resObjects
+      else
+        callback null, responseData
+
   @get '/apiv1/authors/:id', (req, res) ->
     getAuthorAndAuthorsWithRatingsAndConcertsForRatingsWithAuthorID @params.id, (err, author, artistsWithRatings, concerts) =>
       console.log "got stuff for authorID #{@params.id} with err #{err}: artists ct: #{artistsWithRatings.length} concert ct: #{concerts.length}"
@@ -125,7 +171,7 @@ tbApp = require('zappa').app ->
         @response.send {authors: [author], concerts: concerts, artists: artistsWithRatings}
 
   getAuthorAndAuthorsWithRatingsAndConcertsForRatingsWithAuthorID = (authorID, callback) -> #callback (err, author, artistsWithRatings, concertsForRatings)
-    getAuthorWithIDAndAuthorizeToken authorID, null, (err, author, authorInfo, isAuthed) =>
+    getAuthorWithID authorID, (err, author, authorInfo) =>
       if author? == false || error?
         callback "error getAuthorAndRatings: #{err}"
         return
@@ -191,7 +237,7 @@ tbApp = require('zappa').app ->
  
   @post '/apiv1/concerts/:id/feed', (req, res) ->
     lastUpdate = req.query.lastUpdateDate
-    getAuthorWithIDAndAuthorizeToken req.body.authorID, null, (err, author,authorInfo, isAuthed) =>
+    getAuthorWithID req.body.authorID, (err, author,authorInfo) =>
       console.log "new feedItem from author#{ author.authorID}"
       if @params.id?
         Concert.update {concertID: @params.id}, {$push : {feedItems: {modifiedDate: new Date(), author: authorInfo, comment: req.body.comment} }}, 0, (err) =>
@@ -255,19 +301,13 @@ tbApp = require('zappa').app ->
 
 
   ## DONE FUNCTIONS ##
-  getAuthorWithIDAndAuthorizeToken = (authorID, authorToken, callback) -> #callback(err, author, abreviatedInfo, isAuthorizedAuthor)
-    authorObjID = null
-    try
-      authorObjID = mongoose.mongo.BSONPure.ObjectID.fromString(authorID)
-    catch err
-      callback "objID err: #{err} from id #{authorID}"
-      return
-    Author.findOne {_id: authorObjID}, (err, author) =>
-      if err?
-        callback err
+  getAuthorWithID = (authorID, callback) -> #callback(err, author, abreviatedInfo)
+    Author.findOne {authorID: authorID},{accessToken:0, facebookID: 0}, (err, author) =>
+      if err? || author? == false
+        callback "could not find author of id #{authorID} with error #{err}"
       else
         authorInfo = {imageURI: author.imageURI, authorID: author.authorID.toString(), metroAreaDisplayName: author.metroAreaDisplayName, authorDisplayName: author.authorDisplayName, ratingCount: author.ratingCount}
-        callback null, author, authorInfo, false
+        callback null, author, authorInfo
  
   feedItemsConcertWithConcertID = (concertID, lastUpdate, callback) -> #callback (error, concertWithFeed)
     if lastUpdate == 0 || lastUpdate? == false
@@ -298,7 +338,7 @@ tbApp = require('zappa').app ->
         Concert.findOne {concertID: ratingPOST.concertID}, (err, concert) =>
           if concert?
 
-            getAuthorWithIDAndAuthorizeToken ratingPOST.authorID, null, (err, author, authorInfo, isAuthed) =>
+            getAuthorWithID ratingPOST.authorID, (err, author, authorInfo) =>
               if author?
                 console.log "authorID", author.authorID
                 rating = new Rating {author: authorInfo, artistID: artistID, concertDate: concert.startDateTime, concertID: concert.concertID, overallRating: ratingPOST.overallRating, stagePRating: ratingPOST.stagePRating, soundQRating: ratingPOST.soundQRating, visualsEffectsRating: ratingPOST.visualsEffectsRating, reviewText: ratingPOST.reviewText,modifiedDate: new Date()}
