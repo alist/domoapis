@@ -61,15 +61,6 @@ ArtistSchema = new Schema {
   modifiedDate: {type: Date, index: {unique: false}}
 }
 
-VenueDef = {
-  venueID: {type: Number, index: {unique: false}}
-  location: [Number, Number]
-  displayName: {type: String, index: {unique: false}}
-  metroAreaID: {type: Number, index: {unique: false}}
-  metroAreaDisplayName: String
-  uri: String
-}
-
 FeedItemSchema = new Schema {
   ratingID: String #maybe none
   comment: String #maybe none
@@ -83,6 +74,16 @@ FeedItemSchema = new Schema {
 FeedItemSchema.virtual('feedItemID').get ->
   return this._id
 
+VenueDef = {
+  venueID: {type: Number, index: {unique: false}, required: true}
+  location: [Number, Number]
+  latitude: Number
+  longitude: Number
+  displayName: {type: String, index: {unique: false}}
+  metroAreaID: {type: Number, index: {unique: false}}
+  metroAreaDisplayName: String
+  uri: String
+}
 
 ConcertSchema = new Schema {
   modifiedDate: {type: Date, index: {unique: false}}
@@ -301,6 +302,7 @@ tbApp = require('zappa').app ->
           @response.send {artists: [artist]}
         else
           @response.send {}
+
   @get '/apiv1/happening', (req, res) ->
     console.log req.query
     if req.query.longitude? and req.query.latitude?
@@ -511,6 +513,9 @@ tbApp = require('zappa').app ->
         if dateTime? == false
           dateTime = skEvent.start?.date
         savingVenue = {venueID: skVenue.id, displayName: skVenue.displayName, metroAreaDisplayName: skVenue.metroArea?.displayName, location: location, uri: skVenue.uri, metroAreaID: skVenue.metroArea?.id}
+        if skVenue.lng? && skVenue.lat?
+          savingVenue.longitude = skVenue.lng
+          savingVenue.latitude = skVenue.lat
 
         savingConcert = new Concert {concertID: skEvent.id, uri: skEvent.uri, imageURI: concertImageURI,  headliner: artistHeadlining, openers: openers, artists: savingArtists, venue: savingVenue, startDateTime: dateTime, modifiedDate: new Date()}
         
