@@ -45,7 +45,7 @@ AuthorSchema = new Schema {
   imageURI: String
   ratingCount: Number
   metroAreaDisplayName: String #todo: update this with rating
-  authorID: {type: String, index: {unique: true}}
+  authorID: {type: String, required: true, index: {unique: true}}
   accessToken: {type: String}
   facebookID: {type: Number, index: {unique: true}}
 }
@@ -116,10 +116,11 @@ tbApp = require('zappa').app ->
 
   @get '/apiv1/authors': 'not at REST'
   
-  @post '/apiv1/authors', (req, res) ->
-    fbID = req.body.facebookID
-    accessToken = req.body.facebookAccessToken
+  @get '/apiv1/authors/login', (req, res) ->
+    fbID = req.query.facebookID
+    accessToken = req.query.facebookAccessToken
     authCurrentAuthorWithIDAndToken fbID, accessToken, (err, author,authorInfo) =>
+      console.log "auth or create for id #{fbID} finished with err #{err}"
       if err?
         @response.send {}
       else
@@ -132,12 +133,25 @@ tbApp = require('zappa').app ->
 
     Author.findOne {authorID: authorID},{}, (err, author) =>
       if err? || author? == false
-        authUserWithFacebookOfIDAndToken authorID, token, (err, fbResponse) =>
+        authUserWithFacebookOfIDAndToken authorID, token, (err, fbUserID, fbResponse) =>
           if err?
-            callback "could not find author with id #{authorID} with error #{err}"
+            callback "could not find author with pre-id #{authorID} with fbID #{fbUserID} with error #{err}"
           else
-            console.log "create the author!"
-            callback "aahhhH!"
+            if authorID? == false #if prior authorID was unknown by request, we'll check to see if we have a match right now-- recursion!
+              console.log "using recursion to determine if fbUserID exists, now that we know it's #{fbUserID}"
+              authCurrentAuthorWithIDAndToken fbUserID, token, callback
+            else
+              imgURI = "https://graph.facebook.com/#{fbUserID}/picture?type=large&return_ssl_resources=1"
+              authorInfo = {authorID: fbUserID, facebookID: fbUserID, accessToken: token, imageURI: imgURI, authorDisplayName: fbResponse.name, modifiedDate: new Date()}
+              authorInfo.metroAreaDisplayName = fbResponse.location?.name
+              newAuthor = new Author authorInfo
+              console.log "create the author! with info #{authorInfo}"
+              newAuthor.save (err, savedAuthor) =>
+                if err?
+                  callback "error for author save #{err} with info #{authorInfo} savedAuthor: #{savedAuthor}"
+                else
+                  console.log "saved new author #{savedAuthor} with info #{authorInfo}, using recursion for auth"
+                  authCurrentAuthorWithIDAndToken fbUserID, token, callback
       else
         if author.accessToken != token
           callback "access token invalid for user id #{authorID}"
@@ -145,9 +159,9 @@ tbApp = require('zappa').app ->
           authorInfo = {imageURI: author.imageURI, authorID: author.authorID.toString(), metroAreaDisplayName: author.metroAreaDisplayName, authorDisplayName: author.authorDisplayName, ratingCount: author.ratingCount}
           callback null, author, authorInfo
   
-  authUserWithFacebookOfIDAndToken = (fbID, fbToken, callback) -> #callback (err, responseData) #with err if invalid token
-    if fbID? == false || fbToken? == false
-      callback "missing info for fb req"
+  authUserWithFacebookOfIDAndToken = (fbID, fbToken, callback) -> #callback (err, fbUserID, responseData) #with err if invalid token
+    if fbToken? == false
+      callback "missing token for fb req"
       return
     requestURL = "https://graph.facebook.com/me?access_token=#{fbToken}"
     console.log "doing request to fb with url: #{requestURL}"
@@ -157,10 +171,11 @@ tbApp = require('zappa').app ->
         return
       resObjects = JSON.parse body
       if resObjects?.id != fbID
-        callback "fbreq mismatched fbID from req #{fbID} from server #{resObjects?.id}"
-        console.log "dumping response: ", resObjects
+        console.log "fbreq mismatched fbID from req #{fbID} from server #{resObjects?.id}"
+      if resObjects?.id? == false
+        callback "no fbID returned for token #{fbToken}"
       else
-        callback null, responseData
+        callback null, resObjects.id, resObjects
 
   @get '/apiv1/authors/:id', (req, res) ->
     getAuthorAndAuthorsWithRatingsAndConcertsForRatingsWithAuthorID @params.id, (err, author, artistsWithRatings, concerts) =>
@@ -350,7 +365,8 @@ tbApp = require('zappa').app ->
                 artist.averageRating = cumRating/ artist.ratings.length
                 artist.ratingCount = artist.ratings.length
                 
-                toSet = { ratingCount: (author.ratingCount + 1) }
+                ratings = if author.ratingCount then author.ratingCount + 1 else 1
+                toSet = { ratingCount: ratings }
                 if concert.venue?.metroAreaDisplayName? == true
                   toSet.metroAreaDisplayName = concert.venue?.metroAreaDisplayName
                 Author.update {_id: author._id}, {$set: toSet},0, (err) ->
