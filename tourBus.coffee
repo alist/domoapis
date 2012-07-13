@@ -489,15 +489,15 @@ tbApp = require('zappa').app ->
           err = "no artists for skevent ##{concertIter} on page ##{page}"
           return
 
+        openers = ""
         if artists.length > 1
-          openers = ""
           numbersOfArtists = artists.length
           for artIt in [1..artists.length - 1]
             if artIt == 1
-              openers = openers.concat "#{artists[artIt]?.displayName}"
+              openers = artists[artIt]?.displayName
             else
               openers = openers.concat ", #{artists[artIt]?.displayName}"
-        
+
         savingArtists = []
         for artistB in artists
           artist = artistB.artist
@@ -515,23 +515,24 @@ tbApp = require('zappa').app ->
         dateTime = skEvent.start?.datetime
         if dateTime? == false
           dateTime = skEvent.start?.date
-        savingVenue = {venueID: skVenue.id, displayName: skVenue.displayName, metroAreaDisplayName: skVenue.metroArea?.displayName, location: location, uri: skVenue.uri, metroAreaID: skVenue.metroArea?.id}
+        if skVenue?.id? == false
+          console.log "no venueID for concertID #{skEvent?.id} -- skip obj# #{concertIter} of #{ (concerts.length) - 1} for page # #{page}"
+
+          return #returns through do
+        savingVenue = {venueID: skVenue.id, displayName: skVenue.displayName, metroAreaDisplayName: skVenue.metroArea?.displayName, uri: skVenue.uri, metroAreaID: skVenue.metroArea?.id}
         if skVenue.lng? && skVenue.lat?
           savingVenue.longitude = skVenue.lng
           savingVenue.latitude = skVenue.lat
+          savingVenue.location = location
 
-        savingConcert = new Concert {concertID: skEvent.id, uri: skEvent.uri, imageURI: concertImageURI,  headliner: artistHeadlining, openers: openers, artists: savingArtists, venue: savingVenue, startDateTime: dateTime, modifiedDate: new Date()}
+        savingConcert = {concertID: skEvent.id, uri: skEvent.uri, imageURI: concertImageURI,  headliner: artistHeadlining, openers: openers, artists: savingArtists, venue: savingVenue, startDateTime: dateTime, modifiedDate: new Date()}
         
-        if concertIter == concerts.length - 1
-          savingConcert.save (err) ->
-            if err?
-              console.log "noting save error obj# #{concertIter} for page # #{page}, last obj"
+        Concert.update {concertID: skEvent.id},{$set: savingConcert}, {upsert: 1}, (err) ->
+          if err?
+            console.log "noting save error obj# #{concertIter} of #{ (concerts.length) - 1} for page # #{page}"
+            console.log err, savingConcert
+          if concertIter == concerts.length - 1
             callback null, page
-        else
-          savingConcert.save (err) ->
-            if err?
-              console.log "noting save error #{err} for obj# #{concertIter} for page # #{page}"
-              #console.log err
   
   #get concerts for area (wherein we update from server as necessary)
   concertsNearArea = (area, callback) -> #callback (concerts, error)
