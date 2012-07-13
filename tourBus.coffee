@@ -493,7 +493,10 @@ tbApp = require('zappa').app ->
           openers = ""
           numbersOfArtists = artists.length
           for artIt in [1..artists.length - 1]
-            openers = openers.concat "#{artists[artIt]?.displayName} "
+            if artIt == 1
+              openers = openers.concat "#{artists[artIt]?.displayName}"
+            else
+              openers = openers.concat ", #{artists[artIt]?.displayName}"
         
         savingArtists = []
         for artistB in artists
