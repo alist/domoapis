@@ -154,8 +154,8 @@ tbApp = require('zappa').app ->
                   console.log "saved new author #{savedAuthor} with info #{authorInfo}, using recursion for auth"
                   authCurrentAuthorWithIDAndToken fbUserID, token, callback
       else
-        if author.accessToken != token
-          callback "access token invalid for user id #{authorID}"
+        if author.accessToken? == false
+          callback "no valid token for user id #{authorID}"
         else
           authorInfo = {imageURI: author.imageURI, authorID: author.authorID.toString(), metroAreaDisplayName: author.metroAreaDisplayName, authorDisplayName: author.authorDisplayName, ratingCount: author.ratingCount}
           callback null, author, authorInfo
