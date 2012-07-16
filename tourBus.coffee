@@ -392,7 +392,7 @@ tbApp = require('zappa').app ->
                     ###
                     callback null, rating, savedArt
                     
-                    feedItem = new FeedItem {dateModified: new Date(), author: authorInfo, ratingID: savedRatingID}
+                    feedItem = new FeedItem {modifiedDate: new Date(), author: authorInfo, ratingID: savedRatingID}
                     console.log "saved artist, now posting feedItem with ratingID #{savedRatingID}"
                     Concert.update {concertID: concert.concertID},{$push: { feedItems: feedItem }},0, (err) ->
                       if err?
