@@ -13,6 +13,7 @@ AreaLocationSchema.index { location: '2d' }
 AreaSchema = new Schema {
   locations : [AreaLocationSchema] #long, lat
   metroAreaID : {type: Number, index: {unique: true}}
+  displayName:  String
   concertsLastUpdated : Date
 }
 
@@ -650,7 +651,7 @@ tbApp = require('zappa').app ->
                   oldArea.locations.splice 0,0, newLocation
                   areaAtLocation = oldArea
                 else
-                  newArea = new Area {locations: [newLocation], metroAreaID: firstArea.id}
+                  newArea = new Area {locations: [newLocation], displayName: firstArea.displayName, metroAreaID: firstArea.id}
                   areaAtLocation = newArea
                 
                 areaAtLocation.save (error) =>
