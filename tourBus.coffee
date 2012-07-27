@@ -641,7 +641,7 @@ tbApp = require('zappa').app ->
          retErr = "bad response for URL #{requestURL}"
          callback null, retErr
     else
-      Concert.find {'venue.metroAreaID' : area.metroAreaID, startDateTime: {$gt: new Date()}}, {feedItems: 0}, {limit:500, sort: {startDateTime: 1}}, (err, docs) =>
+      Concert.find {'venue.metroAreaID' : area.metroAreaID, startDateTime: {$gt: new Date()}}, {feedItems: 0}, {limit:200, sort: {startDateTime: 1}}, (err, docs) =>
         if err?
           retErr =  "ConcertsNearArea retrieval error #{err}"
           callback null, retErr
