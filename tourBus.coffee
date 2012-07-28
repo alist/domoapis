@@ -204,10 +204,11 @@ tbApp = require('zappa').app ->
  
   @post '/apiv1/concerts/:id/feed', (req, res) ->
     lastUpdate = req.query.lastUpdateDate
-    #TODO: make this secure by using authCurrentAuthorWithIDAndToken
-    getAuthorWithID req.body.authorID, (err, author,authorInfo) =>
-      console.log "new feedItem from author#{ author.authorID}"
-      if @params.id?
+    fbID = req.query.authorID
+    accessToken = req.query.accessToken
+    authCurrentAuthorWithIDAndToken fbID, accessToken, (err, author,authorInfo) =>
+      if @params.id? && err? == false
+        console.log "new feedItem from author#{ author.authorID}"
         Concert.update {concertID: @params.id}, {$push : {feedItems: {modifiedDate: new Date(), author: authorInfo, comment: req.body.comment} }}, 0, (err) =>
           if err?
             console.log "adding feedItem failed w/ error #{err}"
@@ -246,15 +247,20 @@ tbApp = require('zappa').app ->
       @response.send {}
 
   @post '/apiv1/artists/:id/ratings', (req, res) ->
-    #TODO: make this secure by using authCurrentAuthorWithIDAndToken
-    console.log "new review from author#{ req.body.authorID}"
-    if @params.id
-      saveRatingWithPostData @params.id, req.body, (err, rating, artist) =>
-        console.log "post rating error #{err}", rating, artist, rating?.author
-        if err? == false
-          @response.send {artists: [artist]}
-        else
-          @response.send {}
+    fbID = req.query.authorID
+    accessToken = req.query.accessToken
+    authCurrentAuthorWithIDAndToken fbID, accessToken, (err, author,authorInfo) =>
+      if err? == false
+        console.log "new review from author#{ req.body.authorID}"
+        if @params.id
+          saveRatingWithPostData @params.id, req.body, (err, rating, artist) =>
+            console.log "post rating error #{err}", rating, artist, rating?.author
+            if err? == false
+              @response.send {artists: [artist]}
+            else
+              @response.send {}
+      else
+        @response.send {}
 
   @get '/apiv1/happening', (req, res) ->
     console.log req.query
@@ -659,88 +665,6 @@ tbApp = require('zappa').app ->
             console.log retErr
             completionFunction metroAreaID, iterator, areaIDs,  callback
  
-  #depreciated
-  #get concerts for area (wherein we update from server as necessary)
-  concertsNearArea = (area, callback) -> #callback (concerts, error)
-    if area.concertsLastUpdated? == false || new Date().getTime() - area.concertsLastUpdated.getTime() > 1000*60*60*24
-      console.log "Updating concerts for metroAreaID #{area.metroAreaID} beginning #{new Date()}"
-      requestURL = "https://api.songkick.com/api/3.0/metro_areas/#{area.metroAreaID}/calendar.json?apikey=B7tlwR9tyOXNG2qw"
-      console.log requestURL
-      request requestURL, (error, response, body) ->
-       if response.statusCode == 200
-          resObjects = JSON.parse body
-          resPage = resObjects.resultsPage
-          resCount =  resPage.totalEntries
-          resPages = Math.ceil (resCount / resPage.perPage) #page 1 is first page, not zero.
-          console.log resCount, resPage.totalEntries, resPages
-          console.log "beginning fetch/integration of #{resPages} pages for metroAreaID #{area.metroAreaID}"
-          
-          firstEvents = resObjects?.resultsPage?.results?.event
-
-          if resPages > 1
-            integrateEvents firstEvents, 1, (error, page) ->
-              console.log "integration error on page #{page} #{error}"
-            
-            for page in [2..resPages]
-              do (page) ->
-                requestURL = "https://api.songkick.com/api/3.0/metro_areas/#{area.metroAreaID}/calendar.json?apikey=B7tlwR9tyOXNG2qw&page=#{page}"
-                console.log requestURL
-                request requestURL, (error, response, body) =>
-                  pageIn = page
-                  if response.statusCode == 200
-                    resObjects = JSON.parse body
-                    resPage = resObjects.resultsPage
-                    events = resPage?.results?.event
-                    console.log "#{events?.length} events to integrate for page #{pageIn}"
-                    if page == resPages
-                      integrateEvents events, resPages, (error, page) ->
-                        console.log "integrated page# #{page}"
-                        if error?
-                          console.log "integration error on page #{page} #{error}, metroAreaID #{area.metroAreaID} update aborted"
-                        else
-                          console.log "finished updating concerts for metroAreaID #{area.metroAreaID} @ #{new Date()}"
-                          area.concertsLastUpdated = new Date()
-                          area.save (error) =>
-                            if error?
-                              retErr = "updating concertslastupdated error #{error}"
-                              callback null, retErr
-                            else
-                              concertsNearArea area, callback #we'll just get all recursive on it!
-
-                    else
-                      integrateEvents events, page, (error, page) ->
-                        if error?
-                          console.log "integration error on page #{page} #{error}"
-                      
-          else if resPages == 1
-            integrateEvents firstEvents, 1, (error, page) ->
-              if error?
-                console.log "integration error on page #{page} #{error}, metroAreaID #{area.metroAreaID} update aborted"
-              else
-                area.concertsLastUpdated = new Date()
-                area.save (error) =>
-                  if error?
-                    retErr = "updating concertslastupdated error #{error}"
-                    callback null, retErr
-                  else
-                    concertsNearArea area, callback #we'll just get all recursive on it!
-          else #respages == 0
-            retErr = "no concerts nearby for URL: #{requestURL}"
-            callback null, retErr
-       else
-         retErr = "bad response for URL #{requestURL}"
-         callback null, retErr
-    else
-      Concert.find {'venue.metroAreaID' : area.metroAreaID, startDateTime: {$gt: new Date()}}, {feedItems: 0}, {limit:200, sort: {startDateTime: 1}}, (err, docs) =>
-        if err?
-          retErr =  "ConcertsNearArea retrieval error #{err}"
-          callback null, retErr
-        else if docs?
-          callback docs, null
-        else
-          retErr = "No concerts, but no retrieval errors"
-          callback null, retErr
-
   #gets all songkick metro ids at location
   metroAreaIDsAtLocation = (location, callback) -> #callback (error, firstArea, metroIDs)
     requestURL = "https://api.songkick.com/api/3.0/search/locations.json?apikey=B7tlwR9tyOXNG2qw&location=geo:#{location[1]},#{location[0]}"
@@ -762,56 +686,6 @@ tbApp = require('zappa').app ->
         callback null, firstArea, metroIDs
       else
         callback "bad response for metroId lookup"
-
-  #depriciated
-  #gets nearest location, or asks songkick for it
-  areaNearestLocation = (location, callback) -> #callback (area, error)
-    maxDistanceRadial = 5 * 1/6378 #in radial coord km/radiusEarth *ONLY WORKS ON EARTH*
-    areaAtLocation = null
-    if location?
-      Area.find { "locations.location" : { $nearSphere : location, $maxDistance : maxDistanceRadial }}, (err, docs) =>
-        if err?
-          console.log "error on area location lookup #{err}"
-          callback err, null
-          return
-        if docs?[0]?
-          console.log docs
-          areaAtLocation = docs[0]
-          callback areaAtLocation, null
-    
-        #songkick request
-        if areaAtLocation == null
-          requestURL = "https://api.songkick.com/api/3.0/search/locations.json?apikey=B7tlwR9tyOXNG2qw&location=geo:#{location[1]},#{location[0]}"
-          console.log requestURL
-          request requestURL, (error,response,body) =>
-            
-            if response.statusCode == 200
-              resObjects = JSON.parse body
-              firstArea = resObjects?.resultsPage?.results?.location?[0]?.metroArea
-              console.log firstArea
-              if firstArea? == false
-                callback null, "no area returned error"
-                return
-              
-              newLocation = new AreaLocation {location: location}
-              Area.findOne { "metroAreaID" : firstArea.id}, (err, oldArea) =>
-                if oldArea?
-                  oldArea.locations.splice 0,0, newLocation
-                  areaAtLocation = oldArea
-                else
-                  newArea = new Area {locations: [newLocation], displayName: firstArea.displayName, metroAreaID: firstArea.id}
-                  areaAtLocation = newArea
-                
-                areaAtLocation.save (error) =>
-                  if error? == false
-                    callback areaAtLocation, null
-                  else
-                    console.log error
-          
-                  if areaAtLocation == null
-                    errormsg = "no location found for #{location}"
-                    console.log errormsg
-                    callback null, errormsg
 
 port = if process.env.PORT > 0 then process.env.PORT else 3000
 tbApp.app.listen port
