@@ -121,12 +121,22 @@ tbApp = require('zappa').app ->
   @get '/apiv1/authors/login', (req, res) ->
     fbID = req.query.facebookID
     accessToken = req.query.facebookAccessToken
+    if accessToken? == false
+      accessToken = req.query.accessToken
+    twitterHandle = req.query.twitterHandle
+    
     authCurrentAuthorWithIDAndToken fbID, accessToken, (err, author,authorInfo) =>
       console.log "auth or create for id #{fbID} finished with err #{err}"
       if err?
         @response.send {}
       else
-        @response.send {authors: [author]}
+        if twitterHandle?
+          author.twitterHandle =  twitterHandle
+          author.save (err, savedAuthor) =>
+            console.log "did set twitter handle for authorID #{author.authorID}"
+            @response.send {authors: [author]}
+        else
+          @response.send {authors: [author]}
  
   @get '/apiv1/authors/:id', (req, res) ->
     getAuthorAndAuthorsWithRatingsAndConcertsForRatingsWithAuthorID @params.id, (err, author, artistsWithRatings, concerts) =>
@@ -154,31 +164,6 @@ tbApp = require('zappa').app ->
       @response.contentType 'text/json'
       @response.send {}
      
-  processCheckinRequest = (fbID, accessToken, concertID, wantsCheckIn, callback) -> #callback (didCheckIn, concert)
-    Concert.findOne {concertID: concertID},{feedItems: {$slice:-20}}, (err, concert) =>
-      if concert? == false
-        callback false
-      else
-        authCurrentAuthorWithIDAndToken fbID, accessToken, (err, author,authorInfo) =>
-          if err?
-            callback false, concert
-          else
-            if wantsCheckIn?
-              Concert.update {"concertID": concertID}, {$push : {authorsCheckedIn: authorInfo}}, 0, (err) =>
-                if err?
-                  console.log "adding checkInAuthor failed w/ error #{err}"
-                  callback false, concert
-                else
-                  console.log "added checkedIn author id# #{fbID}"
-                  Concert.findOne {concertID: concertID},{feedItems: {$slice:-20}}, (err, concertRefresh) =>
-                    if concertRefresh?
-                      callback true, concertRefresh
-                    else
-                      console.log "critical: deleted concert during check-in"
-                      callback true, concert
-            else
-              callback false, concert
-
   @get '/apiv1/concerts/:id', (req, res) ->
     lastUpdate = req.query.lastUpdateDate
     fbID = req.query.authorID
@@ -277,6 +262,31 @@ tbApp = require('zappa').app ->
 
 
   ## DONE FUNCTIONS ##
+  processCheckinRequest = (fbID, accessToken, concertID, wantsCheckIn, callback) -> #callback (didCheckIn, concert)
+    Concert.findOne {concertID: concertID},{feedItems: {$slice:-20}}, (err, concert) =>
+      if concert? == false
+        callback false
+      else
+        authCurrentAuthorWithIDAndToken fbID, accessToken, (err, author,authorInfo) =>
+          if err?
+            callback false, concert
+          else
+            if wantsCheckIn?
+              Concert.update {"concertID": concertID}, {$push : {authorsCheckedIn: authorInfo}}, 0, (err) =>
+                if err?
+                  console.log "adding checkInAuthor failed w/ error #{err}"
+                  callback false, concert
+                else
+                  console.log "added checkedIn author id# #{fbID}"
+                  Concert.findOne {concertID: concertID},{feedItems: {$slice:-20}}, (err, concertRefresh) =>
+                    if concertRefresh?
+                      callback true, concertRefresh
+                    else
+                      console.log "critical: deleted concert during check-in"
+                      callback true, concert
+            else
+              callback false, concert
+
   getAuthorAndAuthorsWithRatingsAndConcertsForRatingsWithAuthorID = (authorID, callback) -> #callback (err, author, artistsWithRatings, concertsForRatings)
     getAuthorWithID authorID, (err, author, authorInfo) =>
       if author? == false || error?
@@ -325,6 +335,10 @@ tbApp = require('zappa').app ->
         if author.accessToken? == false
           callback "no valid token for user id #{authorID}"
         else
+          if author.accessToken? != token
+            author.accessToken = token
+            author.save (err) =>
+              console.log "updated token for authorID #{author.authorID} w. error #{err}"
           authorInfo = {imageURI: author.imageURI, authorID: author.authorID.toString(), metroAreaDisplayName: author.metroAreaDisplayName, authorDisplayName: author.authorDisplayName, ratingCount: parseInt(author.ratingCount)}
           callback null, author, authorInfo
   
