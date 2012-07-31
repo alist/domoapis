@@ -114,8 +114,11 @@ tbApp = require('zappa').app ->
   mongoose.connect(secrets.mongoDBConnectURLSecret)
   @use 'bodyParser', 'static', 'cookies', 'cookieparser'
 
-  @get '/': ->
-    @render index: {}
+  @get '/': -> @render index: {}
+      
+  @get '/faq': -> @render faq: {}
+
+  @get '/contact': -> @render contact: {}
 
   @get '/apiv1/authors': 'not at REST'
   

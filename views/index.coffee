@@ -1,11 +1,12 @@
 @title = 'TourBus App'
 @stylesheets = ['/css/style']
 
-div '#header', ->
-  img (id:"indexLogo",src:"/img/tourbusIndexLogo.png")
+div '#indexHeader', ->
+  a href: "/", ->
+    img (id:"indexLogo",src:"/img/tourbusIndexLogo.png")
 
 
-div '#center', ->
+div '#indexCenter', ->
   div '#centerContent', ->
     div '#indexAppDemo', ->
     div '#description', ->
@@ -14,7 +15,7 @@ div '#center', ->
         img (src:"/img/tourbusIndexAppStoreButton.png")
 
 div '#footerDisclaimer', ->
-  a '#footerlink', href: '/faq', -> 'FAQ'
-  text ' | '
-  a '#footerlink', href: '/contact', -> 'Contact Us'
+  a '#footerLink', href: '/faq', -> 'FAQ'
+  p '#footerLink', -> ' | '
+  a '#footerLink', href: '/contact', -> 'Contact Us'
   p '#allrightsFooter', -> '© 2012 TourBus LLC. All rights reserved.'

@@ -95,35 +95,81 @@ a img {
 }
 html {
   background: #354a4c;
+  height: 100%;
 }
 body {
   color: #fff;
-  font-family: 'Futura', sans-serif;
+  font-family: 'Helvetica', sans-serif;
   margin: 0 auto;
   background: transparent;
+  height: 100%;
 }
-#header {
+#stdHeader {
+  height: 61px;
+  max-height: 61px;
+  background-image: url("/img/tourbusStdHeaderBG.png");
+  background-repeat: repeat-x;
+}
+#stdHeaderContent {
+  margin-left: auto;
+  margin-right: auto;
+  width: 830px;
+  padding-top: 12px;
+}
+#contentBox {
+  width: 100%;
+  min-height: 100%;
+  height: auto;
+  background: #fff;
+}
+#content {
+  margin-left: auto;
+  margin-right: auto;
+  width: 830px;
+}
+#indexHeader {
   margin-left: auto;
   margin-right: auto;
   width: 830px;
   height: 165px;
 }
-#header #indexLogo {
+#indexHeader #indexLogo {
   margin-top: 45px;
 }
-#center {
+#headerLinks {
+  width: 659px;
+  float: right;
+  display: inline;
+  margin-top: 11px;
+  text-align: left;
+  height: 32px;
+  min-height: 32px;
+  font-size: 11pt;
+}
+#headerLink,
+#footerLink {
+  margin-right: 15px;
+  display: inline;
+}
+.headerSeperator {
+  padding-top: 5px;
+}
+.currentHeaderLink {
+  color: #de4044;
+}
+#indexCenter {
   margin-left: auto;
   margin-right: auto;
   background-image: url("/img/tourbusIndexBackgroundBar.png");
   background-repeat: repeat-x;
   height: 280px;
 }
-#center #centerContent {
+#indexCenter #centerContent {
   margin-left: auto;
   margin-right: auto;
   width: 830px;
 }
-#center #description {
+#indexCenter #description {
   padding-top: 60px;
   width: 375px;
   height: 81px;
@@ -131,8 +177,25 @@ body {
   background-repeat: no-repeat;
   background-position: center bottom;
 }
-#center #appStore {
+#indexCenter #appStore {
   padding-top: 20px;
+}
+#faqInfoText {
+  width: 568px;
+  height: 666px;
+  margin-bottom: 112px;
+  background-image: url("/img/tourbusFAQInfoText.png");
+  background-repeat: no-repeat;
+  background-position: center bottom;
+}
+#stdAllrightsFooter {
+  width: 830px;
+  text-align: right;
+  color: #414042;
+  font-size: 10pt;
+  padding-bottom: 30px;
+  margin-left: auto;
+  margin-right: auto;
 }
 #allrightsFooter {
   text-align: right;
