@@ -1,0 +1,82 @@
+@import '/usr/local/lib/node_modules/nib/lib/nib'
+
+global-reset()
+
+blue = #377ad0 
+ 
+*
+  margin 0
+  padding 0
+
+html
+  background #354a4c
+
+body
+  color white
+  font-family 'Futura', sans-serif
+  margin 0 auto
+  background transparent
+
+
+#header
+  margin-left auto
+  margin-right auto
+  width 830px
+  height 165px
+  #indexLogo
+    margin-top 45px
+
+#center
+  margin-left auto
+  margin-right auto
+  background-image url("/img/tourbusIndexBackgroundBar.png")
+  background-repeat repeat-x
+  height 280px
+  #centerContent
+    margin-left auto
+    margin-right auto
+    width 830px
+  #description
+    padding-top 60px
+    width 375px
+    height 81px
+    background-image url("/img/tourbusIndexInfoText.png")
+    background-repeat no-repeat
+    background-position center bottom
+  #appStore
+    padding-top 20px
+  
+#allrightsFooter
+  text-align right
+  float right
+  display inline
+
+#indexAppDemo
+  float right
+  width 390px
+  height 562px
+  margin-top -65px
+  margin-left auto
+  margin-right auto
+  background-image url("/img/tourbusIndexAppDemo.png")
+  background-repeat no-repeat
+  background-position center right
+  border none
+
+#footerDisclaimer
+  width 830px
+  text-align left
+  margin-top 240px
+  line-height: 1.5
+  font-size 12px
+  margin-left auto
+  margin-right auto
+
+a
+  color white
+  text-decoration none
+  position relative
+  &:hover
+    text-decoration underline
+  &:active
+    top 1px

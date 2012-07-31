@@ -113,8 +113,9 @@ Concert = mongoose.model 'Concert', ConcertSchema
 tbApp = require('zappa').app ->
   mongoose.connect(secrets.mongoDBConnectURLSecret)
   @use 'bodyParser', 'static', 'cookies', 'cookieparser'
-  
-  @get '/': 'time to tour'
+
+  @get '/': ->
+    @render index: {}
 
   @get '/apiv1/authors': 'not at REST'
   
