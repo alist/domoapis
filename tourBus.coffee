@@ -119,9 +119,11 @@ tbApp = require('zappa').app ->
   @get '/faq': -> @render faq: {}
 
   @get '/contact': -> @render contact: {}
+  
+  @get '/ratings/:id': -> @render rating: {}
 
   @get '/apiv1/authors': 'not at REST'
-  
+
   @get '/apiv1/authors/login', (req, res) ->
     fbID = req.query.facebookID
     accessToken = req.query.facebookAccessToken
