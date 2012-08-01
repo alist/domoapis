@@ -15,7 +15,7 @@ div '#stdHeader', ->
 div '#contentBox', ->
   div '#content', ->
     div '#contactUsHeader', ->
-    div '#contactUsText', ->
+    div '#infoText', ->
       b "Feedback"
       p ->
         text "We’d love to hear what you have to think about TourBus. <br />"

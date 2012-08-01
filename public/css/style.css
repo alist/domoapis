@@ -199,32 +199,36 @@ body {
   background-repeat: no-repeat;
   background-position: left bottom;
 }
-#contactUsText {
+#infoText {
   margin-top: 35px;
+  width: 570px;
   color: #414042;
   font-size: 9pt;
   line-height: 1.5;
 }
-#contactUsText b {
+#infoText ol {
+  list-style: initial;
+  margin-left: 23px;
+}
+#infoText b {
   color: #de4044;
   margin-bottom: 7px;
   margin-top: 12px;
   font-size: 10.5pt;
   line-height: 2;
 }
-#contactUsText a {
+#infoText a {
   color: #de4044;
 }
-#contactUsText p {
+#infoText p {
   margin-bottom: 12px;
 }
-#faqInfoText {
+#faqInfoTextHeader {
   width: 568px;
-  height: 666px;
-  margin-bottom: 112px;
-  background-image: url("/img/tourbusFAQInfoText.png");
+  height: 71px;
+  background-image: url("/img/tourbusFAQInfoTextHeader.png");
   background-repeat: no-repeat;
-  background-position: center bottom;
+  background-position: bottom left;
 }
 #stdAllrightsFooter {
   width: 830px;
@@ -234,6 +238,7 @@ body {
   padding-bottom: 30px;
   margin-left: auto;
   margin-right: auto;
+  margin-top: 100px;
 }
 #allrightsFooter {
   text-align: right;
