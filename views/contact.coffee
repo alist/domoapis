@@ -14,5 +14,22 @@ div '#stdHeader', ->
 
 div '#contentBox', ->
   div '#content', ->
-    div '#faqInfoText', ->
+    div '#contactUsHeader', ->
+    div '#contactUsText', ->
+      b "Feedback"
+      p ->
+        text "We’d love to hear what you have to think about TourBus. <br />"
+        text "For all feedback, please contact us at "
+        a href: 'mailto:feedback@tourb.us', -> 'feedback@tourb.us'
+      
+      b 'Technical Support'
+      p ->
+        text "For any technical issues, please contact us at "
+        a href: 'mailto:support@tourb.us', -> 'support@tourb.us'
+      
+      b 'Press'
+      p ->
+        text "For all media inquiries, please contact us at "
+        a href: 'mailto:press@tourb.us', -> 'support@tourb.us'
+     
     div '#stdAllrightsFooter', -> '© 2012 TourBus LLC. All rights reserved.'

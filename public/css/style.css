@@ -99,10 +99,23 @@ html {
 }
 body {
   color: #fff;
-  font-family: 'Helvetica', sans-serif;
+  font-family: 'Interstate', 'Helvetica', sans-serif;
   margin: 0 auto;
   background: transparent;
   height: 100%;
+}
+@font-face {
+  font-family: 'Interstate';
+  src: url("/fonts/Interstate.eot");
+/* IE */
+  src: local('Interstate'), url("/fonts/Interstate.ttf") format('truetype');
+}
+@font-face {
+  font-family: 'Interstate';
+  src: url("/fonts/Interstate-bold.eot");
+/* IE */
+  src: local('Interstate'), url("/fonts/Interstate-bold.ttf") format('truetype');
+  font-weight: bold;
 }
 #stdHeader {
   height: 61px;
@@ -179,6 +192,31 @@ body {
 }
 #indexCenter #appStore {
   padding-top: 20px;
+}
+#contactUsHeader {
+  height: 66px;
+  background-image: url("/img/tourbusContactUsTextHeader.png");
+  background-repeat: no-repeat;
+  background-position: left bottom;
+}
+#contactUsText {
+  margin-top: 35px;
+  color: #414042;
+  font-size: 9pt;
+  line-height: 1.5;
+}
+#contactUsText b {
+  color: #de4044;
+  margin-bottom: 7px;
+  margin-top: 12px;
+  font-size: 10.5pt;
+  line-height: 2;
+}
+#contactUsText a {
+  color: #de4044;
+}
+#contactUsText p {
+  margin-bottom: 12px;
 }
 #faqInfoText {
   width: 568px;
