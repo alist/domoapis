@@ -117,6 +117,13 @@ body {
   src: local('Interstate'), url("/fonts/Interstate-bold.ttf") format('truetype');
   font-weight: bold;
 }
+@font-face {
+  font-family: 'Interstate';
+  src: url("/fonts/Interstate-light.eot");
+/* IE */
+  src: local('Interstate'), url("/fonts/Interstate-light.ttf") format('truetype');
+  font-weight: italic;
+}
 #stdHeader {
   height: 61px;
   max-height: 61px;
@@ -224,7 +231,12 @@ body {
 #infoText p {
   margin-bottom: 12px;
 }
-#ratingDisplay {
+#ratingsAppStorePrompt {
+  float: right;
+  display: inline;
+  margin-top: 59px;
+}
+#ratingContainer {
   width: 504px;
   height: 426px;
   background-image: url("/img/tourbusRatingsRatingBG.png");
@@ -234,6 +246,41 @@ body {
   margin-right: auto;
   margin-top: 21px;
   margin-bottom: 78px;
+}
+#ratingContainer #ratingDisplay {
+  color: #414042;
+  margin-left: 27px;
+  padding-top: 15px;
+  width: 450px;
+  height: 380px;
+}
+#ratingContainer #ratingArtistName {
+  color: #fff;
+  height: 41px;
+  padding-left: 24px;
+  padding-top: 10px;
+}
+#ratingContainer #ratingArtistName b {
+  font-size: 15pt;
+}
+#ratingContainer #ratingConcertInfo {
+  padding-left: 24px;
+  height: 21px;
+}
+#ratingContainer #ratingConcertInfo b {
+  padding-right: 5px;
+  display: inline;
+}
+#ratingContainer #artistImage {
+  width: 130px;
+  height: 130px;
+  margin: 18px;
+  background-color: #f00;
+}
+#ratingContainer #ratingRatings {
+  width: 260px;
+  display: inline;
+  float: right;
 }
 #faqInfoTextHeader {
   width: 568px;
