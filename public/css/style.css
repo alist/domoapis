@@ -122,7 +122,7 @@ body {
   src: url("/fonts/Interstate-light.eot");
 /* IE */
   src: local('Interstate'), url("/fonts/Interstate-light.ttf") format('truetype');
-  font-weight: italic;
+  font-weight: lighter;
 }
 #stdHeader {
   height: 61px;
@@ -254,9 +254,13 @@ body {
   width: 450px;
   height: 380px;
 }
+#ratingContainer #ratingAndArtistTop {
+  width: 450px;
+  height: 150px;
+}
 #ratingContainer #ratingArtistName {
   color: #fff;
-  height: 41px;
+  height: 38px;
   padding-left: 24px;
   padding-top: 10px;
 }
@@ -265,7 +269,7 @@ body {
 }
 #ratingContainer #ratingConcertInfo {
   padding-left: 24px;
-  height: 21px;
+  height: 24px;
 }
 #ratingContainer #ratingConcertInfo b {
   padding-right: 5px;
@@ -274,13 +278,48 @@ body {
 #ratingContainer #artistImage {
   width: 130px;
   height: 130px;
-  margin: 18px;
-  background-color: #f00;
+  margin-left: 18px;
+  margin-top: 18px;
+  float: left;
+  background-color: #de4044;
 }
 #ratingContainer #ratingRatings {
-  width: 260px;
+  font-size: 12pt;
+  width: 240px;
   display: inline;
   float: right;
+  margin-right: 44px;
+  margin-top: 28px;
+}
+#ratingContainer #ratingLine {
+  margin-bottom: 14px;
+}
+#ratingContainer #ratingImage {
+  margin-top: -3px;
+  float: right;
+}
+#ratingContainer #ratingComment {
+  display: block;
+  margin-left: 18px;
+  margin-right: 18px;
+  margin-top: 14px;
+  font-weight: lighter;
+  font-size: 11pt;
+  line-height: 1.2;
+  height: 95px;
+  overflow: scroll;
+}
+#ratingContainer #authorAndRatings {
+  margin-left: 18px;
+  margin-top: 14px;
+}
+#ratingContainer #authorAndRatings b {
+  font-size: 11pt;
+}
+#ratingContainer #authorAndRatings #ratingCount {
+  display: inline;
+  color: #de4044;
+  margin-left: 5px;
 }
 #faqInfoTextHeader {
   width: 568px;

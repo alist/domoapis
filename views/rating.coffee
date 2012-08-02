@@ -21,9 +21,22 @@ div '#ratingContainer', ->
       div '#artistImage', ->
       div '#ratingRatings', ->
         div '#ratingLine', ->
-          b "overall rating"
-          img (id: "ratingImage", class: "rating4", src: "/img/rating4.png")
-
+          b "overall rating:"
+          img (id: "ratingImage", src: "/img/rating/5.png")
+        div '#ratingLine', ->
+          b "stage presence:"
+          img (id: "ratingImage", src: "/img/rating/0.png")
+        div '#ratingLine', ->
+          b "sound quality:"
+          img (id: "ratingImage", src: "/img/rating/2.png")
+        div '#ratingLine', ->
+          b "visuals/effects:"
+          img (id: "ratingImage", src: "/img/rating/3.png")
+    div '#ratingComment', ->
+      p "Great Scott is a live music venue in Allston, MA. It is located at 1222 Commonwealth Avenue at the corner of Harvard Avenue. The venue is currently home to a wide range of live acts with a focus on live indie/rock and DJ based dance nights... Great Scott is a live music venue in Allston, MA. It is located at 1222 Commonwealth Avenue at the corner of Harvard Avenue. The venue is currently home to a wide range of live acts with a focus on live indie/rock and DJ based dance nights."
+    div '#authorAndRatings', ->
+      b "by Author With A very Very Long name"
+      p '#ratingCount', -> '(167 ratings)'
 
 div '#footerDisclaimer', ->
   a '#footerLink', href: '/', -> 'Home'

@@ -3,6 +3,7 @@
 global-reset()
 
 blue = #377ad0 
+tbRed = #de4044
  
 *
   margin 0
@@ -34,7 +35,7 @@ body
   font-family 'Interstate'
   src url("/fonts/Interstate-light.eot"); /* IE */
   src local('Interstate'), url('/fonts/Interstate-light.ttf') format('truetype');
-  font-weight italic
+  font-weight lighter
 
 #stdHeader
   height 61px
@@ -83,7 +84,7 @@ body
 .headerSeperator
   padding-top 5px
 .currentHeaderLink
-  color #de4044
+  color tbRed
 
 #indexCenter
   margin-left auto
@@ -122,13 +123,13 @@ body
     list-style initial
     margin-left 23px
   b
-    color #de4044
+    color tbRed
     margin-bottom 7px
     margin-top 12px
     font-size 10.5pt
     line-height 2
   a
-    color #de4044 
+    color tbRed 
   p
     margin-bottom 12px
 
@@ -153,28 +154,60 @@ body
     padding-top 15px
     width 450px
     height 380px
+  #ratingAndArtistTop
+    width 450px
+    height 150px
   #ratingArtistName
     color white
-    height 41px
+    height 38px
     padding-left 24px
     padding-top 10px
     b
       font-size 15pt
   #ratingConcertInfo
     padding-left 24px
-    height 21px
+    height 24px
     b
       padding-right 5px
       display inline
   #artistImage
     width 130px
     height 130px
-    margin 18px
-    background-color red
+    margin-left 18px
+    margin-top 18px
+    float left
+    background-color tbRed
   #ratingRatings
-    width 260px
+    font-size 12pt
+    width 240px
     display inline
     float right
+    margin-right 44px
+    margin-top 28px
+  #ratingLine
+    margin-bottom 14px
+  #ratingImage
+    margin-top -3px
+    float right
+  #ratingComment
+    display block
+    margin-left 18px
+    margin-right 18px
+    margin-top 14px
+    font-weight lighter
+    font-size 11pt
+    line-height 1.2
+    height 95px
+    overflow scroll
+  #authorAndRatings
+    margin-left 18px
+    margin-top 14px
+    b
+      font-size 11pt
+    #ratingCount
+      display inline
+      color tbRed
+      margin-left 5px
 
 #faqInfoTextHeader
   width 568px
