@@ -120,7 +120,32 @@ tbApp = require('zappa').app ->
 
   @get '/contact': -> @render contact: {}
   
-  @get '/ratings/:id': -> @render rating: {}
+  @get '/ratings/:id': ->
+    objID = null
+    try
+      objID = mongoose.mongo.BSONPure.ObjectID.fromString(@params.id)
+    catch err
+      console.log "objID err: #{err} from publicid #{@params.id}"
+    
+    Artist.findOne {'ratings._id': objID}, null, (error, artist) =>
+      if error? || artist? == false
+        console.log "failed fetch artists with rating id #{objID} with error #{error}"
+        @redirect '/'
+      else
+        theRating = null
+        for rating in artist?.ratings
+          if rating._id.toString() == objID.toString()
+            theRating = rating
+            break
+        authID = theRating.author?.authorID
+        Author.findOne {authorID: authID},{}, (err, author) =>
+          if author? == false
+            console.log "no author found with id #{authID}"
+            author = theRating?.author
+          Concert.findOne {concertID: theRating?.concertID}, null, (cErr, concert) =>
+            if concert? == false
+              concert = null
+            @render rating: {artist: artist, rating: theRating, author: author, concert: concert}
 
   @get '/apiv1/authors': 'not at REST'
 
@@ -557,12 +582,12 @@ tbApp = require('zappa').app ->
         savingArtists = []
         for artistB in artists
           artist = artistB.artist
-          artistImageURI = "http://topimage.herokuapp.com/#{artist.displayName}"
+          artistImageURI = "http://topimage.herokuapp.com/#{artist.displayName} album"
           artistImageURI = artistImageURI.replace /\ /g, "-"
           savingArtists.push {displayName: artist.displayName, uri: artist.uri, imageURI: artistImageURI, artistID: artist.id}
 
         skVenue = skEvent.venue
-        concertImageURI = "http://topimage.herokuapp.com/#{artistHeadlining}"
+        concertImageURI = "http://topimage.herokuapp.com/#{artistHeadlining} album"
         concertImageURI = concertImageURI.replace /\ /g, "-"
 
         if skVenue.lng? && skVenue.lat?

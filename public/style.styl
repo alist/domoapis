@@ -4,10 +4,11 @@ global-reset()
 
 blue = #377ad0 
 tbRed = #de4044
- 
+tbBlack = #414042 
 *
   margin 0
   padding 0
+  border 0
 
 html
   background #354a4c
@@ -40,7 +41,7 @@ body
 #stdHeader
   height 61px
   max-height 61px
-  background-image url("/img/tourbusStdHeaderBG.png")
+  background-image url("/img/tourbusstdheaderbg.png")
   background-repeat repeat-x
 
 #stdHeaderContent
@@ -116,7 +117,7 @@ body
 #infoText
   margin-top 35px
   width 570px
-  color #414042
+  color tbBlack
   font-size 9pt
   line-height 1.5
   ol
@@ -149,7 +150,7 @@ body
   margin-top 21px
   margin-bottom 78px
   #ratingDisplay
-    color #414042
+    color tbBlack
     margin-left 27px
     padding-top 15px
     width 450px
@@ -165,6 +166,7 @@ body
     b
       font-size 15pt
   #ratingConcertInfo
+    overflow hidden
     padding-left 24px
     height 24px
     b
@@ -176,7 +178,7 @@ body
     margin-left 18px
     margin-top 18px
     float left
-    background-color tbRed
+    background-color tbBlack
   #ratingRatings
     font-size 12pt
     width 240px
@@ -219,7 +221,7 @@ body
 #stdAllrightsFooter
   width 830px
   text-align right
-  color #414042 
+  color tbBlack 
   font-size 10pt
   padding-bottom 30px
   margin-left auto

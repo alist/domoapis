@@ -92,6 +92,7 @@ a img {
 * {
   margin: 0;
   padding: 0;
+  border: 0;
 }
 html {
   background: #354a4c;
@@ -127,7 +128,7 @@ body {
 #stdHeader {
   height: 61px;
   max-height: 61px;
-  background-image: url("/img/tourbusStdHeaderBG.png");
+  background-image: url("/img/tourbusstdheaderbg.png");
   background-repeat: repeat-x;
 }
 #stdHeaderContent {
@@ -268,6 +269,7 @@ body {
   font-size: 15pt;
 }
 #ratingContainer #ratingConcertInfo {
+  overflow: hidden;
   padding-left: 24px;
   height: 24px;
 }
@@ -281,7 +283,7 @@ body {
   margin-left: 18px;
   margin-top: 18px;
   float: left;
-  background-color: #de4044;
+  background-color: #414042;
 }
 #ratingContainer #ratingRatings {
   font-size: 12pt;

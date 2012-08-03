@@ -13,30 +13,43 @@ div '#indexHeader', ->
 div '#ratingContainer', ->
   div '#ratingDisplay', ->
     div '#ratingArtistName', ->
-      b "Two Door Cinema Club"
+      b @artist.displayName
+
     div '#ratingConcertInfo', ->
-      b "6/24/2012"
-      text "House of Blues, Boston, MA"
+      day = @concert?.startDateTime?.getDay() + 1
+      month = @concert?.startDateTime?.getMonth() + 1
+      year = @concert?.startDateTime?.getFullYear()
+      dateStr = "#{day}/#{month}/#{year}"
+      b dateStr
+      venueStr = "#{@concert?.venue?.displayName}, #{@concert?.venue?.metroAreaDisplayName}"
+      text venueStr
     div '#ratingAndArtistTop', ->
-      div '#artistImage', ->
+      img (id: 'artistImage', src: @artist.imageURI)
       div '#ratingRatings', ->
         div '#ratingLine', ->
           b "overall rating:"
-          img (id: "ratingImage", src: "/img/rating/5.png")
+          img (id: "ratingImage", src: "/img/rating/#{@rating.overallRating}.png")
         div '#ratingLine', ->
           b "stage presence:"
-          img (id: "ratingImage", src: "/img/rating/0.png")
+          img (id: "ratingImage", src: "/img/rating/#{@rating.stagePRating}.png")
         div '#ratingLine', ->
           b "sound quality:"
-          img (id: "ratingImage", src: "/img/rating/2.png")
+          img (id: "ratingImage", src: "/img/rating/#{@rating.soundQRating}.png")
         div '#ratingLine', ->
           b "visuals/effects:"
-          img (id: "ratingImage", src: "/img/rating/3.png")
+          img (id: "ratingImage", src: "/img/rating/#{@rating.visualsEffectsRating}.png")
+    
     div '#ratingComment', ->
-      p "Great Scott is a live music venue in Allston, MA. It is located at 1222 Commonwealth Avenue at the corner of Harvard Avenue. The venue is currently home to a wide range of live acts with a focus on live indie/rock and DJ based dance nights... Great Scott is a live music venue in Allston, MA. It is located at 1222 Commonwealth Avenue at the corner of Harvard Avenue. The venue is currently home to a wide range of live acts with a focus on live indie/rock and DJ based dance nights."
+      p @rating.reviewText
+
     div '#authorAndRatings', ->
-      b "by Author With A very Very Long name"
-      p '#ratingCount', -> '(167 ratings)'
+      b @author.authorDisplayName
+
+      ratings = @author?.ratingCount
+      ratingString = "(#{ratings} ratings)"
+      if ratings == 1
+        ratingString = "(#{ratings} rating)"
+      p '#ratingCount', -> ratingString
 
 div '#footerDisclaimer', ->
   a '#footerLink', href: '/', -> 'Home'
