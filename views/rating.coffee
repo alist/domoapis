@@ -24,21 +24,21 @@ div '#ratingContainer', ->
       venueStr = "#{@concert?.venue?.displayName}, #{@concert?.venue?.metroAreaDisplayName}"
       text venueStr
     div '#ratingAndArtistTop', ->
-      img (id: 'artistImage', src: @artist.imageURI)
-      div '#ratingRatings', ->
-        div '#ratingLine', ->
-          b "overall rating:"
-          img (id: "ratingImage", src: "/img/rating/#{@rating.overallRating}.png")
-        div '#ratingLine', ->
-          b "stage presence:"
-          img (id: "ratingImage", src: "/img/rating/#{@rating.stagePRating}.png")
-        div '#ratingLine', ->
-          b "sound quality:"
-          img (id: "ratingImage", src: "/img/rating/#{@rating.soundQRating}.png")
-        div '#ratingLine', ->
-          b "visuals/effects:"
-          img (id: "ratingImage", src: "/img/rating/#{@rating.visualsEffectsRating}.png")
-    
+        div (id: 'artistImage', style:"background-image: url('#{@artist.imageURI}')"), ->
+        div '#ratingRatings', ->
+          div '#ratingLine', ->
+            b "overall rating:"
+            img (id: "ratingImage", src: "/img/rating/#{@rating.overallRating}.png")
+          div '#ratingLine', ->
+            b "stage presence:"
+            img (id: "ratingImage", src: "/img/rating/#{@rating.stagePRating}.png")
+          div '#ratingLine', ->
+            b "sound quality:"
+            img (id: "ratingImage", src: "/img/rating/#{@rating.soundQRating}.png")
+          div '#ratingLine', ->
+            b "visuals/effects:"
+            img (id: "ratingImage", src: "/img/rating/#{@rating.visualsEffectsRating}.png")
+      
     div '#ratingComment', ->
       p @rating.reviewText
 
