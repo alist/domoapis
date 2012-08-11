@@ -25,6 +25,8 @@ div '#ratingContainer', ->
       text venueStr
     div '#ratingAndArtistTop', ->
         div (id: 'artistImage', style:"background-image: url('#{@artist.imageURI}')"), ->
+        #div '#image1', ->
+        #  img (id: 'artistImage', src:@artist.imageURI), ->
         div '#ratingRatings', ->
           div '#ratingLine', ->
             b "overall rating:"
