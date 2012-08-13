@@ -4,9 +4,9 @@
 div '#indexHeader', ->
   a href: "/", ->
     img (id:"indexLogo",src:"/img/tourbusIndexLogo.png")
-  div '#ratingsAppStorePrompt', ->
-    a href:"http://itunes.com/app/tourbus", ->
-      img (src:"/img/tourbusIndexAppStoreButton.png")
+#  div '#ratingsAppStorePrompt', ->
+#    a href:"http://itunes.com/app/tourbus", ->
+#      img (src:"/img/tourbusIndexAppStoreButton.png")
 
 
 
@@ -25,8 +25,6 @@ div '#ratingContainer', ->
       text venueStr
     div '#ratingAndArtistTop', ->
         div (id: 'artistImage', style:"background-image: url('#{@artist.imageURI}')"), ->
-        #div '#image1', ->
-        #  img (id: 'artistImage', src:@artist.imageURI), ->
         div '#ratingRatings', ->
           div '#ratingLine', ->
             b "overall rating:"
@@ -45,7 +43,7 @@ div '#ratingContainer', ->
       p @rating.reviewText
 
     div '#authorAndRatings', ->
-      b @author.authorDisplayName
+      b "by #{@author.authorDisplayName}"
 
       ratings = @author?.ratingCount
       ratingString = "(#{ratings} ratings)"
@@ -54,11 +52,12 @@ div '#ratingContainer', ->
       p '#ratingCount', -> ratingString
 
 div '#footerDisclaimer', ->
-  a '#footerLink', href: '/', -> 'Home'
-  p '#footerLink', -> ' | '
-  a '#footerLink', href: '/faq', -> 'FAQ'
-  p '#footerLink', -> ' | '
-  a '#footerLink', href: '/contact', -> 'Contact Us'
-  p '#allrightsFooter', ->
-      b '©'
-      text ' 2012 TourBus LLC. All rights reserved.'
+  div '#footerLinks', ->
+    a '#footerLink', href: '/', -> 'Home'
+    p '#footerLink', -> ' | '
+    a '#footerLink', href: '/faq', -> 'FAQ'
+    p '#footerLink', -> ' | '
+    a '#footerLink', href: '/contact', -> 'Contact Us'
+    p '#allrightsFooter', ->
+        b '©'
+        text ' 2012 TourBus LLC. All rights reserved.'

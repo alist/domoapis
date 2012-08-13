@@ -30,7 +30,7 @@ div '#contentBox', ->
       b 'Press'
       p ->
         text "For all media inquiries, please contact us at "
-        a href: 'mailto:press@tourb.us', -> 'support@tourb.us'
+        a href: 'mailto:press@tourb.us', -> 'press@tourb.us'
      
     div '#stdAllrightsFooter', ->
       b '©'

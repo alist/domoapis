@@ -131,6 +131,9 @@ body {
   background-image: url("/img/tourbusStdHeaderBG.png");
   background-repeat: repeat-x;
 }
+#stdLogo {
+  margin-left: -5px;
+}
 #stdHeaderContent {
   margin-left: auto;
   margin-right: auto;
@@ -155,10 +158,11 @@ body {
   height: 165px;
 }
 #indexHeader #indexLogo {
-  margin-top: 45px;
+  margin-top: 42px;
+  margin-left: -5px;
 }
 #headerLinks {
-  width: 659px;
+  width: 664px;
   float: right;
   display: inline;
   margin-top: 11px;
@@ -167,7 +171,20 @@ body {
   min-height: 32px;
   font-size: 11pt;
 }
-#headerLink,
+#headerLink {
+  margin-right: 15px;
+  display: inline;
+  text-shadow: 0 0px 6px #000;
+}
+.headerSeperator {
+  padding-top: 5px;
+}
+.currentHeaderLink {
+  color: #de4044;
+}
+#footerLinks {
+  margin-left: 3px;
+}
 #footerLink {
   margin-right: 15px;
   display: inline;
@@ -192,7 +209,8 @@ body {
   width: 830px;
 }
 #indexCenter #description {
-  padding-top: 60px;
+  padding-top: 56px;
+  padding-left: 1px;
   width: 375px;
   height: 81px;
   background-image: url("/img/tourbusIndexInfoText.png");
@@ -200,7 +218,8 @@ body {
   background-position: center bottom;
 }
 #indexCenter #appStore {
-  padding-top: 20px;
+  padding-top: 17px;
+  margin-left: 1px;
 }
 #contactUsHeader {
   height: 66px;
@@ -209,11 +228,11 @@ body {
   background-position: left bottom;
 }
 #infoText {
-  margin-top: 35px;
+  margin-top: 29px;
   width: 580px;
   color: #414042;
   font-size: 9pt;
-  line-height: 1.5;
+  line-height: 1.4;
 }
 #infoText ol {
   list-style: initial;
@@ -222,7 +241,7 @@ body {
 }
 #infoText b {
   color: #de4044;
-  margin-bottom: 7px;
+  margin-bottom: 4px;
   margin-top: 12px;
   font-size: 10.5pt;
   line-height: 2;
@@ -246,8 +265,8 @@ body {
   background-position: center center;
   margin-left: auto;
   margin-right: auto;
-  margin-top: 21px;
-  margin-bottom: 78px;
+  margin-top: 20px;
+  margin-bottom: 74px;
 }
 #ratingContainer #ratingDisplay {
   color: #414042;
@@ -263,7 +282,7 @@ body {
 #ratingContainer #ratingArtistName {
   color: #fff;
   height: 38px;
-  padding-left: 24px;
+  padding-left: 18px;
   padding-top: 10px;
 }
 #ratingContainer #ratingArtistName b {
@@ -271,7 +290,7 @@ body {
 }
 #ratingContainer #ratingConcertInfo {
   overflow: hidden;
-  padding-left: 24px;
+  padding-left: 18px;
   height: 24px;
 }
 #ratingContainer #ratingConcertInfo b {
@@ -290,20 +309,17 @@ body {
   background-size: cover;
   background-repeat: no-repeat;
   background-position: center center;
-  -webkit-box-shadow: 2px 2px 2px #414042;
-  -moz-box-shadow: 2px 2px 2px #414042;
-  box-shadow: 2px 2px 2px #414042;
 }
 #ratingContainer #ratingRatings {
   font-size: 12pt;
   width: 240px;
   display: inline;
   float: right;
-  margin-right: 44px;
-  margin-top: 28px;
+  margin-right: 41px;
+  margin-top: 32px;
 }
 #ratingContainer #ratingLine {
-  margin-bottom: 14px;
+  margin-bottom: 11px;
 }
 #ratingContainer #ratingImage {
   margin-top: -3px;
@@ -313,18 +329,16 @@ body {
   display: block;
   margin-left: 18px;
   margin-right: 18px;
-  margin-top: 14px;
+  margin-top: 11px;
   font-weight: lighter;
   font-size: 11pt;
-  line-height: 1.2;
+  line-height: 1.3;
   height: 95px;
-  overflow: scroll;
+  overflow: auto;
 }
 #ratingContainer #authorAndRatings {
   margin-left: 18px;
   margin-top: 14px;
-}
-#ratingContainer #authorAndRatings b {
   font-size: 11pt;
 }
 #ratingContainer #authorAndRatings #ratingCount {
@@ -356,14 +370,17 @@ body {
   text-align: right;
   float: right;
   display: inline;
+  margin-right: 6px;
+}
+#allrightsFooter b {
+  font-family: 'Helvetica';
 }
 #indexAppDemo {
   float: right;
   width: 390px;
   height: 562px;
-  margin-top: -65px;
-  margin-left: auto;
-  margin-right: auto;
+  margin-top: -58px;
+  margin-right: -1px;
   background-image: url("/img/tourbusIndexAppDemo.png");
   background-repeat: no-repeat;
   background-position: center right;
@@ -374,6 +391,7 @@ body {
   text-align: left;
   line-height: 1.5;
   font-size: 12px;
+  margin-top: 5px;
   margin-left: auto;
   margin-right: auto;
 }
