@@ -20,7 +20,7 @@ div '#contentBox', ->
       p ->
         text "TourBus is an app that helps you discover the best live bands by providing ratings and reviews by other music fans of their past performances."
       b "How does it work?"
-      p -> ol ->
+      ol ->
        li "First, you'll check into a concert on your iPhone."
        li "From there, you'll be able to share your opinion on the artists by rating them right in the moment."
        li "Then there’s SoundBoard, an ongoing discussion forum for each concert where you can interact with other people at the show and read their reviews as they happen."
@@ -39,12 +39,6 @@ div '#contentBox', ->
         text "All of the basic concert information (artist, venue, date) comes from the outstanding folks at Songkick. <br />"
         text "The rest of the ratings and reviews come from our loyal fan base."
    
-      b "Who do I contact if I have a technical problem?"
-      p ->
-        text "For any technical issues, please see our "
-        a href: '/contact/', -> 'contact us '
-        text "page."
-
       b "When will TourBus be available on other devices?"
       p ->
         text "We will explore adapting TourBus for other devices as soon as we feel that the iPhone experience is as solid as possible."
@@ -54,4 +48,6 @@ div '#contentBox', ->
         text "We are currently not hiring, but check back for job postings as they become available."
 
  
-    div '#stdAllrightsFooter', -> '© 2012 TourBus LLC. All rights reserved.'
+    div '#stdAllrightsFooter', ->
+      b '©'
+      text ' 2012 TourBus LLC. All rights reserved.'

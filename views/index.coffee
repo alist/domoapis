@@ -18,4 +18,6 @@ div '#footerDisclaimer', ->
   a '#footerLink', href: '/faq', -> 'FAQ'
   p '#footerLink', -> ' | '
   a '#footerLink', href: '/contact', -> 'Contact Us'
-  p '#allrightsFooter', -> '© 2012 TourBus LLC. All rights reserved.'
+  p '#allrightsFooter', ->
+    b '©'
+    text ' 2012 TourBus LLC. All rights reserved.'

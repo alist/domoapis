@@ -128,7 +128,7 @@ body {
 #stdHeader {
   height: 61px;
   max-height: 61px;
-  background-image: url("/img/tourbusstdheaderbg.png");
+  background-image: url("/img/tourbusStdHeaderBG.png");
   background-repeat: repeat-x;
 }
 #stdHeaderContent {
@@ -210,7 +210,7 @@ body {
 }
 #infoText {
   margin-top: 35px;
-  width: 570px;
+  width: 580px;
   color: #414042;
   font-size: 9pt;
   line-height: 1.5;
@@ -218,6 +218,7 @@ body {
 #infoText ol {
   list-style: initial;
   margin-left: 23px;
+  margin-bottom: 12px;
 }
 #infoText b {
   color: #de4044;
@@ -347,6 +348,9 @@ body {
   margin-left: auto;
   margin-right: auto;
   margin-top: 100px;
+}
+#stdAllrightsFooter b {
+  font-family: 'Helvetica';
 }
 #allrightsFooter {
   text-align: right;

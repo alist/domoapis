@@ -32,4 +32,6 @@ div '#contentBox', ->
         text "For all media inquiries, please contact us at "
         a href: 'mailto:press@tourb.us', -> 'support@tourb.us'
      
-    div '#stdAllrightsFooter', -> '© 2012 TourBus LLC. All rights reserved.'
+    div '#stdAllrightsFooter', ->
+      b '©'
+      text ' 2012 TourBus LLC. All rights reserved.'
