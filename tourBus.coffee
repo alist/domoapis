@@ -582,7 +582,7 @@ tbApp = require('zappa').app ->
         savingArtists = []
         for artistB in artists
           artist = artistB.artist
-          artistImageURI = "http://topimage.herokuapp.com/#{artist.displayName} album"
+          artistImageURI = "http://topimage.herokuapp.com/#{artist.displayName} music"
           artistImageURI = artistImageURI.replace /\ /g, "-"
           savingArtists.push {displayName: artist.displayName, uri: artist.uri, imageURI: artistImageURI, artistID: artist.id}
 
