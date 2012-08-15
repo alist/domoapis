@@ -100,10 +100,14 @@ html {
 }
 body {
   color: #fff;
-  font-family: 'Interstate', 'Helvetica', sans-serif;
+  font-family: 'Interstate-Light', 'Helvetica', sans-serif;
   margin: 0 auto;
   background: transparent;
   height: 100%;
+}
+body b {
+  font-family: 'Interstate';
+  font-weight: normal;
 }
 @font-face {
   font-family: 'Interstate';
@@ -170,6 +174,7 @@ body {
   height: 32px;
   min-height: 32px;
   font-size: 11pt;
+  font-family: 'Interstate';
 }
 #headerLink {
   margin-right: 15px;
@@ -353,7 +358,7 @@ body {
   background-repeat: no-repeat;
   background-position: bottom left;
 }
-#stdAllrightsFooter {
+#stdAllRightsFooter {
   width: 830px;
   text-align: right;
   color: #414042;
@@ -363,7 +368,7 @@ body {
   margin-right: auto;
   margin-top: 100px;
 }
-#stdAllrightsFooter b {
+#stdAllRightsFooter font-family 'Interstate-Light' b {
   font-family: 'Helvetica';
 }
 #allrightsFooter {
@@ -371,6 +376,7 @@ body {
   float: right;
   display: inline;
   margin-right: 6px;
+  font-family: 'Interstate-Light';
 }
 #allrightsFooter b {
   font-family: 'Helvetica';
@@ -394,6 +400,7 @@ body {
   margin-top: 5px;
   margin-left: auto;
   margin-right: auto;
+  font-family: 'Interstate';
 }
 a {
   color: #fff;
