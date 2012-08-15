@@ -142,11 +142,12 @@ body b {
   margin-left: auto;
   margin-right: auto;
   width: 830px;
-  padding-top: 12px;
+  padding-top: 11px;
 }
 #contentBox {
   width: 100%;
   min-height: 100%;
+  padding-left: 18px;
   height: auto;
   background: #fff;
 }
@@ -159,7 +160,7 @@ body b {
   margin-left: auto;
   margin-right: auto;
   width: 830px;
-  height: 165px;
+  height: 162px;
 }
 #indexHeader #indexLogo {
   margin-top: 42px;
@@ -203,7 +204,7 @@ body b {
 #indexCenter {
   margin-left: auto;
   margin-right: auto;
-  margin-bottom: 240px;
+  margin-bottom: 244px;
   background-image: url("/img/tourbusIndexBackgroundBar.png");
   background-repeat: repeat-x;
   height: 280px;
@@ -223,17 +224,17 @@ body b {
   background-position: center bottom;
 }
 #indexCenter #appStore {
-  padding-top: 17px;
+  padding-top: 20px;
   margin-left: 1px;
 }
 #contactUsHeader {
-  height: 66px;
+  height: 62px;
   background-image: url("/img/tourbusContactUsTextHeader.png");
   background-repeat: no-repeat;
   background-position: left bottom;
 }
 #infoText {
-  margin-top: 29px;
+  margin-top: 21px;
   width: 580px;
   color: #414042;
   font-size: 9pt;
@@ -271,7 +272,7 @@ body b {
   margin-left: auto;
   margin-right: auto;
   margin-top: 20px;
-  margin-bottom: 74px;
+  margin-bottom: 79px;
 }
 #ratingContainer #ratingDisplay {
   color: #414042;
@@ -306,7 +307,7 @@ body b {
   width: 130px;
   height: 130px;
   overflow: hidden;
-  margin-left: 18px;
+  margin-left: 19px;
   margin-top: 18px;
   float: left;
   -webkit-background-size: cover;
@@ -321,13 +322,13 @@ body b {
   display: inline;
   float: right;
   margin-right: 41px;
-  margin-top: 32px;
+  margin-top: 34px;
 }
 #ratingContainer #ratingLine {
   margin-bottom: 11px;
 }
 #ratingContainer #ratingImage {
-  margin-top: -3px;
+  margin-top: -4px;
   float: right;
 }
 #ratingContainer #ratingComment {
@@ -343,7 +344,7 @@ body b {
 }
 #ratingContainer #authorAndRatings {
   margin-left: 18px;
-  margin-top: 14px;
+  margin-top: 18px;
   font-size: 11pt;
 }
 #ratingContainer #authorAndRatings #ratingCount {
@@ -353,19 +354,18 @@ body b {
 }
 #faqInfoTextHeader {
   width: 568px;
-  height: 71px;
+  height: 67px;
   background-image: url("/img/tourbusFAQInfoTextHeader.png");
   background-repeat: no-repeat;
   background-position: bottom left;
 }
 #stdAllRightsFooter {
-  width: 830px;
+  width: 813px;
   text-align: right;
   color: #414042;
   font-size: 10pt;
   padding-bottom: 30px;
-  margin-left: auto;
-  margin-right: auto;
+  padding-right: 17px;
   margin-top: 100px;
 }
 #stdAllRightsFooter font-family 'Interstate-Light' b {
@@ -385,7 +385,7 @@ body b {
   float: right;
   width: 390px;
   height: 562px;
-  margin-top: -58px;
+  margin-top: -72px;
   margin-right: -1px;
   background-image: url("/img/tourbusIndexAppDemo.png");
   background-repeat: no-repeat;
