@@ -403,7 +403,7 @@ tbApp = require('zappa').app ->
     Concert.find {concertID: {$in: relevantConcertIDs}}, {feedItems: 0}, null, (err, docs) =>
       callback err, docs
 
- getAuthorWithID = (authorID, callback) -> #callback(err, author, abreviatedInfo)
+  getAuthorWithID = (authorID, callback) -> #callback(err, author, abreviatedInfo)
     Author.findOne {authorID: authorID},{accessToken:0, facebookID: 0}, (err, author) =>
       if err? || author? == false
         callback "could not find author of id #{authorID} with error #{err}"
