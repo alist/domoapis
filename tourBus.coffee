@@ -550,7 +550,7 @@ tbApp = require('zappa').app ->
       callback err, docs
 
   #integrates the concerts updated from songkick with the existing server data 
-  integrateEvents = (concerts, page, callback) -> #callback (error, page)
+  integrateEvents = (concerts, page, defaultLocation, callback) -> #callback (error, page)
     if concerts? == false || concerts.length == 0
       err = "bad concerts data provided integration error"
       callback err, page
@@ -596,15 +596,21 @@ tbApp = require('zappa').app ->
         dateTime = skEvent.start?.datetime
         if dateTime? == false
           dateTime = skEvent.start?.date
+
         if skVenue?.id? == false
           console.log "no venueID for concertID #{skEvent?.id} -- skip obj# #{concertIter} of #{ (concerts.length) - 1} for page # #{page}"
-
           return #returns through do
+
         savingVenue = {venueID: skVenue.id, displayName: skVenue.displayName, metroAreaDisplayName: skVenue.metroArea?.displayName, uri: skVenue.uri, metroAreaID: skVenue.metroArea?.id}
         if skVenue.lng? && skVenue.lat?
           savingVenue.longitude = skVenue.lng
           savingVenue.latitude = skVenue.lat
           savingVenue.location = location
+        else
+          savingVenue.longitude = defaultLocation[0]
+          savingVenue.latitude = defaultLocation[1]
+          savingVenue.location = defaultLocation
+          console.log "no location for concertID #{skEvent?.id}  -- setting default for obj# #{concertIter} of #{ (concerts.length) - 1} for page # #{page}"
 
         savingConcert = {concertID: skEvent.id, uri: skEvent.uri, imageURI: concertImageURI,  headliner: artistHeadlining, openers: openers, artists: savingArtists, venue: savingVenue, startDateTime: dateTime, modifiedDate: new Date()}
         
@@ -629,10 +635,11 @@ tbApp = require('zappa').app ->
             console.log "got #{metroIDs?.length} metro ids at loc with error #{error} and firstArea #{firstArea}"
             console.log metroIDs
             if metroIDs?.length > 0 && firstArea? == true
-              updateConcertsWithMetroAreaIDs metroIDs, (err) =>
+              updateConcertsWithMetroAreaIDs metroIDs, location, (err) =>
                 console.log "did update metroAreaIDs with err #{err}"
                 areaInfo = {concertsLastUpdated: new Date(), location: location, displayName: firstArea.displayName}
                 criteria = { "location" : { $nearSphere : location, $maxDistance : radialKM * 5 }}
+                #find the nearest 'area' and set it as updated, if it's within 5km, otherwise create one
                 Area.update criteria, {$set: areaInfo},{upsert: 1}, (err) ->
                   if err?
                     returnErr = "error #{err} updating area #{area}"
@@ -646,7 +653,7 @@ tbApp = require('zappa').app ->
           Concert.find {"venue.location": {$nearSphere: location, $maxDistance: radialKM * 50}, startDateTime: {$gt: new Date()}}, {feedItems: 0}, {limit:200, sort: {startDateTime: 1}}, (err, concerts) =>
             callback err, concerts
 
-  updateConcertsWithMetroAreaIDs = (areaIDs, callback) -> #callback (err)
+  updateConcertsWithMetroAreaIDs = (areaIDs, updateCentralLocation, callback) -> #callback (err)
     completionFunction = (metroAreaID, iterator, areaIDs,  theCallback) ->
       console.log "finished updating concerts for ##{iterator} of #{areaIDs.length} metroAreaIDs #{metroAreaID} @ #{new Date()}"
       if iterator == areaIDs.length
@@ -671,7 +678,7 @@ tbApp = require('zappa').app ->
             firstEvents = resObjects?.resultsPage?.results?.event
 
             if resPages > 1
-              integrateEvents firstEvents, 1, (error, page) ->
+              integrateEvents firstEvents, 1, updateCentralLocation, (error, page) ->
                 console.log "integration error on page #{page} #{error}"
               
               for page in [2..resPages]
@@ -686,18 +693,18 @@ tbApp = require('zappa').app ->
                       events = resPage?.results?.event
                       console.log "#{events?.length} events to integrate for page #{pageIn}"
                       if page == resPages
-                        integrateEvents events, resPages, (error, page) ->
+                        integrateEvents events, resPages, updateCentralLocation, (error, page) ->
                           console.log "integrated page# #{page}"
                           if error?
                             console.log "integration error on page #{page} #{error}, metroAreaID #{metroAreaID} update aborted"
                           completionFunction metroAreaID, iterator, areaIDs,  callback
                       else
-                        integrateEvents events, page, (error, page) ->
+                        integrateEvents events, page, updateCentralLocation, (error, page) ->
                           if error?
                             console.log "integration error on page #{page} #{error}"
                         
             else if resPages == 1
-              integrateEvents firstEvents, 1, (error, page) ->
+              integrateEvents firstEvents, 1, updateCentralLocation, (error, page) ->
                 if error?
                   console.log "integration error on page #{page} #{error}, metroAreaID #{metroAreaID} update aborted"
                 completionFunction metroAreaID, iterator, areaIDs,  callback
