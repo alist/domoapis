@@ -126,6 +126,8 @@ tbApp = require('zappa').app ->
       objID = mongoose.mongo.BSONPure.ObjectID.fromString(@params.id)
     catch err
       console.log "objID err: #{err} from publicid #{@params.id}"
+      @redirect '/'
+      return
     
     Artist.findOne {'ratings._id': objID}, null, (error, artist) =>
       if error? || artist? == false
@@ -137,7 +139,7 @@ tbApp = require('zappa').app ->
           if rating._id.toString() == objID.toString()
             theRating = rating
             break
-        authID = theRating.author?.authorID
+        authID = theRating?.author?.authorID
         Author.findOne {authorID: authID},{}, (err, author) =>
           if author? == false
             console.log "no author found with id #{authID}"
@@ -291,7 +293,9 @@ tbApp = require('zappa').app ->
   @get '/apiv1/happening/:id', (req, res) ->
     @response.send "happening id #{@params.id}, wokring on it!"
 
-
+  @get '/:id': ->
+    @redirect "/ratings/#{@params.id}"
+ 
   ## DONE FUNCTIONS ##
   processCheckinRequest = (fbID, accessToken, concertID, wantsCheckIn, callback) -> #callback (didCheckIn, concert)
     Concert.findOne {concertID: concertID},{feedItems: {$slice:-20}}, (err, concert) =>
