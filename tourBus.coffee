@@ -171,7 +171,7 @@ tbApp = require('zappa').app ->
  
   @get '/apiv1/authors/:id', (req, res) ->
     getAuthorAndAuthorsWithRatingsAndConcertsForRatingsWithAuthorID @params.id, (err, author, artistsWithRatings, concerts) =>
-      console.log "got stuff for authorID #{@params.id} with err #{err}: artists ct: #{artistsWithRatings.length} concert ct: #{concerts.length}"
+      console.log "got stuff for authorID #{@params.id} with err #{err}: artists ct: #{artistsWithRatings?.length} concert ct: #{concerts?.length}"
       if err?
         @response.send {}
       else
