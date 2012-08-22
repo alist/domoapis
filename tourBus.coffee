@@ -654,8 +654,8 @@ tbApp = require('zappa').app ->
             else
               callback "no metroArea at location coord"
         else
-          Concert.find {"venue.location": {$nearSphere: location, $maxDistance: radialKM * 50}, startDateTime: {$gt: new Date()}}, {feedItems: 0}, {limit:200, sort: {startDateTime: 1}}, (err, concerts) =>
-            callback err, concerts
+          Concert.find {"venue.location": {$nearSphere: location, $maxDistance: radialKM * 50}, startDateTime: {$gt: new Date()}}, {feedItems: 0}, {limit:10000, sort: {startDateTime: 1}}, (err, concerts) =>
+            callback err, concerts?.slice 0, 200
 
   updateConcertsWithMetroAreaIDs = (areaIDs, updateCentralLocation, callback) -> #callback (err)
     completionFunction = (metroAreaID, iterator, areaIDs,  theCallback) ->
