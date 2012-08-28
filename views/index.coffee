@@ -1,5 +1,5 @@
 @title = 'TourBus App'
-@stylesheets = ['/css/style']
+@stylesheets = ['/css/style','/css/bootstrap.min']
 
 div '#indexHeader', ->
   a href: "/", ->
