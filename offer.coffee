@@ -6,14 +6,30 @@ Schema = mongoose.Schema
 ObjectId = mongoose.SchemaTypes.ObjectId
 
 #authors use non-int ids
+OfferGroupDef = {
+  twilioNumber: {type: String, index: {unique: false}}
+  groupDisplayName: {type: String}
+  groupCreationDate: {type: Date, index: {unique: false}}
+  subscribers: [{authorID: {type: String, index: {unique: false}}},
+                 authorDisplayName: String
+                 modifiedDate: {type: Date, index: {unique: false}}
+               ]
+}
+
 AuthorSchema = new Schema {
   modifiedDate: {type: Date, index: {unique: false}}
   authorDisplayName: String
   imageURI: String
   authorID: {type: String, required: true, index: {unique: true}}
+
   fbAccessToken: {type: String}
   facebookID: {type: Number, index: {unique: true}}
+
   activeSessionIDs: [ {type: String, index: {unique: true}} ]
+  telephoneNumber: {type: String, index: {unique: true}}
+  telephoneVerifyDate: {type: Date}
+
+  friendGroups: [OfferGroupDef]
 }
 
 FeedItemSchema = new Schema {
@@ -34,26 +50,30 @@ FeedItem = mongoose.model 'FeedItem', FeedItemSchema
 
 offerApp = require('zappa').app ->
   mongoose.connect(secrets.mongoDBConnectURLSecret)
-  @use 'bodyParser', 'static', 'cookies', 'cookieparser'
+  @use 'bodyParser', 'static', 'cookies', 'cookieParser', session: {secret: secrets.sessionSecret}
 
+  crypto = require('crypto')
+  
   @get '/': -> @render index: {}
       
 
   @get '/login', (req, res) ->
-    accessToken = req.query.token
+    fbAccessToken = req.query.token
+    sessionToken = @request.cookies?.sessiontoken
     
-    authCurrentAuthorWithIDAndToken fbID, accessToken, (err, author,authorInfo) =>
-      console.log "auth or create for id #{fbID} finished with err #{err}"
+    if sessionToken? == false
+      current_date = (new Date()).valueOf().toString()
+      random = Math.random().toString()
+      hash = crypto.createHash('sha1').update(current_date + random).digest('hex')
+      newToken = "OFFER_#{hash}"
+ 
+  
+    authCurrentAuthorWithIDAndTokenForSession null, fbAccessToken, sessionToken, (err, author) =>
+      console.log "auth or create for sessionid# #{sessionToken} finished with err #{err}"
       if err?
         @response.send {}
       else
-        if twitterHandle?
-          author.twitterHandle =  twitterHandle
-          author.save (err, savedAuthor) =>
-            console.log "did set twitter handle for authorID #{author.authorID}"
-            @response.send {authors: [author]}
-        else
-          @response.send {authors: [author]}
+        @response.send {authors: [author]}
  
   @get '/apiv1/authors/:id', (req, res) ->
     getAuthorAndAuthorsWithRatingsAndConcertsForRatingsWithAuthorID @params.id, (err, author, artistsWithRatings, concerts) =>
@@ -63,106 +83,6 @@ offerApp = require('zappa').app ->
       else
         @response.send {authors: [author], concerts: concerts, artists: artistsWithRatings}
 
-  @get '/apiv1/concerts', (req,res) ->
-    console.log req.query
-    if req.query.longitude? and req.query.latitude?
-      getConcertsNearLocation [parseFloat(req.query.longitude),parseFloat( req.query.latitude)], (error, concerts) =>
-        console.log "found concerts count# #{concerts?.length} near with error #{ error}"
-        if error?
-          @response.contentType 'text/json'
-          @response.send {}
-          return
-        else
-          getArtistsRelevantToConcerts concerts, (error, artists) =>
-            console.log "found rated artists count ##{artists?.length} for concerts with error #{error}"
-            @response.contentType 'text/json'
-            @response.send {concerts: concerts, artists: artists}
-    else
-      @response.contentType 'text/json'
-      @response.send {}
-     
-  @get '/apiv1/concerts/:id', (req, res) ->
-    lastUpdate = req.query.lastUpdateDate
-    fbID = req.query.authorID
-    accessToken = req.query.accessToken
-    checkInRequest = req.query.checkIn
-    processCheckinRequest fbID, accessToken, @params.id, checkInRequest, (didCheckIn, concert) =>
-      console.log "did checkin #{didCheckIn} for id #{@params.id}"
-      if concert?
-        getArtistsRelevantToConcerts [concert], (error, artists) =>
-          @response.contentType 'text/json'
-          @response.send {concerts: [concert], artists: artists}
-      else
-        @response.send {}
-
-  @get '/apiv1/concerts/:id/feed', (req, res) ->
-    lastUpdate = req.query.lastUpdateDate
-    feedItemsConcertWithConcertID @params.id, lastUpdate, (error, concertWithFeed) =>
-      console.log "sending relevant response for feedItems after error #{error}",  concertWithFeed
-      if concertWithFeed
-        @response.send concertWithFeed
-      else
-        @response.send {}
- 
-  @post '/apiv1/concerts/:id/feed', (req, res) ->
-    lastUpdate = req.query.lastUpdateDate
-    fbID = req.query.authorID
-    accessToken = req.query.accessToken
-    authCurrentAuthorWithIDAndToken fbID, accessToken, (err, author,authorInfo) =>
-      if @params.id? && err? == false
-        console.log "new feedItem from author#{ author.authorID}"
-        Concert.update {concertID: @params.id}, {$push : {feedItems: {modifiedDate: new Date(), author: authorInfo, comment: req.body.comment} }}, 0, (err) =>
-          if err?
-            console.log "adding feedItem failed w/ error #{err}"
-            @response.send {}
-          else
-            feedItemsConcertWithConcertID @params.id, lastUpdate, (error, concertWithFeed) =>
-              console.log "sending relevant response for feedpost after error #{error}", concertWithFeed
-              if concertWithFeed
-                @response.send concertWithFeed
-              else
-                @response.send {}
-      else
-        @response.send {}
-  
-  @get '/apiv1/artists/:id', (req, res) ->
-    if @params.id
-      getArtistForIDGenerateIfNone @params.id, (error, artist) =>
-        console.log "got artist for id #{@params.id} with error #{error}"
-        if artist
-          @response.send {artists: [artist]}
-        else
-          @response.send {}
-    else
-      @response.send {}
-
-  
-  @get '/apiv1/artists/:id/ratings', (req, res) ->
-    if @params.id
-      getArtistForIDGenerateIfNone @params.id, (error, artist) =>
-        console.log "got artist for id #{@params.id} with error #{error}"
-        if artist
-          @response.send {artists: [artist]}
-        else
-          @response.send {}
-    else
-      @response.send {}
-
-  @post '/apiv1/artists/:id/ratings', (req, res) ->
-    fbID = req.query.authorID
-    accessToken = req.query.accessToken
-    authCurrentAuthorWithIDAndToken fbID, accessToken, (err, author,authorInfo) =>
-      if err? == false
-        console.log "new review from author#{ req.body.authorID}"
-        if @params.id
-          saveRatingWithPostData @params.id, req.body, (err, rating, artist) =>
-            console.log "post rating error #{err}", rating, artist, rating?.author
-            if err? == false
-              @response.send {artists: [artist]}
-            else
-              @response.send {}
-      else
-        @response.send {}
 
   @get '/apiv1/happening', (req, res) ->
     console.log req.query
@@ -176,23 +96,26 @@ offerApp = require('zappa').app ->
 
 
   ## DONE FUNCTIONS ##
-  authCurrentAuthorWithIDAndToken = (authorID, token, callback) -> #callback(err, author, abreviatedInfo)
-    if token? == false
-      callback "no token included for authorID auth id##{authorID}"
+  authCurrentAuthorWithIDAndTokenForSession = (authorID, fbAToken, sessionToken, callback) -> #callback(err, author)
+    if sessionToken? == false
+      callback "no sessionToken included for authorID author lookup"
       return
-
-    Author.findOne {authorID: authorID},{}, (err, author) =>
+    
+    #Strategy 1: find existing session
+    Author.findOne {activeSessionIDs: sessionToken},{}, (err, author) =>
+      console.log "found author #{author} for session #{sessionToken}"
       if err? || author? == false
-        authUserWithFacebookOfIDAndToken authorID, token, (err, fbUserID, fbResponse) =>
+        #strategy 2: query fb with fbAToken, then check for existing authorIDs of equal to FB's response
+        authUserWithFacebookOfIDAndToken authorID, fbAToken, (err, fbUserID, fbResponse) =>
           if err?
             callback "could not find author with pre-id #{authorID} with fbID #{fbUserID} with error #{err}"
           else
             if authorID? == false #if prior authorID was unknown by request, we'll check to see if we have a match right now-- recursion!
               console.log "using recursion to determine if fbUserID exists, now that we know it's #{fbUserID}"
-              authCurrentAuthorWithIDAndToken fbUserID, token, callback
+              authCurrentAuthorWithIDAndTokenForSession fbUserID, fbAToken, sessionToken, callback
             else
               imgURI = "https://graph.facebook.com/#{fbUserID}/picture?type=large&return_ssl_resources=1"
-              authorInfo = {authorID: fbUserID, facebookID: fbUserID, accessToken: token, imageURI: imgURI, authorDisplayName: fbResponse.name, modifiedDate: new Date()}
+              authorInfo = {authorID: fbUserID, facebookID: fbUserID, fbAccessToken: fbAToken, imageURI: imgURI, authorDisplayName: fbResponse.name, modifiedDate: new Date()}
               authorInfo.metroAreaDisplayName = fbResponse.location?.name
               newAuthor = new Author authorInfo
               console.log "create the author! with info #{authorInfo}"
@@ -201,17 +124,9 @@ offerApp = require('zappa').app ->
                   callback "error for author save #{err} with info #{authorInfo} savedAuthor: #{savedAuthor}"
                 else
                   console.log "saved new author #{savedAuthor} with info #{authorInfo}, using recursion for auth"
-                  authCurrentAuthorWithIDAndToken fbUserID, token, callback
+                  authCurrentAuthorWithIDAndTokenForSession fbUserID, fbAToken, sessionToken, callback
       else
-        if author.accessToken? == false
-          callback "no valid token for user id #{authorID}"
-        else
-          if author.accessToken? != token
-            author.accessToken = token
-            author.save (err) =>
-              console.log "updated token for authorID #{author.authorID} w. error #{err}"
-          authorInfo = {imageURI: author.imageURI, authorID: author.authorID.toString(), metroAreaDisplayName: author.metroAreaDisplayName, authorDisplayName: author.authorDisplayName, ratingCount: parseInt(author.ratingCount)}
-          callback null, author, authorInfo
+        callback null, author
   
   authUserWithFacebookOfIDAndToken = (fbID, fbToken, callback) -> #callback (err, fbUserID, responseData) #with err if invalid token
     if fbToken? == false
@@ -244,7 +159,7 @@ offerApp = require('zappa').app ->
       callback err, docs
 
   getAuthorWithID = (authorID, callback) -> #callback(err, author, abreviatedInfo)
-    Author.findOne {authorID: authorID},{accessToken:0, facebookID: 0}, (err, author) =>
+    Author.findOne {authorID: authorID},{fbAccessToken:0, facebookID: 0}, (err, author) =>
       if err? || author? == false
         callback "could not find author of id #{authorID} with error #{err}"
       else
