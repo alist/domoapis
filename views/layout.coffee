@@ -14,9 +14,11 @@
 
   body ->
     @body
-    
+   
+  body ->
     if @scripts
       for s in @scripts
-        script src: s + '.js'
-    script(src: @script + '.js') if @script
-
+          script src: s + '.js'
+    
+  footer ->
+    text 'Exomachina, Inc.'

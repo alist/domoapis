@@ -5,34 +5,6 @@ Schema = mongoose.Schema
 
 ObjectId = mongoose.SchemaTypes.ObjectId
 
-AreaSchema = new Schema {
-  location: [Number, Number]
-  displayName:  String
-  concertsLastUpdated : Date
-}
-AreaSchema.index { location: '2d' }
-
-#ratings use non-int IDs
-RatingSchema = new Schema {
-  modifiedDate: Date
-  author: {
-    authorID: {type: String, index: {unique: false}}
-    authorDisplayName: String
-    imageURI: String
-  }
-  artistID: Number #just because I need it here
-  concertDate: {type: Date, index: {unique: false}}
-  concertID: {type: Number, index: {unique: false}}
-  overallRating: {type: Number, index: {unique: false}}
-  stagePRating: Number
-  soundQRating: Number
-  visualsEffectsRating: Number
-  reviewText: String
-}
-RatingSchema.virtual('ratingID').get ->
-  return this._id
-
-
 #authors use non-int ids
 AuthorSchema = new Schema {
   modifiedDate: {type: Date, index: {unique: false}}
@@ -46,17 +18,6 @@ AuthorSchema = new Schema {
   facebookID: {type: Number, index: {unique: true}}
 }
 
-ArtistSchema = new Schema {
-  artistID: {type: Number, index: {unique: true }}
-  displayName: String
-  uri: String
-  imageURI: String,
-  averageRating: {type: Number, index: {unique: false}}
-  ratings: [RatingSchema]
-  ratingCount: Number
-  modifiedDate: {type: Date, index: {unique: false}}
-}
-
 FeedItemSchema = new Schema {
   ratingID: String #maybe none
   comment: String #maybe none
@@ -67,59 +28,18 @@ FeedItemSchema = new Schema {
     imageURI: String
   }
 }
-FeedItemSchema.virtual('feedItemID').get ->
-  return this._id
-
-VenueDef = {
-  venueID: {type: Number, index: {unique: false}, required: true}
-  location: [Number, Number]
-  latitude: Number
-  longitude: Number
-  displayName: {type: String, index: {unique: false}}
-  metroAreaID: {type: Number, index: {unique: false}}
-  metroAreaDisplayName: String
-  uri: String
-}
-
-ConcertSchema = new Schema {
-  modifiedDate: {type: Date, index: {unique: false}}
-  concertID : {type: Number, index: { unique: true } }
-  headliner : {type: String}
-  imageURI: String
-  openers: String
-  rating: Number
-  startDateTime: {type: Date, index: {unique: false}}
-  uri : String
-  venue : VenueDef
-  artists: [{uri: String, imageURI: String, displayName: String, artistID: {type: Number, index: {unique: false}}}]
-  feedItems: [FeedItemSchema]
-  authorsCheckedIn: [{
-    authorID: {type: String, index: {unique: false}}
-    authorDisplayName: String
-    imageURI: String
-  }]
-}
-ConcertSchema.index { 'venue.location': '2d' }
 
 Author = mongoose.model 'Author', AuthorSchema
-Artist = mongoose.model 'Artist', ArtistSchema
-Rating = mongoose.model 'Artist.ratings', RatingSchema
-Area = mongoose.model 'Area', AreaSchema
-FeedItem = mongoose.model 'Concert.feedItems', FeedItemSchema
-Concert = mongoose.model 'Concert', ConcertSchema
+FeedItem = mongoose.model 'FeedItem', FeedItemSchema
 
 `Array.prototype.unique = function() {    var o = {}, i, l = this.length, r = [];    for(i=0; i<l;i+=1) o[this[i]] = this[i];    for(i in o) r.push(o[i]);    return r;};`
 
 tbApp = require('zappa').app ->
-  mongoose.connect(secrets.mongoDBConnectURLSecret)
+  #mongoose.connect(secrets.mongoDBConnectURLSecret)
   @use 'bodyParser', 'static', 'cookies', 'cookieparser'
 
   @get '/': -> @render index: {}
       
-  @get '/faq': -> @render faq: {}
-
-  @get '/contact': -> @render contact: {}
-  
   @get '/ratings/:id': ->
     objID = null
     try
@@ -290,12 +210,7 @@ tbApp = require('zappa').app ->
           @response.contentType 'text/json'
           @response.send {concerts: concerts, artists: artists}
 
-  @get '/apiv1/happening/:id', (req, res) ->
-    @response.send "happening id #{@params.id}, wokring on it!"
 
-  @get '/:id': ->
-    @redirect "/ratings/#{@params.id}"
- 
   ## DONE FUNCTIONS ##
   processCheckinRequest = (fbID, accessToken, concertID, wantsCheckIn, callback) -> #callback (didCheckIn, concert)
     Concert.findOne {concertID: concertID},{feedItems: {$slice:-20}}, (err, concert) =>

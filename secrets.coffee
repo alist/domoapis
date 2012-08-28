@@ -1,3 +1,3 @@
-exports.mongoDBConnectURLSecret = 'mongodb://tourbus:82u6A^yURATfK@ds033767.mongolab.com:33767/heroku_app4986894'
+exports.mongoDBConnectURLSecret = 'mongodb://username:passwd@ds033767.mongolab.com:33767/heroku_app4986894'
 
-exports.sessionSecret = 'daslkd333sakjldsaljk221232T2132d#%'
+exports.sessionSecret = 'da#sddsadjkl3@#*dsadjk1221jdsjsad%'
