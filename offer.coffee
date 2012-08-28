@@ -9,13 +9,11 @@ ObjectId = mongoose.SchemaTypes.ObjectId
 AuthorSchema = new Schema {
   modifiedDate: {type: Date, index: {unique: false}}
   authorDisplayName: String
-  twitterHandle: String
   imageURI: String
-  ratingCount: Number
-  metroAreaDisplayName: String #todo: update this with rating
   authorID: {type: String, required: true, index: {unique: true}}
-  accessToken: {type: String}
+  fbAccessToken: {type: String}
   facebookID: {type: Number, index: {unique: true}}
+  activeSessionIDs: [ {type: String, index: {unique: true}} ]
 }
 
 FeedItemSchema = new Schema {
@@ -34,49 +32,15 @@ FeedItem = mongoose.model 'FeedItem', FeedItemSchema
 
 `Array.prototype.unique = function() {    var o = {}, i, l = this.length, r = [];    for(i=0; i<l;i+=1) o[this[i]] = this[i];    for(i in o) r.push(o[i]);    return r;};`
 
-tbApp = require('zappa').app ->
-  #mongoose.connect(secrets.mongoDBConnectURLSecret)
+offerApp = require('zappa').app ->
+  mongoose.connect(secrets.mongoDBConnectURLSecret)
   @use 'bodyParser', 'static', 'cookies', 'cookieparser'
 
   @get '/': -> @render index: {}
       
-  @get '/ratings/:id': ->
-    objID = null
-    try
-      objID = mongoose.mongo.BSONPure.ObjectID.fromString(@params.id)
-    catch err
-      console.log "objID err: #{err} from publicid #{@params.id}"
-      @redirect '/'
-      return
-    
-    Artist.findOne {'ratings._id': objID}, null, (error, artist) =>
-      if error? || artist? == false
-        console.log "failed fetch artists with rating id #{objID} with error #{error}"
-        @redirect '/'
-      else
-        theRating = null
-        for rating in artist?.ratings
-          if rating._id.toString() == objID.toString()
-            theRating = rating
-            break
-        authID = theRating?.author?.authorID
-        Author.findOne {authorID: authID},{}, (err, author) =>
-          if author? == false
-            console.log "no author found with id #{authID}"
-            author = theRating?.author
-          Concert.findOne {concertID: theRating?.concertID}, null, (cErr, concert) =>
-            if concert? == false
-              concert = null
-            @render rating: {artist: artist, rating: theRating, author: author, concert: concert}
 
-  @get '/apiv1/authors': 'not at REST'
-
-  @get '/apiv1/authors/login', (req, res) ->
-    fbID = req.query.facebookID
-    accessToken = req.query.facebookAccessToken
-    if accessToken? == false
-      accessToken = req.query.accessToken
-    twitterHandle = req.query.twitterHandle
+  @get '/login', (req, res) ->
+    accessToken = req.query.token
     
     authCurrentAuthorWithIDAndToken fbID, accessToken, (err, author,authorInfo) =>
       console.log "auth or create for id #{fbID} finished with err #{err}"
@@ -212,49 +176,6 @@ tbApp = require('zappa').app ->
 
 
   ## DONE FUNCTIONS ##
-  processCheckinRequest = (fbID, accessToken, concertID, wantsCheckIn, callback) -> #callback (didCheckIn, concert)
-    Concert.findOne {concertID: concertID},{feedItems: {$slice:-20}}, (err, concert) =>
-      if concert? == false
-        callback false
-      else
-        authCurrentAuthorWithIDAndToken fbID, accessToken, (err, author,authorInfo) =>
-          if err?
-            callback false, concert
-          else
-            if wantsCheckIn?
-              Concert.update {"concertID": concertID}, {$push : {authorsCheckedIn: authorInfo}}, 0, (err) =>
-                if err?
-                  console.log "adding checkInAuthor failed w/ error #{err}"
-                  callback false, concert
-                else
-                  console.log "added checkedIn author id# #{fbID}"
-                  Concert.findOne {concertID: concertID},{feedItems: {$slice:-20}}, (err, concertRefresh) =>
-                    if concertRefresh?
-                      callback true, concertRefresh
-                    else
-                      console.log "critical: deleted concert during check-in"
-                      callback true, concert
-            else
-              callback false, concert
-
-  getAuthorAndAuthorsWithRatingsAndConcertsForRatingsWithAuthorID = (authorID, callback) -> #callback (err, author, artistsWithRatings, concertsForRatings)
-    getAuthorWithID authorID, (err, author, authorInfo) =>
-      if author? == false || error?
-        callback "error getAuthorAndRatings: #{err}"
-        return
-      else
-        #here authorID it is a string-- intende?
-        Artist.find {'ratings.author.authorID': "#{authorID}"}, null, null, (err, artists) =>
-          if err?
-            callback "fetch artists with author ratings err"
-          else
-            #todo: trim the artists reviewed here
-            getConcertsRelevantToRatingsInArtistsWithAuthor artists, author, (err, concerts) =>
-              if err?
-                callback "fetch concerts relevant to artists and author err #{err}"
-              else
-                callback null, author, artists, concerts
-
   authCurrentAuthorWithIDAndToken = (authorID, token, callback) -> #callback(err, author, abreviatedInfo)
     if token? == false
       callback "no token included for authorID auth id##{authorID}"
@@ -668,5 +589,5 @@ tbApp = require('zappa').app ->
         callback "bad response for metroId lookup"
 
 port = if process.env.PORT > 0 then process.env.PORT else 3000
-tbApp.app.listen port
+offerApp.app.listen port
 console.log "starting on port # #{port}"
