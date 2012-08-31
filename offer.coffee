@@ -29,6 +29,7 @@ AuthorSchema = new Schema {
   telephoneNumber: {type: String, index: {unique: true}}
   telephoneVerifyDate: {type: Date}
 
+  activeOffers: [{modifiedDate: Date, forPerson: String, offerID: {type: String, index: {unique: true}}} ]
   friendGroups: [OfferGroupDef]
 }
 
@@ -54,8 +55,20 @@ offerApp = require('zappa').app ->
 
   crypto = require('crypto')
   
-  @get '/': -> @render index: {}
-      
+  @get '/': ->
+    sessionToken = @request.cookies?.sessiontoken
+    authCurrentAuthorWithIDAndTokenForSession null, null, sessionToken, (err, author) =>
+      @render index: {localAuthor:author}
+
+  @get '/offer': ->
+    @render offer: {}
+    return
+    sessionToken = @request.cookies?.sessiontoken
+    authCurrentAuthorWithIDAndTokenForSession null, null, sessionToken, (err, author) =>
+      if author?
+        @render offer: {localAuthor:author, offers: author.activeOffers}
+      else
+        @redirect '/'
 
   @get '/login', (req, res) ->
     fbAccessToken = req.query.token
@@ -65,15 +78,22 @@ offerApp = require('zappa').app ->
       current_date = (new Date()).valueOf().toString()
       random = Math.random().toString()
       hash = crypto.createHash('sha1').update(current_date + random).digest('hex')
-      newToken = "OFFER_#{hash}"
- 
+      sessionToken = "OFFER_#{hash}"
+      if @request.headers['host'] == 'localhost:3000'
+         req.response.cookie 'sessiontoken', sessionToken, {httpOnly: true, maxAge: 90000000000 }
+      else
+         req.response.cookie 'sessiontoken', sessionToken, {httpOnly: true, secure: true, maxAge: 90000000000 }
   
     authCurrentAuthorWithIDAndTokenForSession null, fbAccessToken, sessionToken, (err, author) =>
       console.log "auth or create for sessionid# #{sessionToken} finished with err #{err}"
       if err?
-        @response.send {}
+        @redirect '/'
       else
-        @response.send {authors: [author]}
+        @redirect '/'
+
+  @get '/logout', (req, res)->
+    req.response.clearCookie 'sessiontoken' # clear the cookie
+    req.redirect '/'
  
   @get '/apiv1/authors/:id', (req, res) ->
     getAuthorAndAuthorsWithRatingsAndConcertsForRatingsWithAuthorID @params.id, (err, author, artistsWithRatings, concerts) =>
@@ -103,27 +123,29 @@ offerApp = require('zappa').app ->
     
     #Strategy 1: find existing session
     Author.findOne {activeSessionIDs: sessionToken},{}, (err, author) =>
-      console.log "found author #{author} for session #{sessionToken}"
+      console.log "found author w. ID #{author?.authorID} for session #{sessionToken}"
       if err? || author? == false
         #strategy 2: query fb with fbAToken, then check for existing authorIDs of equal to FB's response
         authUserWithFacebookOfIDAndToken authorID, fbAToken, (err, fbUserID, fbResponse) =>
-          if err?
+          if err? || ((fbUserID != authorID) && authorID? == true) ##if there is mismatch when authorID!=nil
             callback "could not find author with pre-id #{authorID} with fbID #{fbUserID} with error #{err}"
           else
-            if authorID? == false #if prior authorID was unknown by request, we'll check to see if we have a match right now-- recursion!
+            if authorID? == false
+              #if prior authorID was unknown by request, we'll check to see if we have a match right now from FB
               console.log "using recursion to determine if fbUserID exists, now that we know it's #{fbUserID}"
               authCurrentAuthorWithIDAndTokenForSession fbUserID, fbAToken, sessionToken, callback
             else
+              #we've authed the token using FB, and the userID probably exists
               imgURI = "https://graph.facebook.com/#{fbUserID}/picture?type=large&return_ssl_resources=1"
               authorInfo = {authorID: fbUserID, facebookID: fbUserID, fbAccessToken: fbAToken, imageURI: imgURI, authorDisplayName: fbResponse.name, modifiedDate: new Date()}
               authorInfo.metroAreaDisplayName = fbResponse.location?.name
-              newAuthor = new Author authorInfo
+              
               console.log "create the author! with info #{authorInfo}"
-              newAuthor.save (err, savedAuthor) =>
+              Author.update {authorID: fbUserID},{$set: authorInfo, $push: { activeSessionIDs: sessionToken}}, {upsert: 1}, (err) ->
                 if err?
-                  callback "error for author save #{err} with info #{authorInfo} savedAuthor: #{savedAuthor}"
+                  callback "error for author save #{err} with info #{authorInfo} savedAuthorInfo: #{savedInfo}"
                 else
-                  console.log "saved new author #{savedAuthor} with info #{authorInfo}, using recursion for auth"
+                  console.log "saved new author with info #{authorInfo}, using recursion for auth"
                   authCurrentAuthorWithIDAndTokenForSession fbUserID, fbAToken, sessionToken, callback
       else
         callback null, author

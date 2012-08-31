@@ -2,7 +2,35 @@
 @stylesheets = ['/css/style','/css/bootstrap.min']
 @localScripts = ['/js/bootstrap.min','/js/jquery.min']
 
-h1 -> "what's up offer?"
+ 
+fbAppID = '410538195679889'
+body ->
+  text """
+  <div id="fb-root"></div>
+  <script>
+    window.fbAsyncInit = function() {
+      FB.init({
+      appId      : '#{fbAppID}', // App ID
+            channelUrl : 'http://offer.herokuapp.com/channel.html', // Channel File
+            status     : true, // check login status
+            cookie     : true, // enable cookies to allow the server to access the session
+            xfbml      : true  // parse XFBML
+            });
+  // Additional initialization code here
+    };
+
+      // Load the SDK Asynchronously
+        (function(d){
+               var js, id = 'facebook-jssdk', ref = d.getElementsByTagName('script')[0];
+                    if (d.getElementById(id)) {return;}
+                         js = d.createElement('script'); js.id = id; js.async = true;
+                              js.src = "//connect.facebook.net/en_US/all.js";
+                                   ref.parentNode.insertBefore(js, ref);
+                                      }(document));
+        </script>
+  """
+
+
 
 coffeescript ->
   @window.loginPressed = (shouldLogin) ->
@@ -11,7 +39,11 @@ coffeescript ->
         console.log response, FB.getAccessToken()
         window.location = "/login?token=#{FB.getAccessToken()}"
 
-if @user? == false
+if @localAuthor? == false
   a 'loginButton', {href:"javascript:void(0)", onclick: 'window.loginPressed.apply()'}, -> 'Login with Facebook'
 else
   a 'loginButton', {href:"/logout"}, -> 'Logout'
+  
+p ->
+  if @localAuthor?
+    a {class: "btn btn-primary btn-large", href:"/offer"}, -> 'Make Offer'
