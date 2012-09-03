@@ -90,7 +90,25 @@ a img {
   border: none;
 }
 * {
-  margin: 0;
-  padding: 0;
   border: 0;
+}
+.container {
+  width: 870;
+  margin-left: auto;
+  margin-right: auto;
+}
+footer {
+  text-align: center;
+}
+a {
+  position: relative;
+  color: #377ad0;
+  text-decoration: none;
+}
+a:hover {
+  color: #2861aa;
+  text-decoration: underline;
+}
+a:active {
+  top: 1px;
 }

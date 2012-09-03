@@ -18,8 +18,11 @@
 
 
   body ->
-    h1 -> "what's up offer?"
-    @body
+    div 'container', ->
+      h1 ->
+        a 'home', {href: "/"}, ->
+          "what's up offer?"
+      @body
    
   body ->
     if @scripts

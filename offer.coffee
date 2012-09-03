@@ -5,8 +5,8 @@ Schema = mongoose.Schema
 
 ObjectId = mongoose.SchemaTypes.ObjectId
 
-#authors use non-int ids
-OfferGroupDef = {
+#offer groups categorize the offers given to particular author as 'subscribers'
+OfferGroupSchema = new Schema {
   twilioNumber: {type: String, index: {unique: false}}
   groupDisplayName: {type: String}
   groupCreationDate: {type: Date, index: {unique: false}}
@@ -14,6 +14,14 @@ OfferGroupDef = {
                  authorDisplayName: String
                  modifiedDate: {type: Date, index: {unique: false}}
                ]
+}
+
+ActiveOfferSchema = new Schema {
+  createDate: Date
+  forPerson: String
+  forAuthorID: {type: String, index: {unique: false}}
+  offerURL: {type: String, index: {unique: true}}
+  #offerID: {type: String, index: {unique: true}} #offer is unique through _id property
 }
 
 AuthorSchema = new Schema {
@@ -29,23 +37,13 @@ AuthorSchema = new Schema {
   telephoneNumber: {type: String, index: {unique: true}}
   telephoneVerifyDate: {type: Date}
 
-  activeOffers: [{modifiedDate: Date, forPerson: String, offerID: {type: String, index: {unique: true}}} ]
-  friendGroups: [OfferGroupDef]
-}
-
-FeedItemSchema = new Schema {
-  ratingID: String #maybe none
-  comment: String #maybe none
-  modifiedDate: {type: Date, index: {unique: false}}
-  author: {
-    authorID: String
-    authorDisplayName: String
-    imageURI: String
-  }
+  activeOffers: [ActiveOfferSchema]
+  offerGroups: [OfferGroupSchema]
 }
 
 Author = mongoose.model 'Author', AuthorSchema
-FeedItem = mongoose.model 'FeedItem', FeedItemSchema
+OfferGroup = mongoose.model 'Author.offerGroups', OfferGroupSchema
+ActiveOffer = mongoose.model 'Author.activeOffers', ActiveOfferSchema
 
 `Array.prototype.unique = function() {    var o = {}, i, l = this.length, r = [];    for(i=0; i<l;i+=1) o[this[i]] = this[i];    for(i in o) r.push(o[i]);    return r;};`
 
@@ -59,10 +57,38 @@ offerApp = require('zappa').app ->
     sessionToken = @request.cookies?.sessiontoken
     authCurrentAuthorWithIDAndTokenForSession null, null, sessionToken, (err, author) =>
       @render index: {localAuthor:author}
+  
+  @get '/apiv1/newOffer', (req, res) ->
+    sessionToken = @request.cookies?.sessiontoken
+    authCurrentAuthorWithIDAndTokenForSession null, null, sessionToken, (err, author) =>
+      if author?
+        newOffer = new ActiveOffer {forPerson: req.query.name, createDate: new Date()}
+        newOffer.offerURL = "http://offer.herokuapp.com/offer/#{newOffer._id}"
+        activeOffers = if (author.activeOffers)? then author.activeOffers else []
+        activeOffers.push newOffer
+        author.activeOffers = activeOffers
+        author.save (error) =>
+          @response.send {offer:newOffer, status: 'success'}
+      else
+        @response.send 401, {status: 'failed'}
+  
+  @get '/offer/:id/recind', (req, res) ->
+    offerID = @params.id
+    sessionToken = @request.cookies?.sessiontoken
+    authCurrentAuthorWithIDAndTokenForSession null, null, sessionToken, (err, author) =>
+      if author?
+        updatedOffers = []
+        for offer in author.activeOffers
+          if offer._id.toString() != offerID
+            updatedOffers.push offer
+        author.activeOffers = updatedOffers
+        author.save (error) =>
+          console.log "recinded offer id #{offerID}"
+          @redirect '/offer'
+      else
+        @redirect '/'
 
   @get '/offer': ->
-    @render offer: {}
-    return
     sessionToken = @request.cookies?.sessiontoken
     authCurrentAuthorWithIDAndTokenForSession null, null, sessionToken, (err, author) =>
       if author?
