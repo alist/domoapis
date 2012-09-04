@@ -30,20 +30,26 @@ body ->
         </script>
   """
 
-
+if @redirectURL? #if for example, index is rendered from offer/:id
+  script "window.redirectURL = '#{@redirectURL}'"
 
 coffeescript ->
   @window.loginPressed = (shouldLogin) ->
      FB.login (response) ->
       if response?
-        console.log response, FB.getAccessToken()
-        window.location = "/login?token=#{FB.getAccessToken()}"
+        #here we see whether we redirect
+        if window.redirectURL then redirectStr = "&redirectURL=#{window.redirectURL}" else redirectStr =""
+        window.location = "/login?token=#{FB.getAccessToken() + redirectStr}"
 
+if @message
+  p 'message', -> @message
+ 
 if @localAuthor? == false
   a 'loginButton', {href:"javascript:void(0)", onclick: 'window.loginPressed.apply()'}, -> 'Login with Facebook'
 else
   a 'loginButton', {href:"/logout"}, -> 'Logout'
-  
+ 
+ 
 p ->
   if @localAuthor?
-    a {class: "btn btn-primary btn-large", href:"/offer"}, -> 'Make Offer'
+    a {class: "btn btn-primary btn-large", href:"/offers"}, -> 'Make Offer'

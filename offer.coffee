@@ -34,7 +34,7 @@ AuthorSchema = new Schema {
   facebookID: {type: Number, index: {unique: true}}
 
   activeSessionIDs: [ {type: String, index: {unique: true}} ]
-  telephoneNumber: {type: String, index: {unique: true}}
+  telephoneNumber: {type: String}
   telephoneVerifyDate: {type: Date}
 
   activeOffers: [ActiveOfferSchema]
@@ -63,7 +63,7 @@ offerApp = require('zappa').app ->
     authCurrentAuthorWithIDAndTokenForSession null, null, sessionToken, (err, author) =>
       if author?
         newOffer = new ActiveOffer {forPerson: req.query.name, createDate: new Date()}
-        newOffer.offerURL = "http://offer.herokuapp.com/offer/#{newOffer._id}"
+        newOffer.offerURL = "http://offer.herokuapp.com/offers/#{newOffer._id}"
         activeOffers = if (author.activeOffers)? then author.activeOffers else []
         activeOffers.push newOffer
         author.activeOffers = activeOffers
@@ -72,7 +72,7 @@ offerApp = require('zappa').app ->
       else
         @response.send 401, {status: 'failed'}
   
-  @get '/offer/:id/recind', (req, res) ->
+  @get '/offers/:id/recind', (req, res) ->
     offerID = @params.id
     sessionToken = @request.cookies?.sessiontoken
     authCurrentAuthorWithIDAndTokenForSession null, null, sessionToken, (err, author) =>
@@ -84,15 +84,45 @@ offerApp = require('zappa').app ->
         author.activeOffers = updatedOffers
         author.save (error) =>
           console.log "recinded offer id #{offerID}"
-          @redirect '/offer'
+          @redirect '/offers'
       else
         @redirect '/'
 
-  @get '/offer': ->
+  @get '/offers/:id', (req, res) ->
+    offerID = @params.id
     sessionToken = @request.cookies?.sessiontoken
     authCurrentAuthorWithIDAndTokenForSession null, null, sessionToken, (err, author) =>
       if author?
-        @render offer: {localAuthor:author, offers: author.activeOffers}
+        offerAndOffereeFromOfferID offerID, (err, offer, offeree) =>
+          console.log "found offer: #{offer}, with error #{err}"
+          if offer?
+            @render offerConsider: {offeree: offeree, offer: offer, localAuthor:author}
+          else
+            @render index: {message: "sorry, the offer is no longer valid"}
+      else
+        @render index: {message: "login first", locals:{ redirectURL: @request.originalUrl}, localAuthor:author}
+  
+  offerAndOffereeFromOfferID = (offerID, callback) -> #callback (err, offer, offeree)
+    try
+      objID = mongoose.mongo.BSONPure.ObjectID.fromString(offerID)
+    catch err
+      callback "objID err: #{err} from id #{offerID}"
+    Author.findOne {'activeOffers._id': objID}, (err, offeree) =>
+      if offeree?
+        if offeree.activeOffers? then for offer in offeree.activeOffers
+          if offer._id.toString() == offerID
+            callback null, offer, offeree
+      else
+        callback "no offeree w error #{err}"
+
+
+   
+
+  @get '/offers': ->
+    sessionToken = @request.cookies?.sessiontoken
+    authCurrentAuthorWithIDAndTokenForSession null, null, sessionToken, (err, author) =>
+      if author?
+        @render offers: {localAuthor:author, offers: author.activeOffers}
       else
         @redirect '/'
 
@@ -112,8 +142,9 @@ offerApp = require('zappa').app ->
   
     authCurrentAuthorWithIDAndTokenForSession null, fbAccessToken, sessionToken, (err, author) =>
       console.log "auth or create for sessionid# #{sessionToken} finished with err #{err}"
-      if err?
-        @redirect '/'
+      redirectURL = req.query.redirectURL
+      if redirectURL
+        @redirect redirectURL
       else
         @redirect '/'
 
@@ -128,17 +159,6 @@ offerApp = require('zappa').app ->
         @response.send {}
       else
         @response.send {authors: [author], concerts: concerts, artists: artistsWithRatings}
-
-
-  @get '/apiv1/happening', (req, res) ->
-    console.log req.query
-    if req.query.longitude? and req.query.latitude?
-      getHappeningConcertsNearLocation [parseFloat(req.query.longitude),parseFloat(req.query.latitude)], (concerts, error) =>
-        console.log "found happening concerts count# #{concerts?.length} near loc #{req.query} with error #{ error}"
-        getArtistsRelevantToConcerts concerts, (error, artists) =>
-          console.log "found rated artists count ##{artists?.length} for concerts with error #{error}"
-          @response.contentType 'text/json'
-          @response.send {concerts: concerts, artists: artists}
 
 
   ## DONE FUNCTIONS ##
@@ -169,7 +189,7 @@ offerApp = require('zappa').app ->
               console.log "create the author! with info #{authorInfo}"
               Author.update {authorID: fbUserID},{$set: authorInfo, $push: { activeSessionIDs: sessionToken}}, {upsert: 1}, (err) ->
                 if err?
-                  callback "error for author save #{err} with info #{authorInfo} savedAuthorInfo: #{savedInfo}"
+                  callback "error for author save #{err} with info #{authorInfo}"
                 else
                   console.log "saved new author with info #{authorInfo}, using recursion for auth"
                   authCurrentAuthorWithIDAndTokenForSession fbUserID, fbAToken, sessionToken, callback

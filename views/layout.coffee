@@ -19,9 +19,12 @@
 
   body ->
     div 'container', ->
-      h1 ->
-        a 'home', {href: "/"}, ->
-          "what's up offer?"
+      div 'header', ->
+        h1 'homeHeader', ->
+          a  {href: "/"}, ->
+            "what's up offer?"
+        if @localAuthor?
+          a 'logoutButton', {href:"/logout"}, -> 'Logout'
       @body
    
   body ->
