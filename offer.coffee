@@ -9,18 +9,21 @@ ObjectId = mongoose.SchemaTypes.ObjectId
 OfferGroupSchema = new Schema {
   twilioNumber: {type: String, index: {unique: false}}
   groupDisplayName: {type: String}
-  groupCreationDate: {type: Date, index: {unique: false}}
+  creationDate: {type: Date, index: {unique: false}}
   subscribers: [{authorID: {type: String, index: {unique: false}}},
+                 imageURI: String
                  authorDisplayName: String
                  modifiedDate: {type: Date, index: {unique: false}}
+                 offerID: String
                ]
 }
 
 ActiveOfferSchema = new Schema {
   createDate: Date
+  acceptDate: Date
   forPerson: String
   forAuthorID: {type: String, index: {unique: false}}
-  offerURL: {type: String, index: {unique: true}}
+  offerURL: String
   #offerID: {type: String, index: {unique: true}} #offer is unique through _id property
 }
 
@@ -58,6 +61,36 @@ offerApp = require('zappa').app ->
     authCurrentAuthorWithIDAndTokenForSession null, null, sessionToken, (err, author) =>
       @render index: {localAuthor:author}
   
+  @get '/friends', (req, res) ->
+    sessionToken = @request.cookies?.sessiontoken
+    authCurrentAuthorWithIDAndTokenForSession null, null, sessionToken, (err, author) =>
+      if author?
+        @render friends: {localAuthor: author}
+      else
+        @render index: {message: "login first", locals:{ redirectURL: @request.originalUrl}, localAuthor:author}
+  
+  @get '/friends/:groupID/:friendID/remove', (req, res) ->
+    groupID = @params.groupID
+    friendID = @params.friendID
+    sessionToken = @request.cookies?.sessiontoken
+    authCurrentAuthorWithIDAndTokenForSession null, null, sessionToken, (err, author) =>
+      if author?
+        if author?.offerGroups? then for offerGroup in author.offerGroups
+          if offerGroup._id.toString() == groupID
+            newSubscribers = []
+            if offerGroup.subscribers? then for subscriber in offerGroup.subscribers
+              if subscriber.authorID != friendID
+                newSubscribers.push subscriber
+              #else
+              #  console.log "removed matched authorID #{friendID}"
+            offerGroup.set {subscribers: newSubscribers}
+            author.save (erro) ->
+              console.log "removed friend matching grp #{groupID} with friendID #{friendID}"
+        @redirect '/friends'
+      else
+        @render index: {message: "login first", locals:{ redirectURL: @request.originalUrl}, localAuthor:author}
+    
+ 
   @get '/apiv1/newOffer', (req, res) ->
     sessionToken = @request.cookies?.sessiontoken
     authCurrentAuthorWithIDAndTokenForSession null, null, sessionToken, (err, author) =>
@@ -81,13 +114,42 @@ offerApp = require('zappa').app ->
         for offer in author.activeOffers
           if offer._id.toString() != offerID
             updatedOffers.push offer
-        author.activeOffers = updatedOffers
+        author.set {activeOffers: updatedOffers}
         author.save (error) =>
-          console.log "recinded offer id #{offerID}"
+          console.log "recinded offer id #{offerID} with error #{error}"
           @redirect '/offers'
       else
         @redirect '/'
-
+ 
+  @get '/offers/:id/accept', (req, res) ->
+    offerID = @params.id
+    sessionToken = @request.cookies?.sessiontoken
+    authCurrentAuthorWithIDAndTokenForSession null, null, sessionToken, (err, author) =>
+      if author?
+        offerAndOffereeFromOfferID offerID, (err, offer, offeree) =>
+          console.log "found offer with _id #{offer._id} acceptdate #{offer.acceptDate}: #{offer}, with error #{err}"
+          if offer? && offer.acceptDate? == false
+            offerGroup = author.offerGroups?[0]
+            if offerGroup? == false
+              offerGroup = new OfferGroup {groupDisplayName: "real friends", creationDate: new Date(), subscribers:[]}
+              author.offerGroups = [offerGroup]
+            
+            newSubscriber = {authorID: offeree?.authorID, imageURI: offeree?.imageURI, authorDisplayName: offeree?.authorDisplayName, offerID: offer._id.toString()}
+            offerGroup.subscribers.push newSubscriber
+            
+            offer.set {acceptDate: new Date(), forAuthorID: author.authorID}
+            
+            offeree.save (error) ->
+              console.log "updated offer record #{offer}"
+            
+            author.save (error) =>
+              console.log "saved offer acceptance #{offer}"
+              @redirect '/friends'
+          else
+            @render index: {message: "sorry, that offer is no longer valid", localAuthor:author}
+      else
+        @render index: {message: "login first", locals:{ redirectURL: @request.originalUrl}, localAuthor:author}
+  
   @get '/offers/:id', (req, res) ->
     offerID = @params.id
     sessionToken = @request.cookies?.sessiontoken
@@ -95,10 +157,10 @@ offerApp = require('zappa').app ->
       if author?
         offerAndOffereeFromOfferID offerID, (err, offer, offeree) =>
           console.log "found offer: #{offer}, with error #{err}"
-          if offer?
+          if offer? && offer.acceptDate? == false
             @render offerConsider: {offeree: offeree, offer: offer, localAuthor:author}
           else
-            @render index: {message: "sorry, the offer is no longer valid"}
+            @render index: {message: "sorry, that offer is no longer valid", localAuthor:author}
       else
         @render index: {message: "login first", locals:{ redirectURL: @request.originalUrl}, localAuthor:author}
   

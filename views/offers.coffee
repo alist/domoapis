@@ -15,7 +15,7 @@ coffeescript ->
   
   @window.displayOffer = (offer) ->
     shortenLink =  "<a class='shortenShare' href='https://bitly.com/#{offer.offerURL}'>Shorten</a>"
-    recindButton = "<a class='btn' href='/offer/#{offer._id.toString()}/recind'>X</a>"
+    recindButton = "<a class='btn' href='/offers/#{offer._id.toString()}/recind'>X</a>"
     insertRow = "<tr><td>#{offer.createDate}</td><td>#{offer.forPerson}</td><td>#{offer.offerURL + ' ' + shortenLink}</td><td>#{recindButton}</td></tr>"
     $('#offerTable > tbody > tr:first').after insertRow
   
@@ -39,6 +39,6 @@ table 'table', {id: 'offerTable'}, ->
         text offer.offerURL + " "
         a 'shortenShare', {href:"https://bitly.com/#{offer.offerURL}"}, -> 'Shorten'
       td ->
-        a 'btn', {href:"/offer/#{offer._id.toString()}/recind"}, -> 'X'
+        a 'btn', {href:"/offers/#{offer._id.toString()}/recind"}, -> 'X'
 
 

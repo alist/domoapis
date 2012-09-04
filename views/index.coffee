@@ -46,10 +46,9 @@ if @message
  
 if @localAuthor? == false
   a 'loginButton', {href:"javascript:void(0)", onclick: 'window.loginPressed.apply()'}, -> 'Login with Facebook'
-else
-  a 'loginButton', {href:"/logout"}, -> 'Logout'
- 
  
 p ->
   if @localAuthor?
     a {class: "btn btn-primary btn-large", href:"/offers"}, -> 'Make Offer'
+    text ' '
+    a {class: "btn btn-primary btn-large", href:"/friends"}, -> 'Ask Friends'
