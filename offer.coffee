@@ -1,3 +1,4 @@
+primaryHost = "https://offer.herokuapp.com"
 secrets = require ('./secrets')
 request = require 'request'
 mongoose     = require('mongoose')
@@ -55,7 +56,15 @@ offerApp = require('zappa').app ->
   @use 'bodyParser', 'static', 'cookies', 'cookieParser', session: {secret: secrets.sessionSecret}
 
   crypto = require('crypto')
-  
+ 
+  @get '*': ->
+    if @request.headers['host'] == '127.0.0.1:3000' || @request.headers['host'] == 'localhost:3000'
+      @next()
+    else if @request.headers['x-forwarded-proto']!='https'
+      @redirect "#{primaryHost}#{@request.url}"
+    else
+      @next()
+
   @get '/': ->
     sessionToken = @request.cookies?.sessiontoken
     authCurrentAuthorWithIDAndTokenForSession null, null, sessionToken, (err, author) =>
