@@ -2,10 +2,39 @@
 @stylesheets = ['/css/style','/css/bootstrap.min']
 @localScripts = ['/js/bootstrap.min','/js/jquery.min']
 
- 
-fbAppID = '410538195679889'
+fbAppID = '488045857873688'
 body ->
-  text """
+
+div 'contentHeader', ->
+  p "here's a big thing"
+
+text '<div class="container">'
+
+if @redirectURL? #if for example, index is rendered from offer/:id
+  script "window.redirectURL = '#{@redirectURL}'"
+
+coffeescript ->
+  @window.loginPressed = (shouldLogin) ->
+     FB.login (response) ->
+      if response?
+        #here we see whether we redirect
+        if window.redirectURL then redirectStr = "&redirectURL=#{window.redirectURL}" else redirectStr =""
+        window.location = "/login?token=#{FB.getAccessToken() + redirectStr}"
+
+if @message
+  p 'message', -> @message
+ 
+if @localAuthor? == false
+  a 'loginButton', {href:"javascript:void(0)", onclick: 'window.loginPressed.apply()'}, -> 'Login with Facebook'
+ 
+p ->
+  if @localAuthor?
+    a {class: "btn btn-primary btn-large", href:"/offers"}, -> 'Make Offer'
+    text ' '
+    a {class: "btn btn-primary btn-large", href:"/friends"}, -> 'Ask Friends'
+    
+    
+text """
   <div id="fb-root"></div>
   <script>
     window.fbAsyncInit = function() {
@@ -30,25 +59,5 @@ body ->
         </script>
   """
 
-if @redirectURL? #if for example, index is rendered from offer/:id
-  script "window.redirectURL = '#{@redirectURL}'"
 
-coffeescript ->
-  @window.loginPressed = (shouldLogin) ->
-     FB.login (response) ->
-      if response?
-        #here we see whether we redirect
-        if window.redirectURL then redirectStr = "&redirectURL=#{window.redirectURL}" else redirectStr =""
-        window.location = "/login?token=#{FB.getAccessToken() + redirectStr}"
-
-if @message
-  p 'message', -> @message
- 
-if @localAuthor? == false
-  a 'loginButton', {href:"javascript:void(0)", onclick: 'window.loginPressed.apply()'}, -> 'Login with Facebook'
- 
-p ->
-  if @localAuthor?
-    a {class: "btn btn-primary btn-large", href:"/offers"}, -> 'Make Offer'
-    text ' '
-    a {class: "btn btn-primary btn-large", href:"/friends"}, -> 'Ask Friends'
+text '</ div>'

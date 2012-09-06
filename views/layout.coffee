@@ -18,19 +18,22 @@
 
 
   body ->
-    div 'container', ->
-      div 'header', ->
+    div 'header navbar-static-top', ->
+      div 'container', ->
         h1 'homeHeader', ->
           a  {href: "/"}, ->
-            "what's up offer?"
+            "Adherean"
         if @localAuthor?
           a 'logoutButton', {href:"/logout"}, -> 'Logout'
-      @body
-   
+    @body
+
+  body ->
+   footer ->
+    text 'Adherean, Inc.'
+
   body ->
     if @scripts
       for s in @scripts
           script src: s + '.js'
     
-  footer ->
-    text 'Exomachina, Inc.'
+
