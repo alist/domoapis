@@ -22,7 +22,7 @@
       div 'container', ->
         h1 'homeHeader', ->
           a  {href: "/"}, ->
-            "Adherean"
+            img src: "/img/adhearean-website-header-logo.png", ->
         if @localAuthor?
           a 'logoutButton', {href:"/logout"}, -> 'Logout'
     @body

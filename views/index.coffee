@@ -6,9 +6,16 @@ fbAppID = '488045857873688'
 body ->
 
 div 'contentHeader', ->
-  p "here's a big thing"
+  div 'container', ->
+    p 'contentHeaderText', -> "Your health can be rewarding."
 
-text '<div class="container">'
+text '<div class="content container">'
+
+#div 'hero-unit', ->
+h1 ->
+   text 'Adherean '
+   small 'currently in a pilot development phase'
+p 'lead', -> 'Adherean helps patients stay on track with their treatment plans. Our Healthcheck technology turns simple medication checkups into secret codes patients can exchange for instant rewards.'
 
 if @redirectURL? #if for example, index is rendered from offer/:id
   script "window.redirectURL = '#{@redirectURL}'"
@@ -24,15 +31,11 @@ coffeescript ->
 if @message
   p 'message', -> @message
  
-if @localAuthor? == false
-  a 'loginButton', {href:"javascript:void(0)", onclick: 'window.loginPressed.apply()'}, -> 'Login with Facebook'
- 
 p ->
-  if @localAuthor?
-    a {class: "btn btn-primary btn-large", href:"/offers"}, -> 'Make Offer'
-    text ' '
-    a {class: "btn btn-primary btn-large", href:"/friends"}, -> 'Ask Friends'
-    
+    a {class: "btn btn-primary btn-large", href:"mailto:info@adherean.com"}, -> 'Stay In Touch'
+    if @localAuthor? == false
+      text ' '
+      a 'btn btn-primary btn-large', {href:"javascript:void(0)", onclick: 'window.loginPressed.apply()'}, -> 'Login'
     
 text """
   <div id="fb-root"></div>
