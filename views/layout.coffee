@@ -15,15 +15,29 @@
       for s in @localScripts
           script src: s + '.js'
  
-
+  
 
   body ->
     div 'header navbar-static-top', ->
       div 'container', ->
         a  {href: "/"}, ->
           img 'homeHeader', src: "/img/adhearean-website-header-logo.png", ->
-        if @localAuthor?
-          a 'logoutButton', {href:"/logout"}, -> 'Logout'
+       
+        div 'headerControls', ->
+          if @message?
+            div 'headerAlert', ->
+              text @message
+          ul 'nav nav-pills inline', ->
+            li class:(if (this.parentView.name == 'code') then 'active' else ''), ->
+              a href:'/code', -> "Enter Code"
+            li class:(if (this.parentView.name == 'rewards') then 'active' else ''), ->
+              a href:'/rewards', -> "My Rewards"
+          
+          if @localAuthor? == false
+            a 'userLoginOutButton btn btn-primary btn-small', {href:"javascript:void(0)", onclick: 'window.loginPressed.apply()'}, -> 'Login'
+          else
+            a 'userLoginOutButton btn btn-primary btn-small', {href:"/logout"}, -> 'Logout'
+   
     @body
 
   body ->

@@ -44,6 +44,22 @@ adhereanApp = require('zappa').app ->
     authCurrentAuthorWithIDAndTokenForSession null, null, sessionToken, (err, author) =>
       @render index: {localAuthor:author}
   
+  @get '/rewards': ->
+    sessionToken = @request.cookies?.sessiontoken
+    authCurrentAuthorWithIDAndTokenForSession null, null, sessionToken, (err, author) =>
+      if author?
+        @render rewards: {localAuthor: author}
+      else
+        @render index: {message: "login first", locals:{ redirectURL: @request.originalUrl}, localAuthor:author}
+    
+  @get '/code': ->
+    sessionToken = @request.cookies?.sessiontoken
+    authCurrentAuthorWithIDAndTokenForSession null, null, sessionToken, (err, author) =>
+      if author?
+        @render code: {localAuthor: author}
+      else
+        @render index: {message: "login first", locals:{ redirectURL: @request.originalUrl}, localAuthor:author}
+ 
   @get '/friends', (req, res) ->
     sessionToken = @request.cookies?.sessiontoken
     authCurrentAuthorWithIDAndTokenForSession null, null, sessionToken, (err, author) =>
