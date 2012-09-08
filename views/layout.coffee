@@ -1,6 +1,6 @@
   head ->
     meta charset: 'utf-8'
-    meta name:"viewport", content:"width=870"
+    meta name:"viewport", content:"width=960"
     meta name: "apple-mobile-web-app-capable", content:"yes"
     
     title "#{@title or 'Untitled'} | Offer"
@@ -20,9 +20,8 @@
   body ->
     div 'header navbar-static-top', ->
       div 'container', ->
-        h1 'homeHeader', ->
-          a  {href: "/"}, ->
-            img src: "/img/adhearean-website-header-logo.png", ->
+        a  {href: "/"}, ->
+          img 'homeHeader', src: "/img/adhearean-website-header-logo.png", ->
         if @localAuthor?
           a 'logoutButton', {href:"/logout"}, -> 'Logout'
     @body
