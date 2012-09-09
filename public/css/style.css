@@ -130,10 +130,13 @@ a:active {
   height: 300px;
   border-bottom-color: #e1e1e1;
   border-bottom-style: solid;
-  border-bottom-width: 1px;
+  border-bottom-width: 0px;
   border-top-color: #ebebeb;
   border-top-style: solid;
   border-top-width: 0px;
+  -webkit-box-shadow: inset 0px -2px 3px #aaa;
+  -moz-box-shadow: inset 0px -2px 3px #aaa;
+  box-shadow: inset 0px -2px 3px #aaa;
 }
 .headerControls {
   float: right;
@@ -167,6 +170,21 @@ a:active {
 }
 .inline {
   display: inline;
+}
+.hidden {
+  display: none;
+}
+.text-warning {
+  color: #c09853;
+}
+.text-error {
+  color: #b94a48;
+}
+.text-info {
+  color: #3a87ad;
+}
+.text-success {
+  color: #468847;
 }
 .center {
   margin-left: auto;

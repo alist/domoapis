@@ -6,6 +6,13 @@ Schema = mongoose.Schema
 
 ObjectId = mongoose.SchemaTypes.ObjectId
 
+SubmittedCodeSchema  = new Schema {
+  code: {type: String, required: true}
+  value: String
+  submitDate: Date
+  rewardURL: String
+}
+
 AuthorSchema = new Schema {
   modifiedDate: {type: Date, index: {unique: false}}
   authorDisplayName: String
@@ -19,9 +26,11 @@ AuthorSchema = new Schema {
   telephoneNumber: {type: String}
   telephoneVerifyDate: {type: Date}
 
+  submittedCodes: [SubmittedCodeSchema]
 }
 
 Author = mongoose.model 'Author', AuthorSchema
+SubmittedCode = mongoose.model 'Author.submittedCodes', SubmittedCodeSchema
 
 `Array.prototype.unique = function() {    var o = {}, i, l = this.length, r = [];    for(i=0; i<l;i+=1) o[this[i]] = this[i];    for(i in o) r.push(o[i]);    return r;};`
 
@@ -69,19 +78,24 @@ adhereanApp = require('zappa').app ->
         @render index: {message: "login first", locals:{ redirectURL: @request.originalUrl}, localAuthor:author}
   
  
-  @get '/apiv1/newOffer', (req, res) ->
+  @post '/apiv1/submitCode', (req, res) ->
     sessionToken = @request.cookies?.sessiontoken
+    console.log req.body
+    code = req.body.code
     authCurrentAuthorWithIDAndTokenForSession null, null, sessionToken, (err, author) =>
-      if author?
-        newOffer = new ActiveOffer {forPerson: req.query.name, createDate: new Date()}
-        newOffer.offerURL = "http://offer.herokuapp.com/offers/#{newOffer._id}"
-        activeOffers = if (author.activeOffers)? then author.activeOffers else []
-        activeOffers.push newOffer
-        author.activeOffers = activeOffers
+      if author? && code?.length >= 4
+        newCode = new SubmittedCode {code: code, submitDate: new Date()}
+        newCode.rewardURL = "#{primaryHost}/rewards/#{newCode._id}"
+        submittedCodes = if (author.submittedCodes)? then author.submittedCodes else []
+        submittedCodes.push newCode
+        author.submittedCodes = submittedCodes
         author.save (error) =>
-          @response.send {offer:newOffer, status: 'success'}
+          if error? == false
+            @response.send {submittedCode: newCode, status: 'success'}
+          else
+            @response.send {status: 'failed', reason: error}
       else
-        @response.send 401, {status: 'failed'}
+        @response.send {status: 'failed'}
   
  
 
