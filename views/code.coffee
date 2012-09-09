@@ -8,21 +8,22 @@ coffeescript ->
     if codeVal == ""
       $('#badCodeWarning').text "enter a code!"
       $('#badCodeWarning').show()
-      $('form > div:first').addClass('error')
+      $('#codeEntryGroup').addClass('error')
     else
       $('#badCodeWarning').hide()
-      $('form > div:first').removeClass('error')
+      $('#codeEntryGroup').removeClass('error')
       $("#submitButton").addClass('disabled')
        
       $.post "/apiv1/submitCode", {code: codeVal}, (response)=>
         if response?.status != "success"
           $('#badCodeWarning').text "invalid code"
           $('#badCodeWarning').show()
-          $('form > div:first').addClass('error')
+          $('#codeEntryGroup').addClass('error')
           $("#submitButton").removeClass('disabled')
           $("#codeCountRemaining").show()
         else
           $("#codeCountRemaining").hide()
+          #$("#rewardBox").animate {opacity:1}, {duration: 'slow',easing: 'easein'}
           $("#rewardBox").show()
         console.log response
   
@@ -35,7 +36,7 @@ form 'form-horizontal', method:'GET', action:"#", onsubmit: 'window.submitCodePr
   legend -> 'Enter your code'
   div 'row-fluid', ->
     div 'span6', ->
-      div 'control-group', ->
+      div 'control-group', id: 'codeEntryGroup', ->
         p 'text-error hidden' , id:'badCodeWarning', -> 'whoops, bad code, try again'
         label 'control-label', for: "codeInput", -> "Code:"
         div 'controls', ->
