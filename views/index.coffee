@@ -1,20 +1,20 @@
 @title = 'Welcome'
 @stylesheets = ['/css/style','/css/bootstrap.min']
-@localScripts = ['/js/bootstrap.min','/js/jquery.min']
+@localScripts = ['/js/jquery.min','/js/bootstrap']
 
 fbAppID = '488045857873688'
 body ->
 
 div 'contentHeader', ->
-  div 'container', ->
+  div 'container-fluid', ->
     p 'contentHeaderText', -> "Your health can be rewarding."
 
-text '<div class="content container">'
+text '<div class="content container-fluid">'
 
 #div 'hero-unit', ->
 h1 ->
    text 'Adherean '
-   small 'currently in a pilot development phase'
+   small 'is currently in a pilot development phase'
 p 'lead', -> 'Adherean helps patients stay on track with their treatment plans. Our Healthcheck technology turns simple medication checkups into secret codes patients can exchange for instant rewards.'
 
 if @redirectURL? #if for example, index is rendered from offer/:id

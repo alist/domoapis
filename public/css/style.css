@@ -120,6 +120,7 @@ a:active {
   font-size: 36px;
   margin-top: 240px;
   font-weight: bold;
+  line-height: 35px;
   text-shadow: 0px 2px 7px #000;
 }
 .contentHeader {
@@ -138,9 +139,27 @@ a:active {
   -moz-box-shadow: inset 0px -2px 3px #aaa;
   box-shadow: inset 0px -2px 3px #aaa;
 }
+.container-fluid {
+  margin-left: auto;
+  margin-right: auto;
+  max-width: 940px;
+}
 .headerControls {
   float: right;
   margin-top: 20px;
+}
+@media (max-width:480px) {
+  .hidden-phone {
+    display: none;
+  }
+  .visible-phone {
+    display: block;
+  }
+}
+@media (min-width: 768px) {
+  .hidden-desktop {
+    display: none;
+  }
 }
 .content {
   margin-top: 5px;
@@ -202,12 +221,18 @@ a:active {
   float: right;
   margin-top: 10px;
 }
+@media (max-width: 480px) {
+  #rewardBox {
+    background-color: #fff;
+    border: 0;
+  }
+}
 #gallery {
   margin: 0 auto;
   position: relative;
   background: #fff;
-  width: 520px;
-  height: 520px;
+  width: 260px;
+  height: 260px;
   -webkit-border-radius: 50%;
   -moz-border-radius: 50%;
   border-radius: 50%;
@@ -224,10 +249,12 @@ a:active {
   -webkit-transform-origin: 50% 100%;
   padding: 5px;
   top: 0;
-  margin-top: -50px;
+  margin-top: -30px;
   left: 50%;
-  margin-left: -155px;
+  margin-left: -80px;
   cursor: pointer;
+  width: 150px;
+  height: 150px;
 }
 #gallery-wheel img:hover {
   opacity: 0.5;
@@ -255,10 +282,10 @@ a:active {
   background-position: center;
   top: 50%;
   left: 50%;
-  margin-left: -160px;
-  margin-top: -160px;
-  width: 300px;
-  height: 300px;
+  margin-left: -85px;
+  margin-top: -85px;
+  width: 150px;
+  height: 150px;
   -webkit-border-radius: 50%;
   -moz-border-radius: 50%;
   border-radius: 50%;

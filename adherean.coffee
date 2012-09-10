@@ -151,10 +151,12 @@ adhereanApp = require('zappa').app ->
     checkRewardOptionsFunction = (author, callback) -> #callback(author)
       if author.rewardOptions? == false || author.rewardOptions.length  < 1
         rewardOptions = if (author.rewardOptions)? then author.rewardOptions else []
+        #we'll just add all reward options!
         RewardOption.find {}, {}, null, (err, allOptions) =>
           for option in allOptions
             rewardOptions.push option._id
 
+          author.rewardOptions = rewardOptions
           author.save (error) =>
             console.log "assigned author #{author.displayName} defaultRewardOptionsIDs #{author.rewardOptions} with error #{error}"
             callback author

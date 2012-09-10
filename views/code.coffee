@@ -1,6 +1,6 @@
 @title = 'Welcome'
 @stylesheets = ['/css/style','/css/bootstrap.min']
-@localScripts = ['/js/bootstrap.min','/js/jquery.old.min', '/js/galleryWheel', '/js/jquery.transform.min']
+@localScripts = ['/js/jquery.old.min','/js/bootstrap', '/js/galleryWheel', '/js/jquery.transform.min']
 
 coffeescript ->
   @window.submitCodePressed = (offerPersonName) ->
@@ -30,12 +30,12 @@ coffeescript ->
             $('#gallery-wheel').append insertRow
           window.galleryWheelInit()
 
-text '<div class="content container">'
+text '<div class="content container-fluid">'
 
-h1 "Enter code for instant reward"
+h1 "Enter code to stay on track with your health"
 
 form 'form-horizontal', method:'GET', action:"#", onsubmit: 'window.submitCodePressed.apply(); return false;', ->
-  legend -> 'Enter your code'
+  legend -> 'Enter your health code'
   div 'row-fluid', ->
     div 'span4', id: 'codeEntrySpan', ->
       div 'control-group', id: 'codeEntryGroup', ->
@@ -48,14 +48,15 @@ form 'form-horizontal', method:'GET', action:"#", onsubmit: 'window.submitCodePr
           input 'btn btn-success', id:"submitButton", type: 'submit', -> 'Submit'
           p 'text-info hidden', id:'codeCountRemaining', -> 'Two trys left'
 
-    div 'span8', ->
-      div 'alert alert-block alert-info hidden', id: 'rewardBox', ->
-        h4 'alert-heading', -> "Code Submitted! "
-        p -> "Now spin the prize-wheel!"
+    div 'span10', ->
+      div 'hidden alert alert-block alert-info', id: 'rewardBox', ->
+        h4 'alert-heading', -> "Great job! "
+        p -> "Now spin your prize-wheel!"
         
         div id: 'gallery', ->
           div id: 'gallery-wheel', ->
-            
+          div id: "gallery-center", ->
+
         a 'btn btn-primary',href:"javascript:void(0)", onclick: 'window.galleryWheelSpin.apply()', -> "Spin!"
 
 text '</ div>'

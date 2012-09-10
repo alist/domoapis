@@ -1,6 +1,6 @@
 @title = 'Welcome'
 @stylesheets = ['/css/style','/css/bootstrap.min']
-@localScripts = ['/js/bootstrap.min','/js/jquery.min']
+@localScripts = ['/js/jquery.old.min','/js/bootstrap']
 
 coffeescript ->
   $(document).ready =>
@@ -16,7 +16,7 @@ coffeescript ->
  
 body ->
 
-text '<div class="content container">'
+text '<div class="content container-fluid">'
 
 div 'page-header', ->
   h1 "Here's where you see your rewards"

@@ -20,11 +20,28 @@
 
   body ->
     div 'header navbar-static-top', ->
-      div 'container', ->
+      div 'container-fluid', ->
         a  {href: "/"}, ->
           img 'homeHeader', src: "/img/adhearean-website-header-logo.png", ->
-       
-        div 'headerControls', ->
+        div 'headerControls hidden-desktop visible-phone',->
+          div 'btn-group', ->
+            button 'btn btn-primary dropdown-toggle', 'data-toggle':'dropdown', href:'#', ->
+              text "! "
+              span 'caret', ->
+            ul 'dropdown-menu pull-right', ->
+              if @localAuthor? == true
+                li class:(if (this.parentView.name == 'code') then 'active' else ''), ->
+                  a href:'/code', -> "Enter Code"
+                li class:(if (this.parentView.name == 'rewards') then 'active' else ''), ->
+                  a href:'/rewards', -> "My Rewards"
+                li 'divider', ->
+              li ->
+                if @localAuthor? == false
+                  a '', {href:"javascript:void(0)", onclick: 'window.loginPressed.apply()'}, -> 'Login'
+                else
+                  a '', {href:"/logout"}, -> 'Logout'
+
+        div 'headerControls hidden-phone', ->
           if @message?
             div 'headerAlert', ->
               text @message
