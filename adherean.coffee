@@ -6,29 +6,59 @@ Schema = mongoose.Schema
 
 ObjectId = mongoose.SchemaTypes.ObjectId
 
+RewardOptionSchema = new Schema {
+  displayName: String
+  description: String
+  imageURI: String
+  modifiedDate: String
+}
+
+RewardSchema = new Schema {
+  rewardOption: {type: ObjectId, ref: 'RewardOption'}
+  rewardAmount: {type: String}
+  redeemURL: {type: String}
+}
+
+ReaderSchema = new Schema {
+  identifier: {type: String, required: true, index: {unique: true}}
+  version: Number
+  initializeDate: Date
+  owningAuthor: {type: ObjectId, ref: 'Author'}
+}
+
 SubmittedCodeSchema  = new Schema {
   code: {type: String, required: true}
   value: String
+  reader: {type: ObjectId, ref: 'Reader'}
   submitDate: Date
+  reward: {type: ObjectId, ref: 'Reward'}
   rewardURL: String
 }
 
+#authors are users
 AuthorSchema = new Schema {
   modifiedDate: {type: Date, index: {unique: false}}
-  authorDisplayName: String
+  displayName: String
   imageURI: String
   authorID: {type: String, required: true, index: {unique: true}}
 
   fbAccessToken: {type: String}
   facebookID: {type: Number, index: {unique: true}}
+  isAdmin: {type: Boolean}
 
   activeSessionIDs: [ {type: String, index: {unique: true}} ]
   telephoneNumber: {type: String}
   telephoneVerifyDate: {type: Date}
-
+  
+  readers: [{type: ObjectId, ref: 'Reader'}]
   submittedCodes: [SubmittedCodeSchema]
+  rewardOptions: [{type: ObjectId, ref: 'RewardOption'}]
+  rewards: [{type: ObjectId, ref: 'Reward'}]
 }
 
+Reader = mongoose.model 'Reader', ReaderSchema
+Reward = mongoose.model 'Reward', RewardSchema
+RewardOption = mongoose.model 'RewardOption', RewardOptionSchema
 Author = mongoose.model 'Author', AuthorSchema
 SubmittedCode = mongoose.model 'Author.submittedCodes', SubmittedCodeSchema
 
@@ -40,6 +70,7 @@ adhereanApp = require('zappa').app ->
 
   crypto = require('crypto')
  
+  #we want https
   @get '*': ->
     if @request.headers['host'] == '127.0.0.1:3000' || @request.headers['host'] == 'localhost:3000'
       @next()
@@ -57,7 +88,8 @@ adhereanApp = require('zappa').app ->
     sessionToken = @request.cookies?.sessiontoken
     authCurrentAuthorWithIDAndTokenForSession null, null, sessionToken, (err, author) =>
       if author?
-        @render rewards: {localAuthor: author}
+        RewardOption.find {}, {}, null, (err, rewardOptions) =>
+          @render rewards: {localAuthor: author, rewardOptions: rewardOptions}
       else
         @render index: {message: "login first", locals:{ redirectURL: @request.originalUrl}, localAuthor:author}
     
@@ -91,13 +123,54 @@ adhereanApp = require('zappa').app ->
         author.submittedCodes = submittedCodes
         author.save (error) =>
           if error? == false
-            @response.send {submittedCode: newCode, status: 'success'}
+            Author.findOne({_id: author._id}).populate('rewardOptions').exec (err, fullAuthor) =>
+              @response.send {submittedCode: newCode, rewardOptions:fullAuthor?.rewardOptions, status: 'success'}
           else
             @response.send {status: 'failed', reason: error}
       else
         @response.send {status: 'failed'}
   
- 
+  assignAuthorNewReader = (author, reader, callback) -> #callback(err, author, reader)
+    #Reader.findOne {forAuthor: {$exists: false}}, {}, (err, freeReader) =>
+    if reader? == false
+      reader = new Reader {initializeDate: new Date, version: 1}
+      reader.identifier = reader._id.toString()
+    reader.owningAuthor = author._id
+    reader.save (error) =>
+      if error?
+        callback error
+        return
+      readers = if (author.readers)? then author.readers else []
+      readers.push reader._id
+      author.readers = readers
+      author.save (error) =>
+        callback null, author, reader
+  
+  setAuthorDefaultsIfNeeded = (author, callback) -> #callback(author)  
+
+    checkRewardOptionsFunction = (author, callback) -> #callback(author)
+      if author.rewardOptions? == false || author.rewardOptions.length  < 1
+        rewardOptions = if (author.rewardOptions)? then author.rewardOptions else []
+        RewardOption.find {}, {}, null, (err, allOptions) =>
+          for option in allOptions
+            rewardOptions.push option._id
+
+          author.save (error) =>
+            console.log "assigned author #{author.displayName} defaultRewardOptionsIDs #{author.rewardOptions} with error #{error}"
+            callback author
+      else
+        callback author
+
+    if author.readers? == false || author.readers?.length < 1
+      assignAuthorNewReader author, null, (err, author, reader) =>
+        console.log "assigned author #{author.displayName} readerID #{reader.identifier}"
+        
+        checkRewardOptionsFunction author, (retAuthor) =>
+          callback author
+
+    else
+      checkRewardOptionsFunction author, (retAuthor) =>
+        callback retAuthor
 
   @get '/login', (req, res) ->
     fbAccessToken = req.query.token
@@ -115,11 +188,13 @@ adhereanApp = require('zappa').app ->
   
     authCurrentAuthorWithIDAndTokenForSession null, fbAccessToken, sessionToken, (err, author) =>
       console.log "auth or create for sessionid# #{sessionToken} finished with err #{err}"
-      redirectURL = req.query.redirectURL
-      if redirectURL
-        @redirect redirectURL
-      else
-        @redirect '/'
+      #we'll update with some newer stuff if need-be here
+      setAuthorDefaultsIfNeeded author, (updatedAuthor) =>
+        redirectURL = req.query.redirectURL
+        if redirectURL
+          @redirect redirectURL
+        else
+          @redirect '/'
 
   @get '/logout', (req, res)->
     req.response.clearCookie 'sessiontoken' # clear the cookie
@@ -147,7 +222,7 @@ adhereanApp = require('zappa').app ->
             else
               #we've authed the token using FB, and the userID probably exists
               imgURI = "https://graph.facebook.com/#{fbUserID}/picture?type=large&return_ssl_resources=1"
-              authorInfo = {authorID: fbUserID, facebookID: fbUserID, fbAccessToken: fbAToken, imageURI: imgURI, authorDisplayName: fbResponse.name, modifiedDate: new Date()}
+              authorInfo = {authorID: fbUserID, facebookID: fbUserID, fbAccessToken: fbAToken, imageURI: imgURI, displayName: fbResponse.name, modifiedDate: new Date()}
               authorInfo.metroAreaDisplayName = fbResponse.location?.name
               
               console.log "create the author! with info #{authorInfo}"
@@ -195,7 +270,7 @@ adhereanApp = require('zappa').app ->
       if err? || author? == false
         callback "could not find author of id #{authorID} with error #{err}"
       else
-        authorInfo = {imageURI: author.imageURI, authorID: author.authorID.toString(), metroAreaDisplayName: author.metroAreaDisplayName, authorDisplayName: author.authorDisplayName, ratingCount: author.ratingCount}
+        authorInfo = {imageURI: author.imageURI, authorID: author.authorID.toString(), metroAreaDisplayName: author.metroAreaDisplayName, displayName: author.displayName, ratingCount: author.ratingCount}
         callback null, author, authorInfo
  
   feedItemsConcertWithConcertID = (concertID, lastUpdate, callback) -> #callback (error, concertWithFeed)
