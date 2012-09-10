@@ -1,3 +1,5 @@
+//attributed: http://joelb.me/sandbox/gallerywheel/
+
 var galleryWheel;
 var galleryCenter;
 var galleryItems;
@@ -12,9 +14,11 @@ window.galleryWheelInit = function() {
 }
  
 function clickImage(e) {
+   return
    var target = $(e.target);
    if (!target.hasClass("active") && !animating) {
       animating = true;
+      $('#gallery-center').fadeOut();
       var activeElement = galleryWheel.find(".active");
  
       // Calculate the number of elements between the active (top) image and the clicked
@@ -37,6 +41,7 @@ function clickImage(e) {
               .appendTo(galleryCenter).animate({opacity: 1.0}, 500, function() {
                    galleryCenter.css("backgroundImage", "url(" + target.attr("src") + ")");
                    $(this).remove();
+      		   $('#gallery-center').fadeIn();
                });
  
       activeElement.removeClass("active");
@@ -46,15 +51,16 @@ function clickImage(e) {
    }
 }
 
-window.galleryWheelSpin = function() {
+window.galleryWheelSpin = function(winningBgURL, callback) {
       animating = true;
+      $('#gallery-center').fadeOut();
       var activeElement = galleryWheel.find(".active");
       activeElement.removeClass("active");
       rotateBy = 1400;
       galleryWheel.animate({rotate: "+=" + rotateBy + 'deg'}, 2500, function() {
 		animating = false;
-		e = []
-		e.target =  $('.galleryImg:first')
-		clickImage(e)
+		galleryCenter.css("backgroundImage", "url(" + winningBgURL + ")");
+      	        $('#gallery-center').fadeIn();
+		callback();
 	} );
 }

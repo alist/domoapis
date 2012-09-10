@@ -11,12 +11,14 @@ RewardOptionSchema = new Schema {
   description: String
   imageURI: String
   modifiedDate: String
+  rewardQuantities: [{probability: Number, quantity: Number}]
 }
 
 RewardSchema = new Schema {
   rewardOption: {type: ObjectId, ref: 'RewardOption'}
-  rewardAmount: {type: String}
+  totalQuantity: {type: Number}
   redeemURL: {type: String}
+  issuances: [{issueDate: Date, quantity: Number, submittedCode: {type: ObjectId, ref: 'SubmittedCode'}}]
 }
 
 ReaderSchema = new Schema {
@@ -31,7 +33,6 @@ SubmittedCodeSchema  = new Schema {
   value: String
   reader: {type: ObjectId, ref: 'Reader'}
   submitDate: Date
-  reward: {type: ObjectId, ref: 'Reward'}
   rewardURL: String
 }
 
@@ -123,12 +124,49 @@ adhereanApp = require('zappa').app ->
         author.submittedCodes = submittedCodes
         author.save (error) =>
           if error? == false
-            Author.findOne({_id: author._id}).populate('rewardOptions').exec (err, fullAuthor) =>
-              @response.send {submittedCode: newCode, rewardOptions:fullAuthor?.rewardOptions, status: 'success'}
+            generateRewardForAuthorForSubmittedCode author, newCode, (err, reward, fullAuthor) =>
+              console.log "rewarded #{reward} author #{fullAuthor._id}"
+              @response.send {submittedCode: newCode, reward: reward, rewardOptions:fullAuthor?.rewardOptions, status: 'success'}
           else
             @response.send {status: 'failed', reason: error}
       else
         @response.send {status: 'failed'}
+  
+  generateRewardForAuthorForSubmittedCode = (author, code, callback) -> #callback(err, reward, populatedAuthor)
+    if author.rewardOptions? == false
+      callback "no reward options chose for authorID: #{author._id}"
+      return
+    Author.findOne({_id: author._id}).populate('rewardOptions').exec (err, author) =>
+      rewardOptionsCount = author.rewardOptions?.length
+      rewardOptionNumber = Math.floor(Math.random()*rewardOptionsCount) #random from 0->rewardOptionsCt -1
+      rewardOption = author.rewardOptions[rewardOptionNumber]
+
+      #here's how we find out which option is chose: we get a random val <= 1, then we add each rewardPobability's Quantity togeather and the first added that's greater than the random number is the reward options that's good
+      randLessThanOne = Math.random()
+      rewardQuantity = null
+      probabilitySum = 0
+      for quantityGroup in rewardOption.rewardQuantities
+        probabilitySum = probabilitySum + quantityGroup.probability
+        if probabilitySum > randLessThanOne
+          rewardQuantity = quantityGroup.quantity
+          console.log "found rewardQuantity #{rewardQuantity} for option: #{rewardOption}"
+          break
+    
+      Author.findOne({_id: author._id}).populate('rewardOptions').populate('rewards').exec (err, author) =>
+        rewardItem = null
+        for reward in author?.rewards
+          if reward.rewardOption == rewardOption._id
+            rewardItem = reward
+        if rewardItem? == false
+          rewardItem = new Reward {rewardOption: rewardOption._id, issuances:[], totalQuantity: 0}
+          rewardItem.redeemURL = "#{primaryHost}/redeem/#{rewardItem._id.toString()}"
+          Author.update {_id: author._id}, {$push: {rewards: rewardItem._id}},0,0, (error) =>
+            console.log "updated author id #{author._id} to have new rewardItem inside it with error: #{error}"
+        rewardItem.issuances.push {issueDate: new Date(), quantity: rewardQuantity, submittedCode: code._id}
+        rewardItem.totalQuantity = (rewardItem.totalQuantity + rewardQuantity)
+        rewardItem.save (err) =>
+          console.log "Saved reward item#{rewardItem}"
+          callback null, rewardItem, author
   
   assignAuthorNewReader = (author, reader, callback) -> #callback(err, author, reader)
     #Reader.findOne {forAuthor: {$exists: false}}, {}, (err, freeReader) =>
