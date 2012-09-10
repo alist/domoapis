@@ -48,6 +48,13 @@ function clickImage(e) {
 
 window.galleryWheelSpin = function() {
       animating = true;
+      var activeElement = galleryWheel.find(".active");
+      activeElement.removeClass("active");
       rotateBy = 1400;
-      galleryWheel.animate({rotate: "+=" + rotateBy + 'deg'}, 2500, function() { animating = false; } );
+      galleryWheel.animate({rotate: "+=" + rotateBy + 'deg'}, 2500, function() {
+		animating = false;
+		e = []
+		e.target =  $('.galleryImg:first')
+		clickImage(e)
+	} );
 }
