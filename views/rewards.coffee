@@ -20,6 +20,21 @@ text '<div class="content container-fluid">'
 
 div 'page-header', ->
   h1 "Here's where you see your rewards"
+ul 'thumbnails', ->
+  for reward in @localAuthor?.rewards
+    rewardOption = null
+    for option in @localAuthor?.rewardOptions
+      if reward.rewardOption.toString() == option._id.toString()
+        rewardOption = option
+        break
+    li 'span4', ->
+      div 'thumbnail alert-info reward', ->
+        img src: rewardOption.imageURI
+        div 'caption', ->
+          h4 'rewardQuantity text-info', -> "$#{reward.totalQuantity.toString()}"
+          h3 rewardOption.displayName
+          a 'btn btn-primary', href: reward.redeemURL, -> 'Redeem'
+
 
 div 'page-header', ->
   h1 'inline', -> "Reward Options"

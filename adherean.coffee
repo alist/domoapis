@@ -89,8 +89,9 @@ adhereanApp = require('zappa').app ->
     sessionToken = @request.cookies?.sessiontoken
     authCurrentAuthorWithIDAndTokenForSession null, null, sessionToken, (err, author) =>
       if author?
-        RewardOption.find {}, {}, null, (err, rewardOptions) =>
-          @render rewards: {localAuthor: author, rewardOptions: rewardOptions}
+        Author.findOne({_id: author._id}).populate('rewardOptions').populate('rewards').exec (err, author) =>
+          RewardOption.find {}, {}, null, (err, rewardOptions) =>
+            @render rewards: {localAuthor: author, rewardOptions: rewardOptions}
       else
         @render index: {message: "login first", locals:{ redirectURL: @request.originalUrl}, localAuthor:author}
     
@@ -102,14 +103,8 @@ adhereanApp = require('zappa').app ->
       else
         @render index: {message: "login first", locals:{ redirectURL: @request.originalUrl}, localAuthor:author}
  
-  @get '/friends', (req, res) ->
-    sessionToken = @request.cookies?.sessiontoken
-    authCurrentAuthorWithIDAndTokenForSession null, null, sessionToken, (err, author) =>
-      if author?
-        @render friends: {localAuthor: author}
-      else
-        @render index: {message: "login first", locals:{ redirectURL: @request.originalUrl}, localAuthor:author}
-  
+  @get '/redeem/:id', (req, res) ->
+    @redirect '/'
  
   @post '/apiv1/submitCode', (req, res) ->
     sessionToken = @request.cookies?.sessiontoken
@@ -155,8 +150,9 @@ adhereanApp = require('zappa').app ->
       Author.findOne({_id: author._id}).populate('rewardOptions').populate('rewards').exec (err, author) =>
         rewardItem = null
         for reward in author?.rewards
-          if reward.rewardOption == rewardOption._id
+          if reward.rewardOption.toString() == rewardOption._id.toString()
             rewardItem = reward
+            break
         if rewardItem? == false
           rewardItem = new Reward {rewardOption: rewardOption._id, issuances:[], totalQuantity: 0}
           rewardItem.redeemURL = "#{primaryHost}/redeem/#{rewardItem._id.toString()}"
