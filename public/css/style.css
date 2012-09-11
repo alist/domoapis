@@ -221,6 +221,9 @@ a:active {
   float: right;
   margin-top: 10px;
 }
+.reward {
+  height: 277px;
+}
 .rewardQuantity {
   float: right;
   margin-top: 22px;
