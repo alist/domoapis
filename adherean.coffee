@@ -166,6 +166,8 @@ adhereanApp = require('zappa').app ->
   
   assignAuthorNewReader = (author, reader, callback) -> #callback(err, author, reader)
     #Reader.findOne {forAuthor: {$exists: false}}, {}, (err, freeReader) =>
+    if author? == false
+      callback "no author"
     if reader? == false
       reader = new Reader {initializeDate: new Date, version: 1}
       reader.identifier = reader._id.toString()
@@ -223,14 +225,18 @@ adhereanApp = require('zappa').app ->
          req.response.cookie 'sessiontoken', sessionToken, {httpOnly: true, secure: true, maxAge: 90000000000 }
   
     authCurrentAuthorWithIDAndTokenForSession null, fbAccessToken, sessionToken, (err, author) =>
-      console.log "auth or create for sessionid# #{sessionToken} finished with err #{err}"
-      #we'll update with some newer stuff if need-be here
-      setAuthorDefaultsIfNeeded author, (updatedAuthor) =>
-        redirectURL = req.query.redirectURL
-        if redirectURL
-          @redirect redirectURL
-        else
-          @redirect '/'
+      if author?
+        console.log "auth or create for sessionid# #{sessionToken} finished with err #{err}"
+        #we'll update with some newer stuff if need-be here
+        setAuthorDefaultsIfNeeded author, (updatedAuthor) =>
+          redirectURL = req.query.redirectURL
+          if redirectURL
+            @redirect redirectURL
+          else
+            @redirect '/'
+      else
+        console.log "bad login for author w/ token #{fbAccessToken} and err #{err}"
+        @render index: {message: "login first", locals:{ redirectURL:redirectURL}}
 
   @get '/logout', (req, res)->
     req.response.clearCookie 'sessiontoken' # clear the cookie
