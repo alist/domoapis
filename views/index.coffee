@@ -36,6 +36,9 @@ p ->
     if @localAuthor? == false
       text ' '
       a 'btn btn-primary btn-large', {href:"javascript:void(0)", onclick: 'window.loginPressed.apply()'}, -> 'Login'
+    else
+      text ' '
+      a {class: "btn btn-primary btn-large", href:"/code"}, -> 'Enter Code'
     
 text """
   <div id="fb-root"></div>
