@@ -28,9 +28,6 @@ coffeescript ->
         if window.redirectURL then redirectStr = "&redirectURL=#{window.redirectURL}" else redirectStr =""
         window.location = "/login?token=#{FB.getAccessToken() + redirectStr}"
 
-if @message
-  p 'message', -> @message
- 
 p ->
     a {class: "btn btn-primary btn-large", href:"mailto:info@adherean.com"}, -> 'Stay In Touch'
     if @localAuthor? == false

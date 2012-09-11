@@ -237,7 +237,7 @@ adhereanApp = require('zappa').app ->
       else
         redirectURL = req.query.redirectURL
         console.log "bad login for author w/ redirect #{redirectURL}, token #{fbAccessToken} and err #{err}"
-        @render index: {message: "login first", locals:{ redirectURL:redirectURL}}
+        @render index: {message: "login denied; please login", locals:{ redirectURL:redirectURL}}
 
   @get '/logout', (req, res)->
     req.response.clearCookie 'sessiontoken' # clear the cookie
