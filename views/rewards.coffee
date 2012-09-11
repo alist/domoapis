@@ -19,7 +19,7 @@ body ->
 text '<div class="content container-fluid">'
 
 div 'page-header', ->
-  h1 "Here's where you see your rewards"
+  h1 "Your health rewards"
 ul 'thumbnails', ->
   for reward in @localAuthor?.rewards
     rewardOption = null
