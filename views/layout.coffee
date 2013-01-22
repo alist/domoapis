@@ -22,7 +22,9 @@
     div 'header navbar-static-top', ->
       div 'container-fluid', ->
         a  {href: "/"}, ->
-          img 'homeHeader', src: "/img/adhearean-website-header-logo.png", ->
+          img 'homeHeader', src: "/img/exomachina-website-header-logo.png", ->
+
+        ///
         div 'headerControls hidden-desktop visible-phone',->
           div 'btn-group', ->
             button 'btn btn-primary dropdown-toggle', 'data-toggle':'dropdown', href:'#', ->
@@ -55,12 +57,13 @@
             a 'userLoginOutButton btn btn-primary btn-small', {href:"javascript:void(0)", onclick: 'window.loginPressed.apply()'}, -> 'Login'
           else
             a 'userLoginOutButton btn btn-primary btn-small', {href:"/logout"}, -> 'Logout'
+        ///
    
     @body
 
   body ->
    footer ->
-    text 'Adherean, Inc.'
+    text 'ExoMachina, Inc.'
 
   body ->
     if @scripts

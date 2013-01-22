@@ -2,41 +2,35 @@
 @stylesheets = ['/css/style','/css/bootstrap.min']
 @localScripts = ['/js/jquery.min','/js/bootstrap']
 
-fbAppID = '488045857873688'
+fbAppID = '8848577688'
 body ->
 
 div 'contentHeader', ->
   div 'container-fluid', ->
-    p 'contentHeaderText', -> "Your health can be rewarding."
+    p 'contentHeaderText', -> "Above the stratosphere."
 
 text '<div class="content container-fluid">'
 
 #div 'hero-unit', ->
 h1 ->
-   text 'Adherean '
-   small 'is currently in a pilot development phase'
-p 'lead', -> 'Adherean helps patients stay on track with their treatment plans. Our Healthcheck technology turns simple medication checkups into secret codes patients can exchange for instant rewards.'
+   text 'ExoMachina '
+   small 'is a partnership-based development corporation'
+p 'lead', -> 'With partners having expertise in mental health, human-computer interaction and aerospace, ExoMachina combines research and design into products for the entire world.'
 
 if @redirectURL? #if for example, index is rendered from offer/:id
   script "window.redirectURL = '#{@redirectURL}'"
 
-coffeescript ->
-  @window.loginPressed = (shouldLogin) ->
-     FB.login (response) ->
-      if response?
-        #here we see whether we redirect
-        if window.redirectURL then redirectStr = "&redirectURL=#{window.redirectURL}" else redirectStr =""
-        window.location = "/login?token=#{FB.getAccessToken() + redirectStr}"
-
 p ->
-    a {class: "btn btn-primary btn-large", href:"mailto:info@adherean.com"}, -> 'Stay In Touch'
+    a {class: "btn btn-primary btn-large",id:"writeUsButton", href:"mailto:hello@exomachina.com"}, -> 'Write us'
+    ###
     if @localAuthor? == false
       text ' '
       a 'btn btn-primary btn-large', {href:"javascript:void(0)", onclick: 'window.loginPressed.apply()'}, -> 'Login'
     else
       text ' '
       a {class: "btn btn-primary btn-large", href:"/code"}, -> 'Enter Code'
-    
+    ###
+
 text """
   <div id="fb-root"></div>
   <script>

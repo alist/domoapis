@@ -1,1 +1,1 @@
-web: coffee adherean.coffee
+web: supervisor exomachina.coffee
