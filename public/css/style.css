@@ -101,12 +101,29 @@ a {
   color: #377ad0;
   text-decoration: none;
 }
-a:hoveR {
+a:hover {
   color: #2861aa;
   text-decoration: underline;
 }
 a:active {
   top: 1px;
+}
+.media-body {
+  padding-left: 110px;
+}
+.media-body a {
+  color: #414042;
+}
+.media-body a:hover {
+  color: #2861aa;
+  text-decoration: none;
+}
+section {
+  margin-bottom: 35px;
+}
+section#apps .page-header {
+  border-top: 1px solid #eee;
+  border-bottom: 0px solid #eee;
 }
 .header {
   height: 60px;
