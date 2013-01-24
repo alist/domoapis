@@ -4,7 +4,7 @@
     meta name: "apple-mobile-web-app-capable", content:"yes"
     #link href: "/css/bootstrap-responsive.css", rel: "stylesheet"
     
-    title "#{@title or 'Untitled'} | Adherean"
+    title "#{@title or 'Untitled'} | ExoMachina"
 
     if @stylesheets
       for s in @stylesheets

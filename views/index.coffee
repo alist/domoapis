@@ -53,30 +53,6 @@ section id: "apps", ->
             h4 'media-heading', -> 'exoNotes'
           text 'exoNotes brings easy-to-use text and drawing functionality to your fingers within a smart interface.'
 
-text """
-  <div id="fb-root"></div>
-  <script>
-    window.fbAsyncInit = function() {
-      FB.init({
-      appId      : '#{fbAppID}', // App ID
-            channelUrl : 'http://offer.herokuapp.com/channel.html', // Channel File
-            status     : true, // check login status
-            cookie     : true, // enable cookies to allow the server to access the session
-            xfbml      : true  // parse XFBML
-            });
-  // Additional initialization code here
-    };
-
-      // Load the SDK Asynchronously
-        (function(d){
-               var js, id = 'facebook-jssdk', ref = d.getElementsByTagName('script')[0];
-                    if (d.getElementById(id)) {return;}
-                         js = d.createElement('script'); js.id = id; js.async = true;
-                              js.src = "//connect.facebook.net/en_US/all.js";
-                                   ref.parentNode.insertBefore(js, ref);
-                                      }(document));
-        </script>
-  """
 
 
 text '</ div>'
