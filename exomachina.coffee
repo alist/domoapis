@@ -4,6 +4,7 @@ hostURL = "https://#{primaryHost}"
 request = require 'request'
 
 home = require('./routes/home')
+roughdraft = require('./routes/roughdraft')
 #feedback = require('./routes/feedback')
 #opinions = require('./routes/opinions')
 redirstat = require('./routes/redirstat')
@@ -36,6 +37,8 @@ alistApp = require('zappa').app ->
 
   @get '/', home.home
 
+  @get '/roughdraft', roughdraft.roughdraft
+  
   @get '/fibromyalgia': -> @redirect 'https://itunes.apple.com/app/fibromyalgia/id398150128?mt=8'
   
   @get '/exonotes': -> @redirect 'https://itunes.apple.com/app/exonotes/id386497497?mt=8'
