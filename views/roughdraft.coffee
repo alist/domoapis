@@ -17,7 +17,7 @@ section id:'about', ->
     script "window.redirectURL = '#{@redirectURL}'"
 
   p ->
-      a {class: "btn btn-primary btn-large",id:"writeUsButton", href:"mailto:hello@exomachina.com"}, -> 'Write us'
+      a {class: "btn btn-primary btn-large",id:"writeUsButton", href:"mailto:alex@domo.io"}, -> 'Write us'
       ###
       if @localAuthor? == false
         text ' '
