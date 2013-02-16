@@ -43,6 +43,9 @@ alistApp = require('zappa').app ->
   
   @get '/exonotes': -> @redirect 'https://itunes.apple.com/app/exonotes/id386497497?mt=8'
 
+  #for fibromyalgia app
+  @get '/site/news/current_fmaware': -> @redirect 'http://fmaware.org/PageServer4311.html?pagename=community_patientStories'
+
   ###
   @get '/feedback': -> @redirect '/s/feedback'
 
