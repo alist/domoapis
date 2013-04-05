@@ -42,6 +42,9 @@ alistApp = require('zappa').app ->
   @get '/fibromyalgia': -> @redirect 'https://itunes.apple.com/app/fibromyalgia/id398150128?mt=8'
   
   @get '/exonotes': -> @redirect 'https://itunes.apple.com/app/exonotes/id386497497?mt=8'
+  
+  @get '/alex': -> @redirect 'http://alist.im'
+  @get '/andrew': -> @redirect 'http://www.linkedin.com/in/andrewhomd'
 
   #for fibromyalgia app
   @get '/site/news/current_fmaware': -> @redirect 'http://fmaware.org/PageServer4311.html?pagename=community_patientStories'
