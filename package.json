@@ -13,6 +13,6 @@
     "mongoose": "2.5.10",
     "express": "2.5.9",
     "request": "2.9.x",
-    "twilio" : "git://github.com/sjwalter/node-twilio.git#2e6a82572691f030aa01654c706d9db260385364"
+    "twilio" : "git://github.com/alist/node-twilio.git"
   }
 }
