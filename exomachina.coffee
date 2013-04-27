@@ -37,7 +37,7 @@ alistApp = require('zappa').app ->
 
   @get '/', home.home
 
-  @get '/roughdraft', roughdraft.roughdraft
+  #@get '/roughdraft', roughdraft.roughdraft
   
   @get '/fibromyalgia': -> @redirect 'https://itunes.apple.com/app/fibromyalgia/id398150128?mt=8'
   
