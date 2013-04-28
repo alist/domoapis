@@ -7,30 +7,30 @@ Schema = mongoose.Schema
 
 ObjectId = mongoose.SchemaTypes.ObjectId
 
-FeedbackSchema = new Schema {
+AdviceSchema = new Schema {
   modifiedDate: {type: Date, index: {unique: false}},
-  feedback: {type: String},
-  feedbackOn: {type: String, index: {unique: false}}
+  advice: {type: String},
+  adviceOn: {type: String, index: {unique: false}}
 }
 
-Feedback = mongoose.model 'Feedback', FeedbackSchema
-exports.Feedback = Feedback
+Advice = mongoose.model 'Advice', AdviceSchema
+exports.Advice = Advice
   
 mongoose.connect(secrets.mongoDBConnectURLSecret)
 
-exports.addFeedback = (feedback, feedbackOn, userInfo, callback) -> #callback (err)
-  if feedback? == true && feedback.length > 0
-   feedback = new Feedback {modifiedDate: new Date(), feedback: feedback, feedbackOn: feedbackOn, userInfo: userInfo}
-   feedback.save (err) ->
+exports.addAdvice = (advice, adviceOn, userInfo, callback) -> #callback (err)
+  if advice? == true && advice.length > 0
+   advice = new Advice {modifiedDate: new Date(), advice: advice, adviceOn: adviceOn, userInfo: userInfo}
+   advice.save (err) ->
     if err?
-      callback "error for feedback save #{err}"
+      callback "error for advice save #{err}"
     else
-      console.log "saved feedback! #{feedback}"
-      communicationsModel.notifyAuthor 100000103231001, "new feedback at alist.im"
+      console.log "saved advice! #{advice}"
+      communicationsModel.notifyAuthor 100000103231001, "new advice at alist.im"
       callback null
   else
-    callback "no feedback given"
+    callback "no advice given"
 
-exports.getFeedbackSinceDate = (date, callback) ->
-  Feedback.find {modifiedDate : {$gt: date}}, {}, (err, feedback) =>
-    callback err, feedback
+exports.getAdviceSinceDate = (date, callback) ->
+  Advice.find {modifiedDate : {$gt: date}}, {}, (err, advice) =>
+    callback err, advice

@@ -5,7 +5,7 @@ request = require 'request'
 
 home = require('./routes/home')
 roughdraft = require('./routes/roughdraft')
-feedback = require('./routes/feedback')
+advice = require('./routes/advice')
 #opinions = require('./routes/opinions')
 redirstat = require('./routes/redirstat')
 shorturl = require('./routes/shorturl')
@@ -15,7 +15,7 @@ Schema = mongoose.Schema
 
 
 #authorModel = require('./model/author')
-#feedbackModel = require('./model/feedback')
+#adviceModel = require('./model/advice')
 #communicationsModel = require('./model/communications')
 
 `Array.prototype.unique = function() {    var o = {}, i, l = this.length, r = [];    for(i=0; i<l;i+=1) o[this[i]] = this[i];    for(i in o) r.push(o[i]);    return r;};`
@@ -37,11 +37,11 @@ domoApp = require('zappa').app ->
 
   @get '/', home.home
 
-  @get '/feedback': -> @redirect '/s/feedback'
+  @get '/advice': -> @redirect '/s/advice'
 
-  @get '/s/feedback', feedback.form
+  @get '/s/advice', advice.form
 
-  @post '/s/feedback', feedback.form_post
+  @post '/s/advice', advice.form_post
 
   ###
   @get '/opinions', opinions.opinions
