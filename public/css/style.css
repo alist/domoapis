@@ -157,6 +157,9 @@ section#apps .page-header {
   -webkit-box-shadow: inset 0px -2px 3px #aaa;
   -moz-box-shadow: inset 0px -2px 3px #aaa;
   box-shadow: inset 0px -2px 3px #aaa;
+  -webkit-background-size: 1020px;
+  -moz-background-size: 1020px;
+  background-size: 1020px;
 }
 .container-fluid {
   margin-left: auto;
