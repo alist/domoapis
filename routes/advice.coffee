@@ -7,7 +7,7 @@ exports.form = (req, res) ->
 exports.form_post = (req, res) ->
   x_ip = req?.request?.headers?['x-forwarded-for']
   unless x_ip? then x_ip = req?.request?.connection?.remoteAddress
-  adviceModel.addFeedback req.body.advice, req.body.adviceOn, {userIP: x_ip}, (err) =>
+  adviceModel.addAdvice req.body.advice, req.body.adviceOn, req.body.adviceContact, {userIP: x_ip}, (err) =>
     if err?
       @send  {status: 'fail'}
     else
