@@ -49,12 +49,12 @@ coffeescript ->
 
 text '<div class="content container-fluid">'
 
-h1 ->
-  text "Domo brings people "
-  small -> "effective assistance for anxiety, depression, and other struggles they encounter in life."
-
 form method:'GET', id:'adviceForm', action:"#", onsubmit: 'window.submitPressed.apply(); return false;', ->
-  legend -> "Through your anonymous vignette you'll receive advice from our network of therapists and validated amazing people. You can schedule to meet with any of them!"
+  h1 ->
+    text "Domo brings effective assistance"
+    small -> " for anxiety, depression, and other struggles people encounter in life."
+
+  legend -> "Through this anonymous request you'll receive advice from our network of therapists and validated amazing people. If you'd like more of their advice, you can schedule a chat!"
   
   onText = null
   if @adviceOn? == true
@@ -68,7 +68,7 @@ form method:'GET', id:'adviceForm', action:"#", onsubmit: 'window.submitPressed.
 
 h1 'text-success hidden', id:'thankYouText', ->
   text 'Thank you for your vignette!'
-  small -> " We'll get you some advice ASAP! (<7 days)"
+  small -> " We'll get you some advice ASAP! (days)"
 
 
 text '</ div>'
