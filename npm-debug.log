@@ -1,0 +1,2142 @@
+0 info it worked if it ends with ok
+1 verbose cli [ '/var/lib/openshift/50299f34e9c741a5985354823b2fc8b0/app-root/data//bin/node-openshift-v8',
+1 verbose cli   '/var/lib/stickshift/50299f34e9c741a5985354823b2fc8b0/app-root/data/lib/node_modules/npm/bin/npm-cli.js',
+1 verbose cli   'update' ]
+2 info using npm@1.1.62
+3 info using node@v0.8.9
+4 verbose node symlink /var/lib/openshift/50299f34e9c741a5985354823b2fc8b0/app-root/data//bin/node-openshift-v8
+5 verbose read json /var/lib/stickshift/50299f34e9c741a5985354823b2fc8b0/app-root/data/333815/domo-io/package.json
+6 verbose read json /var/lib/stickshift/50299f34e9c741a5985354823b2fc8b0/app-root/data/333815/domo-io/node_modules/zappa/package.json
+7 verbose read json /var/lib/stickshift/50299f34e9c741a5985354823b2fc8b0/app-root/data/333815/domo-io/node_modules/.bin/package.json
+8 verbose read json /var/lib/stickshift/50299f34e9c741a5985354823b2fc8b0/app-root/data/333815/domo-io/node_modules/express/package.json
+9 verbose read json /var/lib/stickshift/50299f34e9c741a5985354823b2fc8b0/app-root/data/333815/domo-io/node_modules/request/package.json
+10 verbose read json /var/lib/stickshift/50299f34e9c741a5985354823b2fc8b0/app-root/data/333815/domo-io/node_modules/coffee-script/package.json
+11 verbose read json /var/lib/stickshift/50299f34e9c741a5985354823b2fc8b0/app-root/data/333815/domo-io/node_modules/mongoose/package.json
+12 verbose read json /var/lib/stickshift/50299f34e9c741a5985354823b2fc8b0/app-root/data/333815/domo-io/node_modules/should/package.json
+13 verbose read json /var/lib/stickshift/50299f34e9c741a5985354823b2fc8b0/app-root/data/333815/domo-io/node_modules/supervisor/package.json
+14 verbose cache add [ 'coffee-script', '1.2.0' ]
+15 silly cache add name="coffee-script" spec="1.2.0" args=["coffee-script","1.2.0"]
+16 verbose parsed url { pathname: '1.2.0', path: '1.2.0', href: '1.2.0' }
+17 verbose addNamed [ 'coffee-script', '1.2.0' ]
+18 verbose addNamed [ '1.2.0', '1.2.0' ]
+19 verbose cache add [ 'zappa', '0.3.3' ]
+20 silly cache add name="zappa" spec="0.3.3" args=["zappa","0.3.3"]
+21 verbose parsed url { pathname: '0.3.3', path: '0.3.3', href: '0.3.3' }
+22 verbose addNamed [ 'zappa', '0.3.3' ]
+23 verbose addNamed [ '0.3.3', '0.3.3' ]
+24 verbose cache add [ 'supervisor', '0.5.x' ]
+25 silly cache add name="supervisor" spec="0.5.x" args=["supervisor","0.5.x"]
+26 verbose parsed url { pathname: '0.5.x', path: '0.5.x', href: '0.5.x' }
+27 verbose addNamed [ 'supervisor', '0.5.x' ]
+28 verbose addNamed [ null, '>=0.5.0- <0.6.0-' ]
+29 verbose cache add [ 'should', '1.2.x' ]
+30 silly cache add name="should" spec="1.2.x" args=["should","1.2.x"]
+31 verbose parsed url { pathname: '1.2.x', path: '1.2.x', href: '1.2.x' }
+32 verbose addNamed [ 'should', '1.2.x' ]
+33 verbose addNamed [ null, '>=1.2.0- <1.3.0-' ]
+34 verbose cache add [ 'mongoose', '2.5.10' ]
+35 silly cache add name="mongoose" spec="2.5.10" args=["mongoose","2.5.10"]
+36 verbose parsed url { pathname: '2.5.10', path: '2.5.10', href: '2.5.10' }
+37 verbose addNamed [ 'mongoose', '2.5.10' ]
+38 verbose addNamed [ '2.5.10', '2.5.10' ]
+39 verbose cache add [ 'express', '2.5.9' ]
+40 silly cache add name="express" spec="2.5.9" args=["express","2.5.9"]
+41 verbose parsed url { pathname: '2.5.9', path: '2.5.9', href: '2.5.9' }
+42 verbose addNamed [ 'express', '2.5.9' ]
+43 verbose addNamed [ '2.5.9', '2.5.9' ]
+44 verbose cache add [ 'request', '2.9.x' ]
+45 silly cache add name="request" spec="2.9.x" args=["request","2.9.x"]
+46 verbose parsed url { pathname: '2.9.x', path: '2.9.x', href: '2.9.x' }
+47 verbose addNamed [ 'request', '2.9.x' ]
+48 verbose addNamed [ null, '>=2.9.0- <2.10.0-' ]
+49 verbose cache add [ 'twilio', 'git://github.com/alist/node-twilio.git' ]
+50 silly cache add name="twilio" spec="git://github.com/alist/node-twilio.git" args=["twilio","git://github.com/alist/node-twilio.git"]
+51 verbose parsed url { protocol: 'git:',
+51 verbose parsed url   slashes: true,
+51 verbose parsed url   host: 'github.com',
+51 verbose parsed url   hostname: 'github.com',
+51 verbose parsed url   href: 'git://github.com/alist/node-twilio.git',
+51 verbose parsed url   pathname: '/alist/node-twilio.git',
+51 verbose parsed url   path: '/alist/node-twilio.git' }
+52 silly lockFile 1dae3b3d-coffee-script-1-2-0 coffee-script@1.2.0
+53 verbose lock coffee-script@1.2.0 /var/lib/openshift/50299f34e9c741a5985354823b2fc8b0/app-root/data/.npm/1dae3b3d-coffee-script-1-2-0.lock
+54 silly lockFile e670c7d3-zappa-0-3-3 zappa@0.3.3
+55 verbose lock zappa@0.3.3 /var/lib/openshift/50299f34e9c741a5985354823b2fc8b0/app-root/data/.npm/e670c7d3-zappa-0-3-3.lock
+56 silly lockFile 663d975c-supervisor-0-5-x supervisor@0.5.x
+57 verbose lock supervisor@0.5.x /var/lib/openshift/50299f34e9c741a5985354823b2fc8b0/app-root/data/.npm/663d975c-supervisor-0-5-x.lock
+58 silly lockFile 04a4c92d-should-1-2-x should@1.2.x
+59 verbose lock should@1.2.x /var/lib/openshift/50299f34e9c741a5985354823b2fc8b0/app-root/data/.npm/04a4c92d-should-1-2-x.lock
+60 silly lockFile e5b423ff-mongoose-2-5-10 mongoose@2.5.10
+61 verbose lock mongoose@2.5.10 /var/lib/openshift/50299f34e9c741a5985354823b2fc8b0/app-root/data/.npm/e5b423ff-mongoose-2-5-10.lock
+62 silly lockFile b342ec4f-express-2-5-9 express@2.5.9
+63 verbose lock express@2.5.9 /var/lib/openshift/50299f34e9c741a5985354823b2fc8b0/app-root/data/.npm/b342ec4f-express-2-5-9.lock
+64 silly lockFile 0258777d-request-2-9-x request@2.9.x
+65 verbose lock request@2.9.x /var/lib/openshift/50299f34e9c741a5985354823b2fc8b0/app-root/data/.npm/0258777d-request-2-9-x.lock
+66 silly lockFile f9dfea3c-github-com-alist-node-twilio-git git://github.com/alist/node-twilio.git
+67 verbose lock git://github.com/alist/node-twilio.git /var/lib/openshift/50299f34e9c741a5985354823b2fc8b0/app-root/data/.npm/f9dfea3c-github-com-alist-node-twilio-git.lock
+68 silly addNameRange { name: 'supervisor', range: '>=0.5.0- <0.6.0-', hasData: false }
+69 silly addNameRange { name: 'should', range: '>=1.2.0- <1.3.0-', hasData: false }
+70 silly addNameRange { name: 'request', range: '>=2.9.0- <2.10.0-', hasData: false }
+71 verbose addRemoteGit [ 'git://github.com/alist/node-twilio.git', 'master' ]
+72 silly exec /var/lib/stickshift/50299f34e9c741a5985354823b2fc8b0/app-root/data/bin/git "clone" "git://github.com/alist/node-twilio.git" "/var/lib/openshift/50299f34e9c741a5985354823b2fc8b0/app-root/data/tmp/npm-25558/1367120807075-0.6951032767537981"
+73 silly /var/lib/stickshift/50299f34e9c741a5985354823b2fc8b0/app-root/data/bin/git,clone,git://github.com/alist/node-twilio.git,/var/lib/openshift/50299f34e9c741a5985354823b2fc8b0/app-root/data/tmp/npm-25558/1367120807075-0.6951032767537981, spawning
+74 verbose url raw coffee-script/1.2.0
+75 verbose url resolving [ 'https://registry.npmjs.org/', './coffee-script/1.2.0' ]
+76 verbose url resolved https://registry.npmjs.org/coffee-script/1.2.0
+77 info trying registry request attempt 1 at 23:46:47
+78 verbose etag "4SERN669FTVR28WAALP09FCNQ"
+79 http GET https://registry.npmjs.org/coffee-script/1.2.0
+80 verbose url raw zappa/0.3.3
+81 verbose url resolving [ 'https://registry.npmjs.org/', './zappa/0.3.3' ]
+82 verbose url resolved https://registry.npmjs.org/zappa/0.3.3
+83 info trying registry request attempt 1 at 23:46:47
+84 verbose etag "2UN8J0I4NUIIM0A0FPJ0IGI7Y"
+85 http GET https://registry.npmjs.org/zappa/0.3.3
+86 verbose url raw supervisor
+87 verbose url resolving [ 'https://registry.npmjs.org/', './supervisor' ]
+88 verbose url resolved https://registry.npmjs.org/supervisor
+89 info trying registry request attempt 1 at 23:46:47
+90 verbose etag "6JO0NW75LOUHCH3DWWYFOC4ID"
+91 http GET https://registry.npmjs.org/supervisor
+92 verbose url raw should
+93 verbose url resolving [ 'https://registry.npmjs.org/', './should' ]
+94 verbose url resolved https://registry.npmjs.org/should
+95 info trying registry request attempt 1 at 23:46:47
+96 verbose etag "D4CVSAAKQ8ZIL0WYGO4TI4Y8V"
+97 http GET https://registry.npmjs.org/should
+98 verbose url raw request
+99 verbose url resolving [ 'https://registry.npmjs.org/', './request' ]
+100 verbose url resolved https://registry.npmjs.org/request
+101 info trying registry request attempt 1 at 23:46:47
+102 verbose etag "A73N8Z015IBIGSSY5REPHX74L"
+103 http GET https://registry.npmjs.org/request
+104 verbose url raw express/2.5.9
+105 verbose url resolving [ 'https://registry.npmjs.org/', './express/2.5.9' ]
+106 verbose url resolved https://registry.npmjs.org/express/2.5.9
+107 info trying registry request attempt 1 at 23:46:47
+108 verbose etag "1ADYQONQTR1X6RPBB3OM7HEUR"
+109 http GET https://registry.npmjs.org/express/2.5.9
+110 verbose url raw mongoose/2.5.10
+111 verbose url resolving [ 'https://registry.npmjs.org/', './mongoose/2.5.10' ]
+112 verbose url resolved https://registry.npmjs.org/mongoose/2.5.10
+113 info trying registry request attempt 1 at 23:46:47
+114 verbose etag "D4T6HC5U3OCUJQ6UAL43TQWN8"
+115 http GET https://registry.npmjs.org/mongoose/2.5.10
+116 http 304 https://registry.npmjs.org/coffee-script/1.2.0
+117 silly registry.get cb [ 304,
+117 silly registry.get   { server: 'CouchDB/1.3.0 (Erlang OTP/R15B03)',
+117 silly registry.get     etag: '"4SERN669FTVR28WAALP09FCNQ"',
+117 silly registry.get     date: 'Sun, 28 Apr 2013 03:46:47 GMT',
+117 silly registry.get     'content-length': '0' } ]
+118 verbose etag coffee-script/1.2.0 from cache
+119 verbose git clone git://github.com/alist/node-twilio.git Initialized empty Git repository in /var/lib/openshift/50299f34e9c741a5985354823b2fc8b0/app-root/data/tmp/npm-25558/1367120807075-0.6951032767537981/.git/
+120 silly exec /var/lib/stickshift/50299f34e9c741a5985354823b2fc8b0/app-root/data/bin/git "checkout" "master"
+121 silly /var/lib/stickshift/50299f34e9c741a5985354823b2fc8b0/app-root/data/bin/git,checkout,master,/var/lib/openshift/50299f34e9c741a5985354823b2fc8b0/app-root/data/tmp/npm-25558/1367120807075-0.6951032767537981 spawning
+122 verbose read json /var/lib/openshift/50299f34e9c741a5985354823b2fc8b0/app-root/data/.npm/coffee-script/1.2.0/package/package.json
+123 silly lockFile 1dae3b3d-coffee-script-1-2-0 coffee-script@1.2.0
+124 verbose from cache /var/lib/stickshift/50299f34e9c741a5985354823b2fc8b0/app-root/data/333815/domo-io/node_modules/coffee-script/package.json
+125 verbose git checkout master Already on 'master'
+126 verbose read json /var/lib/openshift/50299f34e9c741a5985354823b2fc8b0/app-root/data/tmp/npm-25558/1367120807075-0.6951032767537981/package.json
+127 verbose tar pack [ '/var/lib/openshift/50299f34e9c741a5985354823b2fc8b0/app-root/data/tmp/npm-25558/1367120808184-0.9783140525687486/tmp.tgz',
+127 verbose tar pack   '/var/lib/openshift/50299f34e9c741a5985354823b2fc8b0/app-root/data/tmp/npm-25558/1367120807075-0.6951032767537981' ]
+128 verbose tarball /var/lib/openshift/50299f34e9c741a5985354823b2fc8b0/app-root/data/tmp/npm-25558/1367120808184-0.9783140525687486/tmp.tgz
+129 verbose folder /var/lib/openshift/50299f34e9c741a5985354823b2fc8b0/app-root/data/tmp/npm-25558/1367120807075-0.6951032767537981
+130 silly lockFile 08702dfe-08184-0-9783140525687486-tmp-tgz /var/lib/openshift/50299f34e9c741a5985354823b2fc8b0/app-root/data/tmp/npm-25558/1367120808184-0.9783140525687486/tmp.tgz
+131 verbose lock /var/lib/openshift/50299f34e9c741a5985354823b2fc8b0/app-root/data/tmp/npm-25558/1367120808184-0.9783140525687486/tmp.tgz /var/lib/openshift/50299f34e9c741a5985354823b2fc8b0/app-root/data/.npm/08702dfe-08184-0-9783140525687486-tmp-tgz.lock
+132 http 304 https://registry.npmjs.org/zappa/0.3.3
+133 silly registry.get cb [ 304,
+133 silly registry.get   { server: 'CouchDB/1.3.0 (Erlang OTP/R15B03)',
+133 silly registry.get     etag: '"2UN8J0I4NUIIM0A0FPJ0IGI7Y"',
+133 silly registry.get     date: 'Sun, 28 Apr 2013 03:46:48 GMT',
+133 silly registry.get     'content-length': '0' } ]
+134 verbose etag zappa/0.3.3 from cache
+135 http 304 https://registry.npmjs.org/request
+136 silly registry.get cb [ 304,
+136 silly registry.get   { server: 'CouchDB/1.3.0 (Erlang OTP/R15B03)',
+136 silly registry.get     etag: '"A73N8Z015IBIGSSY5REPHX74L"',
+136 silly registry.get     date: 'Sun, 28 Apr 2013 03:46:48 GMT',
+136 silly registry.get     'content-length': '0' } ]
+137 verbose etag request from cache
+138 http 304 https://registry.npmjs.org/should
+139 silly registry.get cb [ 304,
+139 silly registry.get   { server: 'CouchDB/1.3.0 (Erlang OTP/R15B03)',
+139 silly registry.get     etag: '"D4CVSAAKQ8ZIL0WYGO4TI4Y8V"',
+139 silly registry.get     date: 'Sun, 28 Apr 2013 03:46:48 GMT',
+139 silly registry.get     'content-length': '0' } ]
+140 verbose etag should from cache
+141 http 304 https://registry.npmjs.org/express/2.5.9
+142 silly registry.get cb [ 304,
+142 silly registry.get   { server: 'CouchDB/1.3.0 (Erlang OTP/R15B03)',
+142 silly registry.get     etag: '"1ADYQONQTR1X6RPBB3OM7HEUR"',
+142 silly registry.get     date: 'Sun, 28 Apr 2013 03:46:48 GMT',
+142 silly registry.get     'content-length': '0' } ]
+143 verbose etag express/2.5.9 from cache
+144 http 304 https://registry.npmjs.org/supervisor
+145 silly registry.get cb [ 304,
+145 silly registry.get   { server: 'CouchDB/1.3.0 (Erlang OTP/R15B03)',
+145 silly registry.get     etag: '"6JO0NW75LOUHCH3DWWYFOC4ID"',
+145 silly registry.get     date: 'Sun, 28 Apr 2013 03:46:48 GMT',
+145 silly registry.get     'content-length': '0' } ]
+146 verbose etag supervisor from cache
+147 silly addNameRange number 2 { name: 'supervisor', range: '>=0.5.0- <0.6.0-', hasData: true }
+148 silly addNameRange versions [ 'supervisor',
+148 silly addNameRange   [ '0.0.4',
+148 silly addNameRange     '0.0.5',
+148 silly addNameRange     '0.0.6',
+148 silly addNameRange     '0.1.0',
+148 silly addNameRange     '0.1.1',
+148 silly addNameRange     '0.1.2',
+148 silly addNameRange     '0.1.3',
+148 silly addNameRange     '0.2.0',
+148 silly addNameRange     '0.3.0',
+148 silly addNameRange     '0.3.1',
+148 silly addNameRange     '0.3.2',
+148 silly addNameRange     '0.3.3',
+148 silly addNameRange     '0.3.4',
+148 silly addNameRange     '0.3.5',
+148 silly addNameRange     '0.3.6',
+148 silly addNameRange     '0.4.0',
+148 silly addNameRange     '0.4.1',
+148 silly addNameRange     '0.5.0',
+148 silly addNameRange     '0.5.1',
+148 silly addNameRange     '0.5.2' ] ]
+149 verbose addNamed [ 'supervisor', '0.5.2' ]
+150 verbose addNamed [ '0.5.2', '0.5.2' ]
+151 silly lockFile fef4aa6b-supervisor-0-5-2 supervisor@0.5.2
+152 verbose lock supervisor@0.5.2 /var/lib/openshift/50299f34e9c741a5985354823b2fc8b0/app-root/data/.npm/fef4aa6b-supervisor-0-5-2.lock
+153 silly addNameRange number 2 { name: 'request', range: '>=2.9.0- <2.10.0-', hasData: true }
+154 silly addNameRange versions [ 'request',
+154 silly addNameRange   [ '0.10.0',
+154 silly addNameRange     '0.8.3',
+154 silly addNameRange     '0.9.0',
+154 silly addNameRange     '0.9.1',
+154 silly addNameRange     '0.9.5',
+154 silly addNameRange     '1.0.0',
+154 silly addNameRange     '1.1.0',
+154 silly addNameRange     '1.1.1',
+154 silly addNameRange     '1.2.0',
+154 silly addNameRange     '1.9.0',
+154 silly addNameRange     '1.9.1',
+154 silly addNameRange     '1.9.2',
+154 silly addNameRange     '1.9.3',
+154 silly addNameRange     '1.9.5',
+154 silly addNameRange     '1.9.7',
+154 silly addNameRange     '1.9.8',
+154 silly addNameRange     '1.9.9',
+154 silly addNameRange     '2.0.0',
+154 silly addNameRange     '2.0.1',
+154 silly addNameRange     '2.0.2',
+154 silly addNameRange     '2.0.3',
+154 silly addNameRange     '2.0.4',
+154 silly addNameRange     '2.0.5',
+154 silly addNameRange     '2.1.0',
+154 silly addNameRange     '2.1.1',
+154 silly addNameRange     '2.2.0',
+154 silly addNameRange     '2.2.5',
+154 silly addNameRange     '2.2.6',
+154 silly addNameRange     '2.2.9',
+154 silly addNameRange     '2.9.0',
+154 silly addNameRange     '2.9.1',
+154 silly addNameRange     '2.9.2',
+154 silly addNameRange     '2.9.3',
+154 silly addNameRange     '2.9.100',
+154 silly addNameRange     '2.9.150',
+154 silly addNameRange     '2.9.151',
+154 silly addNameRange     '2.9.152',
+154 silly addNameRange     '2.9.153',
+154 silly addNameRange     '2.9.200',
+154 silly addNameRange     '2.9.201',
+154 silly addNameRange     '2.9.202',
+154 silly addNameRange     '2.9.203',
+154 silly addNameRange     '2.10.0',
+154 silly addNameRange     '2.11.0',
+154 silly addNameRange     '2.11.1',
+154 silly addNameRange     '2.11.2',
+154 silly addNameRange     '2.11.3',
+154 silly addNameRange     '2.11.4',
+154 silly addNameRange     '2.12.0',
+154 silly addNameRange     '2.14.0',
+154 silly addNameRange     '2.16.0',
+154 silly addNameRange     '2.16.2',
+154 silly addNameRange     '2.16.4',
+154 silly addNameRange     '2.16.6',
+154 silly addNameRange     '2.18.0',
+154 silly addNameRange     '2.19.0',
+154 silly addNameRange     '2.20.0' ] ]
+155 verbose addNamed [ 'request', '2.9.203' ]
+156 verbose addNamed [ '2.9.203', '2.9.203' ]
+157 silly lockFile 3887d89d-request-2-9-203 request@2.9.203
+158 verbose lock request@2.9.203 /var/lib/openshift/50299f34e9c741a5985354823b2fc8b0/app-root/data/.npm/3887d89d-request-2-9-203.lock
+159 silly addNameRange number 2 { name: 'should', range: '>=1.2.0- <1.3.0-', hasData: true }
+160 silly addNameRange versions [ 'should',
+160 silly addNameRange   [ '0.0.1',
+160 silly addNameRange     '0.0.2',
+160 silly addNameRange     '0.0.3',
+160 silly addNameRange     '0.0.4',
+160 silly addNameRange     '0.1.0',
+160 silly addNameRange     '0.2.0',
+160 silly addNameRange     '0.2.1',
+160 silly addNameRange     '0.3.0',
+160 silly addNameRange     '0.3.1',
+160 silly addNameRange     '0.3.2',
+160 silly addNameRange     '0.4.0',
+160 silly addNameRange     '0.4.1',
+160 silly addNameRange     '0.4.2',
+160 silly addNameRange     '0.5.0',
+160 silly addNameRange     '0.5.1',
+160 silly addNameRange     '0.6.0',
+160 silly addNameRange     '0.6.1',
+160 silly addNameRange     '0.6.2',
+160 silly addNameRange     '0.6.3',
+160 silly addNameRange     '1.0.0',
+160 silly addNameRange     '1.1.0',
+160 silly addNameRange     '1.1.1',
+160 silly addNameRange     '1.2.0',
+160 silly addNameRange     '1.2.1',
+160 silly addNameRange     '1.2.2' ] ]
+161 verbose addNamed [ 'should', '1.2.2' ]
+162 verbose addNamed [ '1.2.2', '1.2.2' ]
+163 silly lockFile a3ec6cce-should-1-2-2 should@1.2.2
+164 verbose lock should@1.2.2 /var/lib/openshift/50299f34e9c741a5985354823b2fc8b0/app-root/data/.npm/a3ec6cce-should-1-2-2.lock
+165 verbose read json /var/lib/openshift/50299f34e9c741a5985354823b2fc8b0/app-root/data/.npm/zappa/0.3.3/package/package.json
+166 verbose read json /var/lib/openshift/50299f34e9c741a5985354823b2fc8b0/app-root/data/.npm/express/2.5.9/package/package.json
+167 verbose read json /var/lib/openshift/50299f34e9c741a5985354823b2fc8b0/app-root/data/.npm/supervisor/0.5.2/package/package.json
+168 verbose read json /var/lib/openshift/50299f34e9c741a5985354823b2fc8b0/app-root/data/.npm/request/2.9.203/package/package.json
+169 verbose read json /var/lib/openshift/50299f34e9c741a5985354823b2fc8b0/app-root/data/.npm/should/1.2.2/package/package.json
+170 silly lockFile e670c7d3-zappa-0-3-3 zappa@0.3.3
+171 silly lockFile b342ec4f-express-2-5-9 express@2.5.9
+172 silly lockFile fef4aa6b-supervisor-0-5-2 supervisor@0.5.2
+173 silly lockFile 3887d89d-request-2-9-203 request@2.9.203
+174 silly lockFile a3ec6cce-should-1-2-2 should@1.2.2
+175 verbose from cache /var/lib/stickshift/50299f34e9c741a5985354823b2fc8b0/app-root/data/333815/domo-io/node_modules/zappa/package.json
+176 verbose from cache /var/lib/stickshift/50299f34e9c741a5985354823b2fc8b0/app-root/data/333815/domo-io/node_modules/express/package.json
+177 verbose read json /var/lib/stickshift/50299f34e9c741a5985354823b2fc8b0/app-root/data/333815/domo-io/node_modules/zappa/node_modules/.bin/package.json
+178 verbose read json /var/lib/stickshift/50299f34e9c741a5985354823b2fc8b0/app-root/data/333815/domo-io/node_modules/zappa/node_modules/express/package.json
+179 verbose read json /var/lib/stickshift/50299f34e9c741a5985354823b2fc8b0/app-root/data/333815/domo-io/node_modules/zappa/node_modules/node-uuid/package.json
+180 verbose read json /var/lib/stickshift/50299f34e9c741a5985354823b2fc8b0/app-root/data/333815/domo-io/node_modules/zappa/node_modules/uglify-js/package.json
+181 verbose read json /var/lib/stickshift/50299f34e9c741a5985354823b2fc8b0/app-root/data/333815/domo-io/node_modules/zappa/node_modules/coffeekup/package.json
+182 verbose read json /var/lib/stickshift/50299f34e9c741a5985354823b2fc8b0/app-root/data/333815/domo-io/node_modules/zappa/node_modules/socket.io/package.json
+183 silly lockFile 663d975c-supervisor-0-5-x supervisor@0.5.x
+184 silly lockFile 0258777d-request-2-9-x request@2.9.x
+185 silly lockFile 04a4c92d-should-1-2-x should@1.2.x
+186 verbose read json /var/lib/stickshift/50299f34e9c741a5985354823b2fc8b0/app-root/data/333815/domo-io/node_modules/express/node_modules/qs/package.json
+187 verbose read json /var/lib/stickshift/50299f34e9c741a5985354823b2fc8b0/app-root/data/333815/domo-io/node_modules/express/node_modules/mime/package.json
+188 verbose read json /var/lib/stickshift/50299f34e9c741a5985354823b2fc8b0/app-root/data/333815/domo-io/node_modules/express/node_modules/connect/package.json
+189 verbose read json /var/lib/stickshift/50299f34e9c741a5985354823b2fc8b0/app-root/data/333815/domo-io/node_modules/express/node_modules/mkdirp/package.json
+190 verbose from cache /var/lib/stickshift/50299f34e9c741a5985354823b2fc8b0/app-root/data/333815/domo-io/node_modules/supervisor/package.json
+191 verbose from cache /var/lib/stickshift/50299f34e9c741a5985354823b2fc8b0/app-root/data/333815/domo-io/node_modules/request/package.json
+192 verbose from cache /var/lib/stickshift/50299f34e9c741a5985354823b2fc8b0/app-root/data/333815/domo-io/node_modules/should/package.json
+193 silly lockFile 08702dfe-08184-0-9783140525687486-tmp-tgz /var/lib/openshift/50299f34e9c741a5985354823b2fc8b0/app-root/data/tmp/npm-25558/1367120808184-0.9783140525687486/tmp.tgz
+194 verbose tar unpack /var/lib/openshift/50299f34e9c741a5985354823b2fc8b0/app-root/data/tmp/npm-25558/1367120808184-0.9783140525687486/tmp.tgz
+195 verbose cache add [ 'express', '< 3.0.0' ]
+196 silly cache add name="express" spec="< 3.0.0" args=["express","< 3.0.0"]
+197 verbose parsed url { pathname: '%3C%203.0.0',
+197 verbose parsed url   path: '%3C%203.0.0',
+197 verbose parsed url   href: '%3C%203.0.0' }
+198 verbose addNamed [ 'express', '< 3.0.0' ]
+199 verbose addNamed [ null, '<3.0.0' ]
+200 silly lockFile 16b8b1a4-express-3-0-0 express@< 3.0.0
+201 verbose lock express@< 3.0.0 /var/lib/openshift/50299f34e9c741a5985354823b2fc8b0/app-root/data/.npm/16b8b1a4-express-3-0-0.lock
+202 verbose cache add [ 'socket.io', '0.8.x' ]
+203 silly cache add name="socket.io" spec="0.8.x" args=["socket.io","0.8.x"]
+204 verbose parsed url { pathname: '0.8.x', path: '0.8.x', href: '0.8.x' }
+205 verbose addNamed [ 'socket.io', '0.8.x' ]
+206 verbose addNamed [ null, '>=0.8.0- <0.9.0-' ]
+207 silly lockFile a2321bf7-socket-io-0-8-x socket.io@0.8.x
+208 verbose lock socket.io@0.8.x /var/lib/openshift/50299f34e9c741a5985354823b2fc8b0/app-root/data/.npm/a2321bf7-socket-io-0-8-x.lock
+209 verbose cache add [ 'coffeekup', '0.3.x' ]
+210 silly cache add name="coffeekup" spec="0.3.x" args=["coffeekup","0.3.x"]
+211 verbose parsed url { pathname: '0.3.x', path: '0.3.x', href: '0.3.x' }
+212 verbose addNamed [ 'coffeekup', '0.3.x' ]
+213 verbose addNamed [ null, '>=0.3.0- <0.4.0-' ]
+214 silly lockFile 23a50e4a-coffeekup-0-3-x coffeekup@0.3.x
+215 verbose lock coffeekup@0.3.x /var/lib/openshift/50299f34e9c741a5985354823b2fc8b0/app-root/data/.npm/23a50e4a-coffeekup-0-3-x.lock
+216 verbose cache add [ 'node-uuid', '1.2.0' ]
+217 silly cache add name="node-uuid" spec="1.2.0" args=["node-uuid","1.2.0"]
+218 verbose parsed url { pathname: '1.2.0', path: '1.2.0', href: '1.2.0' }
+219 verbose addNamed [ 'node-uuid', '1.2.0' ]
+220 verbose addNamed [ '1.2.0', '1.2.0' ]
+221 silly lockFile a07244d1-node-uuid-1-2-0 node-uuid@1.2.0
+222 verbose lock node-uuid@1.2.0 /var/lib/openshift/50299f34e9c741a5985354823b2fc8b0/app-root/data/.npm/a07244d1-node-uuid-1-2-0.lock
+223 verbose cache add [ 'uglify-js', '1.1.x' ]
+224 silly cache add name="uglify-js" spec="1.1.x" args=["uglify-js","1.1.x"]
+225 verbose parsed url { pathname: '1.1.x', path: '1.1.x', href: '1.1.x' }
+226 verbose addNamed [ 'uglify-js', '1.1.x' ]
+227 verbose addNamed [ null, '>=1.1.0- <1.2.0-' ]
+228 silly lockFile c0d8a10a-uglify-js-1-1-x uglify-js@1.1.x
+229 verbose lock uglify-js@1.1.x /var/lib/openshift/50299f34e9c741a5985354823b2fc8b0/app-root/data/.npm/c0d8a10a-uglify-js-1-1-x.lock
+230 verbose cache add [ 'connect', '1.x' ]
+231 silly cache add name="connect" spec="1.x" args=["connect","1.x"]
+232 verbose parsed url { pathname: '1.x', path: '1.x', href: '1.x' }
+233 verbose addNamed [ 'connect', '1.x' ]
+234 verbose addNamed [ null, '>=1.0.0- <2.0.0-' ]
+235 silly lockFile 53f47653-connect-1-x connect@1.x
+236 verbose lock connect@1.x /var/lib/openshift/50299f34e9c741a5985354823b2fc8b0/app-root/data/.npm/53f47653-connect-1-x.lock
+237 verbose cache add [ 'mime', '1.2.4' ]
+238 silly cache add name="mime" spec="1.2.4" args=["mime","1.2.4"]
+239 verbose parsed url { pathname: '1.2.4', path: '1.2.4', href: '1.2.4' }
+240 verbose addNamed [ 'mime', '1.2.4' ]
+241 verbose addNamed [ '1.2.4', '1.2.4' ]
+242 silly lockFile f98e0446-mime-1-2-4 mime@1.2.4
+243 verbose lock mime@1.2.4 /var/lib/openshift/50299f34e9c741a5985354823b2fc8b0/app-root/data/.npm/f98e0446-mime-1-2-4.lock
+244 verbose cache add [ 'qs', '0.4.x' ]
+245 silly cache add name="qs" spec="0.4.x" args=["qs","0.4.x"]
+246 verbose parsed url { pathname: '0.4.x', path: '0.4.x', href: '0.4.x' }
+247 verbose addNamed [ 'qs', '0.4.x' ]
+248 verbose addNamed [ null, '>=0.4.0- <0.5.0-' ]
+249 silly lockFile 40f23af8-qs-0-4-x qs@0.4.x
+250 verbose lock qs@0.4.x /var/lib/openshift/50299f34e9c741a5985354823b2fc8b0/app-root/data/.npm/40f23af8-qs-0-4-x.lock
+251 verbose cache add [ 'mkdirp', '0.3.0' ]
+252 silly cache add name="mkdirp" spec="0.3.0" args=["mkdirp","0.3.0"]
+253 verbose parsed url { pathname: '0.3.0', path: '0.3.0', href: '0.3.0' }
+254 verbose addNamed [ 'mkdirp', '0.3.0' ]
+255 verbose addNamed [ '0.3.0', '0.3.0' ]
+256 silly lockFile 9a6651f3-mkdirp-0-3-0 mkdirp@0.3.0
+257 verbose lock mkdirp@0.3.0 /var/lib/openshift/50299f34e9c741a5985354823b2fc8b0/app-root/data/.npm/9a6651f3-mkdirp-0-3-0.lock
+258 silly lockFile 19b7ec25-08184-0-9783140525687486-package /var/lib/openshift/50299f34e9c741a5985354823b2fc8b0/app-root/data/tmp/npm-25558/1367120808184-0.9783140525687486/package
+259 verbose lock /var/lib/openshift/50299f34e9c741a5985354823b2fc8b0/app-root/data/tmp/npm-25558/1367120808184-0.9783140525687486/package /var/lib/openshift/50299f34e9c741a5985354823b2fc8b0/app-root/data/.npm/19b7ec25-08184-0-9783140525687486-package.lock
+260 silly addNameRange { name: 'express', range: '<3.0.0', hasData: false }
+261 silly addNameRange { name: 'socket.io', range: '>=0.8.0- <0.9.0-', hasData: false }
+262 silly addNameRange { name: 'coffeekup', range: '>=0.3.0- <0.4.0-', hasData: false }
+263 silly addNameRange { name: 'uglify-js', range: '>=1.1.0- <1.2.0-', hasData: false }
+264 silly addNameRange { name: 'connect', range: '>=1.0.0- <2.0.0-', hasData: false }
+265 silly addNameRange { name: 'qs', range: '>=0.4.0- <0.5.0-', hasData: false }
+266 silly gunzTarPerm modes [ '755', '644' ]
+267 verbose url raw express
+268 verbose url resolving [ 'https://registry.npmjs.org/', './express' ]
+269 verbose url resolved https://registry.npmjs.org/express
+270 info trying registry request attempt 1 at 23:46:49
+271 verbose etag "1ADYQONQTR1X6RPBB3OM7HEUR"
+272 http GET https://registry.npmjs.org/express
+273 verbose url raw socket.io
+274 verbose url resolving [ 'https://registry.npmjs.org/', './socket.io' ]
+275 verbose url resolved https://registry.npmjs.org/socket.io
+276 info trying registry request attempt 1 at 23:46:49
+277 verbose etag "B1EJT7PU69P9DN8CJKAYP1JQK"
+278 http GET https://registry.npmjs.org/socket.io
+279 verbose url raw node-uuid/1.2.0
+280 verbose url resolving [ 'https://registry.npmjs.org/', './node-uuid/1.2.0' ]
+281 verbose url resolved https://registry.npmjs.org/node-uuid/1.2.0
+282 info trying registry request attempt 1 at 23:46:49
+283 verbose etag "CZIHKDFX3N2GNUZTLU6UCABOW"
+284 http GET https://registry.npmjs.org/node-uuid/1.2.0
+285 verbose url raw coffeekup
+286 verbose url resolving [ 'https://registry.npmjs.org/', './coffeekup' ]
+287 verbose url resolved https://registry.npmjs.org/coffeekup
+288 info trying registry request attempt 1 at 23:46:49
+289 verbose etag "83XAUI3EOE24ZR6XVJ9QO1RZS"
+290 http GET https://registry.npmjs.org/coffeekup
+291 verbose url raw uglify-js
+292 verbose url resolving [ 'https://registry.npmjs.org/', './uglify-js' ]
+293 verbose url resolved https://registry.npmjs.org/uglify-js
+294 info trying registry request attempt 1 at 23:46:49
+295 verbose etag "7YJVQMLPMRN5QP54RH073PRSW"
+296 http GET https://registry.npmjs.org/uglify-js
+297 verbose url raw connect
+298 verbose url resolving [ 'https://registry.npmjs.org/', './connect' ]
+299 verbose url resolved https://registry.npmjs.org/connect
+300 info trying registry request attempt 1 at 23:46:49
+301 verbose etag "EU14MM1YA2UWSUG723M3J7SA4"
+302 http GET https://registry.npmjs.org/connect
+303 verbose url raw mime/1.2.4
+304 verbose url resolving [ 'https://registry.npmjs.org/', './mime/1.2.4' ]
+305 verbose url resolved https://registry.npmjs.org/mime/1.2.4
+306 info trying registry request attempt 1 at 23:46:49
+307 verbose etag "A72PTGLVGP1BRSAJSHHIGT70M"
+308 http GET https://registry.npmjs.org/mime/1.2.4
+309 verbose url raw mkdirp/0.3.0
+310 verbose url resolving [ 'https://registry.npmjs.org/', './mkdirp/0.3.0' ]
+311 verbose url resolved https://registry.npmjs.org/mkdirp/0.3.0
+312 info trying registry request attempt 1 at 23:46:49
+313 verbose etag "6PV7OT2J70BO48D4WZ7QYBJ06"
+314 http GET https://registry.npmjs.org/mkdirp/0.3.0
+315 verbose url raw qs
+316 verbose url resolving [ 'https://registry.npmjs.org/', './qs' ]
+317 verbose url resolved https://registry.npmjs.org/qs
+318 info trying registry request attempt 1 at 23:46:49
+319 verbose etag "6BC5I68CRWYBJOZIANZGI0C6K"
+320 http GET https://registry.npmjs.org/qs
+321 silly gunzTarPerm extractEntry package.json
+322 silly gunzTarPerm extractEntry .npmignore
+323 silly gunzTarPerm extractEntry README.md
+324 http 304 https://registry.npmjs.org/mongoose/2.5.10
+325 silly registry.get cb [ 304,
+325 silly registry.get   { server: 'CouchDB/1.3.0 (Erlang OTP/R15B03)',
+325 silly registry.get     etag: '"D4T6HC5U3OCUJQ6UAL43TQWN8"',
+325 silly registry.get     date: 'Sun, 28 Apr 2013 03:46:49 GMT',
+325 silly registry.get     'content-length': '0' } ]
+326 verbose etag mongoose/2.5.10 from cache
+327 silly gunzTarPerm extractEntry index.js
+328 silly gunzTarPerm extractEntry lib/twiml.js
+329 silly gunzTarPerm extractEntry lib/rest-client.js
+330 silly gunzTarPerm extractEntry lib/auto-uri.js
+331 silly gunzTarPerm extractEntry lib/twilio.js
+332 silly gunzTarPerm extractEntry lib/index.js
+333 silly gunzTarPerm extractEntry examples/quiz-message/app.js
+334 silly gunzTarPerm extractEntry examples/quiz-message/config.js.sample
+335 silly gunzTarPerm extractEntry examples/sms-list/app.js
+336 silly gunzTarPerm extractEntry examples/sms-list/config.js.sample
+337 verbose read json /var/lib/openshift/50299f34e9c741a5985354823b2fc8b0/app-root/data/.npm/mongoose/2.5.10/package/package.json
+338 silly gunzTarPerm extractEntry examples/dial-list/app.js
+339 silly gunzTarPerm extractEntry examples/dial-list/config.js.sample
+340 silly gunzTarPerm extractEntry test/twiml-test.js
+341 silly gunzTarPerm extractEntry test/twilio-test.js
+342 silly lockFile e5b423ff-mongoose-2-5-10 mongoose@2.5.10
+343 verbose from cache /var/lib/stickshift/50299f34e9c741a5985354823b2fc8b0/app-root/data/333815/domo-io/node_modules/mongoose/package.json
+344 verbose read json /var/lib/stickshift/50299f34e9c741a5985354823b2fc8b0/app-root/data/333815/domo-io/node_modules/mongoose/node_modules/mongodb/package.json
+345 verbose read json /var/lib/stickshift/50299f34e9c741a5985354823b2fc8b0/app-root/data/333815/domo-io/node_modules/mongoose/node_modules/hooks/package.json
+346 silly gunzTarPerm extractEntry test/client-test.js
+347 silly gunzTarPerm extractEntry test/Makefile
+348 verbose cache add [ 'hooks', '0.2.0' ]
+349 silly cache add name="hooks" spec="0.2.0" args=["hooks","0.2.0"]
+350 verbose parsed url { pathname: '0.2.0', path: '0.2.0', href: '0.2.0' }
+351 verbose addNamed [ 'hooks', '0.2.0' ]
+352 verbose addNamed [ '0.2.0', '0.2.0' ]
+353 silly lockFile 40a83a27-hooks-0-2-0 hooks@0.2.0
+354 verbose lock hooks@0.2.0 /var/lib/openshift/50299f34e9c741a5985354823b2fc8b0/app-root/data/.npm/40a83a27-hooks-0-2-0.lock
+355 verbose cache add [ 'mongodb', '0.9.9-4' ]
+356 silly cache add name="mongodb" spec="0.9.9-4" args=["mongodb","0.9.9-4"]
+357 verbose parsed url { pathname: '0.9.9-4', path: '0.9.9-4', href: '0.9.9-4' }
+358 verbose addNamed [ 'mongodb', '0.9.9-4' ]
+359 verbose addNamed [ '0.9.9-4', '0.9.9-4' ]
+360 silly lockFile cdadbf80-mongodb-0-9-9-4 mongodb@0.9.9-4
+361 verbose lock mongodb@0.9.9-4 /var/lib/openshift/50299f34e9c741a5985354823b2fc8b0/app-root/data/.npm/cdadbf80-mongodb-0-9-9-4.lock
+362 silly gunzTarPerm extractEntry test/config.js.sample
+363 verbose url raw hooks/0.2.0
+364 verbose url resolving [ 'https://registry.npmjs.org/', './hooks/0.2.0' ]
+365 verbose url resolved https://registry.npmjs.org/hooks/0.2.0
+366 info trying registry request attempt 1 at 23:46:49
+367 verbose etag "5NR8ZT0KB22UPF07CGU84DT6V"
+368 http GET https://registry.npmjs.org/hooks/0.2.0
+369 verbose url raw mongodb/0.9.9-4
+370 verbose url resolving [ 'https://registry.npmjs.org/', './mongodb/0.9.9-4' ]
+371 verbose url resolved https://registry.npmjs.org/mongodb/0.9.9-4
+372 info trying registry request attempt 1 at 23:46:49
+373 verbose etag "5MWGBAAQGSE9N0FKQXNMI9AUB"
+374 http GET https://registry.npmjs.org/mongodb/0.9.9-4
+375 http 304 https://registry.npmjs.org/uglify-js
+376 silly registry.get cb [ 304,
+376 silly registry.get   { server: 'CouchDB/1.3.0 (Erlang OTP/R15B03)',
+376 silly registry.get     etag: '"7YJVQMLPMRN5QP54RH073PRSW"',
+376 silly registry.get     date: 'Sun, 28 Apr 2013 03:46:49 GMT',
+376 silly registry.get     'content-length': '0' } ]
+377 verbose etag uglify-js from cache
+378 silly addNameRange number 2 { name: 'uglify-js', range: '>=1.1.0- <1.2.0-', hasData: true }
+379 silly addNameRange versions [ 'uglify-js',
+379 silly addNameRange   [ '0.0.1',
+379 silly addNameRange     '0.0.2',
+379 silly addNameRange     '0.0.3',
+379 silly addNameRange     '0.0.4',
+379 silly addNameRange     '0.0.5',
+379 silly addNameRange     '1.0.1',
+379 silly addNameRange     '1.0.2',
+379 silly addNameRange     '1.0.3',
+379 silly addNameRange     '1.0.4',
+379 silly addNameRange     '1.0.5',
+379 silly addNameRange     '1.0.6',
+379 silly addNameRange     '1.0.7',
+379 silly addNameRange     '1.1.0',
+379 silly addNameRange     '1.1.1',
+379 silly addNameRange     '1.2.0',
+379 silly addNameRange     '1.2.1',
+379 silly addNameRange     '1.2.2',
+379 silly addNameRange     '1.2.3',
+379 silly addNameRange     '1.2.4',
+379 silly addNameRange     '1.2.5',
+379 silly addNameRange     '1.2.6',
+379 silly addNameRange     '1.3.0',
+379 silly addNameRange     '1.3.1',
+379 silly addNameRange     '1.3.2',
+379 silly addNameRange     '1.3.3',
+379 silly addNameRange     '1.3.4',
+379 silly addNameRange     '2.2.0',
+379 silly addNameRange     '2.2.1',
+379 silly addNameRange     '2.2.2',
+379 silly addNameRange     '2.2.3',
+379 silly addNameRange     '2.2.4',
+379 silly addNameRange     '2.2.5' ] ]
+380 verbose addNamed [ 'uglify-js', '1.1.1' ]
+381 verbose addNamed [ '1.1.1', '1.1.1' ]
+382 silly lockFile 4bf6c84f-uglify-js-1-1-1 uglify-js@1.1.1
+383 verbose lock uglify-js@1.1.1 /var/lib/openshift/50299f34e9c741a5985354823b2fc8b0/app-root/data/.npm/4bf6c84f-uglify-js-1-1-1.lock
+384 verbose read json /var/lib/openshift/50299f34e9c741a5985354823b2fc8b0/app-root/data/.npm/uglify-js/1.1.1/package/package.json
+385 silly lockFile 4bf6c84f-uglify-js-1-1-1 uglify-js@1.1.1
+386 silly lockFile c0d8a10a-uglify-js-1-1-x uglify-js@1.1.x
+387 verbose from cache /var/lib/stickshift/50299f34e9c741a5985354823b2fc8b0/app-root/data/333815/domo-io/node_modules/zappa/node_modules/uglify-js/package.json
+388 http 304 https://registry.npmjs.org/connect
+389 silly registry.get cb [ 304,
+389 silly registry.get   { server: 'CouchDB/1.3.0 (Erlang OTP/R15B03)',
+389 silly registry.get     etag: '"EU14MM1YA2UWSUG723M3J7SA4"',
+389 silly registry.get     date: 'Sun, 28 Apr 2013 03:46:50 GMT',
+389 silly registry.get     'content-length': '0' } ]
+390 verbose etag connect from cache
+391 silly addNameRange number 2 { name: 'connect', range: '>=1.0.0- <2.0.0-', hasData: true }
+392 silly addNameRange versions [ 'connect',
+392 silly addNameRange   [ '0.0.1',
+392 silly addNameRange     '0.0.2',
+392 silly addNameRange     '0.0.3',
+392 silly addNameRange     '0.0.4',
+392 silly addNameRange     '0.0.5',
+392 silly addNameRange     '0.0.6',
+392 silly addNameRange     '0.1.0',
+392 silly addNameRange     '0.2.0',
+392 silly addNameRange     '0.2.1',
+392 silly addNameRange     '0.2.2',
+392 silly addNameRange     '0.2.3',
+392 silly addNameRange     '0.2.4',
+392 silly addNameRange     '0.2.5',
+392 silly addNameRange     '0.2.6',
+392 silly addNameRange     '0.2.7',
+392 silly addNameRange     '0.3.0',
+392 silly addNameRange     '0.4.0',
+392 silly addNameRange     '0.5.0',
+392 silly addNameRange     '0.5.1',
+392 silly addNameRange     '0.5.2',
+392 silly addNameRange     '0.5.3',
+392 silly addNameRange     '0.5.4',
+392 silly addNameRange     '0.5.5',
+392 silly addNameRange     '0.5.6',
+392 silly addNameRange     '0.5.7',
+392 silly addNameRange     '0.5.8',
+392 silly addNameRange     '0.5.9',
+392 silly addNameRange     '0.5.10',
+392 silly addNameRange     '1.0.0',
+392 silly addNameRange     '1.0.1',
+392 silly addNameRange     '1.0.2',
+392 silly addNameRange     '1.0.3',
+392 silly addNameRange     '1.0.4',
+392 silly addNameRange     '1.0.5',
+392 silly addNameRange     '1.0.6',
+392 silly addNameRange     '1.1.0',
+392 silly addNameRange     '1.1.1',
+392 silly addNameRange     '1.1.2',
+392 silly addNameRange     '1.1.3',
+392 silly addNameRange     '1.1.4',
+392 silly addNameRange     '1.1.5',
+392 silly addNameRange     '1.2.0',
+392 silly addNameRange     '1.2.1',
+392 silly addNameRange     '1.2.2',
+392 silly addNameRange     '1.2.3',
+392 silly addNameRange     '1.3.0',
+392 silly addNameRange     '1.4.0',
+392 silly addNameRange     '1.4.1',
+392 silly addNameRange     '1.4.2',
+392 silly addNameRange     '1.4.3',
+392 silly addNameRange     '1.4.4',
+392 silly addNameRange     '1.4.5',
+392 silly addNameRange     '1.4.6',
+392 silly addNameRange     '1.5.0',
+392 silly addNameRange     '1.5.1',
+392 silly addNameRange     '1.5.2',
+392 silly addNameRange     '1.6.0',
+392 silly addNameRange     '1.6.1',
+392 silly addNameRange     '1.6.2',
+392 silly addNameRange     '1.6.3',
+392 silly addNameRange     '1.6.4',
+392 silly addNameRange     '1.7.0',
+392 silly addNameRange     '1.7.1',
+392 silly addNameRange     '1.7.2',
+392 silly addNameRange     '1.7.3',
+392 silly addNameRange     '1.8.0',
+392 silly addNameRange     '1.8.1',
+392 silly addNameRange     '1.8.2',
+392 silly addNameRange     '1.8.3',
+392 silly addNameRange     '1.8.4',
+392 silly addNameRange     '1.8.5',
+392 silly addNameRange     '2.0.0',
+392 silly addNameRange     '2.0.1',
+392 silly addNameRange     '2.0.2',
+392 silly addNameRange     '2.0.3',
+392 silly addNameRange     '1.8.6',
+392 silly addNameRange     '2.1.0',
+392 silly addNameRange     '2.1.1',
+392 silly addNameRange     '2.1.2',
+392 silly addNameRange     '1.8.7',
+392 silly addNameRange     '2.1.3',
+392 silly addNameRange     '2.2.0',
+392 silly addNameRange     '2.2.1',
+392 silly addNameRange     '2.2.2',
+392 silly addNameRange     '2.3.0',
+392 silly addNameRange     '2.3.1',
+392 silly addNameRange     '2.3.2',
+392 silly addNameRange     '2.3.3',
+392 silly addNameRange     '1.9.0',
+392 silly addNameRange     '1.9.1',
+392 silly addNameRange     '2.3.4',
+392 silly addNameRange     '2.3.5',
+392 silly addNameRange     '2.3.6',
+392 silly addNameRange     '2.3.7',
+392 silly addNameRange     '1.9.2',
+392 silly addNameRange     '2.3.8',
+392 silly addNameRange     '2.3.9',
+392 silly addNameRange     '2.4.0',
+392 silly addNameRange     '2.4.1',
+392 silly addNameRange     '2.4.2',
+392 silly addNameRange     '2.4.3',
+392 silly addNameRange     '2.4.4',
+392 silly addNameRange     '2.4.5',
+392 silly addNameRange     '2.4.6',
+392 silly addNameRange     '2.5.0',
+392 silly addNameRange     '2.6.0',
+392 silly addNameRange     '2.6.1',
+392 silly addNameRange     '2.6.2',
+392 silly addNameRange     '2.7.0',
+392 silly addNameRange     '2.7.1',
+392 silly addNameRange     '2.7.2',
+392 silly addNameRange     '2.7.3',
+392 silly addNameRange     '2.7.4',
+392 silly addNameRange     '2.7.5',
+392 silly addNameRange     '2.7.6' ] ]
+393 verbose addNamed [ 'connect', '1.9.2' ]
+394 verbose addNamed [ '1.9.2', '1.9.2' ]
+395 silly lockFile 8bbefb96-connect-1-9-2 connect@1.9.2
+396 verbose lock connect@1.9.2 /var/lib/openshift/50299f34e9c741a5985354823b2fc8b0/app-root/data/.npm/8bbefb96-connect-1-9-2.lock
+397 verbose read json /var/lib/openshift/50299f34e9c741a5985354823b2fc8b0/app-root/data/tmp/npm-25558/1367120808184-0.9783140525687486/package/package.json
+398 verbose read json /var/lib/openshift/50299f34e9c741a5985354823b2fc8b0/app-root/data/.npm/connect/1.9.2/package/package.json
+399 http 304 https://registry.npmjs.org/socket.io
+400 silly registry.get cb [ 304,
+400 silly registry.get   { server: 'CouchDB/1.3.0 (Erlang OTP/R15B03)',
+400 silly registry.get     etag: '"B1EJT7PU69P9DN8CJKAYP1JQK"',
+400 silly registry.get     date: 'Sun, 28 Apr 2013 03:46:50 GMT',
+400 silly registry.get     'content-length': '0' } ]
+401 verbose etag socket.io from cache
+402 http 304 https://registry.npmjs.org/express
+403 silly registry.get cb [ 304,
+403 silly registry.get   { server: 'CouchDB/1.3.0 (Erlang OTP/R15B03)',
+403 silly registry.get     etag: '"1ADYQONQTR1X6RPBB3OM7HEUR"',
+403 silly registry.get     date: 'Sun, 28 Apr 2013 03:46:50 GMT',
+403 silly registry.get     'content-length': '0' } ]
+404 verbose etag express from cache
+405 http 304 https://registry.npmjs.org/node-uuid/1.2.0
+406 silly registry.get cb [ 304,
+406 silly registry.get   { server: 'CouchDB/1.3.0 (Erlang OTP/R15B03)',
+406 silly registry.get     etag: '"CZIHKDFX3N2GNUZTLU6UCABOW"',
+406 silly registry.get     date: 'Sun, 28 Apr 2013 03:46:50 GMT',
+406 silly registry.get     'content-length': '0' } ]
+407 verbose etag node-uuid/1.2.0 from cache
+408 http 304 https://registry.npmjs.org/coffeekup
+409 silly registry.get cb [ 304,
+409 silly registry.get   { server: 'CouchDB/1.3.0 (Erlang OTP/R15B03)',
+409 silly registry.get     etag: '"83XAUI3EOE24ZR6XVJ9QO1RZS"',
+409 silly registry.get     date: 'Sun, 28 Apr 2013 03:46:50 GMT',
+409 silly registry.get     'content-length': '0' } ]
+410 verbose etag coffeekup from cache
+411 silly lockFile 19b7ec25-08184-0-9783140525687486-package /var/lib/openshift/50299f34e9c741a5985354823b2fc8b0/app-root/data/tmp/npm-25558/1367120808184-0.9783140525687486/package
+412 silly lockFile 8bbefb96-connect-1-9-2 connect@1.9.2
+413 verbose from cache /var/lib/openshift/50299f34e9c741a5985354823b2fc8b0/app-root/data/tmp/npm-25558/1367120808184-0.9783140525687486/package/package.json
+414 silly lockFile 53f47653-connect-1-x connect@1.x
+415 silly addNameRange number 2 { name: 'coffeekup', range: '>=0.3.0- <0.4.0-', hasData: true }
+416 silly addNameRange versions [ 'coffeekup',
+416 silly addNameRange   [ '0.2.1',
+416 silly addNameRange     '0.2.0',
+416 silly addNameRange     '0.1.7',
+416 silly addNameRange     '0.1.6',
+416 silly addNameRange     '0.1.5',
+416 silly addNameRange     '0.2.2',
+416 silly addNameRange     '0.2.3',
+416 silly addNameRange     '0.3.0beta',
+416 silly addNameRange     '0.3.0',
+416 silly addNameRange     '0.3.1' ] ]
+417 verbose addNamed [ 'coffeekup', '0.3.1' ]
+418 verbose addNamed [ '0.3.1', '0.3.1' ]
+419 silly lockFile cc0376af-coffeekup-0-3-1 coffeekup@0.3.1
+420 verbose lock coffeekup@0.3.1 /var/lib/openshift/50299f34e9c741a5985354823b2fc8b0/app-root/data/.npm/cc0376af-coffeekup-0-3-1.lock
+421 silly addNameRange number 2 { name: 'socket.io', range: '>=0.8.0- <0.9.0-', hasData: true }
+422 silly addNameRange versions [ 'socket.io',
+422 silly addNameRange   [ '0.3.8',
+422 silly addNameRange     '0.4.0',
+422 silly addNameRange     '0.4.1',
+422 silly addNameRange     '0.5.1',
+422 silly addNameRange     '0.5.3',
+422 silly addNameRange     '0.6.0',
+422 silly addNameRange     '0.6.1',
+422 silly addNameRange     '0.6.3',
+422 silly addNameRange     '0.6.4',
+422 silly addNameRange     '0.6.5',
+422 silly addNameRange     '0.6.6',
+422 silly addNameRange     '0.6.7',
+422 silly addNameRange     '0.6.8',
+422 silly addNameRange     '0.6.9',
+422 silly addNameRange     '0.6.10',
+422 silly addNameRange     '0.6.11',
+422 silly addNameRange     '0.6.12',
+422 silly addNameRange     '0.6.14',
+422 silly addNameRange     '0.6.15',
+422 silly addNameRange     '0.6.16',
+422 silly addNameRange     '0.6.17',
+422 silly addNameRange     '0.6.18',
+422 silly addNameRange     '0.7.0',
+422 silly addNameRange     '0.7.1',
+422 silly addNameRange     '0.7.2',
+422 silly addNameRange     '0.7.3',
+422 silly addNameRange     '0.7.4',
+422 silly addNameRange     '0.7.5',
+422 silly addNameRange     '0.7.6',
+422 silly addNameRange     '0.7.7',
+422 silly addNameRange     '0.7.8',
+422 silly addNameRange     '0.7.9',
+422 silly addNameRange     '0.7.10',
+422 silly addNameRange     '0.7.11',
+422 silly addNameRange     '0.8.0',
+422 silly addNameRange     '0.8.1',
+422 silly addNameRange     '0.8.2',
+422 silly addNameRange     '0.8.3',
+422 silly addNameRange     '0.8.4',
+422 silly addNameRange     '0.8.5',
+422 silly addNameRange     '0.8.6',
+422 silly addNameRange     '0.8.7',
+422 silly addNameRange     '0.9.0',
+422 silly addNameRange     '0.9.1',
+422 silly addNameRange     '0.9.1-1',
+422 silly addNameRange     '0.9.2',
+422 silly addNameRange     '0.9.3',
+422 silly addNameRange     '0.9.4',
+422 silly addNameRange     '0.9.5',
+422 silly addNameRange     '0.9.6',
+422 silly addNameRange     '0.9.7',
+422 silly addNameRange     '0.9.8',
+422 silly addNameRange     '0.9.9',
+422 silly addNameRange     '0.9.10',
+422 silly addNameRange     '0.9.11',
+422 silly addNameRange     '0.9.12',
+422 silly addNameRange     '0.9.13',
+422 silly addNameRange     '0.9.14' ] ]
+423 verbose addNamed [ 'socket.io', '0.8.7' ]
+424 verbose addNamed [ '0.8.7', '0.8.7' ]
+425 silly lockFile cb903926-socket-io-0-8-7 socket.io@0.8.7
+426 verbose lock socket.io@0.8.7 /var/lib/openshift/50299f34e9c741a5985354823b2fc8b0/app-root/data/.npm/cb903926-socket-io-0-8-7.lock
+427 silly addNameRange number 2 { name: 'express', range: '<3.0.0', hasData: true }
+428 silly addNameRange versions [ 'express',
+428 silly addNameRange   [ '0.14.0',
+428 silly addNameRange     '0.14.1',
+428 silly addNameRange     '1.0.0beta',
+428 silly addNameRange     '1.0.0beta2',
+428 silly addNameRange     '1.0.0rc',
+428 silly addNameRange     '1.0.0rc2',
+428 silly addNameRange     '1.0.0rc3',
+428 silly addNameRange     '1.0.0rc4',
+428 silly addNameRange     '1.0.0',
+428 silly addNameRange     '1.0.1',
+428 silly addNameRange     '1.0.2',
+428 silly addNameRange     '1.0.3',
+428 silly addNameRange     '1.0.4',
+428 silly addNameRange     '1.0.5',
+428 silly addNameRange     '1.0.6',
+428 silly addNameRange     '1.0.7',
+428 silly addNameRange     '2.0.0beta',
+428 silly addNameRange     '1.0.8',
+428 silly addNameRange     '2.0.0beta2',
+428 silly addNameRange     '2.0.0beta3',
+428 silly addNameRange     '2.0.0rc',
+428 silly addNameRange     '2.0.0rc2',
+428 silly addNameRange     '2.0.0rc3',
+428 silly addNameRange     '2.0.0',
+428 silly addNameRange     '2.1.0',
+428 silly addNameRange     '2.1.1',
+428 silly addNameRange     '2.2.0',
+428 silly addNameRange     '2.2.1',
+428 silly addNameRange     '2.2.2',
+428 silly addNameRange     '2.3.0',
+428 silly addNameRange     '2.3.1',
+428 silly addNameRange     '2.3.2',
+428 silly addNameRange     '2.3.3',
+428 silly addNameRange     '2.3.4',
+428 silly addNameRange     '2.3.5',
+428 silly addNameRange     '2.3.6',
+428 silly addNameRange     '2.3.7',
+428 silly addNameRange     '2.3.8',
+428 silly addNameRange     '2.3.9',
+428 silly addNameRange     '2.3.10',
+428 silly addNameRange     '2.3.11',
+428 silly addNameRange     '2.3.12',
+428 silly addNameRange     '2.4.0',
+428 silly addNameRange     '2.4.1',
+428 silly addNameRange     '2.4.2',
+428 silly addNameRange     '2.4.3',
+428 silly addNameRange     '2.4.4',
+428 silly addNameRange     '2.4.5',
+428 silly addNameRange     '2.4.6',
+428 silly addNameRange     '2.4.7',
+428 silly addNameRange     '2.5.0',
+428 silly addNameRange     '2.5.1',
+428 silly addNameRange     '2.5.2',
+428 silly addNameRange     '2.5.3',
+428 silly addNameRange     '2.5.4',
+428 silly addNameRange     '2.5.5',
+428 silly addNameRange     '2.5.6',
+428 silly addNameRange     '2.5.7',
+428 silly addNameRange     '2.5.8',
+428 silly addNameRange     '2.5.9',
+428 silly addNameRange     '3.0.0alpha1',
+428 silly addNameRange     '3.0.0alpha2',
+428 silly addNameRange     '3.0.0alpha3',
+428 silly addNameRange     '3.0.0alpha4',
+428 silly addNameRange     '3.0.0alpha5',
+428 silly addNameRange     '3.0.0beta1',
+428 silly addNameRange     '3.0.0beta2',
+428 silly addNameRange     '3.0.0beta3',
+428 silly addNameRange     '2.5.10',
+428 silly addNameRange     '3.0.0beta4',
+428 silly addNameRange     '2.5.11',
+428 silly addNameRange     '3.0.0beta6',
+428 silly addNameRange     '3.0.0beta7',
+428 silly addNameRange     '3.0.0rc1',
+428 silly addNameRange     '3.0.0rc2',
+428 silly addNameRange     '3.0.0rc3',
+428 silly addNameRange     '3.0.0rc4',
+428 silly addNameRange     '3.0.0rc5',
+428 silly addNameRange     '3.0.0',
+428 silly addNameRange     '3.0.1',
+428 silly addNameRange     '3.0.2',
+428 silly addNameRange     '3.0.3',
+428 silly addNameRange     '3.0.4',
+428 silly addNameRange     '3.0.5',
+428 silly addNameRange     '3.0.6',
+428 silly addNameRange     '3.1.0',
+428 silly addNameRange     '3.1.1',
+428 silly addNameRange     '3.1.2',
+428 silly addNameRange     '3.2.0' ] ]
+429 verbose addNamed [ 'express', '3.0.0rc5' ]
+430 verbose addNamed [ '3.0.0rc5', '3.0.0rc5' ]
+431 silly lockFile 7e7c581c-express-3-0-0rc5 express@3.0.0rc5
+432 verbose lock express@3.0.0rc5 /var/lib/openshift/50299f34e9c741a5985354823b2fc8b0/app-root/data/.npm/7e7c581c-express-3-0-0rc5.lock
+433 verbose read json /var/lib/openshift/50299f34e9c741a5985354823b2fc8b0/app-root/data/.npm/node-uuid/1.2.0/package/package.json
+434 verbose from cache /var/lib/stickshift/50299f34e9c741a5985354823b2fc8b0/app-root/data/333815/domo-io/node_modules/express/node_modules/connect/package.json
+435 verbose read json /var/lib/openshift/50299f34e9c741a5985354823b2fc8b0/app-root/data/.npm/coffeekup/0.3.1/package/package.json
+436 verbose read json /var/lib/openshift/50299f34e9c741a5985354823b2fc8b0/app-root/data/.npm/socket.io/0.8.7/package/package.json
+437 verbose read json /var/lib/openshift/50299f34e9c741a5985354823b2fc8b0/app-root/data/.npm/express/3.0.0rc5/package/package.json
+438 verbose read json /var/lib/stickshift/50299f34e9c741a5985354823b2fc8b0/app-root/data/333815/domo-io/node_modules/express/node_modules/connect/node_modules/formidable/package.json
+439 silly lockFile a07244d1-node-uuid-1-2-0 node-uuid@1.2.0
+440 silly lockFile cc0376af-coffeekup-0-3-1 coffeekup@0.3.1
+441 silly lockFile cb903926-socket-io-0-8-7 socket.io@0.8.7
+442 silly lockFile 7e7c581c-express-3-0-0rc5 express@3.0.0rc5
+443 verbose from cache /var/lib/stickshift/50299f34e9c741a5985354823b2fc8b0/app-root/data/333815/domo-io/node_modules/zappa/node_modules/node-uuid/package.json
+444 silly lockFile a2321bf7-socket-io-0-8-x socket.io@0.8.x
+445 silly lockFile 16b8b1a4-express-3-0-0 express@< 3.0.0
+446 silly lockFile 23a50e4a-coffeekup-0-3-x coffeekup@0.3.x
+447 verbose from cache /var/lib/stickshift/50299f34e9c741a5985354823b2fc8b0/app-root/data/333815/domo-io/node_modules/zappa/node_modules/socket.io/package.json
+448 verbose from cache /var/lib/stickshift/50299f34e9c741a5985354823b2fc8b0/app-root/data/333815/domo-io/node_modules/zappa/node_modules/express/package.json
+449 verbose from cache /var/lib/stickshift/50299f34e9c741a5985354823b2fc8b0/app-root/data/333815/domo-io/node_modules/zappa/node_modules/coffeekup/package.json
+450 verbose read json /var/lib/stickshift/50299f34e9c741a5985354823b2fc8b0/app-root/data/333815/domo-io/node_modules/zappa/node_modules/socket.io/node_modules/socket.io-client/package.json
+451 verbose read json /var/lib/stickshift/50299f34e9c741a5985354823b2fc8b0/app-root/data/333815/domo-io/node_modules/zappa/node_modules/socket.io/node_modules/redis/package.json
+452 verbose read json /var/lib/stickshift/50299f34e9c741a5985354823b2fc8b0/app-root/data/333815/domo-io/node_modules/zappa/node_modules/socket.io/node_modules/policyfile/package.json
+453 verbose read json /var/lib/stickshift/50299f34e9c741a5985354823b2fc8b0/app-root/data/333815/domo-io/node_modules/zappa/node_modules/express/node_modules/crc/package.json
+454 verbose read json /var/lib/stickshift/50299f34e9c741a5985354823b2fc8b0/app-root/data/333815/domo-io/node_modules/zappa/node_modules/express/node_modules/methods/package.json
+455 verbose read json /var/lib/stickshift/50299f34e9c741a5985354823b2fc8b0/app-root/data/333815/domo-io/node_modules/zappa/node_modules/express/node_modules/range-parser/package.json
+456 verbose read json /var/lib/stickshift/50299f34e9c741a5985354823b2fc8b0/app-root/data/333815/domo-io/node_modules/zappa/node_modules/express/node_modules/cookie/package.json
+457 verbose read json /var/lib/stickshift/50299f34e9c741a5985354823b2fc8b0/app-root/data/333815/domo-io/node_modules/zappa/node_modules/express/node_modules/send/package.json
+458 verbose read json /var/lib/stickshift/50299f34e9c741a5985354823b2fc8b0/app-root/data/333815/domo-io/node_modules/zappa/node_modules/express/node_modules/debug/package.json
+459 verbose read json /var/lib/stickshift/50299f34e9c741a5985354823b2fc8b0/app-root/data/333815/domo-io/node_modules/zappa/node_modules/express/node_modules/connect/package.json
+460 verbose read json /var/lib/stickshift/50299f34e9c741a5985354823b2fc8b0/app-root/data/333815/domo-io/node_modules/zappa/node_modules/express/node_modules/commander/package.json
+461 verbose read json /var/lib/stickshift/50299f34e9c741a5985354823b2fc8b0/app-root/data/333815/domo-io/node_modules/zappa/node_modules/express/node_modules/fresh/package.json
+462 verbose read json /var/lib/stickshift/50299f34e9c741a5985354823b2fc8b0/app-root/data/333815/domo-io/node_modules/zappa/node_modules/express/node_modules/mkdirp/package.json
+463 verbose cache add [ 'qs', '>= 0.4.0' ]
+464 silly cache add name="qs" spec=">= 0.4.0" args=["qs",">= 0.4.0"]
+465 verbose parsed url { pathname: '%3E=%200.4.0',
+465 verbose parsed url   path: '%3E=%200.4.0',
+465 verbose parsed url   href: '%3E=%200.4.0' }
+466 verbose addNamed [ 'qs', '>= 0.4.0' ]
+467 verbose addNamed [ null, '>=0.4.0' ]
+468 silly lockFile d8ffb163-qs-0-4-0 qs@>= 0.4.0
+469 verbose lock qs@>= 0.4.0 /var/lib/openshift/50299f34e9c741a5985354823b2fc8b0/app-root/data/.npm/d8ffb163-qs-0-4-0.lock
+470 verbose cache add [ 'mime', '>= 0.0.1' ]
+471 silly cache add name="mime" spec=">= 0.0.1" args=["mime",">= 0.0.1"]
+472 verbose parsed url { pathname: '%3E=%200.0.1',
+472 verbose parsed url   path: '%3E=%200.0.1',
+472 verbose parsed url   href: '%3E=%200.0.1' }
+473 verbose addNamed [ 'mime', '>= 0.0.1' ]
+474 verbose addNamed [ null, '>=0.0.1' ]
+475 silly lockFile c812b446-mime-0-0-1 mime@>= 0.0.1
+476 verbose lock mime@>= 0.0.1 /var/lib/openshift/50299f34e9c741a5985354823b2fc8b0/app-root/data/.npm/c812b446-mime-0-0-1.lock
+477 verbose cache add [ 'formidable', '1.0.x' ]
+478 silly cache add name="formidable" spec="1.0.x" args=["formidable","1.0.x"]
+479 verbose parsed url { pathname: '1.0.x', path: '1.0.x', href: '1.0.x' }
+480 verbose addNamed [ 'formidable', '1.0.x' ]
+481 verbose addNamed [ null, '>=1.0.0- <1.1.0-' ]
+482 silly lockFile 2fda87d1-formidable-1-0-x formidable@1.0.x
+483 verbose lock formidable@1.0.x /var/lib/openshift/50299f34e9c741a5985354823b2fc8b0/app-root/data/.npm/2fda87d1-formidable-1-0-x.lock
+484 verbose cache add [ 'socket.io-client', '0.8.7' ]
+485 silly cache add name="socket.io-client" spec="0.8.7" args=["socket.io-client","0.8.7"]
+486 verbose parsed url { pathname: '0.8.7', path: '0.8.7', href: '0.8.7' }
+487 verbose addNamed [ 'socket.io-client', '0.8.7' ]
+488 verbose addNamed [ '0.8.7', '0.8.7' ]
+489 silly lockFile e010c162-socket-io-client-0-8-7 socket.io-client@0.8.7
+490 verbose lock socket.io-client@0.8.7 /var/lib/openshift/50299f34e9c741a5985354823b2fc8b0/app-root/data/.npm/e010c162-socket-io-client-0-8-7.lock
+491 verbose cache add [ 'policyfile', '0.0.4' ]
+492 silly cache add name="policyfile" spec="0.0.4" args=["policyfile","0.0.4"]
+493 verbose parsed url { pathname: '0.0.4', path: '0.0.4', href: '0.0.4' }
+494 verbose addNamed [ 'policyfile', '0.0.4' ]
+495 verbose addNamed [ '0.0.4', '0.0.4' ]
+496 silly lockFile 8b99131a-policyfile-0-0-4 policyfile@0.0.4
+497 verbose lock policyfile@0.0.4 /var/lib/openshift/50299f34e9c741a5985354823b2fc8b0/app-root/data/.npm/8b99131a-policyfile-0-0-4.lock
+498 verbose cache add [ 'redis', '0.6.7' ]
+499 silly cache add name="redis" spec="0.6.7" args=["redis","0.6.7"]
+500 verbose parsed url { pathname: '0.6.7', path: '0.6.7', href: '0.6.7' }
+501 verbose addNamed [ 'redis', '0.6.7' ]
+502 verbose addNamed [ '0.6.7', '0.6.7' ]
+503 silly lockFile ffdfc55e-redis-0-6-7 redis@0.6.7
+504 verbose lock redis@0.6.7 /var/lib/openshift/50299f34e9c741a5985354823b2fc8b0/app-root/data/.npm/ffdfc55e-redis-0-6-7.lock
+505 verbose cache add [ 'connect', '2.5.0' ]
+506 silly cache add name="connect" spec="2.5.0" args=["connect","2.5.0"]
+507 verbose parsed url { pathname: '2.5.0', path: '2.5.0', href: '2.5.0' }
+508 verbose addNamed [ 'connect', '2.5.0' ]
+509 verbose addNamed [ '2.5.0', '2.5.0' ]
+510 silly lockFile 0bffa092-connect-2-5-0 connect@2.5.0
+511 verbose lock connect@2.5.0 /var/lib/openshift/50299f34e9c741a5985354823b2fc8b0/app-root/data/.npm/0bffa092-connect-2-5-0.lock
+512 verbose cache add [ 'commander', '0.6.1' ]
+513 silly cache add name="commander" spec="0.6.1" args=["commander","0.6.1"]
+514 verbose parsed url { pathname: '0.6.1', path: '0.6.1', href: '0.6.1' }
+515 verbose addNamed [ 'commander', '0.6.1' ]
+516 verbose addNamed [ '0.6.1', '0.6.1' ]
+517 silly lockFile fa16a2ce-commander-0-6-1 commander@0.6.1
+518 verbose lock commander@0.6.1 /var/lib/openshift/50299f34e9c741a5985354823b2fc8b0/app-root/data/.npm/fa16a2ce-commander-0-6-1.lock
+519 verbose cache add [ 'range-parser', '0.0.4' ]
+520 silly cache add name="range-parser" spec="0.0.4" args=["range-parser","0.0.4"]
+521 verbose parsed url { pathname: '0.0.4', path: '0.0.4', href: '0.0.4' }
+522 verbose addNamed [ 'range-parser', '0.0.4' ]
+523 verbose addNamed [ '0.0.4', '0.0.4' ]
+524 silly lockFile 0760c556-range-parser-0-0-4 range-parser@0.0.4
+525 verbose lock range-parser@0.0.4 /var/lib/openshift/50299f34e9c741a5985354823b2fc8b0/app-root/data/.npm/0760c556-range-parser-0-0-4.lock
+526 verbose cache add [ 'mkdirp', '0.3.3' ]
+527 silly cache add name="mkdirp" spec="0.3.3" args=["mkdirp","0.3.3"]
+528 verbose parsed url { pathname: '0.3.3', path: '0.3.3', href: '0.3.3' }
+529 verbose addNamed [ 'mkdirp', '0.3.3' ]
+530 verbose addNamed [ '0.3.3', '0.3.3' ]
+531 silly lockFile 453bb99b-mkdirp-0-3-3 mkdirp@0.3.3
+532 verbose lock mkdirp@0.3.3 /var/lib/openshift/50299f34e9c741a5985354823b2fc8b0/app-root/data/.npm/453bb99b-mkdirp-0-3-3.lock
+533 verbose cache add [ 'cookie', '0.0.4' ]
+534 silly cache add name="cookie" spec="0.0.4" args=["cookie","0.0.4"]
+535 verbose parsed url { pathname: '0.0.4', path: '0.0.4', href: '0.0.4' }
+536 verbose addNamed [ 'cookie', '0.0.4' ]
+537 verbose addNamed [ '0.0.4', '0.0.4' ]
+538 silly lockFile c11bcebd-cookie-0-0-4 cookie@0.0.4
+539 verbose lock cookie@0.0.4 /var/lib/openshift/50299f34e9c741a5985354823b2fc8b0/app-root/data/.npm/c11bcebd-cookie-0-0-4.lock
+540 verbose cache add [ 'crc', '0.2.0' ]
+541 silly cache add name="crc" spec="0.2.0" args=["crc","0.2.0"]
+542 verbose parsed url { pathname: '0.2.0', path: '0.2.0', href: '0.2.0' }
+543 verbose addNamed [ 'crc', '0.2.0' ]
+544 verbose addNamed [ '0.2.0', '0.2.0' ]
+545 silly lockFile 3e4de13a-crc-0-2-0 crc@0.2.0
+546 verbose lock crc@0.2.0 /var/lib/openshift/50299f34e9c741a5985354823b2fc8b0/app-root/data/.npm/3e4de13a-crc-0-2-0.lock
+547 verbose cache add [ 'fresh', '0.1.0' ]
+548 silly cache add name="fresh" spec="0.1.0" args=["fresh","0.1.0"]
+549 verbose parsed url { pathname: '0.1.0', path: '0.1.0', href: '0.1.0' }
+550 verbose addNamed [ 'fresh', '0.1.0' ]
+551 verbose addNamed [ '0.1.0', '0.1.0' ]
+552 silly lockFile 3dea7da8-fresh-0-1-0 fresh@0.1.0
+553 verbose lock fresh@0.1.0 /var/lib/openshift/50299f34e9c741a5985354823b2fc8b0/app-root/data/.npm/3dea7da8-fresh-0-1-0.lock
+554 verbose cache add [ 'methods', '0.0.1' ]
+555 silly cache add name="methods" spec="0.0.1" args=["methods","0.0.1"]
+556 verbose parsed url { pathname: '0.0.1', path: '0.0.1', href: '0.0.1' }
+557 verbose addNamed [ 'methods', '0.0.1' ]
+558 verbose addNamed [ '0.0.1', '0.0.1' ]
+559 silly lockFile 209c2920-methods-0-0-1 methods@0.0.1
+560 verbose lock methods@0.0.1 /var/lib/openshift/50299f34e9c741a5985354823b2fc8b0/app-root/data/.npm/209c2920-methods-0-0-1.lock
+561 verbose cache add [ 'send', '0.1.0' ]
+562 silly cache add name="send" spec="0.1.0" args=["send","0.1.0"]
+563 verbose parsed url { pathname: '0.1.0', path: '0.1.0', href: '0.1.0' }
+564 verbose addNamed [ 'send', '0.1.0' ]
+565 verbose addNamed [ '0.1.0', '0.1.0' ]
+566 silly lockFile ef2886cd-send-0-1-0 send@0.1.0
+567 verbose lock send@0.1.0 /var/lib/openshift/50299f34e9c741a5985354823b2fc8b0/app-root/data/.npm/ef2886cd-send-0-1-0.lock
+568 verbose cache add [ 'debug', '*' ]
+569 silly cache add name="debug" spec="*" args=["debug","*"]
+570 verbose parsed url { pathname: '*', path: '*', href: '*' }
+571 verbose addNamed [ 'debug', '*' ]
+572 verbose addNamed [ null, '' ]
+573 silly lockFile 3ac45eff-debug debug@*
+574 verbose lock debug@* /var/lib/openshift/50299f34e9c741a5985354823b2fc8b0/app-root/data/.npm/3ac45eff-debug.lock
+575 verbose cache add [ 'coffee-script', '>= 1.1.2' ]
+576 silly cache add name="coffee-script" spec=">= 1.1.2" args=["coffee-script",">= 1.1.2"]
+577 verbose parsed url { pathname: '%3E=%201.1.2',
+577 verbose parsed url   path: '%3E=%201.1.2',
+577 verbose parsed url   href: '%3E=%201.1.2' }
+578 verbose addNamed [ 'coffee-script', '>= 1.1.2' ]
+579 verbose addNamed [ null, '>=1.1.2' ]
+580 silly lockFile 1017699d-coffee-script-1-1-2 coffee-script@>= 1.1.2
+581 verbose lock coffee-script@>= 1.1.2 /var/lib/openshift/50299f34e9c741a5985354823b2fc8b0/app-root/data/.npm/1017699d-coffee-script-1-1-2.lock
+582 http 304 https://registry.npmjs.org/mongodb/0.9.9-4
+583 silly registry.get cb [ 304,
+583 silly registry.get   { server: 'CouchDB/1.3.0 (Erlang OTP/R15B03)',
+583 silly registry.get     etag: '"5MWGBAAQGSE9N0FKQXNMI9AUB"',
+583 silly registry.get     date: 'Sun, 28 Apr 2013 03:46:50 GMT',
+583 silly registry.get     'content-length': '0' } ]
+584 verbose etag mongodb/0.9.9-4 from cache
+585 http 304 https://registry.npmjs.org/mkdirp/0.3.0
+586 silly registry.get cb [ 304,
+586 silly registry.get   { server: 'CouchDB/1.3.0 (Erlang OTP/R15B03)',
+586 silly registry.get     etag: '"6PV7OT2J70BO48D4WZ7QYBJ06"',
+586 silly registry.get     date: 'Sun, 28 Apr 2013 03:46:50 GMT',
+586 silly registry.get     'content-length': '0' } ]
+587 verbose etag mkdirp/0.3.0 from cache
+588 http 304 https://registry.npmjs.org/qs
+589 silly registry.get cb [ 304,
+589 silly registry.get   { server: 'CouchDB/1.3.0 (Erlang OTP/R15B03)',
+589 silly registry.get     etag: '"6BC5I68CRWYBJOZIANZGI0C6K"',
+589 silly registry.get     date: 'Sun, 28 Apr 2013 03:46:50 GMT',
+589 silly registry.get     'content-length': '0' } ]
+590 verbose etag qs from cache
+591 http 304 https://registry.npmjs.org/hooks/0.2.0
+592 silly registry.get cb [ 304,
+592 silly registry.get   { server: 'CouchDB/1.3.0 (Erlang OTP/R15B03)',
+592 silly registry.get     etag: '"5NR8ZT0KB22UPF07CGU84DT6V"',
+592 silly registry.get     date: 'Sun, 28 Apr 2013 03:46:50 GMT',
+592 silly registry.get     'content-length': '0' } ]
+593 verbose etag hooks/0.2.0 from cache
+594 http 304 https://registry.npmjs.org/mime/1.2.4
+595 silly registry.get cb [ 304,
+595 silly registry.get   { server: 'CouchDB/1.3.0 (Erlang OTP/R15B03)',
+595 silly registry.get     etag: '"A72PTGLVGP1BRSAJSHHIGT70M"',
+595 silly registry.get     date: 'Sun, 28 Apr 2013 03:46:50 GMT',
+595 silly registry.get     'content-length': '0' } ]
+596 verbose etag mime/1.2.4 from cache
+597 silly addNameRange { name: 'qs', range: '>=0.4.0', hasData: false }
+598 silly addNameRange { name: 'mime', range: '>=0.0.1', hasData: false }
+599 silly addNameRange { name: 'formidable', range: '>=1.0.0- <1.1.0-', hasData: false }
+600 silly addNameRange { name: 'debug', range: '', hasData: false }
+601 silly addNameRange { name: 'coffee-script', range: '>=1.1.2', hasData: false }
+602 verbose tar pack [ '/var/lib/openshift/50299f34e9c741a5985354823b2fc8b0/app-root/data/.npm/twilio/0.3.2/package.tgz',
+602 verbose tar pack   '/var/lib/openshift/50299f34e9c741a5985354823b2fc8b0/app-root/data/tmp/npm-25558/1367120808184-0.9783140525687486/package' ]
+603 verbose tarball /var/lib/openshift/50299f34e9c741a5985354823b2fc8b0/app-root/data/.npm/twilio/0.3.2/package.tgz
+604 verbose folder /var/lib/openshift/50299f34e9c741a5985354823b2fc8b0/app-root/data/tmp/npm-25558/1367120808184-0.9783140525687486/package
+605 silly lockFile a023197e-ata-npm-twilio-0-3-2-package-tgz /var/lib/openshift/50299f34e9c741a5985354823b2fc8b0/app-root/data/.npm/twilio/0.3.2/package.tgz
+606 verbose lock /var/lib/openshift/50299f34e9c741a5985354823b2fc8b0/app-root/data/.npm/twilio/0.3.2/package.tgz /var/lib/openshift/50299f34e9c741a5985354823b2fc8b0/app-root/data/.npm/a023197e-ata-npm-twilio-0-3-2-package-tgz.lock
+607 verbose url raw mime
+608 verbose url resolving [ 'https://registry.npmjs.org/', './mime' ]
+609 verbose url resolved https://registry.npmjs.org/mime
+610 info trying registry request attempt 1 at 23:46:50
+611 verbose etag "A72PTGLVGP1BRSAJSHHIGT70M"
+612 http GET https://registry.npmjs.org/mime
+613 verbose url raw formidable
+614 verbose url resolving [ 'https://registry.npmjs.org/', './formidable' ]
+615 verbose url resolved https://registry.npmjs.org/formidable
+616 info trying registry request attempt 1 at 23:46:50
+617 verbose etag "9Z64AGP3YH3XP0L2R8ERWLEOO"
+618 http GET https://registry.npmjs.org/formidable
+619 verbose url raw socket.io-client/0.8.7
+620 verbose url resolving [ 'https://registry.npmjs.org/', './socket.io-client/0.8.7' ]
+621 verbose url resolved https://registry.npmjs.org/socket.io-client/0.8.7
+622 info trying registry request attempt 1 at 23:46:50
+623 verbose etag "5YKCAOC4PMW6PPPIDKP89EJZR"
+624 http GET https://registry.npmjs.org/socket.io-client/0.8.7
+625 verbose url raw policyfile/0.0.4
+626 verbose url resolving [ 'https://registry.npmjs.org/', './policyfile/0.0.4' ]
+627 verbose url resolved https://registry.npmjs.org/policyfile/0.0.4
+628 info trying registry request attempt 1 at 23:46:50
+629 verbose etag "7HRW2SNOANLIWAML0W51JHJ7Z"
+630 http GET https://registry.npmjs.org/policyfile/0.0.4
+631 verbose url raw connect/2.5.0
+632 verbose url resolving [ 'https://registry.npmjs.org/', './connect/2.5.0' ]
+633 verbose url resolved https://registry.npmjs.org/connect/2.5.0
+634 info trying registry request attempt 1 at 23:46:50
+635 verbose etag "EU14MM1YA2UWSUG723M3J7SA4"
+636 http GET https://registry.npmjs.org/connect/2.5.0
+637 verbose url raw redis/0.6.7
+638 verbose url resolving [ 'https://registry.npmjs.org/', './redis/0.6.7' ]
+639 verbose url resolved https://registry.npmjs.org/redis/0.6.7
+640 info trying registry request attempt 1 at 23:46:50
+641 verbose etag "BFK5WJKEZF44Q34SFU9A1YH7V"
+642 http GET https://registry.npmjs.org/redis/0.6.7
+643 verbose url raw commander/0.6.1
+644 verbose url resolving [ 'https://registry.npmjs.org/', './commander/0.6.1' ]
+645 verbose url resolved https://registry.npmjs.org/commander/0.6.1
+646 info trying registry request attempt 1 at 23:46:50
+647 verbose etag "D7K1H7LZWS5MZ5237EITUFCEM"
+648 http GET https://registry.npmjs.org/commander/0.6.1
+649 verbose url raw range-parser/0.0.4
+650 verbose url resolving [ 'https://registry.npmjs.org/', './range-parser/0.0.4' ]
+651 verbose url resolved https://registry.npmjs.org/range-parser/0.0.4
+652 info trying registry request attempt 1 at 23:46:50
+653 verbose etag "4LYQEZP7F0RJGVO8CMQ7D0ZM2"
+654 http GET https://registry.npmjs.org/range-parser/0.0.4
+655 verbose url raw mkdirp/0.3.3
+656 verbose url resolving [ 'https://registry.npmjs.org/', './mkdirp/0.3.3' ]
+657 verbose url resolved https://registry.npmjs.org/mkdirp/0.3.3
+658 info trying registry request attempt 1 at 23:46:50
+659 verbose etag "6PV7OT2J70BO48D4WZ7QYBJ06"
+660 http GET https://registry.npmjs.org/mkdirp/0.3.3
+661 verbose url raw cookie/0.0.4
+662 verbose url resolving [ 'https://registry.npmjs.org/', './cookie/0.0.4' ]
+663 verbose url resolved https://registry.npmjs.org/cookie/0.0.4
+664 info trying registry request attempt 1 at 23:46:50
+665 verbose etag "AJXWV81G6JYYHPABREKBN8ZTX"
+666 http GET https://registry.npmjs.org/cookie/0.0.4
+667 verbose url raw crc/0.2.0
+668 verbose url resolving [ 'https://registry.npmjs.org/', './crc/0.2.0' ]
+669 verbose url resolved https://registry.npmjs.org/crc/0.2.0
+670 info trying registry request attempt 1 at 23:46:50
+671 verbose etag "82Y957GZ076MHBCBH5784UUM9"
+672 http GET https://registry.npmjs.org/crc/0.2.0
+673 verbose url raw fresh/0.1.0
+674 verbose url resolving [ 'https://registry.npmjs.org/', './fresh/0.1.0' ]
+675 verbose url resolved https://registry.npmjs.org/fresh/0.1.0
+676 info trying registry request attempt 1 at 23:46:50
+677 verbose etag "GJ32W9WQ9ABBY40CFQ8OX68Q"
+678 http GET https://registry.npmjs.org/fresh/0.1.0
+679 verbose url raw methods/0.0.1
+680 verbose url resolving [ 'https://registry.npmjs.org/', './methods/0.0.1' ]
+681 verbose url resolved https://registry.npmjs.org/methods/0.0.1
+682 info trying registry request attempt 1 at 23:46:50
+683 verbose etag "27PNDVCR34N9PLUBD22E2N507"
+684 http GET https://registry.npmjs.org/methods/0.0.1
+685 verbose url raw send/0.1.0
+686 verbose url resolving [ 'https://registry.npmjs.org/', './send/0.1.0' ]
+687 verbose url resolved https://registry.npmjs.org/send/0.1.0
+688 info trying registry request attempt 1 at 23:46:50
+689 verbose etag "UQQ9ZY2AKN1PBWR3TV2V4DOW"
+690 http GET https://registry.npmjs.org/send/0.1.0
+691 verbose url raw debug
+692 verbose url resolving [ 'https://registry.npmjs.org/', './debug' ]
+693 verbose url resolved https://registry.npmjs.org/debug
+694 info trying registry request attempt 1 at 23:46:50
+695 verbose etag "2NQFBC5T4PM83LSCUT58F4178"
+696 http GET https://registry.npmjs.org/debug
+697 verbose url raw coffee-script
+698 verbose url resolving [ 'https://registry.npmjs.org/', './coffee-script' ]
+699 verbose url resolved https://registry.npmjs.org/coffee-script
+700 info trying registry request attempt 1 at 23:46:50
+701 verbose etag "4SERN669FTVR28WAALP09FCNQ"
+702 http GET https://registry.npmjs.org/coffee-script
+703 silly addNameRange number 2 { name: 'qs', range: '>=0.4.0- <0.5.0-', hasData: true }
+704 silly addNameRange versions [ 'qs',
+704 silly addNameRange   [ '0.0.1',
+704 silly addNameRange     '0.0.2',
+704 silly addNameRange     '0.0.3',
+704 silly addNameRange     '0.0.4',
+704 silly addNameRange     '0.0.5',
+704 silly addNameRange     '0.0.6',
+704 silly addNameRange     '0.0.7',
+704 silly addNameRange     '0.1.0',
+704 silly addNameRange     '0.2.0',
+704 silly addNameRange     '0.3.0',
+704 silly addNameRange     '0.3.1',
+704 silly addNameRange     '0.3.2',
+704 silly addNameRange     '0.4.0',
+704 silly addNameRange     '0.4.1',
+704 silly addNameRange     '0.4.2',
+704 silly addNameRange     '0.5.0',
+704 silly addNameRange     '0.5.1',
+704 silly addNameRange     '0.5.2',
+704 silly addNameRange     '0.5.3',
+704 silly addNameRange     '0.5.4',
+704 silly addNameRange     '0.5.5',
+704 silly addNameRange     '0.5.6',
+704 silly addNameRange     '0.6.0',
+704 silly addNameRange     '0.6.1' ] ]
+705 verbose addNamed [ 'qs', '0.4.2' ]
+706 verbose addNamed [ '0.4.2', '0.4.2' ]
+707 silly lockFile 30ab4164-qs-0-4-2 qs@0.4.2
+708 verbose lock qs@0.4.2 /var/lib/openshift/50299f34e9c741a5985354823b2fc8b0/app-root/data/.npm/30ab4164-qs-0-4-2.lock
+709 verbose read json /var/lib/openshift/50299f34e9c741a5985354823b2fc8b0/app-root/data/.npm/mongodb/0.9.9-4/package/package.json
+710 verbose read json /var/lib/openshift/50299f34e9c741a5985354823b2fc8b0/app-root/data/.npm/mkdirp/0.3.0/package/package.json
+711 verbose read json /var/lib/openshift/50299f34e9c741a5985354823b2fc8b0/app-root/data/.npm/mime/1.2.4/package/package.json
+712 verbose read json /var/lib/openshift/50299f34e9c741a5985354823b2fc8b0/app-root/data/.npm/hooks/0.2.0/package/package.json
+713 verbose read json /var/lib/openshift/50299f34e9c741a5985354823b2fc8b0/app-root/data/.npm/qs/0.4.2/package/package.json
+714 verbose url raw qs
+715 verbose url resolving [ 'https://registry.npmjs.org/', './qs' ]
+716 verbose url resolved https://registry.npmjs.org/qs
+717 info trying registry request attempt 1 at 23:46:51
+718 verbose etag "6BC5I68CRWYBJOZIANZGI0C6K"
+719 http GET https://registry.npmjs.org/qs
+720 silly lockFile cdadbf80-mongodb-0-9-9-4 mongodb@0.9.9-4
+721 verbose from cache /var/lib/stickshift/50299f34e9c741a5985354823b2fc8b0/app-root/data/333815/domo-io/node_modules/mongoose/node_modules/mongodb/package.json
+722 silly lockFile 9a6651f3-mkdirp-0-3-0 mkdirp@0.3.0
+723 silly lockFile f98e0446-mime-1-2-4 mime@1.2.4
+724 silly lockFile 40a83a27-hooks-0-2-0 hooks@0.2.0
+725 silly lockFile 30ab4164-qs-0-4-2 qs@0.4.2
+726 verbose from cache /var/lib/stickshift/50299f34e9c741a5985354823b2fc8b0/app-root/data/333815/domo-io/node_modules/express/node_modules/mime/package.json
+727 verbose from cache /var/lib/stickshift/50299f34e9c741a5985354823b2fc8b0/app-root/data/333815/domo-io/node_modules/express/node_modules/mkdirp/package.json
+728 verbose from cache /var/lib/stickshift/50299f34e9c741a5985354823b2fc8b0/app-root/data/333815/domo-io/node_modules/mongoose/node_modules/hooks/package.json
+729 silly lockFile 40f23af8-qs-0-4-x qs@0.4.x
+730 verbose from cache /var/lib/stickshift/50299f34e9c741a5985354823b2fc8b0/app-root/data/333815/domo-io/node_modules/express/node_modules/qs/package.json
+731 silly lockFile a023197e-ata-npm-twilio-0-3-2-package-tgz /var/lib/openshift/50299f34e9c741a5985354823b2fc8b0/app-root/data/.npm/twilio/0.3.2/package.tgz
+732 silly lockFile 35f8d291-ot-data-npm-twilio-0-3-2-package /var/lib/openshift/50299f34e9c741a5985354823b2fc8b0/app-root/data/.npm/twilio/0.3.2/package
+733 verbose lock /var/lib/openshift/50299f34e9c741a5985354823b2fc8b0/app-root/data/.npm/twilio/0.3.2/package /var/lib/openshift/50299f34e9c741a5985354823b2fc8b0/app-root/data/.npm/35f8d291-ot-data-npm-twilio-0-3-2-package.lock
+734 silly lockFile 35f8d291-ot-data-npm-twilio-0-3-2-package /var/lib/openshift/50299f34e9c741a5985354823b2fc8b0/app-root/data/.npm/twilio/0.3.2/package
+735 verbose tar unpack /var/lib/openshift/50299f34e9c741a5985354823b2fc8b0/app-root/data/.npm/twilio/0.3.2/package.tgz
+736 silly lockFile 35f8d291-ot-data-npm-twilio-0-3-2-package /var/lib/openshift/50299f34e9c741a5985354823b2fc8b0/app-root/data/.npm/twilio/0.3.2/package
+737 verbose lock /var/lib/openshift/50299f34e9c741a5985354823b2fc8b0/app-root/data/.npm/twilio/0.3.2/package /var/lib/openshift/50299f34e9c741a5985354823b2fc8b0/app-root/data/.npm/35f8d291-ot-data-npm-twilio-0-3-2-package.lock
+738 silly gunzTarPerm modes [ '755', '644' ]
+739 silly gunzTarPerm extractEntry package.json
+740 silly gunzTarPerm extractEntry .npmignore
+741 silly gunzTarPerm extractEntry README.md
+742 silly gunzTarPerm extractEntry index.js
+743 silly gunzTarPerm extractEntry lib/twiml.js
+744 silly gunzTarPerm extractEntry lib/rest-client.js
+745 silly gunzTarPerm extractEntry lib/auto-uri.js
+746 silly gunzTarPerm extractEntry lib/twilio.js
+747 silly gunzTarPerm extractEntry lib/index.js
+748 silly gunzTarPerm extractEntry examples/quiz-message/app.js
+749 silly gunzTarPerm extractEntry examples/quiz-message/config.js.sample
+750 silly gunzTarPerm extractEntry examples/sms-list/app.js
+751 silly gunzTarPerm extractEntry examples/sms-list/config.js.sample
+752 silly gunzTarPerm extractEntry examples/dial-list/app.js
+753 silly gunzTarPerm extractEntry examples/dial-list/config.js.sample
+754 silly gunzTarPerm extractEntry test/twiml-test.js
+755 silly gunzTarPerm extractEntry test/twilio-test.js
+756 silly gunzTarPerm extractEntry test/client-test.js
+757 silly gunzTarPerm extractEntry test/Makefile
+758 silly gunzTarPerm extractEntry test/config.js.sample
+759 verbose read json /var/lib/openshift/50299f34e9c741a5985354823b2fc8b0/app-root/data/.npm/twilio/0.3.2/package/package.json
+760 silly lockFile 35f8d291-ot-data-npm-twilio-0-3-2-package /var/lib/openshift/50299f34e9c741a5985354823b2fc8b0/app-root/data/.npm/twilio/0.3.2/package
+761 silly shasum updated bytes 16485
+762 info shasum 125a55e721a7880e5e6e61f5629259515476b18f
+762 info shasum /var/lib/openshift/50299f34e9c741a5985354823b2fc8b0/app-root/data/.npm/twilio/0.3.2/package.tgz
+763 verbose from cache /var/lib/openshift/50299f34e9c741a5985354823b2fc8b0/app-root/data/.npm/twilio/0.3.2/package/package.json
+764 verbose chmod /var/lib/openshift/50299f34e9c741a5985354823b2fc8b0/app-root/data/.npm/twilio/0.3.2/package.tgz 644
+765 verbose chown /var/lib/openshift/50299f34e9c741a5985354823b2fc8b0/app-root/data/.npm/twilio/0.3.2/package.tgz [ 6232, 6232 ]
+766 http 304 https://registry.npmjs.org/formidable
+767 silly registry.get cb [ 304,
+767 silly registry.get   { server: 'CouchDB/1.3.0 (Erlang OTP/R15B03)',
+767 silly registry.get     etag: '"9Z64AGP3YH3XP0L2R8ERWLEOO"',
+767 silly registry.get     date: 'Sun, 28 Apr 2013 03:46:51 GMT',
+767 silly registry.get     'content-length': '0' } ]
+768 verbose etag formidable from cache
+769 http 304 https://registry.npmjs.org/socket.io-client/0.8.7
+770 silly registry.get cb [ 304,
+770 silly registry.get   { server: 'CouchDB/1.3.0 (Erlang OTP/R15B03)',
+770 silly registry.get     etag: '"5YKCAOC4PMW6PPPIDKP89EJZR"',
+770 silly registry.get     date: 'Sun, 28 Apr 2013 03:46:51 GMT',
+770 silly registry.get     'content-length': '0' } ]
+771 verbose etag socket.io-client/0.8.7 from cache
+772 http 304 https://registry.npmjs.org/connect/2.5.0
+773 silly registry.get cb [ 304,
+773 silly registry.get   { server: 'CouchDB/1.3.0 (Erlang OTP/R15B03)',
+773 silly registry.get     etag: '"EU14MM1YA2UWSUG723M3J7SA4"',
+773 silly registry.get     date: 'Sun, 28 Apr 2013 03:46:51 GMT',
+773 silly registry.get     'content-length': '0' } ]
+774 verbose etag connect/2.5.0 from cache
+775 http 304 https://registry.npmjs.org/mime
+776 silly registry.get cb [ 304,
+776 silly registry.get   { server: 'CouchDB/1.3.0 (Erlang OTP/R15B03)',
+776 silly registry.get     etag: '"A72PTGLVGP1BRSAJSHHIGT70M"',
+776 silly registry.get     date: 'Sun, 28 Apr 2013 03:46:51 GMT',
+776 silly registry.get     'content-length': '0' } ]
+777 verbose etag mime from cache
+778 http 304 https://registry.npmjs.org/policyfile/0.0.4
+779 silly registry.get cb [ 304,
+779 silly registry.get   { server: 'CouchDB/1.3.0 (Erlang OTP/R15B03)',
+779 silly registry.get     etag: '"7HRW2SNOANLIWAML0W51JHJ7Z"',
+779 silly registry.get     date: 'Sun, 28 Apr 2013 03:46:51 GMT',
+779 silly registry.get     'content-length': '0' } ]
+780 verbose etag policyfile/0.0.4 from cache
+781 silly lockFile f9dfea3c-github-com-alist-node-twilio-git git://github.com/alist/node-twilio.git
+782 silly addNameRange number 2 { name: 'mime', range: '>=0.0.1', hasData: true }
+783 silly addNameRange versions [ 'mime',
+783 silly addNameRange   [ '1.0.0',
+783 silly addNameRange     '1.1.0',
+783 silly addNameRange     '1.2.1',
+783 silly addNameRange     '1.2.2',
+783 silly addNameRange     '1.2.3',
+783 silly addNameRange     '1.2.4',
+783 silly addNameRange     '1.2.5',
+783 silly addNameRange     '1.2.6',
+783 silly addNameRange     '1.2.7',
+783 silly addNameRange     '1.2.8',
+783 silly addNameRange     '1.2.9' ] ]
+784 verbose addNamed [ 'mime', '1.2.9' ]
+785 verbose addNamed [ '1.2.9', '1.2.9' ]
+786 silly lockFile 24648bbc-mime-1-2-9 mime@1.2.9
+787 verbose lock mime@1.2.9 /var/lib/openshift/50299f34e9c741a5985354823b2fc8b0/app-root/data/.npm/24648bbc-mime-1-2-9.lock
+788 silly addNameRange number 2 { name: 'formidable', range: '>=1.0.0- <1.1.0-', hasData: true }
+789 silly addNameRange versions [ 'formidable',
+789 silly addNameRange   [ '0.3.0',
+789 silly addNameRange     '0.4.0',
+789 silly addNameRange     '0.5.0',
+789 silly addNameRange     '0.6.0',
+789 silly addNameRange     '0.7.0',
+789 silly addNameRange     '0.8.0',
+789 silly addNameRange     '0.9.0',
+789 silly addNameRange     '0.9.1',
+789 silly addNameRange     '0.9.2',
+789 silly addNameRange     '0.9.3',
+789 silly addNameRange     '0.9.4',
+789 silly addNameRange     '0.9.5',
+789 silly addNameRange     '0.9.6',
+789 silly addNameRange     '0.9.7',
+789 silly addNameRange     '0.9.8',
+789 silly addNameRange     '0.9.9',
+789 silly addNameRange     '0.9.10',
+789 silly addNameRange     '0.9.11',
+789 silly addNameRange     '1.0.0',
+789 silly addNameRange     '1.0.1',
+789 silly addNameRange     '1.0.2',
+789 silly addNameRange     '1.0.3',
+789 silly addNameRange     '1.0.4',
+789 silly addNameRange     '1.0.5',
+789 silly addNameRange     '1.0.6',
+789 silly addNameRange     '1.0.7',
+789 silly addNameRange     '1.0.8',
+789 silly addNameRange     '1.0.9',
+789 silly addNameRange     '1.0.10',
+789 silly addNameRange     '1.0.11',
+789 silly addNameRange     '1.0.12',
+789 silly addNameRange     '1.0.13' ] ]
+790 verbose addNamed [ 'formidable', '1.0.13' ]
+791 verbose addNamed [ '1.0.13', '1.0.13' ]
+792 silly lockFile 6009b78d-formidable-1-0-13 formidable@1.0.13
+793 verbose lock formidable@1.0.13 /var/lib/openshift/50299f34e9c741a5985354823b2fc8b0/app-root/data/.npm/6009b78d-formidable-1-0-13.lock
+794 verbose read json /var/lib/openshift/50299f34e9c741a5985354823b2fc8b0/app-root/data/.npm/socket.io-client/0.8.7/package/package.json
+795 verbose read json /var/lib/openshift/50299f34e9c741a5985354823b2fc8b0/app-root/data/.npm/policyfile/0.0.4/package/package.json
+796 verbose read json /var/lib/openshift/50299f34e9c741a5985354823b2fc8b0/app-root/data/.npm/connect/2.5.0/package/package.json
+797 verbose read json /var/lib/openshift/50299f34e9c741a5985354823b2fc8b0/app-root/data/.npm/formidable/1.0.13/package/package.json
+798 verbose read json /var/lib/openshift/50299f34e9c741a5985354823b2fc8b0/app-root/data/.npm/mime/1.2.9/package/package.json
+799 silly lockFile e010c162-socket-io-client-0-8-7 socket.io-client@0.8.7
+800 silly lockFile 0bffa092-connect-2-5-0 connect@2.5.0
+801 silly lockFile 8b99131a-policyfile-0-0-4 policyfile@0.0.4
+802 verbose from cache /var/lib/stickshift/50299f34e9c741a5985354823b2fc8b0/app-root/data/333815/domo-io/node_modules/zappa/node_modules/socket.io/node_modules/socket.io-client/package.json
+803 verbose from cache /var/lib/stickshift/50299f34e9c741a5985354823b2fc8b0/app-root/data/333815/domo-io/node_modules/zappa/node_modules/express/node_modules/connect/package.json
+804 verbose read json /var/lib/stickshift/50299f34e9c741a5985354823b2fc8b0/app-root/data/333815/domo-io/node_modules/zappa/node_modules/socket.io/node_modules/socket.io-client/node_modules/websocket-client/package.json
+805 verbose read json /var/lib/stickshift/50299f34e9c741a5985354823b2fc8b0/app-root/data/333815/domo-io/node_modules/zappa/node_modules/socket.io/node_modules/socket.io-client/node_modules/.bin/package.json
+806 verbose read json /var/lib/stickshift/50299f34e9c741a5985354823b2fc8b0/app-root/data/333815/domo-io/node_modules/zappa/node_modules/socket.io/node_modules/socket.io-client/node_modules/uglify-js/package.json
+807 verbose read json /var/lib/stickshift/50299f34e9c741a5985354823b2fc8b0/app-root/data/333815/domo-io/node_modules/zappa/node_modules/socket.io/node_modules/socket.io-client/node_modules/xmlhttprequest/package.json
+808 verbose from cache /var/lib/stickshift/50299f34e9c741a5985354823b2fc8b0/app-root/data/333815/domo-io/node_modules/zappa/node_modules/socket.io/node_modules/policyfile/package.json
+809 verbose read json /var/lib/stickshift/50299f34e9c741a5985354823b2fc8b0/app-root/data/333815/domo-io/node_modules/zappa/node_modules/express/node_modules/connect/node_modules/qs/package.json
+810 verbose read json /var/lib/stickshift/50299f34e9c741a5985354823b2fc8b0/app-root/data/333815/domo-io/node_modules/zappa/node_modules/express/node_modules/connect/node_modules/formidable/package.json
+811 verbose read json /var/lib/stickshift/50299f34e9c741a5985354823b2fc8b0/app-root/data/333815/domo-io/node_modules/zappa/node_modules/express/node_modules/connect/node_modules/pause/package.json
+812 verbose read json /var/lib/stickshift/50299f34e9c741a5985354823b2fc8b0/app-root/data/333815/domo-io/node_modules/zappa/node_modules/express/node_modules/connect/node_modules/send/package.json
+813 verbose read json /var/lib/stickshift/50299f34e9c741a5985354823b2fc8b0/app-root/data/333815/domo-io/node_modules/zappa/node_modules/express/node_modules/connect/node_modules/bytes/package.json
+814 silly lockFile 6009b78d-formidable-1-0-13 formidable@1.0.13
+815 silly lockFile 24648bbc-mime-1-2-9 mime@1.2.9
+816 silly lockFile 2fda87d1-formidable-1-0-x formidable@1.0.x
+817 silly lockFile c812b446-mime-0-0-1 mime@>= 0.0.1
+818 verbose from cache /var/lib/stickshift/50299f34e9c741a5985354823b2fc8b0/app-root/data/333815/domo-io/node_modules/express/node_modules/connect/node_modules/formidable/package.json
+819 verbose cache add [ 'uglify-js', '1.0.6' ]
+820 silly cache add name="uglify-js" spec="1.0.6" args=["uglify-js","1.0.6"]
+821 verbose parsed url { pathname: '1.0.6', path: '1.0.6', href: '1.0.6' }
+822 verbose addNamed [ 'uglify-js', '1.0.6' ]
+823 verbose addNamed [ '1.0.6', '1.0.6' ]
+824 silly lockFile f5ea0005-uglify-js-1-0-6 uglify-js@1.0.6
+825 verbose lock uglify-js@1.0.6 /var/lib/openshift/50299f34e9c741a5985354823b2fc8b0/app-root/data/.npm/f5ea0005-uglify-js-1-0-6.lock
+826 verbose cache add [ 'websocket-client', '1.0.0' ]
+827 silly cache add name="websocket-client" spec="1.0.0" args=["websocket-client","1.0.0"]
+828 verbose parsed url { pathname: '1.0.0', path: '1.0.0', href: '1.0.0' }
+829 verbose addNamed [ 'websocket-client', '1.0.0' ]
+830 verbose addNamed [ '1.0.0', '1.0.0' ]
+831 silly lockFile fa4eed3e-websocket-client-1-0-0 websocket-client@1.0.0
+832 verbose lock websocket-client@1.0.0 /var/lib/openshift/50299f34e9c741a5985354823b2fc8b0/app-root/data/.npm/fa4eed3e-websocket-client-1-0-0.lock
+833 verbose cache add [ 'xmlhttprequest', '1.2.2' ]
+834 silly cache add name="xmlhttprequest" spec="1.2.2" args=["xmlhttprequest","1.2.2"]
+835 verbose parsed url { pathname: '1.2.2', path: '1.2.2', href: '1.2.2' }
+836 verbose addNamed [ 'xmlhttprequest', '1.2.2' ]
+837 verbose addNamed [ '1.2.2', '1.2.2' ]
+838 silly lockFile 3395971e-xmlhttprequest-1-2-2 xmlhttprequest@1.2.2
+839 verbose lock xmlhttprequest@1.2.2 /var/lib/openshift/50299f34e9c741a5985354823b2fc8b0/app-root/data/.npm/3395971e-xmlhttprequest-1-2-2.lock
+840 verbose cache add [ 'qs', '0.5.1' ]
+841 silly cache add name="qs" spec="0.5.1" args=["qs","0.5.1"]
+842 verbose parsed url { pathname: '0.5.1', path: '0.5.1', href: '0.5.1' }
+843 verbose addNamed [ 'qs', '0.5.1' ]
+844 verbose addNamed [ '0.5.1', '0.5.1' ]
+845 silly lockFile dd3beb89-qs-0-5-1 qs@0.5.1
+846 verbose lock qs@0.5.1 /var/lib/openshift/50299f34e9c741a5985354823b2fc8b0/app-root/data/.npm/dd3beb89-qs-0-5-1.lock
+847 verbose cache add [ 'formidable', '1.0.11' ]
+848 silly cache add name="formidable" spec="1.0.11" args=["formidable","1.0.11"]
+849 verbose parsed url { pathname: '1.0.11', path: '1.0.11', href: '1.0.11' }
+850 verbose addNamed [ 'formidable', '1.0.11' ]
+851 verbose addNamed [ '1.0.11', '1.0.11' ]
+852 silly lockFile 85cafced-formidable-1-0-11 formidable@1.0.11
+853 verbose lock formidable@1.0.11 /var/lib/openshift/50299f34e9c741a5985354823b2fc8b0/app-root/data/.npm/85cafced-formidable-1-0-11.lock
+854 verbose cache add [ 'crc', '0.2.0' ]
+855 silly cache add name="crc" spec="0.2.0" args=["crc","0.2.0"]
+856 verbose parsed url { pathname: '0.2.0', path: '0.2.0', href: '0.2.0' }
+857 verbose addNamed [ 'crc', '0.2.0' ]
+858 verbose cache add [ 'cookie', '0.0.4' ]
+859 silly cache add name="cookie" spec="0.0.4" args=["cookie","0.0.4"]
+860 verbose parsed url { pathname: '0.0.4', path: '0.0.4', href: '0.0.4' }
+861 verbose addNamed [ 'cookie', '0.0.4' ]
+862 verbose cache add [ 'bytes', '0.1.0' ]
+863 silly cache add name="bytes" spec="0.1.0" args=["bytes","0.1.0"]
+864 verbose parsed url { pathname: '0.1.0', path: '0.1.0', href: '0.1.0' }
+865 verbose addNamed [ 'bytes', '0.1.0' ]
+866 verbose addNamed [ '0.1.0', '0.1.0' ]
+867 silly lockFile d6abeac8-bytes-0-1-0 bytes@0.1.0
+868 verbose lock bytes@0.1.0 /var/lib/openshift/50299f34e9c741a5985354823b2fc8b0/app-root/data/.npm/d6abeac8-bytes-0-1-0.lock
+869 verbose cache add [ 'send', '0.0.4' ]
+870 silly cache add name="send" spec="0.0.4" args=["send","0.0.4"]
+871 verbose parsed url { pathname: '0.0.4', path: '0.0.4', href: '0.0.4' }
+872 verbose addNamed [ 'send', '0.0.4' ]
+873 verbose addNamed [ '0.0.4', '0.0.4' ]
+874 silly lockFile dc770d3b-send-0-0-4 send@0.0.4
+875 verbose lock send@0.0.4 /var/lib/openshift/50299f34e9c741a5985354823b2fc8b0/app-root/data/.npm/dc770d3b-send-0-0-4.lock
+876 verbose cache add [ 'fresh', '0.1.0' ]
+877 silly cache add name="fresh" spec="0.1.0" args=["fresh","0.1.0"]
+878 verbose parsed url { pathname: '0.1.0', path: '0.1.0', href: '0.1.0' }
+879 verbose addNamed [ 'fresh', '0.1.0' ]
+880 verbose cache add [ 'pause', '0.0.1' ]
+881 silly cache add name="pause" spec="0.0.1" args=["pause","0.0.1"]
+882 verbose parsed url { pathname: '0.0.1', path: '0.0.1', href: '0.0.1' }
+883 verbose addNamed [ 'pause', '0.0.1' ]
+884 verbose addNamed [ '0.0.1', '0.0.1' ]
+885 silly lockFile c62fc432-pause-0-0-1 pause@0.0.1
+886 verbose lock pause@0.0.1 /var/lib/openshift/50299f34e9c741a5985354823b2fc8b0/app-root/data/.npm/c62fc432-pause-0-0-1.lock
+887 verbose cache add [ 'debug', '*' ]
+888 silly cache add name="debug" spec="*" args=["debug","*"]
+889 verbose parsed url { pathname: '*', path: '*', href: '*' }
+890 verbose addNamed [ 'debug', '*' ]
+891 verbose url raw uglify-js/1.0.6
+892 verbose url resolving [ 'https://registry.npmjs.org/', './uglify-js/1.0.6' ]
+893 verbose url resolved https://registry.npmjs.org/uglify-js/1.0.6
+894 info trying registry request attempt 1 at 23:46:52
+895 verbose etag "7YJVQMLPMRN5QP54RH073PRSW"
+896 http GET https://registry.npmjs.org/uglify-js/1.0.6
+897 verbose url raw qs/0.5.1
+898 verbose url resolving [ 'https://registry.npmjs.org/', './qs/0.5.1' ]
+899 verbose url resolved https://registry.npmjs.org/qs/0.5.1
+900 info trying registry request attempt 1 at 23:46:52
+901 verbose etag "6BC5I68CRWYBJOZIANZGI0C6K"
+902 http GET https://registry.npmjs.org/qs/0.5.1
+903 verbose url raw websocket-client/1.0.0
+904 verbose url resolving [ 'https://registry.npmjs.org/', './websocket-client/1.0.0' ]
+905 verbose url resolved https://registry.npmjs.org/websocket-client/1.0.0
+906 info trying registry request attempt 1 at 23:46:52
+907 verbose etag "ISI8ST84CCWX02XBW7UUUUGL"
+908 http GET https://registry.npmjs.org/websocket-client/1.0.0
+909 verbose url raw formidable/1.0.11
+910 verbose url resolving [ 'https://registry.npmjs.org/', './formidable/1.0.11' ]
+911 verbose url resolved https://registry.npmjs.org/formidable/1.0.11
+912 info trying registry request attempt 1 at 23:46:52
+913 verbose etag "9Z64AGP3YH3XP0L2R8ERWLEOO"
+914 http GET https://registry.npmjs.org/formidable/1.0.11
+915 verbose url raw xmlhttprequest/1.2.2
+916 verbose url resolving [ 'https://registry.npmjs.org/', './xmlhttprequest/1.2.2' ]
+917 verbose url resolved https://registry.npmjs.org/xmlhttprequest/1.2.2
+918 info trying registry request attempt 1 at 23:46:52
+919 verbose etag "3O95W29T2A7Q5DMXBSSQI38MV"
+920 http GET https://registry.npmjs.org/xmlhttprequest/1.2.2
+921 verbose url raw send/0.0.4
+922 verbose url resolving [ 'https://registry.npmjs.org/', './send/0.0.4' ]
+923 verbose url resolved https://registry.npmjs.org/send/0.0.4
+924 info trying registry request attempt 1 at 23:46:52
+925 verbose etag "UQQ9ZY2AKN1PBWR3TV2V4DOW"
+926 http GET https://registry.npmjs.org/send/0.0.4
+927 verbose url raw pause/0.0.1
+928 verbose url resolving [ 'https://registry.npmjs.org/', './pause/0.0.1' ]
+929 verbose url resolved https://registry.npmjs.org/pause/0.0.1
+930 info trying registry request attempt 1 at 23:46:52
+931 verbose etag "54MZ294VPDA2FJ4S1NRHD90L2"
+932 http GET https://registry.npmjs.org/pause/0.0.1
+933 verbose url raw bytes/0.1.0
+934 verbose url resolving [ 'https://registry.npmjs.org/', './bytes/0.1.0' ]
+935 verbose url resolved https://registry.npmjs.org/bytes/0.1.0
+936 info trying registry request attempt 1 at 23:46:52
+937 verbose etag "DOU7SQKHU8KQ8KVJ09ZHCUNBR"
+938 http GET https://registry.npmjs.org/bytes/0.1.0
+939 http 304 https://registry.npmjs.org/cookie/0.0.4
+940 silly registry.get cb [ 304,
+940 silly registry.get   { server: 'CouchDB/1.3.0 (Erlang OTP/R15B03)',
+940 silly registry.get     etag: '"AJXWV81G6JYYHPABREKBN8ZTX"',
+940 silly registry.get     date: 'Sun, 28 Apr 2013 03:46:52 GMT',
+940 silly registry.get     'content-length': '0' } ]
+941 verbose etag cookie/0.0.4 from cache
+942 verbose read json /var/lib/openshift/50299f34e9c741a5985354823b2fc8b0/app-root/data/.npm/cookie/0.0.4/package/package.json
+943 silly lockFile c11bcebd-cookie-0-0-4 cookie@0.0.4
+944 verbose from cache /var/lib/stickshift/50299f34e9c741a5985354823b2fc8b0/app-root/data/333815/domo-io/node_modules/zappa/node_modules/express/node_modules/cookie/package.json
+945 verbose read json /var/lib/stickshift/50299f34e9c741a5985354823b2fc8b0/app-root/data/333815/domo-io/node_modules/zappa/node_modules/express/node_modules/connect/node_modules/cookie/package.json
+946 http 304 https://registry.npmjs.org/redis/0.6.7
+947 silly registry.get cb [ 304,
+947 silly registry.get   { server: 'CouchDB/1.3.0 (Erlang OTP/R15B03)',
+947 silly registry.get     etag: '"BFK5WJKEZF44Q34SFU9A1YH7V"',
+947 silly registry.get     date: 'Sun, 28 Apr 2013 03:46:52 GMT',
+947 silly registry.get     'content-length': '0' } ]
+948 verbose etag redis/0.6.7 from cache
+949 verbose read json /var/lib/openshift/50299f34e9c741a5985354823b2fc8b0/app-root/data/.npm/redis/0.6.7/package/package.json
+950 silly lockFile ffdfc55e-redis-0-6-7 redis@0.6.7
+951 verbose from cache /var/lib/stickshift/50299f34e9c741a5985354823b2fc8b0/app-root/data/333815/domo-io/node_modules/zappa/node_modules/socket.io/node_modules/redis/package.json
+952 http 304 https://registry.npmjs.org/range-parser/0.0.4
+953 silly registry.get cb [ 304,
+953 silly registry.get   { server: 'CouchDB/1.3.0 (Erlang OTP/R15B03)',
+953 silly registry.get     etag: '"4LYQEZP7F0RJGVO8CMQ7D0ZM2"',
+953 silly registry.get     date: 'Sun, 28 Apr 2013 03:46:52 GMT',
+953 silly registry.get     'content-length': '0' } ]
+954 verbose etag range-parser/0.0.4 from cache
+955 http 304 https://registry.npmjs.org/mkdirp/0.3.3
+956 silly registry.get cb [ 304,
+956 silly registry.get   { server: 'CouchDB/1.3.0 (Erlang OTP/R15B03)',
+956 silly registry.get     etag: '"6PV7OT2J70BO48D4WZ7QYBJ06"',
+956 silly registry.get     date: 'Sun, 28 Apr 2013 03:46:52 GMT',
+956 silly registry.get     'content-length': '0' } ]
+957 verbose etag mkdirp/0.3.3 from cache
+958 verbose read json /var/lib/openshift/50299f34e9c741a5985354823b2fc8b0/app-root/data/.npm/range-parser/0.0.4/package/package.json
+959 verbose read json /var/lib/openshift/50299f34e9c741a5985354823b2fc8b0/app-root/data/.npm/mkdirp/0.3.3/package/package.json
+960 silly lockFile 0760c556-range-parser-0-0-4 range-parser@0.0.4
+961 silly lockFile 453bb99b-mkdirp-0-3-3 mkdirp@0.3.3
+962 verbose from cache /var/lib/stickshift/50299f34e9c741a5985354823b2fc8b0/app-root/data/333815/domo-io/node_modules/zappa/node_modules/express/node_modules/range-parser/package.json
+963 verbose from cache /var/lib/stickshift/50299f34e9c741a5985354823b2fc8b0/app-root/data/333815/domo-io/node_modules/zappa/node_modules/express/node_modules/mkdirp/package.json
+964 http 304 https://registry.npmjs.org/commander/0.6.1
+965 silly registry.get cb [ 304,
+965 silly registry.get   { server: 'CouchDB/1.3.0 (Erlang OTP/R15B03)',
+965 silly registry.get     etag: '"D7K1H7LZWS5MZ5237EITUFCEM"',
+965 silly registry.get     date: 'Sun, 28 Apr 2013 03:46:52 GMT',
+965 silly registry.get     'content-length': '0' } ]
+966 verbose etag commander/0.6.1 from cache
+967 verbose read json /var/lib/openshift/50299f34e9c741a5985354823b2fc8b0/app-root/data/.npm/commander/0.6.1/package/package.json
+968 silly lockFile fa16a2ce-commander-0-6-1 commander@0.6.1
+969 verbose from cache /var/lib/stickshift/50299f34e9c741a5985354823b2fc8b0/app-root/data/333815/domo-io/node_modules/zappa/node_modules/express/node_modules/commander/package.json
+970 http 304 https://registry.npmjs.org/fresh/0.1.0
+971 silly registry.get cb [ 304,
+971 silly registry.get   { server: 'CouchDB/1.3.0 (Erlang OTP/R15B03)',
+971 silly registry.get     etag: '"GJ32W9WQ9ABBY40CFQ8OX68Q"',
+971 silly registry.get     date: 'Sun, 28 Apr 2013 03:46:52 GMT',
+971 silly registry.get     'content-length': '0' } ]
+972 verbose etag fresh/0.1.0 from cache
+973 http 304 https://registry.npmjs.org/crc/0.2.0
+974 silly registry.get cb [ 304,
+974 silly registry.get   { server: 'CouchDB/1.3.0 (Erlang OTP/R15B03)',
+974 silly registry.get     etag: '"82Y957GZ076MHBCBH5784UUM9"',
+974 silly registry.get     date: 'Sun, 28 Apr 2013 03:46:52 GMT',
+974 silly registry.get     'content-length': '0' } ]
+975 verbose etag crc/0.2.0 from cache
+976 http 304 https://registry.npmjs.org/send/0.1.0
+977 silly registry.get cb [ 304,
+977 silly registry.get   { server: 'CouchDB/1.3.0 (Erlang OTP/R15B03)',
+977 silly registry.get     etag: '"UQQ9ZY2AKN1PBWR3TV2V4DOW"',
+977 silly registry.get     date: 'Sun, 28 Apr 2013 03:46:52 GMT',
+977 silly registry.get     'content-length': '0' } ]
+978 verbose etag send/0.1.0 from cache
+979 verbose read json /var/lib/openshift/50299f34e9c741a5985354823b2fc8b0/app-root/data/.npm/fresh/0.1.0/package/package.json
+980 verbose read json /var/lib/openshift/50299f34e9c741a5985354823b2fc8b0/app-root/data/.npm/crc/0.2.0/package/package.json
+981 verbose read json /var/lib/openshift/50299f34e9c741a5985354823b2fc8b0/app-root/data/.npm/send/0.1.0/package/package.json
+982 silly lockFile 3dea7da8-fresh-0-1-0 fresh@0.1.0
+983 silly lockFile 3e4de13a-crc-0-2-0 crc@0.2.0
+984 silly lockFile ef2886cd-send-0-1-0 send@0.1.0
+985 verbose from cache /var/lib/stickshift/50299f34e9c741a5985354823b2fc8b0/app-root/data/333815/domo-io/node_modules/zappa/node_modules/express/node_modules/fresh/package.json
+986 verbose read json /var/lib/stickshift/50299f34e9c741a5985354823b2fc8b0/app-root/data/333815/domo-io/node_modules/zappa/node_modules/express/node_modules/connect/node_modules/fresh/package.json
+987 verbose from cache /var/lib/stickshift/50299f34e9c741a5985354823b2fc8b0/app-root/data/333815/domo-io/node_modules/zappa/node_modules/express/node_modules/crc/package.json
+988 verbose read json /var/lib/stickshift/50299f34e9c741a5985354823b2fc8b0/app-root/data/333815/domo-io/node_modules/zappa/node_modules/express/node_modules/connect/node_modules/crc/package.json
+989 verbose from cache /var/lib/stickshift/50299f34e9c741a5985354823b2fc8b0/app-root/data/333815/domo-io/node_modules/zappa/node_modules/express/node_modules/send/package.json
+990 verbose read json /var/lib/stickshift/50299f34e9c741a5985354823b2fc8b0/app-root/data/333815/domo-io/node_modules/zappa/node_modules/express/node_modules/send/node_modules/mime/package.json
+991 http 304 https://registry.npmjs.org/debug
+992 silly registry.get cb [ 304,
+992 silly registry.get   { server: 'CouchDB/1.3.0 (Erlang OTP/R15B03)',
+992 silly registry.get     etag: '"2NQFBC5T4PM83LSCUT58F4178"',
+992 silly registry.get     date: 'Sun, 28 Apr 2013 03:46:52 GMT',
+992 silly registry.get     'content-length': '0' } ]
+993 verbose etag debug from cache
+994 http 304 https://registry.npmjs.org/methods/0.0.1
+995 silly registry.get cb [ 304,
+995 silly registry.get   { server: 'CouchDB/1.3.0 (Erlang OTP/R15B03)',
+995 silly registry.get     etag: '"27PNDVCR34N9PLUBD22E2N507"',
+995 silly registry.get     date: 'Sun, 28 Apr 2013 03:46:52 GMT',
+995 silly registry.get     'content-length': '0' } ]
+996 verbose etag methods/0.0.1 from cache
+997 verbose cache add [ 'debug', '*' ]
+998 silly cache add name="debug" spec="*" args=["debug","*"]
+999 verbose parsed url { pathname: '*', path: '*', href: '*' }
+1000 verbose addNamed [ 'debug', '*' ]
+1001 verbose cache add [ 'mime', '1.2.6' ]
+1002 silly cache add name="mime" spec="1.2.6" args=["mime","1.2.6"]
+1003 verbose parsed url { pathname: '1.2.6', path: '1.2.6', href: '1.2.6' }
+1004 verbose addNamed [ 'mime', '1.2.6' ]
+1005 verbose addNamed [ '1.2.6', '1.2.6' ]
+1006 silly lockFile 898e3106-mime-1-2-6 mime@1.2.6
+1007 verbose lock mime@1.2.6 /var/lib/openshift/50299f34e9c741a5985354823b2fc8b0/app-root/data/.npm/898e3106-mime-1-2-6.lock
+1008 verbose cache add [ 'fresh', '0.1.0' ]
+1009 silly cache add name="fresh" spec="0.1.0" args=["fresh","0.1.0"]
+1010 verbose parsed url { pathname: '0.1.0', path: '0.1.0', href: '0.1.0' }
+1011 verbose addNamed [ 'fresh', '0.1.0' ]
+1012 verbose addNamed [ '0.1.0', '0.1.0' ]
+1013 silly lockFile 3dea7da8-fresh-0-1-0 fresh@0.1.0
+1014 verbose lock fresh@0.1.0 /var/lib/openshift/50299f34e9c741a5985354823b2fc8b0/app-root/data/.npm/3dea7da8-fresh-0-1-0.lock
+1015 verbose cache add [ 'range-parser', '0.0.4' ]
+1016 silly cache add name="range-parser" spec="0.0.4" args=["range-parser","0.0.4"]
+1017 verbose parsed url { pathname: '0.0.4', path: '0.0.4', href: '0.0.4' }
+1018 verbose addNamed [ 'range-parser', '0.0.4' ]
+1019 verbose addNamed [ '0.0.4', '0.0.4' ]
+1020 silly lockFile 0760c556-range-parser-0-0-4 range-parser@0.0.4
+1021 verbose lock range-parser@0.0.4 /var/lib/openshift/50299f34e9c741a5985354823b2fc8b0/app-root/data/.npm/0760c556-range-parser-0-0-4.lock
+1022 http 304 https://registry.npmjs.org/websocket-client/1.0.0
+1023 silly registry.get cb [ 304,
+1023 silly registry.get   { server: 'CouchDB/1.3.0 (Erlang OTP/R15B03)',
+1023 silly registry.get     etag: '"ISI8ST84CCWX02XBW7UUUUGL"',
+1023 silly registry.get     date: 'Sun, 28 Apr 2013 03:46:52 GMT',
+1023 silly registry.get     'content-length': '0' } ]
+1024 verbose etag websocket-client/1.0.0 from cache
+1025 http 304 https://registry.npmjs.org/qs/0.5.1
+1026 silly registry.get cb [ 304,
+1026 silly registry.get   { server: 'CouchDB/1.3.0 (Erlang OTP/R15B03)',
+1026 silly registry.get     etag: '"6BC5I68CRWYBJOZIANZGI0C6K"',
+1026 silly registry.get     date: 'Sun, 28 Apr 2013 03:46:52 GMT',
+1026 silly registry.get     'content-length': '0' } ]
+1027 verbose etag qs/0.5.1 from cache
+1028 http 304 https://registry.npmjs.org/uglify-js/1.0.6
+1029 silly registry.get cb [ 304,
+1029 silly registry.get   { server: 'CouchDB/1.3.0 (Erlang OTP/R15B03)',
+1029 silly registry.get     etag: '"7YJVQMLPMRN5QP54RH073PRSW"',
+1029 silly registry.get     date: 'Sun, 28 Apr 2013 03:46:52 GMT',
+1029 silly registry.get     'content-length': '0' } ]
+1030 verbose etag uglify-js/1.0.6 from cache
+1031 http 304 https://registry.npmjs.org/coffee-script
+1032 silly registry.get cb [ 304,
+1032 silly registry.get   { server: 'CouchDB/1.3.0 (Erlang OTP/R15B03)',
+1032 silly registry.get     etag: '"4SERN669FTVR28WAALP09FCNQ"',
+1032 silly registry.get     date: 'Sun, 28 Apr 2013 03:46:52 GMT',
+1032 silly registry.get     'content-length': '0' } ]
+1033 verbose etag coffee-script from cache
+1034 http 304 https://registry.npmjs.org/qs
+1035 silly registry.get cb [ 304,
+1035 silly registry.get   { server: 'CouchDB/1.3.0 (Erlang OTP/R15B03)',
+1035 silly registry.get     etag: '"6BC5I68CRWYBJOZIANZGI0C6K"',
+1035 silly registry.get     date: 'Sun, 28 Apr 2013 03:46:52 GMT',
+1035 silly registry.get     'content-length': '0' } ]
+1036 verbose etag qs from cache
+1037 silly addNameRange number 2 { name: 'debug', range: '', hasData: true }
+1038 silly addNameRange versions [ 'debug',
+1038 silly addNameRange   [ '0.0.1',
+1038 silly addNameRange     '0.1.0',
+1038 silly addNameRange     '0.2.0',
+1038 silly addNameRange     '0.3.0',
+1038 silly addNameRange     '0.4.0',
+1038 silly addNameRange     '0.4.1',
+1038 silly addNameRange     '0.5.0',
+1038 silly addNameRange     '0.6.0',
+1038 silly addNameRange     '0.7.0',
+1038 silly addNameRange     '0.7.1',
+1038 silly addNameRange     '0.7.2' ] ]
+1039 verbose addNamed [ 'debug', '0.7.2' ]
+1040 verbose addNamed [ '0.7.2', '0.7.2' ]
+1041 silly lockFile 432e5064-debug-0-7-2 debug@0.7.2
+1042 verbose lock debug@0.7.2 /var/lib/openshift/50299f34e9c741a5985354823b2fc8b0/app-root/data/.npm/432e5064-debug-0-7-2.lock
+1043 verbose read json /var/lib/openshift/50299f34e9c741a5985354823b2fc8b0/app-root/data/.npm/methods/0.0.1/package/package.json
+1044 verbose read json /var/lib/openshift/50299f34e9c741a5985354823b2fc8b0/app-root/data/.npm/debug/0.7.2/package/package.json
+1045 verbose url raw mime/1.2.6
+1046 verbose url resolving [ 'https://registry.npmjs.org/', './mime/1.2.6' ]
+1047 verbose url resolved https://registry.npmjs.org/mime/1.2.6
+1048 info trying registry request attempt 1 at 23:46:52
+1049 verbose etag "A72PTGLVGP1BRSAJSHHIGT70M"
+1050 http GET https://registry.npmjs.org/mime/1.2.6
+1051 verbose url raw fresh/0.1.0
+1052 verbose url resolving [ 'https://registry.npmjs.org/', './fresh/0.1.0' ]
+1053 verbose url resolved https://registry.npmjs.org/fresh/0.1.0
+1054 info trying registry request attempt 1 at 23:46:52
+1055 verbose etag "GJ32W9WQ9ABBY40CFQ8OX68Q"
+1056 http GET https://registry.npmjs.org/fresh/0.1.0
+1057 verbose url raw range-parser/0.0.4
+1058 verbose url resolving [ 'https://registry.npmjs.org/', './range-parser/0.0.4' ]
+1059 verbose url resolved https://registry.npmjs.org/range-parser/0.0.4
+1060 info trying registry request attempt 1 at 23:46:52
+1061 verbose etag "4LYQEZP7F0RJGVO8CMQ7D0ZM2"
+1062 http GET https://registry.npmjs.org/range-parser/0.0.4
+1063 silly addNameRange number 2 { name: 'coffee-script', range: '>=1.1.2', hasData: true }
+1064 silly addNameRange versions [ 'coffee-script',
+1064 silly addNameRange   [ '0.7.0',
+1064 silly addNameRange     '0.7.1',
+1064 silly addNameRange     '0.7.2',
+1064 silly addNameRange     '0.9.0',
+1064 silly addNameRange     '0.9.1',
+1064 silly addNameRange     '0.9.2',
+1064 silly addNameRange     '0.9.3',
+1064 silly addNameRange     '0.9.4',
+1064 silly addNameRange     '0.9.5',
+1064 silly addNameRange     '0.9.6',
+1064 silly addNameRange     '1.0.0',
+1064 silly addNameRange     '1.0.1',
+1064 silly addNameRange     '1.1.0',
+1064 silly addNameRange     '1.1.1',
+1064 silly addNameRange     '1.1.2',
+1064 silly addNameRange     '1.1.3',
+1064 silly addNameRange     '1.2.0',
+1064 silly addNameRange     '1.3.0',
+1064 silly addNameRange     '1.3.1',
+1064 silly addNameRange     '1.3.2',
+1064 silly addNameRange     '1.3.3',
+1064 silly addNameRange     '1.4.0',
+1064 silly addNameRange     '1.5.0',
+1064 silly addNameRange     '1.6.0',
+1064 silly addNameRange     '1.6.1',
+1064 silly addNameRange     '1.6.2' ] ]
+1065 verbose addNamed [ 'coffee-script', '1.6.2' ]
+1066 verbose addNamed [ '1.6.2', '1.6.2' ]
+1067 silly lockFile 0166e586-coffee-script-1-6-2 coffee-script@1.6.2
+1068 verbose lock coffee-script@1.6.2 /var/lib/openshift/50299f34e9c741a5985354823b2fc8b0/app-root/data/.npm/0166e586-coffee-script-1-6-2.lock
+1069 silly addNameRange number 2 { name: 'qs', range: '>=0.4.0', hasData: true }
+1070 silly addNameRange versions [ 'qs',
+1070 silly addNameRange   [ '0.0.1',
+1070 silly addNameRange     '0.0.2',
+1070 silly addNameRange     '0.0.3',
+1070 silly addNameRange     '0.0.4',
+1070 silly addNameRange     '0.0.5',
+1070 silly addNameRange     '0.0.6',
+1070 silly addNameRange     '0.0.7',
+1070 silly addNameRange     '0.1.0',
+1070 silly addNameRange     '0.2.0',
+1070 silly addNameRange     '0.3.0',
+1070 silly addNameRange     '0.3.1',
+1070 silly addNameRange     '0.3.2',
+1070 silly addNameRange     '0.4.0',
+1070 silly addNameRange     '0.4.1',
+1070 silly addNameRange     '0.4.2',
+1070 silly addNameRange     '0.5.0',
+1070 silly addNameRange     '0.5.1',
+1070 silly addNameRange     '0.5.2',
+1070 silly addNameRange     '0.5.3',
+1070 silly addNameRange     '0.5.4',
+1070 silly addNameRange     '0.5.5',
+1070 silly addNameRange     '0.5.6',
+1070 silly addNameRange     '0.6.0',
+1070 silly addNameRange     '0.6.1' ] ]
+1071 verbose addNamed [ 'qs', '0.6.1' ]
+1072 verbose addNamed [ '0.6.1', '0.6.1' ]
+1073 silly lockFile bdebfafd-qs-0-6-1 qs@0.6.1
+1074 verbose lock qs@0.6.1 /var/lib/openshift/50299f34e9c741a5985354823b2fc8b0/app-root/data/.npm/bdebfafd-qs-0-6-1.lock
+1075 verbose read json /var/lib/openshift/50299f34e9c741a5985354823b2fc8b0/app-root/data/.npm/websocket-client/1.0.0/package/package.json
+1076 verbose read json /var/lib/openshift/50299f34e9c741a5985354823b2fc8b0/app-root/data/.npm/qs/0.5.1/package/package.json
+1077 verbose read json /var/lib/openshift/50299f34e9c741a5985354823b2fc8b0/app-root/data/.npm/uglify-js/1.0.6/package/package.json
+1078 http 304 https://registry.npmjs.org/pause/0.0.1
+1079 silly registry.get cb [ 304,
+1079 silly registry.get   { server: 'CouchDB/1.3.0 (Erlang OTP/R15B03)',
+1079 silly registry.get     etag: '"54MZ294VPDA2FJ4S1NRHD90L2"',
+1079 silly registry.get     date: 'Sun, 28 Apr 2013 03:46:52 GMT',
+1079 silly registry.get     'content-length': '0' } ]
+1080 verbose etag pause/0.0.1 from cache
+1081 http 304 https://registry.npmjs.org/xmlhttprequest/1.2.2
+1082 silly registry.get cb [ 304,
+1082 silly registry.get   { server: 'CouchDB/1.3.0 (Erlang OTP/R15B03)',
+1082 silly registry.get     etag: '"3O95W29T2A7Q5DMXBSSQI38MV"',
+1082 silly registry.get     date: 'Sun, 28 Apr 2013 03:46:52 GMT',
+1082 silly registry.get     'content-length': '0' } ]
+1083 verbose etag xmlhttprequest/1.2.2 from cache
+1084 http 304 https://registry.npmjs.org/send/0.0.4
+1085 silly registry.get cb [ 304,
+1085 silly registry.get   { server: 'CouchDB/1.3.0 (Erlang OTP/R15B03)',
+1085 silly registry.get     etag: '"UQQ9ZY2AKN1PBWR3TV2V4DOW"',
+1085 silly registry.get     date: 'Sun, 28 Apr 2013 03:46:52 GMT',
+1085 silly registry.get     'content-length': '0' } ]
+1086 verbose etag send/0.0.4 from cache
+1087 http 304 https://registry.npmjs.org/formidable/1.0.11
+1088 silly registry.get cb [ 304,
+1088 silly registry.get   { server: 'CouchDB/1.3.0 (Erlang OTP/R15B03)',
+1088 silly registry.get     etag: '"9Z64AGP3YH3XP0L2R8ERWLEOO"',
+1088 silly registry.get     date: 'Sun, 28 Apr 2013 03:46:52 GMT',
+1088 silly registry.get     'content-length': '0' } ]
+1089 verbose etag formidable/1.0.11 from cache
+1090 http 304 https://registry.npmjs.org/bytes/0.1.0
+1091 silly registry.get cb [ 304,
+1091 silly registry.get   { server: 'CouchDB/1.3.0 (Erlang OTP/R15B03)',
+1091 silly registry.get     etag: '"DOU7SQKHU8KQ8KVJ09ZHCUNBR"',
+1091 silly registry.get     date: 'Sun, 28 Apr 2013 03:46:52 GMT',
+1091 silly registry.get     'content-length': '0' } ]
+1092 verbose etag bytes/0.1.0 from cache
+1093 silly lockFile 209c2920-methods-0-0-1 methods@0.0.1
+1094 verbose read json /var/lib/openshift/50299f34e9c741a5985354823b2fc8b0/app-root/data/.npm/coffee-script/1.6.2/package/package.json
+1095 silly lockFile de6399e1-gistry-npmjs-org-qs-qs-0-6-1-tgz https://registry.npmjs.org/qs/-/qs-0.6.1.tgz
+1096 verbose lock https://registry.npmjs.org/qs/-/qs-0.6.1.tgz /var/lib/openshift/50299f34e9c741a5985354823b2fc8b0/app-root/data/.npm/de6399e1-gistry-npmjs-org-qs-qs-0-6-1-tgz.lock
+1097 verbose from cache /var/lib/stickshift/50299f34e9c741a5985354823b2fc8b0/app-root/data/333815/domo-io/node_modules/zappa/node_modules/express/node_modules/methods/package.json
+1098 verbose addRemoteTarball [ 'https://registry.npmjs.org/qs/-/qs-0.6.1.tgz',
+1098 verbose addRemoteTarball   '37353130532742683ddf4aa1edc5661612a7cc7d' ]
+1099 silly lockFile 432e5064-debug-0-7-2 debug@0.7.2
+1100 info retry fetch attempt 1 at 23:46:52
+1101 verbose fetch to= /var/lib/openshift/50299f34e9c741a5985354823b2fc8b0/app-root/data/tmp/npm-25558/1367120812685-0.4194896735716611/tmp.tgz
+1102 silly lockFile fa4eed3e-websocket-client-1-0-0 websocket-client@1.0.0
+1103 silly lockFile dd3beb89-qs-0-5-1 qs@0.5.1
+1104 silly lockFile f5ea0005-uglify-js-1-0-6 uglify-js@1.0.6
+1105 verbose read json /var/lib/openshift/50299f34e9c741a5985354823b2fc8b0/app-root/data/.npm/xmlhttprequest/1.2.2/package/package.json
+1106 verbose read json /var/lib/openshift/50299f34e9c741a5985354823b2fc8b0/app-root/data/.npm/send/0.0.4/package/package.json
+1107 verbose read json /var/lib/openshift/50299f34e9c741a5985354823b2fc8b0/app-root/data/.npm/pause/0.0.1/package/package.json
+1108 http GET https://registry.npmjs.org/qs/-/qs-0.6.1.tgz
+1109 silly lockFile 3ac45eff-debug debug@*
+1110 verbose from cache /var/lib/stickshift/50299f34e9c741a5985354823b2fc8b0/app-root/data/333815/domo-io/node_modules/zappa/node_modules/socket.io/node_modules/socket.io-client/node_modules/websocket-client/package.json
+1111 verbose from cache /var/lib/stickshift/50299f34e9c741a5985354823b2fc8b0/app-root/data/333815/domo-io/node_modules/zappa/node_modules/express/node_modules/connect/node_modules/qs/package.json
+1112 verbose from cache /var/lib/stickshift/50299f34e9c741a5985354823b2fc8b0/app-root/data/333815/domo-io/node_modules/zappa/node_modules/socket.io/node_modules/socket.io-client/node_modules/uglify-js/package.json
+1113 verbose read json /var/lib/openshift/50299f34e9c741a5985354823b2fc8b0/app-root/data/.npm/formidable/1.0.11/package/package.json
+1114 silly lockFile 0166e586-coffee-script-1-6-2 coffee-script@1.6.2
+1115 verbose from cache /var/lib/stickshift/50299f34e9c741a5985354823b2fc8b0/app-root/data/333815/domo-io/node_modules/zappa/node_modules/express/node_modules/debug/package.json
+1116 verbose read json /var/lib/stickshift/50299f34e9c741a5985354823b2fc8b0/app-root/data/333815/domo-io/node_modules/zappa/node_modules/express/node_modules/connect/node_modules/debug/package.json
+1117 verbose read json /var/lib/stickshift/50299f34e9c741a5985354823b2fc8b0/app-root/data/333815/domo-io/node_modules/zappa/node_modules/express/node_modules/send/node_modules/debug/package.json
+1118 verbose read json /var/lib/openshift/50299f34e9c741a5985354823b2fc8b0/app-root/data/.npm/bytes/0.1.0/package/package.json
+1119 silly lockFile 1017699d-coffee-script-1-1-2 coffee-script@>= 1.1.2
+1120 silly lockFile 3395971e-xmlhttprequest-1-2-2 xmlhttprequest@1.2.2
+1121 silly lockFile dc770d3b-send-0-0-4 send@0.0.4
+1122 silly lockFile c62fc432-pause-0-0-1 pause@0.0.1
+1123 verbose from cache /var/lib/stickshift/50299f34e9c741a5985354823b2fc8b0/app-root/data/333815/domo-io/node_modules/zappa/node_modules/socket.io/node_modules/socket.io-client/node_modules/xmlhttprequest/package.json
+1124 silly lockFile 85cafced-formidable-1-0-11 formidable@1.0.11
+1125 verbose from cache /var/lib/stickshift/50299f34e9c741a5985354823b2fc8b0/app-root/data/333815/domo-io/node_modules/zappa/node_modules/express/node_modules/connect/node_modules/send/package.json
+1126 verbose from cache /var/lib/stickshift/50299f34e9c741a5985354823b2fc8b0/app-root/data/333815/domo-io/node_modules/zappa/node_modules/express/node_modules/connect/node_modules/pause/package.json
+1127 verbose read json /var/lib/stickshift/50299f34e9c741a5985354823b2fc8b0/app-root/data/333815/domo-io/node_modules/zappa/node_modules/express/node_modules/connect/node_modules/send/node_modules/mime/package.json
+1128 silly lockFile d6abeac8-bytes-0-1-0 bytes@0.1.0
+1129 verbose from cache /var/lib/stickshift/50299f34e9c741a5985354823b2fc8b0/app-root/data/333815/domo-io/node_modules/zappa/node_modules/express/node_modules/connect/node_modules/formidable/package.json
+1130 verbose from cache /var/lib/stickshift/50299f34e9c741a5985354823b2fc8b0/app-root/data/333815/domo-io/node_modules/zappa/node_modules/express/node_modules/connect/node_modules/bytes/package.json
+1131 verbose cache add [ 'debug', '*' ]
+1132 silly cache add name="debug" spec="*" args=["debug","*"]
+1133 verbose parsed url { pathname: '*', path: '*', href: '*' }
+1134 verbose addNamed [ 'debug', '*' ]
+1135 verbose addNamed [ null, '' ]
+1136 silly lockFile 3ac45eff-debug debug@*
+1137 verbose lock debug@* /var/lib/openshift/50299f34e9c741a5985354823b2fc8b0/app-root/data/.npm/3ac45eff-debug.lock
+1138 verbose cache add [ 'mime', '1.2.6' ]
+1139 silly cache add name="mime" spec="1.2.6" args=["mime","1.2.6"]
+1140 verbose parsed url { pathname: '1.2.6', path: '1.2.6', href: '1.2.6' }
+1141 verbose addNamed [ 'mime', '1.2.6' ]
+1142 verbose cache add [ 'fresh', '0.1.0' ]
+1143 silly cache add name="fresh" spec="0.1.0" args=["fresh","0.1.0"]
+1144 verbose parsed url { pathname: '0.1.0', path: '0.1.0', href: '0.1.0' }
+1145 verbose addNamed [ 'fresh', '0.1.0' ]
+1146 verbose cache add [ 'range-parser', '0.0.4' ]
+1147 silly cache add name="range-parser" spec="0.0.4" args=["range-parser","0.0.4"]
+1148 verbose parsed url { pathname: '0.0.4', path: '0.0.4', href: '0.0.4' }
+1149 verbose addNamed [ 'range-parser', '0.0.4' ]
+1150 http 304 https://registry.npmjs.org/mime/1.2.6
+1151 silly registry.get cb [ 304,
+1151 silly registry.get   { server: 'CouchDB/1.3.0 (Erlang OTP/R15B03)',
+1151 silly registry.get     etag: '"A72PTGLVGP1BRSAJSHHIGT70M"',
+1151 silly registry.get     date: 'Sun, 28 Apr 2013 03:46:52 GMT',
+1151 silly registry.get     'content-length': '0' } ]
+1152 verbose etag mime/1.2.6 from cache
+1153 http 304 https://registry.npmjs.org/range-parser/0.0.4
+1154 silly registry.get cb [ 304,
+1154 silly registry.get   { server: 'CouchDB/1.3.0 (Erlang OTP/R15B03)',
+1154 silly registry.get     etag: '"4LYQEZP7F0RJGVO8CMQ7D0ZM2"',
+1154 silly registry.get     date: 'Sun, 28 Apr 2013 03:46:52 GMT',
+1154 silly registry.get     'content-length': '0' } ]
+1155 verbose etag range-parser/0.0.4 from cache
+1156 http 304 https://registry.npmjs.org/fresh/0.1.0
+1157 silly registry.get cb [ 304,
+1157 silly registry.get   { server: 'CouchDB/1.3.0 (Erlang OTP/R15B03)',
+1157 silly registry.get     etag: '"GJ32W9WQ9ABBY40CFQ8OX68Q"',
+1157 silly registry.get     date: 'Sun, 28 Apr 2013 03:46:52 GMT',
+1157 silly registry.get     'content-length': '0' } ]
+1158 verbose etag fresh/0.1.0 from cache
+1159 silly addNameRange { name: 'debug', range: '', hasData: false }
+1160 verbose url raw debug
+1161 verbose url resolving [ 'https://registry.npmjs.org/', './debug' ]
+1162 verbose url resolved https://registry.npmjs.org/debug
+1163 info trying registry request attempt 1 at 23:46:52
+1164 verbose etag "2NQFBC5T4PM83LSCUT58F4178"
+1165 http GET https://registry.npmjs.org/debug
+1166 verbose read json /var/lib/openshift/50299f34e9c741a5985354823b2fc8b0/app-root/data/.npm/mime/1.2.6/package/package.json
+1167 verbose from cache /var/lib/openshift/50299f34e9c741a5985354823b2fc8b0/app-root/data/.npm/range-parser/0.0.4/package/package.json
+1168 verbose from cache /var/lib/openshift/50299f34e9c741a5985354823b2fc8b0/app-root/data/.npm/fresh/0.1.0/package/package.json
+1169 silly lockFile 898e3106-mime-1-2-6 mime@1.2.6
+1170 verbose from cache /var/lib/stickshift/50299f34e9c741a5985354823b2fc8b0/app-root/data/333815/domo-io/node_modules/zappa/node_modules/express/node_modules/send/node_modules/mime/package.json
+1171 verbose from cache /var/lib/stickshift/50299f34e9c741a5985354823b2fc8b0/app-root/data/333815/domo-io/node_modules/zappa/node_modules/express/node_modules/connect/node_modules/send/node_modules/mime/package.json
+1172 silly lockFile 0760c556-range-parser-0-0-4 range-parser@0.0.4
+1173 silly lockFile 3dea7da8-fresh-0-1-0 fresh@0.1.0
+1174 verbose read json /var/lib/stickshift/50299f34e9c741a5985354823b2fc8b0/app-root/data/333815/domo-io/node_modules/zappa/node_modules/express/node_modules/send/node_modules/range-parser/package.json
+1175 verbose read json /var/lib/stickshift/50299f34e9c741a5985354823b2fc8b0/app-root/data/333815/domo-io/node_modules/zappa/node_modules/express/node_modules/connect/node_modules/send/node_modules/range-parser/package.json
+1176 verbose read json /var/lib/stickshift/50299f34e9c741a5985354823b2fc8b0/app-root/data/333815/domo-io/node_modules/zappa/node_modules/express/node_modules/send/node_modules/fresh/package.json
+1177 verbose read json /var/lib/stickshift/50299f34e9c741a5985354823b2fc8b0/app-root/data/333815/domo-io/node_modules/zappa/node_modules/express/node_modules/connect/node_modules/send/node_modules/fresh/package.json
+1178 http 200 https://registry.npmjs.org/qs/-/qs-0.6.1.tgz
+1179 http 304 https://registry.npmjs.org/debug
+1180 silly registry.get cb [ 304,
+1180 silly registry.get   { server: 'CouchDB/1.3.0 (Erlang OTP/R15B03)',
+1180 silly registry.get     etag: '"2NQFBC5T4PM83LSCUT58F4178"',
+1180 silly registry.get     date: 'Sun, 28 Apr 2013 03:46:53 GMT',
+1180 silly registry.get     'content-length': '0' } ]
+1181 verbose etag debug from cache
+1182 silly addNameRange number 2 { name: 'debug', range: '', hasData: true }
+1183 silly addNameRange versions [ 'debug',
+1183 silly addNameRange   [ '0.0.1',
+1183 silly addNameRange     '0.1.0',
+1183 silly addNameRange     '0.2.0',
+1183 silly addNameRange     '0.3.0',
+1183 silly addNameRange     '0.4.0',
+1183 silly addNameRange     '0.4.1',
+1183 silly addNameRange     '0.5.0',
+1183 silly addNameRange     '0.6.0',
+1183 silly addNameRange     '0.7.0',
+1183 silly addNameRange     '0.7.1',
+1183 silly addNameRange     '0.7.2' ] ]
+1184 verbose addNamed [ 'debug', '0.7.2' ]
+1185 verbose addNamed [ '0.7.2', '0.7.2' ]
+1186 silly lockFile 432e5064-debug-0-7-2 debug@0.7.2
+1187 verbose lock debug@0.7.2 /var/lib/openshift/50299f34e9c741a5985354823b2fc8b0/app-root/data/.npm/432e5064-debug-0-7-2.lock
+1188 verbose from cache /var/lib/openshift/50299f34e9c741a5985354823b2fc8b0/app-root/data/.npm/debug/0.7.2/package/package.json
+1189 silly lockFile 432e5064-debug-0-7-2 debug@0.7.2
+1190 silly lockFile 3ac45eff-debug debug@*
+1191 verbose read json /var/lib/stickshift/50299f34e9c741a5985354823b2fc8b0/app-root/data/333815/domo-io/node_modules/zappa/node_modules/express/node_modules/connect/node_modules/send/node_modules/debug/package.json
+1192 silly shasum updated bytes 3640
+1193 info shasum 37353130532742683ddf4aa1edc5661612a7cc7d
+1193 info shasum /var/lib/openshift/50299f34e9c741a5985354823b2fc8b0/app-root/data/tmp/npm-25558/1367120812685-0.4194896735716611/tmp.tgz
+1194 verbose tar unpack /var/lib/openshift/50299f34e9c741a5985354823b2fc8b0/app-root/data/tmp/npm-25558/1367120812685-0.4194896735716611/tmp.tgz
+1195 silly lockFile 52b1e071-12685-0-4194896735716611-package /var/lib/openshift/50299f34e9c741a5985354823b2fc8b0/app-root/data/tmp/npm-25558/1367120812685-0.4194896735716611/package
+1196 verbose lock /var/lib/openshift/50299f34e9c741a5985354823b2fc8b0/app-root/data/tmp/npm-25558/1367120812685-0.4194896735716611/package /var/lib/openshift/50299f34e9c741a5985354823b2fc8b0/app-root/data/.npm/52b1e071-12685-0-4194896735716611-package.lock
+1197 silly gunzTarPerm modes [ '755', '644' ]
+1198 silly gunzTarPerm extractEntry package.json
+1199 silly gunzTarPerm extractEntry .npmignore
+1200 silly gunzTarPerm extractEntry index.js
+1201 silly gunzTarPerm extractEntry .gitmodules
+1202 silly gunzTarPerm extractEntry Readme.md
+1203 verbose read json /var/lib/openshift/50299f34e9c741a5985354823b2fc8b0/app-root/data/tmp/npm-25558/1367120812685-0.4194896735716611/package/package.json
+1204 silly lockFile 52b1e071-12685-0-4194896735716611-package /var/lib/openshift/50299f34e9c741a5985354823b2fc8b0/app-root/data/tmp/npm-25558/1367120812685-0.4194896735716611/package
+1205 verbose from cache /var/lib/openshift/50299f34e9c741a5985354823b2fc8b0/app-root/data/tmp/npm-25558/1367120812685-0.4194896735716611/package/package.json
+1206 verbose tar pack [ '/var/lib/openshift/50299f34e9c741a5985354823b2fc8b0/app-root/data/.npm/qs/0.6.1/package.tgz',
+1206 verbose tar pack   '/var/lib/openshift/50299f34e9c741a5985354823b2fc8b0/app-root/data/tmp/npm-25558/1367120812685-0.4194896735716611/package' ]
+1207 verbose tarball /var/lib/openshift/50299f34e9c741a5985354823b2fc8b0/app-root/data/.npm/qs/0.6.1/package.tgz
+1208 verbose folder /var/lib/openshift/50299f34e9c741a5985354823b2fc8b0/app-root/data/tmp/npm-25558/1367120812685-0.4194896735716611/package
+1209 silly lockFile ea8713dd-ot-data-npm-qs-0-6-1-package-tgz /var/lib/openshift/50299f34e9c741a5985354823b2fc8b0/app-root/data/.npm/qs/0.6.1/package.tgz
+1210 verbose lock /var/lib/openshift/50299f34e9c741a5985354823b2fc8b0/app-root/data/.npm/qs/0.6.1/package.tgz /var/lib/openshift/50299f34e9c741a5985354823b2fc8b0/app-root/data/.npm/ea8713dd-ot-data-npm-qs-0-6-1-package-tgz.lock
+1211 silly lockFile ea8713dd-ot-data-npm-qs-0-6-1-package-tgz /var/lib/openshift/50299f34e9c741a5985354823b2fc8b0/app-root/data/.npm/qs/0.6.1/package.tgz
+1212 silly lockFile de379aac-p-root-data-npm-qs-0-6-1-package /var/lib/openshift/50299f34e9c741a5985354823b2fc8b0/app-root/data/.npm/qs/0.6.1/package
+1213 verbose lock /var/lib/openshift/50299f34e9c741a5985354823b2fc8b0/app-root/data/.npm/qs/0.6.1/package /var/lib/openshift/50299f34e9c741a5985354823b2fc8b0/app-root/data/.npm/de379aac-p-root-data-npm-qs-0-6-1-package.lock
+1214 silly lockFile de379aac-p-root-data-npm-qs-0-6-1-package /var/lib/openshift/50299f34e9c741a5985354823b2fc8b0/app-root/data/.npm/qs/0.6.1/package
+1215 verbose tar unpack /var/lib/openshift/50299f34e9c741a5985354823b2fc8b0/app-root/data/.npm/qs/0.6.1/package.tgz
+1216 silly lockFile de379aac-p-root-data-npm-qs-0-6-1-package /var/lib/openshift/50299f34e9c741a5985354823b2fc8b0/app-root/data/.npm/qs/0.6.1/package
+1217 verbose lock /var/lib/openshift/50299f34e9c741a5985354823b2fc8b0/app-root/data/.npm/qs/0.6.1/package /var/lib/openshift/50299f34e9c741a5985354823b2fc8b0/app-root/data/.npm/de379aac-p-root-data-npm-qs-0-6-1-package.lock
+1218 silly gunzTarPerm modes [ '755', '644' ]
+1219 silly gunzTarPerm extractEntry package.json
+1220 silly gunzTarPerm extractEntry .npmignore
+1221 silly gunzTarPerm extractEntry index.js
+1222 silly gunzTarPerm extractEntry .gitmodules
+1223 silly gunzTarPerm extractEntry Readme.md
+1224 verbose read json /var/lib/openshift/50299f34e9c741a5985354823b2fc8b0/app-root/data/.npm/qs/0.6.1/package/package.json
+1225 silly lockFile de379aac-p-root-data-npm-qs-0-6-1-package /var/lib/openshift/50299f34e9c741a5985354823b2fc8b0/app-root/data/.npm/qs/0.6.1/package
+1226 silly shasum updated bytes 3643
+1227 info shasum 7bc8534f86d11ca63678c9c6bfa82f0e2cb72247
+1227 info shasum /var/lib/openshift/50299f34e9c741a5985354823b2fc8b0/app-root/data/.npm/qs/0.6.1/package.tgz
+1228 verbose from cache /var/lib/openshift/50299f34e9c741a5985354823b2fc8b0/app-root/data/.npm/qs/0.6.1/package/package.json
+1229 verbose chmod /var/lib/openshift/50299f34e9c741a5985354823b2fc8b0/app-root/data/.npm/qs/0.6.1/package.tgz 644
+1230 verbose chown /var/lib/openshift/50299f34e9c741a5985354823b2fc8b0/app-root/data/.npm/qs/0.6.1/package.tgz [ 6232, 6232 ]
+1231 silly lockFile de6399e1-gistry-npmjs-org-qs-qs-0-6-1-tgz https://registry.npmjs.org/qs/-/qs-0.6.1.tgz
+1232 silly lockFile bdebfafd-qs-0-6-1 qs@0.6.1
+1233 silly lockFile d8ffb163-qs-0-4-0 qs@>= 0.4.0
+1234 info outdated updating [ [ '/var/lib/stickshift/50299f34e9c741a5985354823b2fc8b0/app-root/data/333815/domo-io',
+1234 info outdated     'twilio',
+1234 info outdated     undefined,
+1234 info outdated     '0.3.2' ],
+1234 info outdated   [ '/var/lib/stickshift/50299f34e9c741a5985354823b2fc8b0/app-root/data/333815/domo-io/node_modules/zappa/node_modules/coffeekup',
+1234 info outdated     'coffee-script',
+1234 info outdated     '1.2.0',
+1234 info outdated     '1.6.2' ],
+1234 info outdated   [ '/var/lib/stickshift/50299f34e9c741a5985354823b2fc8b0/app-root/data/333815/domo-io/node_modules/express/node_modules/connect',
+1234 info outdated     'mime',
+1234 info outdated     '1.2.4',
+1234 info outdated     '1.2.9' ],
+1234 info outdated   [ '/var/lib/stickshift/50299f34e9c741a5985354823b2fc8b0/app-root/data/333815/domo-io/node_modules/express/node_modules/connect',
+1234 info outdated     'qs',
+1234 info outdated     '0.4.2',
+1234 info outdated     '0.6.1' ] ]
+1235 verbose install where,what [ '/var/lib/stickshift/50299f34e9c741a5985354823b2fc8b0/app-root/data/333815/domo-io',
+1235 verbose install   [ 'twilio@0.3.2' ] ]
+1236 verbose install where,what [ '/var/lib/stickshift/50299f34e9c741a5985354823b2fc8b0/app-root/data/333815/domo-io/node_modules/zappa/node_modules/coffeekup',
+1236 verbose install   [ 'coffee-script@1.6.2' ] ]
+1237 verbose install where,what [ '/var/lib/stickshift/50299f34e9c741a5985354823b2fc8b0/app-root/data/333815/domo-io/node_modules/express/node_modules/connect',
+1237 verbose install   [ 'mime@1.2.9' ] ]
+1238 verbose install where,what [ '/var/lib/stickshift/50299f34e9c741a5985354823b2fc8b0/app-root/data/333815/domo-io/node_modules/express/node_modules/connect',
+1238 verbose install   [ 'qs@0.6.1' ] ]
+1239 verbose from cache /var/lib/stickshift/50299f34e9c741a5985354823b2fc8b0/app-root/data/333815/domo-io/package.json
+1240 verbose from cache /var/lib/stickshift/50299f34e9c741a5985354823b2fc8b0/app-root/data/333815/domo-io/node_modules/zappa/node_modules/coffeekup/package.json
+1241 verbose from cache /var/lib/stickshift/50299f34e9c741a5985354823b2fc8b0/app-root/data/333815/domo-io/node_modules/express/node_modules/connect/package.json
+1242 verbose from cache /var/lib/stickshift/50299f34e9c741a5985354823b2fc8b0/app-root/data/333815/domo-io/node_modules/express/node_modules/connect/package.json
+1243 verbose from cache /var/lib/stickshift/50299f34e9c741a5985354823b2fc8b0/app-root/data/333815/domo-io/node_modules/zappa/package.json
+1244 verbose from cache /var/lib/stickshift/50299f34e9c741a5985354823b2fc8b0/app-root/data/333815/domo-io/node_modules/express/package.json
+1245 verbose from cache /var/lib/stickshift/50299f34e9c741a5985354823b2fc8b0/app-root/data/333815/domo-io/node_modules/request/package.json
+1246 verbose from cache /var/lib/stickshift/50299f34e9c741a5985354823b2fc8b0/app-root/data/333815/domo-io/node_modules/coffee-script/package.json
+1247 verbose from cache /var/lib/stickshift/50299f34e9c741a5985354823b2fc8b0/app-root/data/333815/domo-io/node_modules/mongoose/package.json
+1248 verbose from cache /var/lib/stickshift/50299f34e9c741a5985354823b2fc8b0/app-root/data/333815/domo-io/node_modules/should/package.json
+1249 verbose from cache /var/lib/stickshift/50299f34e9c741a5985354823b2fc8b0/app-root/data/333815/domo-io/node_modules/supervisor/package.json
+1250 verbose from cache /var/lib/stickshift/50299f34e9c741a5985354823b2fc8b0/app-root/data/333815/domo-io/node_modules/zappa/node_modules/coffeekup/package.json
+1251 verbose from cache /var/lib/stickshift/50299f34e9c741a5985354823b2fc8b0/app-root/data/333815/domo-io/node_modules/express/node_modules/connect/node_modules/formidable/package.json
+1252 verbose from cache /var/lib/stickshift/50299f34e9c741a5985354823b2fc8b0/app-root/data/333815/domo-io/node_modules/express/node_modules/connect/node_modules/formidable/package.json
+1253 verbose from cache /var/lib/stickshift/50299f34e9c741a5985354823b2fc8b0/app-root/data/333815/domo-io/package.json
+1254 verbose from cache /var/lib/stickshift/50299f34e9c741a5985354823b2fc8b0/app-root/data/333815/domo-io/node_modules/express/node_modules/connect/package.json
+1255 verbose from cache /var/lib/stickshift/50299f34e9c741a5985354823b2fc8b0/app-root/data/333815/domo-io/node_modules/express/node_modules/connect/package.json
+1256 verbose readDependencies using package.json deps
+1257 verbose cache add [ 'coffee-script@1.6.2', null ]
+1258 silly cache add name=undefined spec="coffee-script@1.6.2" args=["coffee-script@1.6.2",null]
+1259 verbose parsed url { pathname: 'coffee-script@1.6.2',
+1259 verbose parsed url   path: 'coffee-script@1.6.2',
+1259 verbose parsed url   href: 'coffee-script@1.6.2' }
+1260 silly cache add name="coffee-script" spec="1.6.2" args=["coffee-script","1.6.2"]
+1261 verbose parsed url { pathname: '1.6.2', path: '1.6.2', href: '1.6.2' }
+1262 verbose addNamed [ 'coffee-script', '1.6.2' ]
+1263 verbose addNamed [ '1.6.2', '1.6.2' ]
+1264 silly lockFile 0166e586-coffee-script-1-6-2 coffee-script@1.6.2
+1265 verbose lock coffee-script@1.6.2 /var/lib/openshift/50299f34e9c741a5985354823b2fc8b0/app-root/data/.npm/0166e586-coffee-script-1-6-2.lock
+1266 verbose readDependencies using package.json deps
+1267 verbose cache add [ 'twilio@0.3.2', null ]
+1268 silly cache add name=undefined spec="twilio@0.3.2" args=["twilio@0.3.2",null]
+1269 verbose parsed url { pathname: 'twilio@0.3.2',
+1269 verbose parsed url   path: 'twilio@0.3.2',
+1269 verbose parsed url   href: 'twilio@0.3.2' }
+1270 silly cache add name="twilio" spec="0.3.2" args=["twilio","0.3.2"]
+1271 verbose parsed url { pathname: '0.3.2', path: '0.3.2', href: '0.3.2' }
+1272 verbose addNamed [ 'twilio', '0.3.2' ]
+1273 verbose addNamed [ '0.3.2', '0.3.2' ]
+1274 silly lockFile c7785838-twilio-0-3-2 twilio@0.3.2
+1275 verbose lock twilio@0.3.2 /var/lib/openshift/50299f34e9c741a5985354823b2fc8b0/app-root/data/.npm/c7785838-twilio-0-3-2.lock
+1276 verbose readDependencies using package.json deps
+1277 verbose cache add [ 'mime@1.2.9', null ]
+1278 silly cache add name=undefined spec="mime@1.2.9" args=["mime@1.2.9",null]
+1279 verbose parsed url { pathname: 'mime@1.2.9',
+1279 verbose parsed url   path: 'mime@1.2.9',
+1279 verbose parsed url   href: 'mime@1.2.9' }
+1280 silly cache add name="mime" spec="1.2.9" args=["mime","1.2.9"]
+1281 verbose parsed url { pathname: '1.2.9', path: '1.2.9', href: '1.2.9' }
+1282 verbose addNamed [ 'mime', '1.2.9' ]
+1283 verbose addNamed [ '1.2.9', '1.2.9' ]
+1284 silly lockFile 24648bbc-mime-1-2-9 mime@1.2.9
+1285 verbose lock mime@1.2.9 /var/lib/openshift/50299f34e9c741a5985354823b2fc8b0/app-root/data/.npm/24648bbc-mime-1-2-9.lock
+1286 verbose readDependencies using package.json deps
+1287 verbose cache add [ 'qs@0.6.1', null ]
+1288 silly cache add name=undefined spec="qs@0.6.1" args=["qs@0.6.1",null]
+1289 verbose parsed url { pathname: 'qs@0.6.1', path: 'qs@0.6.1', href: 'qs@0.6.1' }
+1290 silly cache add name="qs" spec="0.6.1" args=["qs","0.6.1"]
+1291 verbose parsed url { pathname: '0.6.1', path: '0.6.1', href: '0.6.1' }
+1292 verbose addNamed [ 'qs', '0.6.1' ]
+1293 verbose addNamed [ '0.6.1', '0.6.1' ]
+1294 silly lockFile bdebfafd-qs-0-6-1 qs@0.6.1
+1295 verbose lock qs@0.6.1 /var/lib/openshift/50299f34e9c741a5985354823b2fc8b0/app-root/data/.npm/bdebfafd-qs-0-6-1.lock
+1296 verbose url raw coffee-script/1.6.2
+1297 verbose url resolving [ 'https://registry.npmjs.org/', './coffee-script/1.6.2' ]
+1298 verbose url resolved https://registry.npmjs.org/coffee-script/1.6.2
+1299 info trying registry request attempt 1 at 23:46:53
+1300 http GET https://registry.npmjs.org/coffee-script/1.6.2
+1301 verbose url raw twilio/0.3.2
+1302 verbose url resolving [ 'https://registry.npmjs.org/', './twilio/0.3.2' ]
+1303 verbose url resolved https://registry.npmjs.org/twilio/0.3.2
+1304 info trying registry request attempt 1 at 23:46:53
+1305 http GET https://registry.npmjs.org/twilio/0.3.2
+1306 verbose url raw mime/1.2.9
+1307 verbose url resolving [ 'https://registry.npmjs.org/', './mime/1.2.9' ]
+1308 verbose url resolved https://registry.npmjs.org/mime/1.2.9
+1309 info trying registry request attempt 1 at 23:46:53
+1310 http GET https://registry.npmjs.org/mime/1.2.9
+1311 verbose url raw qs/0.6.1
+1312 verbose url resolving [ 'https://registry.npmjs.org/', './qs/0.6.1' ]
+1313 verbose url resolved https://registry.npmjs.org/qs/0.6.1
+1314 info trying registry request attempt 1 at 23:46:53
+1315 http GET https://registry.npmjs.org/qs/0.6.1
+1316 http 200 https://registry.npmjs.org/qs/0.6.1
+1317 silly registry.get cb [ 200,
+1317 silly registry.get   { vary: 'Accept',
+1317 silly registry.get     server: 'CouchDB/1.3.0 (Erlang OTP/R15B03)',
+1317 silly registry.get     etag: '"6BC5I68CRWYBJOZIANZGI0C6K"',
+1317 silly registry.get     date: 'Sun, 28 Apr 2013 03:46:53 GMT',
+1317 silly registry.get     'content-type': 'application/json',
+1317 silly registry.get     'content-length': '2813' } ]
+1318 silly lockFile de6399e1-gistry-npmjs-org-qs-qs-0-6-1-tgz https://registry.npmjs.org/qs/-/qs-0.6.1.tgz
+1319 verbose lock https://registry.npmjs.org/qs/-/qs-0.6.1.tgz /var/lib/openshift/50299f34e9c741a5985354823b2fc8b0/app-root/data/.npm/de6399e1-gistry-npmjs-org-qs-qs-0-6-1-tgz.lock
+1320 verbose addRemoteTarball [ 'https://registry.npmjs.org/qs/-/qs-0.6.1.tgz',
+1320 verbose addRemoteTarball   '37353130532742683ddf4aa1edc5661612a7cc7d' ]
+1321 info retry fetch attempt 1 at 23:46:53
+1322 verbose fetch to= /var/lib/openshift/50299f34e9c741a5985354823b2fc8b0/app-root/data/tmp/npm-25558/1367120813833-0.36871444643475115/tmp.tgz
+1323 http GET https://registry.npmjs.org/qs/-/qs-0.6.1.tgz
+1324 http 404 https://registry.npmjs.org/twilio/0.3.2
+1325 silly registry.get cb [ 404,
+1325 silly registry.get   { vary: 'Accept',
+1325 silly registry.get     server: 'CouchDB/1.3.0 (Erlang OTP/R15B03)',
+1325 silly registry.get     etag: '"4UF4YJ09L7N0YOJHQ3QUPQCDC"',
+1325 silly registry.get     date: 'Sun, 28 Apr 2013 03:46:53 GMT',
+1325 silly registry.get     'content-type': 'application/json',
+1325 silly registry.get     'content-length': '36' } ]
+1326 silly lockFile c7785838-twilio-0-3-2 twilio@0.3.2
+1327 error Error: version not found: 0.3.2 : twilio/0.3.2
+1327 error     at RegClient.<anonymous> (/var/lib/stickshift/50299f34e9c741a5985354823b2fc8b0/app-root/data/lib/node_modules/npm/node_modules/npm-registry-client/lib/request.js:259:14)
+1327 error     at Request.init.self.callback (/var/lib/stickshift/50299f34e9c741a5985354823b2fc8b0/app-root/data/lib/node_modules/npm/node_modules/request/main.js:120:22)
+1327 error     at Request.EventEmitter.emit (events.js:91:17)
+1327 error     at Request.<anonymous> (/var/lib/stickshift/50299f34e9c741a5985354823b2fc8b0/app-root/data/lib/node_modules/npm/node_modules/request/main.js:648:16)
+1327 error     at Request.EventEmitter.emit (events.js:115:20)
+1327 error     at IncomingMessage.Request.start.self.req.self.httpModule.request.buffer (/var/lib/stickshift/50299f34e9c741a5985354823b2fc8b0/app-root/data/lib/node_modules/npm/node_modules/request/main.js:610:14)
+1327 error     at IncomingMessage.EventEmitter.emit (events.js:115:20)
+1327 error     at IncomingMessage._emitEnd (http.js:366:10)
+1327 error     at HTTPParser.parserOnMessageComplete [as onMessageComplete] (http.js:149:23)
+1327 error     at CleartextStream.socketOnData (http.js:1366:20)
+1328 error If you need help, you may report this log at:
+1328 error     <http://github.com/isaacs/npm/issues>
+1328 error or email it to:
+1328 error     <npm-@googlegroups.com>
+1329 error System Linux 2.6.32-358.2.1.el6.x86_64
+1330 error command "/var/lib/openshift/50299f34e9c741a5985354823b2fc8b0/app-root/data//bin/node-openshift-v8" "/var/lib/stickshift/50299f34e9c741a5985354823b2fc8b0/app-root/data/lib/node_modules/npm/bin/npm-cli.js" "update"
+1331 error cwd /var/lib/stickshift/50299f34e9c741a5985354823b2fc8b0/app-root/data/333815/domo-io
+1332 error node -v v0.8.9
+1333 error npm -v 1.1.62
+1334 verbose exit [ 1, true ]

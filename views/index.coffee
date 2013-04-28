@@ -1,27 +1,27 @@
 @title = 'Welcome'
 @stylesheets = ['/css/style','/css/bootstrap.min']
 @localScripts = ['/js/jquery.min','/js/bootstrap']
+@hideToolbar = true
 
 fbAppID = '8848577688'
 body ->
-
-div 'contentHeader', ->
+div 'contentHeader', -> 
   div 'container-fluid', ->
-    p 'contentHeaderText', -> "Above the stratosphere."
-
+    p 'contentHeaderText', -> ""
 text '<div class="content container-fluid">'
 
 section id:'about', ->
   h1 ->
-     text 'ExoMachina '
-     small 'is a partnership-based development corporation'
-  p 'lead', -> 'With partners having expertise in mental health, human-computer interaction and aerospace, ExoMachina combines research and design into products for the entire world.'
+     text 'Domo ' #hnk
+     small 'brings people effective assistance for anxiety, depression, and other struggles they encounter in life.' #hnk
+  p 'lead', -> 'You are about to become part of a wonderful movement - to help or be helped by an awesome group of people who care.' #hnk
 
   if @redirectURL? #if for example, index is rendered from offer/:id
     script "window.redirectURL = '#{@redirectURL}'"
 
   p ->
-      a {class: "btn btn-primary btn-large",id:"writeUsButton", href:"mailto:hello@exomachina.com"}, -> 'Write us'
+      a {class: "btn btn-primary btn-large",id:"seekAdviceButton", href:"/advice/"}, -> 'Get advice'
+      b {class: "btn btn-primary btn-large",id:"giveAdviceButton", href:"/giveadvice/"}, -> 'Give advice'
       ###
       if @localAuthor? == false
         text ' '
@@ -30,7 +30,7 @@ section id:'about', ->
         text ' '
         a {class: "btn btn-primary btn-large", href:"/code"}, -> 'Enter Code'
       ###
-
+### #hnk042813-{
 section id: "apps", ->
   div 'page-header', ->
     h1 ->
@@ -56,3 +56,4 @@ section id: "apps", ->
 
 
 text '</ div>'
+### #hnk042813-}
