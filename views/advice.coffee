@@ -2,7 +2,7 @@
 @stylesheets = ['/css/style','/css/bootstrap.min']
 @localScripts = ['/js/jquery.min','/js/bootstrap']
 
-defaultPlaceholderText = "How are you feeling now? How have you been feeling recently? What could you use some help in?"
+defaultPlaceholderText = "How are you feeling now? How have you been feeling recently? What could you use help in?"
 
 defaultText = "Right now I'm feeling: \n\nRecently I've been feeling: \n\nI could use some help in: \n"
 
@@ -20,10 +20,11 @@ coffeescript ->
  
   @window.submitPressed = () ->
     advice = $('#adviceTextArea').val()
-    if advice?.length > 0 && advice != adviceDefaultText
+    adviceContact = $('#adviceContactInput').val()
+    if adviceContact?.length >0 && advice?.length > 0 && advice != adviceDefaultText
       $('#submitStatus').addClass('hidden')
       $("#submitButton").addClass('disabled')
-      $.post "/s/advice", {advice: advice, adviceOn: adviceOn}, (response)=>
+      $.post "/s/advice", {advice: advice, adviceOn: adviceOn, adviceContact: adviceContact}, (response)=>
         console.log response
         if response?.status != "success"
           $("#submitButton").removeClass('disabled')
@@ -35,7 +36,10 @@ coffeescript ->
  
     else
       $('#submitStatus').removeClass('hidden')
-      $('#submitStatus').text "advice, please!"
+      if advice?.length > 0 && advice != adviceDefaultText #then it's definitely the phone # we need
+        $('#submitStatus').text "a way to get back to you, please!"
+      else
+        $('#submitStatus').text "your advice request, please!"
     return false
 
   @window.focusToFeedback = () ->
@@ -50,16 +54,21 @@ h1 ->
   small -> "effective assistance for anxiety, depression, and other struggles they encounter in life."
 
 form method:'GET', id:'adviceForm', action:"#", onsubmit: 'window.submitPressed.apply(); return false;', ->
-  legend -> "Through your anonymous vignette you'll receive advice from our network of therapists and other validated amazing people. You can schedule to meet with any of them!"
+  legend -> "Through your anonymous vignette you'll receive advice from our network of therapists and validated amazing people. You can schedule to meet with any of them!"
   
   onText = null
   if @adviceOn? == true
      onText = "advice on: \n#{@adviceOn} \n\nthoughts:\n\n"
   textarea 'input-block-level', id:'adviceTextArea', type:'textarea', rows:6, placeholder: defaultPlaceholderText, -> onText
-  input 'btn btn-success', id:"submitButton", type: 'submit', -> 'Submit'
-  p 'text-warning hidden', id:'submitStatus', -> 'Thank you for the advice!!'
+  span class: 'label label-success', -> 'and so we can get back to you!'
+  br ->
+  input type: "text", placeholder: "your email address or US phone number", id: "adviceContactInput", ->
+  input 'btn btn-success right', id:"submitButton", type: 'submit', style: 'margin-top: 5px;', -> 'Submit'
+  p 'text-warning hidden', id:'submitStatus', -> 'Thank you for your vignette!!'
 
-h1 'text-success hidden', id:'thankYouText', -> 'Thank you for your advice!'
+h1 'text-success hidden', id:'thankYouText', ->
+  text 'Thank you for your vignette!'
+  small -> " We'll get you some advice ASAP! (<7 days)"
 
 
 text '</ div>'

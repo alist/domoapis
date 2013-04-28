@@ -240,6 +240,9 @@ section#apps .page-header {
   margin-left: auto;
   margin-right: auto;
 }
+.right {
+  float: right;
+}
 .userLoginOutButton {
   width: 50px;
   margin-top: 4px;
@@ -272,4 +275,9 @@ section#apps .page-header {
   -webkit-border-radius: 50%;
   -moz-border-radius: 50%;
   border-radius: 50%;
+}
+#adviceContactInput {
+  height: 30px;
+  width: 275px;
+  margin-top: 5px;
 }
