@@ -29,7 +29,7 @@ exports.comSetup = (app) ->
   twilio = new twilioClient secrets.twilioAccountSid, secrets.twilioAuthToken, secrets.primaryHost, {port: port, express: app.app}
   autoUri = global.autoUri
   autoUri.baseUri = 'https://' + autoUri.hostname + '/' + autoUri.basePath + '/'
-  phone = twilio.getPhoneNumber('+16502651076')
+  phone = twilio.getPhoneNumber('+16173000557')
   phone.setup =>
     phone.on 'incomingSms', (reqParams, res) ->
       message = reqParams?.Body
@@ -94,7 +94,7 @@ exports.sendSMS = (message, recipient, callback) -> #callback(error)
   if message? == false || message.length == 0
     callback 'undefined message error'
     return
-  if message.length > 179
+  if message.length >smsLength
     callback('overlength message error')
     return
 
