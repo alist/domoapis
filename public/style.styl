@@ -3,9 +3,8 @@
 global-reset()
 
 blue = #377ad0 
-tbRed = #de4044
-tbBlack = #414042 
-tbGreen = #354a4c
+dBlack = #414042 
+dGreen = #01a351;
 *
   border 0
 
@@ -28,7 +27,7 @@ a
 .media-body
  padding-left 110px
  a
-  color tbBlack
+  color dBlack
   &:hover
     color darken(blue, 20%)
     text-decoration none
@@ -81,6 +80,9 @@ section#apps
   float right
   margin-top 20px
 
+.content h1
+  coLor: dGreen
+
 @media (max-width:480px)
   .hidden-phone
     display none
@@ -98,7 +100,6 @@ section#apps
   border-bottom-width 1px
 
 .homeHeader
-  width 183px
   height 54px
   display inline
   margin-top 5px

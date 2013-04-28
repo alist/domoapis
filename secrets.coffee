@@ -1,6 +1,6 @@
-exports.mongoDBConnectURLSecret = 'mongodb://exomachina:nt9pYHw9t5HazWQNQPDZ@ds037827.mongolab.com:37827/heroku_app11209825'
+exports.mongoDBConnectURLSecret = 'mongodb://domomain:CvB8KBKd3qH9db@ds033067.mongolab.com:33067/heroku_app15329132'
 
-exports.primaryHost = "exomachina.herokuapp.com"
+exports.primaryHost = "domo-io.herokuapp.com"
 
 exports.sessionSecret = 'dasds21dkds22as2jsjsad%'
 

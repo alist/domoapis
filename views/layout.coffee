@@ -4,7 +4,7 @@
     meta name: "apple-mobile-web-app-capable", content:"yes"
     #link href: "/css/bootstrap-responsive.css", rel: "stylesheet"
     
-    title "#{@title or 'Untitled'} | ExoMachina"
+    title "#{@title or 'Untitled'} | Domo"
 
     if @stylesheets
       for s in @stylesheets
@@ -22,7 +22,7 @@
     div 'header navbar-static-top', ->
       div 'container-fluid', ->
         a  {href: "/"}, ->
-          img 'homeHeader', src: "/img/exomachina-website-header-logo.png", ->
+          img 'homeHeader', src: "/img/domo-website-header-logo.png", ->
 
         ///
         div 'headerControls hidden-desktop visible-phone',->
@@ -63,7 +63,7 @@
 
   body ->
    footer ->
-    text 'ExoMachina, Inc.'
+    text 'Domo Sapience, Inc.'
 
   body ->
     if @scripts

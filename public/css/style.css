@@ -167,6 +167,9 @@ section#apps .page-header {
   float: right;
   margin-top: 20px;
 }
+.content h1 {
+  coLor: #01a351;
+}
 @media (max-width:480px) {
   .hidden-phone {
     display: none;
@@ -188,7 +191,6 @@ section#apps .page-header {
   border-bottom-width: 1px;
 }
 .homeHeader {
-  width: 183px;
   height: 54px;
   display: inline;
   margin-top: 5px;

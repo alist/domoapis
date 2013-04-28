@@ -1,1 +1,1 @@
-web: supervisor exomachina.coffee
+web: supervisor domo-io.coffee

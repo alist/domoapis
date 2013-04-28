@@ -5,7 +5,7 @@ request = require 'request'
 
 home = require('./routes/home')
 roughdraft = require('./routes/roughdraft')
-#feedback = require('./routes/feedback')
+feedback = require('./routes/feedback')
 #opinions = require('./routes/opinions')
 redirstat = require('./routes/redirstat')
 shorturl = require('./routes/shorturl')
@@ -20,7 +20,7 @@ Schema = mongoose.Schema
 
 `Array.prototype.unique = function() {    var o = {}, i, l = this.length, r = [];    for(i=0; i<l;i+=1) o[this[i]] = this[i];    for(i in o) r.push(o[i]);    return r;};`
 
-alistApp = require('zappa').app ->
+domoApp = require('zappa').app ->
   mongoose.connect(secrets.mongoDBConnectURLSecret)
   @use 'bodyParser', 'static', 'cookies', 'cookieParser', session: {secret: secrets.sessionSecret}
 
@@ -37,25 +37,13 @@ alistApp = require('zappa').app ->
 
   @get '/', home.home
 
-  #@get '/roughdraft', roughdraft.roughdraft
-  
-  @get '/fibromyalgia': -> @redirect 'https://itunes.apple.com/app/fibromyalgia/id398150128?mt=8'
-  
-  @get '/exonotes': -> @redirect 'https://itunes.apple.com/app/exonotes/id386497497?mt=8'
-  
-  @get '/alex': -> @redirect 'http://alist.im'
-  @get '/andrew': -> @redirect 'http://www.linkedin.com/in/andrewhomd'
-
-  #for fibromyalgia app
-  @get '/site/news/current_fmaware': -> @redirect 'http://fmaware.org/PageServer4311.html?pagename=community_patientStories'
-
-  ###
   @get '/feedback': -> @redirect '/s/feedback'
 
   @get '/s/feedback', feedback.form
 
   @post '/s/feedback', feedback.form_post
 
+  ###
   @get '/opinions', opinions.opinions
   
   @get '/r/*', redirstat.redir
@@ -115,6 +103,6 @@ alistApp = require('zappa').app ->
   
  
 port = if process.env.PORT > 0 then process.env.PORT else 3000
-alistApp.app.listen port
+domoApp.app.listen port
 console.log "starting on port # #{port}"
-#communicationsModel.comSetup alistApp
+#communicationsModel.comSetup domoApp
