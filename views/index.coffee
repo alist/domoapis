@@ -21,7 +21,7 @@ section id:'about', ->
 
   p ->
       a {class: "btn btn-primary btn-large",id:"seekAdviceButton", href:"/advice/"}, -> 'Get advice'
-      b {class: "btn btn-primary btn-large",id:"giveAdviceButton", href:"/giveadvice/"}, -> 'Give advice'
+      #b {class: "btn btn-primary btn-large",id:"giveAdviceButton", href:"/giveadvice/"}, -> 'Give advice'
       ###
       if @localAuthor? == false
         text ' '
