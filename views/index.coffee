@@ -5,7 +5,7 @@
 
 fbAppID = '8848577688'
 body ->
-div 'contentHeader', -> 
+div 'contentHeader', ->
   div 'container-fluid', ->
     p 'contentHeaderText', -> ""
 text '<div class="content container-fluid">'
@@ -14,14 +14,15 @@ section id:'about', ->
   h1 ->
      text 'Domo ' #hnk
      small 'brings people effective assistance for anxiety, depression, and other struggles they encounter in life.' #hnk
-  p 'lead', -> 'You are about to become part of a wonderful movement - to help or be helped by an awesome group of people who care.' #hnk
+  p 'lead', -> 'You are about to become part of a wonderful movement - help with anxiety, depression, and other life struggles from an group of awesome and certified people who care.' #hnk
 
   if @redirectURL? #if for example, index is rendered from offer/:id
     script "window.redirectURL = '#{@redirectURL}'"
 
   p ->
-      a {class: "btn btn-primary btn-large",id:"seekAdviceButton", href:"/advice/"}, -> 'Get advice'
-      #b {class: "btn btn-primary btn-large",id:"giveAdviceButton", href:"/giveadvice/"}, -> 'Give advice'
+      a {class: "btn btn-primary btn-large btn-success",id:"getAdviceButton", href:"/advice/"}, -> 'Get advice'
+
+      a {class: "btn btn-primary btn-large btn-success",id:"giveAdviceButton", href:"mailto:domo@domo.io?subject=Applying%20to%20Give%20Advice"}, -> 'Give advice'
       ###
       if @localAuthor? == false
         text ' '

@@ -281,3 +281,6 @@ section#apps .page-header {
   width: 275px;
   margin-top: 5px;
 }
+#giveAdviceButton {
+  margin-left: 5px;
+}

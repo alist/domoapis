@@ -2,9 +2,9 @@
 @stylesheets = ['/css/style','/css/bootstrap.min']
 @localScripts = ['/js/jquery.min','/js/bootstrap']
 
-defaultPlaceholderText = "How are you feeling now? How have you been feeling recently? What could you use help in?"
+defaultPlaceholderText = "How are you feeling now? How have you been feeling recently? What could you use help with?"
 
-defaultText = "Right now I'm feeling: \n\nRecently I've been feeling: \n\nI could use some help in: \n"
+defaultText = "Right now I'm feeling: \n\nRecently I've been feeling: \n\nI could use some help with: \n"
 
 script type:'text/javascript', ->
   text "adviceDefaultText = #{JSON.stringify(defaultText)};"
@@ -54,7 +54,7 @@ form method:'GET', id:'adviceForm', action:"#", onsubmit: 'window.submitPressed.
     text "Domo brings effective assistance"
     small -> " for anxiety, depression, and other struggles people encounter in life."
 
-  legend -> "Through this anonymous request you'll receive advice from our network of therapists and validated amazing people. If you'd like more of their advice, you can schedule a chat!"
+  legend -> "Through this anonymous request you'll receive advice from our network of therapists and other certified amazing people. If you'd like more of their advice, you can schedule a chat!"
   
   onText = null
   if @adviceOn? == true
