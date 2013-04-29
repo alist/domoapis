@@ -145,9 +145,9 @@ section#apps .page-header {
 .contentHeader {
   background-color: #f0f0f0;
   background-image: url("/img/domo-website-home-header-bg.png");
-  -webkit-background-size: 1020px;
-  -moz-background-size: 1020px;
-  background-size: 1020px;
+  -webkit-background-size: 1020px 348px;
+  -moz-background-size: 1020px 348px;
+  background-size: 1020px 348px;
   background-repeat: no-repeat;
   background-position: center bottom;
   height: 360px;
