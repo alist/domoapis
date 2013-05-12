@@ -51,10 +51,9 @@ text '<div class="content container-fluid">'
 
 form method:'GET', id:'adviceForm', action:"#", onsubmit: 'window.submitPressed.apply(); return false;', ->
   h1 ->
-    text "Domo brings effective assistance"
+    text "Domo brings assistance"
     small -> " for anxiety, depression, and other struggles people encounter in life."
-
-  legend -> "Through this anonymous request you'll receive advice from our network of therapists and other certified amazing people. If you'd like more of their advice, you can schedule a chat!"
+  legend -> "Through this anonymous request, vetted peers will engage you with empathy and support."
   
   onText = null
   if @adviceOn? == true
@@ -62,7 +61,7 @@ form method:'GET', id:'adviceForm', action:"#", onsubmit: 'window.submitPressed.
   textarea 'input-block-level', id:'adviceTextArea', type:'textarea', rows:6, placeholder: defaultPlaceholderText, -> onText
   span class: 'label label-success', -> 'and so we can get back to you!'
   br ->
-  input type: "text", placeholder: "a US phone number", id: "adviceContactInput", ->
+  input type: "text", placeholder: "US phone #", id: "adviceContactInput", ->
   input 'btn btn-success right', id:"submitButton", type: 'submit', style: 'margin-top: 5px;', -> 'Submit'
   p 'text-warning hidden', id:'submitStatus', -> 'Thank you for your vignette!!'
 

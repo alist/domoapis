@@ -7,15 +7,15 @@ text '<div class="content container-fluid">'
 
 div 'page-header', ->
   h1 "Give advice"
-ul 'thumbnails', ->
+ul 'thumbnails row-fluid', ->
   for adviceRequest in @pendingAdvice
     li 'span6', ->
       div 'thumbnail alert-info', ->
         a href: "/giveadvice/#{adviceRequest._id.toString()}", ->
           div 'caption', ->
-            h4 'text-info', -> "#{adviceRequest.modifiedDate.toString()}"
-            h4 'text-info', -> "#{if adviceRequest.responses? then adviceRequest.responses?.length else 0} responses"
-            h4 adviceRequest.advice
+            h5 'text-info', -> "#{adviceRequest.modifiedDate.toString()}"
+            h5 'text-info', -> "#{if adviceRequest.responses? then adviceRequest.responses?.length else 0} responses"
+            h5 adviceRequest.advice
             #a 'btn btn-primary', href: reward.redeemURL, -> 'Redeem'
  
 

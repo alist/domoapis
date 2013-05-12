@@ -1,12 +1,15 @@
 adviceModel = require('../model/advice')
+auth = require('../routes/auth') #middleware
 
 exports.advice_detail = (req, res) ->
-  adviceModel.getAdviceWithID @params.id, (err, advice) =>
-    @render giveadvicedetail: {detailAdvice: advice}
+  auth.authCurrentUserForPermission req, res, 'supporter', (err, user) =>
+    adviceModel.getAdviceWithID @params.id, (err, advice) =>
+      @render giveadvicedetail: {detailAdvice: advice, user: user}
 
 exports.advice_pending = (req, res) ->
-  adviceModel.getAdvice "pendingapproval", (err, pendingAdvice) =>
-    @render giveadvice: {pendingAdvice: pendingAdvice}
+  auth.authCurrentUserForPermission req, res, 'supporter', (err, user) =>
+    adviceModel.getAdvice "pendingapproval", (err, pendingAdvice) =>
+      @render giveadvice: {pendingAdvice: pendingAdvice, user: user}
 
 exports.form = (req, res) ->
   onReq = req.query.on

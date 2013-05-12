@@ -1,10 +1,10 @@
 secrets = require ('../secrets')
-authorModel = require('./author')
+userModel = require('./user')
 twilioClient = require('twilio').Client
 Twiml = require 'twilio/lib/twiml'
 
 exports.notifyAuthor = (authorID, message) ->
-  authorModel.getAuthorWithID authorID, (err, author, abrv) =>
+  userModel.getAuthorWithID authorID, (err, author, abrv) =>
     if author?
       timeInterval = Math.abs(author.lastNotificationDate?.getTime() - new Date().getTime())
       console.log timeInterval
