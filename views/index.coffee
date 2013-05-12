@@ -20,41 +20,9 @@ section id:'about', ->
     script "window.redirectURL = '#{@redirectURL}'"
 
   p ->
-      a {class: "btn btn-primary btn-large btn-success",id:"getAdviceButton", href:"/advice/"}, -> 'Get advice'
+      a {class: "btn btn-primary btn-large btn-success",id:"getAdviceButton", href:"/getadvice"}, -> 'Get advice'
 
       a {class: "btn btn-primary btn-large btn-success",id:"giveAdviceButton", href:"mailto:domo@domo.io?subject=Applying%20to%20Give%20Advice"}, -> 'Give advice'
-      ###
-      if @localAuthor? == false
-        text ' '
-        a 'btn btn-primary btn-large', {href:"javascript:void(0)", onclick: 'window.loginPressed.apply()'}, -> 'Login'
-      else
-        text ' '
-        a {class: "btn btn-primary btn-large", href:"/code"}, -> 'Enter Code'
-      ###
-### #hnk042813-{
-section id: "apps", ->
-  div 'page-header', ->
-    h1 ->
-      small 'launched products include'
-  div 'row', ->
-    div 'span5 offset1', ->
-      div 'media', ->
-        a 'pull-left', href:'/fibromyalgia', ->
-          img 'media-object', src: "/img/app-icons/100x100/fibromyalgia.png", ->
-        div 'media-body', ->
-          a href:'/fibromyalgia', ->
-            h4 'media-heading', -> 'Fibromyalgia'
-          text 'the Fibromyalgia app helps people track their pain-levels over time with the research-validated FIQR.'
-    div 'span5 offset1', ->
-       div 'media', ->
-        a 'pull-left', href:'/exonotes', ->
-          img 'media-object', src: "/img/app-icons/100x100/exonotes.png", ->
-        div 'media-body', ->
-          a href:'/exonotes', ->
-            h4 'media-heading', -> 'exoNotes'
-          text 'exoNotes brings easy-to-use text and drawing functionality to your fingers within a smart interface.'
-
 
 
 text '</ div>'
-### #hnk042813-}

@@ -9,7 +9,8 @@ ObjectId = mongoose.SchemaTypes.ObjectId
 
 AdviceSchema = new Schema {
   modifiedDate: {type: Date, index: {unique: false}},
-  advice: {type: String},
+  advice: {type: String}, #rename to request
+  responses: [],
   adviceContact: {type: String},
   adviceOn: {type: String, index: {unique: false}}
 }
@@ -34,4 +35,16 @@ exports.addAdvice = (advice, adviceOn, adviceContact, userInfo, callback) -> #ca
 
 exports.getAdviceSinceDate = (date, callback) ->
   Advice.find {modifiedDate : {$gt: date}}, {}, (err, advice) =>
+    callback err, advice
+
+
+exports.getAdvice = (status, callback) ->
+  Advice.find {}, {}, (err, advice) =>
+    callback err, advice
+
+exports.getAdviceWithID = (adviceID, callback) ->
+  try
+    objID = mongoose.mongo.BSONPure.ObjectID.fromString(adviceID)
+  catch err
+  Advice.findOne {_id : objID}, (err, advice) =>
     callback err, advice

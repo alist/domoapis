@@ -26,8 +26,10 @@ domoApp = require('zappa').app ->
 
   crypto = require('crypto')
  
-  #we want https
-  @get '/s/*': ->
+  @get '/', home.home
+  
+  #we want https unless index
+  @get '/*': ->
     if @request.headers['host'] == '127.0.0.1:3000' || @request.headers['host'] == 'localhost:3000'
       @next()
     else if @request.headers['x-forwarded-proto']!='https'
@@ -35,13 +37,14 @@ domoApp = require('zappa').app ->
     else
       @next()
 
-  @get '/', home.home
 
-  @get '/advice': -> @redirect '/s/advice'
+  @get '/getadvice', advice.form
 
-  @get '/s/advice', advice.form
+  @post '/getadvice', advice.form_post
+  
+  @get '/giveadvice', advice.advice_pending
 
-  @post '/s/advice', advice.form_post
+  @get '/giveadvice/:id', advice.advice_detail
 
   ###
   @get '/opinions', opinions.opinions

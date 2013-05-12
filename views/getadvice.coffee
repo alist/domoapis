@@ -24,7 +24,7 @@ coffeescript ->
     if adviceContact?.length >0 && advice?.length > 0 && advice != adviceDefaultText
       $('#submitStatus').addClass('hidden')
       $("#submitButton").addClass('disabled')
-      $.post "/s/advice", {advice: advice, adviceOn: adviceOn, adviceContact: adviceContact}, (response)=>
+      $.post "/s/getadvice", {advice: advice, adviceOn: adviceOn, adviceContact: adviceContact}, (response)=>
         console.log response
         if response?.status != "success"
           $("#submitButton").removeClass('disabled')
@@ -62,7 +62,7 @@ form method:'GET', id:'adviceForm', action:"#", onsubmit: 'window.submitPressed.
   textarea 'input-block-level', id:'adviceTextArea', type:'textarea', rows:6, placeholder: defaultPlaceholderText, -> onText
   span class: 'label label-success', -> 'and so we can get back to you!'
   br ->
-  input type: "text", placeholder: "your email address or US phone number", id: "adviceContactInput", ->
+  input type: "text", placeholder: "a US phone number", id: "adviceContactInput", ->
   input 'btn btn-success right', id:"submitButton", type: 'submit', style: 'margin-top: 5px;', -> 'Submit'
   p 'text-warning hidden', id:'submitStatus', -> 'Thank you for your vignette!!'
 
