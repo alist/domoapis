@@ -22,6 +22,6 @@ ul 'thumbnails', ->
         label class: 'checkbox span6', ->
           input type: 'checkbox', ->
           text 'to the best of my ability, this adheres to the advice-giving guidlines'
-        input 'btn btn-success span2', id:"submitButton", type: 'submit', style: 'float: right;', -> 'Submit'
+        input 'btn btn-success right', id:"submitButton", type: 'submit', -> 'Submit'
 
 text '</ div>'
