@@ -3,25 +3,77 @@
 @localScripts = ['/js/jquery.min','/js/bootstrap']
 
 
+
+script type:'text/javascript', ->
+  text "adviceRequestID = #{JSON.stringify(@detailAdvice._id.toString())};"
+
+coffeescript ->
+  @window.submitPressed = () ->
+    advice = $('#adviceTextArea').val()
+    checkBoxChecked = $('#guidlinesAcceptedBox').is(":checked")
+
+    errorAction = () ->
+      $("#submitButton").removeClass('disabled')
+      $('#submitStatus').removeClass('hidden')
+      $('#submitStatus').text "Sorry there was an error. Copy your text and let domo@domo.io know if it keeps up!"
+    
+    if advice?.length >0 && checkBoxChecked == true
+      $('#submitStatus').addClass('hidden')
+      $("#submitButton").addClass('disabled')
+      $.post("/giveadvice", {advice: advice, adviceRequestID: adviceRequestID}, (response)=>
+        console.log response
+        if response?.status != "success"
+          errorAction()
+        else
+          $('#adviceForm').addClass('hidden')).error(errorAction)
+    else
+      $('#submitStatus').removeClass('hidden')
+      if advice?.length > 0 && checkBoxChecked != true
+        $('#submitStatus').text "please checkout those guidlines :)!"
+      else
+        $('#submitStatus').text "your advice, please!"
+    return false
+
+  
 text '<div class="content container-fluid">'
 
 div 'page-header', ->
-  h1 "Give advice"
-ul 'thumbnails', ->
-  li 'span12 row-fluid media-row', ->
-    div 'thumbnail alert-info', ->
-      div 'caption', ->
-        h4 'text-info', -> "#{@detailAdvice.modifiedDate.toString()}"
-        h4 @detailAdvice.advice
-          #a 'btn btn-primary', href: reward.redeemURL, -> 'Redeem'
-  li 'span12 row-fluid', ->
-    div 'thumbnail', style: 'padding: 14px;', ->
+  a href: '/giveadvice', ->
+    h1 "Give advice"
+div 'row-fluid', ->
+  ul 'thumbnails', ->
+    li 'span12', ->
+      div 'thumbnail alert-success', ->
+        div 'caption', ->
+          h4 'text-info', -> "#{@detailAdvice.modifiedDate.toString()}"
+          h4 @detailAdvice.adviceRequest
+            #a 'btn btn-primary', href: reward.redeemURL, -> 'Redeem'
+
+drawResponseBox = (response) ->
+  div 'row-fluid', ->
+    ul 'thumbnails', ->
+      li 'span12', ->
+        div 'thumbnail', ->
+          div 'caption', ->
+            h4 'text-success', -> response.user.displayName
+            h4 'text-info', -> "#{response.modifiedDate.toString()}"
+            h4 response.adviceResponse
+
+for response in @detailAdvice.responses
+  drawResponseBox(response)
+
+div 'row-fluid', id: 'giveAdviceBox', ->
+  ul 'thumbnails', ->
+    li 'span12', ->
       h4 'text-success', -> @user.displayName
-      textarea class: "input-block-level",  rows: "3", placeholder: "your response!", ->
-      div class:'controls-row', ->
-        label class: 'checkbox span6', ->
-          input type: 'checkbox', ->
-          text 'to the best of my ability, this adheres to the advice-giving guidlines'
-        input 'btn btn-success right', id:"submitButton", type: 'submit', -> 'Submit'
+      form method:'GET', id:'adviceResponse', action:"#", onsubmit: 'window.submitPressed.apply(); return false;', ->
+        textarea class: "input-block-level", id: 'adviceTextArea', rows: "3", placeholder: "your response!", ->
+        div class:'controls-row', ->
+          label class: 'checkbox span6', ->
+            input id: 'guidlinesAcceptedBox', type: 'checkbox', ->
+            text 'to the best of my ability, this adheres to the advice-giving guidlines'
+          input 'btn btn-success right', id:"submitButton", type: 'submit', -> 'Submit'
+        p 'text-warning hidden', id:'submitStatus', -> 'Thank you for supporting!!'
+
 
 text '</ div>'

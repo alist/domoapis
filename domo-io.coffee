@@ -40,9 +40,11 @@ domoApp = require('zappa').app ->
 
   @get '/getadvice', advice.form
 
-  @post '/getadvice', advice.form_post
+  @post '/getadvice', advice.getadvice_post
   
   @get '/giveadvice', advice.advice_pending
+  
+  @post '/giveadvice', advice.giveadvice_post
 
   @get '/giveadvice/:id', advice.advice_detail
 

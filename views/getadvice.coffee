@@ -2,16 +2,14 @@
 @stylesheets = ['/css/style','/css/bootstrap.min']
 @localScripts = ['/js/jquery.min','/js/bootstrap']
 
-defaultPlaceholderText = "How are you feeling now? How have you been feeling recently? What could you use help with?"
+defaultPlaceholderText = "How have you been feeling recently? What could you use help with?"
 
-defaultText = "Right now I'm feeling: \n\nRecently I've been feeling: \n\nI could use some help with: \n"
+defaultText = "Recently I've been feeling: \n\n\nI could use some help with: \n"
+
 
 script type:'text/javascript', ->
   text "adviceDefaultText = #{JSON.stringify(defaultText)};"
-  if @adviceOn? == true
-    text "adviceOn =  #{JSON.stringify(@adviceOn)};"
-  else
-    text "adviceOn = 'general';"
+
 
 coffeescript ->
   $(document).ready =>
@@ -21,19 +19,24 @@ coffeescript ->
   @window.submitPressed = () ->
     advice = $('#adviceTextArea').val()
     adviceContact = $('#adviceContactInput').val()
+    
+    errorAction = () ->
+      $("#submitButton").removeClass('disabled')
+      $('#submitStatus').removeClass('hidden')
+      $('#submitStatus').text "Sorry there was an error. Save your text and let domo@domo.io know if it keeps up!"
+    
     if adviceContact?.length >0 && advice?.length > 0 && advice != adviceDefaultText
       $('#submitStatus').addClass('hidden')
       $("#submitButton").addClass('disabled')
-      $.post "/s/getadvice", {advice: advice, adviceOn: adviceOn, adviceContact: adviceContact}, (response)=>
+      $.post("/getadvice", {adviceRequest: advice, adviceContact: adviceContact}, (response)=>
         console.log response
         if response?.status != "success"
-          $("#submitButton").removeClass('disabled')
-          $('#submitStatus').removeClass('hidden')
-          $('#submitStatus').text "Sorry there was an error. :( Let domo@domo.io know if it keeps up!"
+          errorAction()
         else
           $('#thankYouText').removeClass('hidden')
-          $('#adviceForm').addClass('hidden')
- 
+          $('#adviceForm').addClass('hidden')).error(errorAction)
+
+
     else
       $('#submitStatus').removeClass('hidden')
       if advice?.length > 0 && advice != adviceDefaultText #then it's definitely the phone # we need
@@ -67,7 +70,7 @@ form method:'GET', id:'adviceForm', action:"#", onsubmit: 'window.submitPressed.
 
 h1 'text-success hidden', id:'thankYouText', ->
   text 'Thank you for your vignette!'
-  small -> " We'll get you some advice ASAP! (days)"
+  small -> " We'll get you some advice ASAP!"
 
 
 text '</ div>'
