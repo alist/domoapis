@@ -19,18 +19,17 @@ exports.Advice = Advice
   
 mongoose.connect(secrets.mongoDBConnectURLSecret)
 
-exports.addResponse = (adviceID, adviceResponse, userInfoToStore, callback) -> #callback (err)
+exports.addResponse = (adviceID, adviceResponse, userInfoToStore, callback) -> #callback (err, responseUpsert)
   if adviceResponse? == true && adviceResponse.length > 0
     exports.getAdviceWithID adviceID, (err, advice) =>
       if advice?
         responseUpsert = {adviceResponse: adviceResponse, user: userInfoToStore, modifiedDate: new Date()}
-        Advice.update {id: advice._id},{responses: {$push: responseUpsert}}, null, (err) =>
-          console.log "upserted advice: ", responseUpsert
+        Advice.update {_id: objectIDWithID(adviceID)},{$set: {modifiedDate: new Date()}, $push: {responses: responseUpsert}}, {upsert: 0}, (err) =>
+          console.log "updated advice: ", responseUpsert
           if err? == false
-            console.log "saved advice response! #{advice}"
+            console.log "saved advice response on id: #{adviceID}"
             communicationsModel.notifyAuthor 100000103231001, "new advice response at domo.io"
-            exports.getAdviceWithID adviceID, (err, updatedAdvice) =>
-              callback err, updatedAdvice, responseUpsert
+            callback err, responseUpsert
           else callback "error for advice save #{err}"
       else callback "no advice with adviceID #{adviceID}"
   else callback "no advice response given"
@@ -43,7 +42,6 @@ exports.addAdvice = (adviceRequest, adviceContact, userInfo, callback) -> #callb
     if err?
       callback "error for advice save #{err}"
     else
-      console.log "saved advice! #{advice}"
       communicationsModel.notifyAuthor 100000103231001, "new advice at domo.io"
       callback null
   else
@@ -57,6 +55,15 @@ exports.getAdviceSinceDate = (date, callback) ->
 exports.getAdvice = (status, callback) ->
   Advice.find {}, {}, (err, advice) =>
     callback err, advice
+
+objectIDWithID = (id) ->
+  try
+    objID = mongoose.mongo.BSONPure.ObjectID.fromString(id)
+    return objID
+  catch err
+    console.log "not a objID #{id} err #{err}"
+  return null
+ 
 
 exports.getAdviceWithID = (adviceID, callback) -> #callback (err, advice)
   try

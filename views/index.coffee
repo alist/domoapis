@@ -14,7 +14,8 @@ section id:'about', ->
   h1 ->
      text 'Domo ' #hnk
      small 'brings people effective assistance for anxiety, depression, and other struggles they encounter in life.' #hnk
-  p 'lead', -> 'You are about to become part of a wonderful movement - help with anxiety, depression, and other life struggles from an group of awesome and certified people who care.' #hnk
+  br ->
+  p 'lead', -> 'Get support from a wonderful movement - help with anxiety, depression, and other life struggles from an group of awesome and validated peers who care.' #hnk
 
   if @redirectURL? #if for example, index is rendered from offer/:id
     script "window.redirectURL = '#{@redirectURL}'"

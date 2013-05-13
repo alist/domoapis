@@ -21,6 +21,8 @@ AuthorSchema = new Schema {
   telephoneVerifyDate: {type: Date}
   telephoneNumberVerifyAttemptCount: {type: Number}
   telelphoneVerifyCode: {type: String}
+  messageCount: {type: Number}
+  overIntervalMessageAllowanceCount: {type: Number}
 
   lastNotificationDate: {type: Date, index: {unique: false}}
   notificationInterval: {type: Number}

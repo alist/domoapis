@@ -5,12 +5,12 @@ exports.giveadvice_post = (req, res) ->
   auth.authCurrentUserForPermission req, res, 'supporter', (err, user) =>
     if user?
       userDataToStore = {displayName: user.displayName, userID: user.userID}
-      adviceModel.addResponse req.body.adviceRequestID, req.body.advice, userDataToStore, (err, updatedAdvice, newResponse) =>
+      adviceModel.addResponse req.body.adviceRequestID, req.body.advice, userDataToStore, (err, newResponse) =>
         if err?
           console.log "failed with reason #{err}"
           @send  {status: 'fail'}
         else
-          @send  {status: 'success', updatedAdvice: updatedAdvice, newResponse: newResponse}
+          @send  {status: 'success', newResponse: newResponse}
     else
       @send {status: 'fail', reason: "not-authed"}
 

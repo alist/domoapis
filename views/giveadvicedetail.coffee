@@ -18,14 +18,15 @@ coffeescript ->
       $('#submitStatus').text "Sorry there was an error. Copy your text and let domo@domo.io know if it keeps up!"
     
     if advice?.length >0 && checkBoxChecked == true
-      $('#submitStatus').addClass('hidden')
+      $('#submitstatus').addClass('hidden')
       $("#submitButton").addClass('disabled')
       $.post("/giveadvice", {advice: advice, adviceRequestID: adviceRequestID}, (response)=>
         console.log response
         if response?.status != "success"
           errorAction()
         else
-          $('#adviceForm').addClass('hidden')).error(errorAction)
+          $('#adviceForm').addClass('hidden')
+          $('#giveAdviceBox').addClass('hidden') ).error(errorAction)
     else
       $('#submitStatus').removeClass('hidden')
       if advice?.length > 0 && checkBoxChecked != true

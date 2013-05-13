@@ -1,20 +1,18 @@
 secrets = require ('../secrets')
-userModel = require('./user')
+authorModel = require('./user')
 twilioClient = require('twilio').Client
 Twiml = require 'twilio/lib/twiml'
 
 exports.notifyAuthor = (authorID, message) ->
-  userModel.getAuthorWithID authorID, (err, author, abrv) =>
+  authorModel.getAuthorWithID authorID, (err, author, abrv) =>
     if author?
       timeInterval = Math.abs(author.lastNotificationDate?.getTime() - new Date().getTime())
-      console.log timeInterval
-      if timeInterval > author.notificationInterval || author.lastNotificationDate? == false
+      if ((timeInterval > author.notificationInterval) || (author.overIntervalMessageAllowanceCount > author.messageCount) || (author.lastNotificationDate? == false))
         exports.processMessageToRecipientForSMS message, author.telephoneNumber, exports.sendSMS, (error, recipient) =>
           if error?
             console.log "sms error to #{recipient}: #{error}"
           else
-            author.lastNotificationDate = new Date()
-            author.save (error) =>
+            authorModel.Author.update {authorID: author.authorID},{$set: {lastNotificationDate: new Date()}, $inc: {messageCount: 1} }, {upsert: 0}, (error) ->
               if error?
                 console.log "couldn't update author to new notify date"
             console.log "notified #{recipient}"
@@ -94,12 +92,12 @@ exports.sendSMS = (message, recipient, callback) -> #callback(error)
   if message? == false || message.length == 0
     callback 'undefined message error'
     return
-  if message.length >smsLength
+  if message.length > smsLength
     callback('overlength message error')
     return
 
   phone.sendSms recipient, message ,  null, (sms) =>
-    console.log sms
+    #console.log sms
     sendStatus = sms?.smsDetails?.status
     if sendStatus == 'queued'
       callback() #unfortunately, only possible to get callback on server
