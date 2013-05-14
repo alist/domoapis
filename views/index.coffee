@@ -12,10 +12,11 @@ text '<div class="content container-fluid">'
 
 section id:'about', ->
   h1 ->
-     text 'Domo ' #hnk
-     small 'brings people effective assistance for anxiety, depression, and other struggles they encounter in life.' #hnk
+     text 'Domo brings support with human compassion' #hnk
+     br ->
+     small 'Help with anxiety, depression, and other life struggles from an group of awesome and validated peers who care.'
   br ->
-  p 'lead', -> 'Get support with human compassion - help with anxiety, depression, and other life struggles from an group of awesome and validated peers who care.' #hnk
+  p 'lead', -> 'Currently in beta for the MIT community'
 
   if @redirectURL? #if for example, index is rendered from offer/:id
     script "window.redirectURL = '#{@redirectURL}'"

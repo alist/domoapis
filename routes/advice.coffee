@@ -17,7 +17,9 @@ exports.giveadvice_post = (req, res) ->
 exports.advice_detail = (req, res) ->
   auth.authCurrentUserForPermission req, res, 'supporter', (err, user) =>
     adviceModel.getAdviceWithID @params.id, (err, advice) =>
-      @render giveadvicedetail: {detailAdvice: advice, user: user}
+      if advice?
+        @render giveadvicedetail: {detailAdvice: advice, user: user}
+      else @redirect '/giveadvice'
 
 exports.advice_pending = (req, res) ->
   auth.authCurrentUserForPermission req, res, 'supporter', (err, user) =>

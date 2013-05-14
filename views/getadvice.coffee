@@ -54,8 +54,9 @@ text '<div class="content container-fluid">'
 
 form method:'GET', id:'adviceForm', action:"#", onsubmit: 'window.submitPressed.apply(); return false;', ->
   h1 ->
-    text "Domo brings assistance"
-    small -> " for anxiety, depression, and other struggles people encounter in life."
+     text 'Domo brings support with human compassion' #hnk
+     br ->
+     small 'Help with anxiety, depression, and other life struggles from an group of awesome and validated peers who care.'
   legend -> "Through this anonymous request, vetted peers will engage you with empathy and support."
   
   onText = null
