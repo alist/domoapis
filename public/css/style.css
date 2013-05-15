@@ -337,9 +337,69 @@ section#apps .page-header {
   background-image: url("/img/patternsquare_green.png");
   background-color: #add8e6;
 }
+#content-supporters #s2 h4 {
+  text-align: right;
+}
 #content-supporters #s3 {
   background-color: #d3d3d3;
   background-image: url("/img/patternsquare_green.png");
+}
+#content-supporters #s4 {
+  background-color: #e0ffff;
+  background-image: none;
+  height: 224px;
+  text-align: center;
+}
+#content-supporters #i1 {
+  background-image: url("/img/domo-handheld-supporters.png");
+  background-repeat: no-repeat;
+}
+#content-supporters #i2 {
+  background-image: url("/img/domo-office-supporters.png");
+  -webkit-background-size: 100%;
+  -moz-background-size: 100%;
+  background-size: 100%;
+  background-repeat: no-repeat;
+}
+#content-supporters #i2-s {
+  background-image: url("/img/domo-logo-supporters.png");
+  -webkit-background-size: 100%;
+  -moz-background-size: 100%;
+  background-size: 100%;
+  background-repeat: no-repeat;
+  height: 500px;
+  width: 100%;
+}
+#content-supporters .p1 {
+  margin-top: 100px;
+  margin-right: 10px;
+  font-size: 40px;
+  line-height: 1.2;
+  text-align: center;
+}
+#content-supporters .p2 {
+  margin-top: 100px;
+  margin-right: 10px;
+  font-size: 40px;
+  line-height: 1.2;
+  text-align: right;
+}
+#content-supporters .p3 {
+  margin-top: 100px;
+  margin-right: 10px;
+  font-size: 40px;
+  line-height: 1.2;
+  text-align: left;
+}
+#content-supporters .currentyBeta {
+  font-size: 15px;
+  margin-top: 3px;
+  font-style: italic;
+}
+#getInvolvedButton {
+  width: 300;
+  margin-left: auto;
+  margin-right: auto;
 }
 .label {
   padding: 3px 4px 2px;
