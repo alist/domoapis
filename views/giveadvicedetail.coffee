@@ -1,8 +1,4 @@
 @title = 'give advice'
-@stylesheets = ['/css/style','/css/bootstrap.min']
-@localScripts = ['/js/jquery.min','/js/bootstrap']
-
-
 
 script type:'text/javascript', ->
   text "adviceRequestID = #{JSON.stringify(@detailAdvice._id.toString())};"

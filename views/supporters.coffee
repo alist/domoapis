@@ -1,4 +1,4 @@
-@title = 'get advice'
+@title = 'supporters'
 
 defaultPlaceholderText = "How have you been feeling recently? What could you use help with?"
 

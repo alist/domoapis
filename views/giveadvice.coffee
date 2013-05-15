@@ -1,6 +1,4 @@
 @title = 'give advice'
-@stylesheets = ['/css/style','/css/bootstrap.min']
-@localScripts = ['/js/jquery.min','/js/bootstrap']
 
 
 text '<div class="content container-fluid">'

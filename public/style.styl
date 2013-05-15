@@ -1,6 +1,33 @@
 @import '/usr/local/lib/node_modules/nib/lib/nib'
 
-global-reset()
+@font-face
+  font-family 'Arimo'
+  src url("/fonts/Arimo-Regular-Latin.eot"); /* IE */
+  src local('Arimo'), url('/fonts/Arimo-Regular-Latin.ttf') format('truetype');
+  font-weight normal
+  font-style normal
+
+@font-face
+  font-family 'Arimo'
+  src url("/fonts/Arimo-Bold-Latin.eot"); /* IE */
+  src local('Arimo'), url('/fonts/Arimo-Bold-Latin.ttf') format('truetype');
+  font-weight bold
+  font-style normal
+
+@font-face
+  font-family 'Arimo'
+  src url("/fonts/Arimo-Italic-Latin.eot"); /* IE */
+  src local('Arimo'), url('/fonts/Arimo-Italic-Latin.ttf') format('truetype');
+  font-weight bold
+  font-style italic
+
+@font-face
+  font-family 'Arimo'
+  src url("/fonts/Arimo-BoldItalic-Latin.eot"); /* IE */
+  src local('Arimo'), url('/fonts/Arimo-BoldItalic-Latin.ttf') format('truetype');
+  font-weight bold
+  font-style italic
+
 
 blue = #377ad0 
 dBlack = #414042 
@@ -23,6 +50,8 @@ a
   &:active
     top 1px
 
+body
+  font-family 'Arimo', 'Helvetica Neue'
 
 .media-body
  padding-left 110px
@@ -64,9 +93,8 @@ section#apps
  width 100%
  height 0
  padding-bottom: 25%;
- margin-top: 3px;
  background-repeat no-repeat
- background-position center bottom
+ background-position center 15px
  border-bottom-color #E1E1E1
  border-bottom-style solid
  border-bottom-width 0px
@@ -158,14 +186,7 @@ section#apps
 
 .headerButtonRight
   float right
-  margin-top 10px
-
-.reward
-  height 277px
-
-.rewardQuantity
-  float right
-  margin-top 22px
+  margin-top 18px
 
 @media (max-width: 480px)
   #rewardBox
@@ -189,3 +210,9 @@ section#apps
 
 #giveAdviceButton
   margin-left 10px
+
+//index
+#index-about
+  h1
+    line-height 60px
+    font-f

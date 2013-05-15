@@ -1,16 +1,12 @@
-@title = 'Welcome'
-@stylesheets = ['/css/style','/css/bootstrap.min']
-@localScripts = ['/js/jquery.min','/js/bootstrap']
+@title = 'Hey!'
 @hideToolbar = true
 
-fbAppID = '8848577688'
 body ->
 div 'contentHeader', ->
-  div 'container-fluid', ->
     p 'contentHeaderText', -> ""
 text '<div class="content container-fluid">'
 
-section id:'about', ->
+section id:'index-about', ->
   h1 ->
      text 'Domo brings support with human compassion' #hnk
      br ->
