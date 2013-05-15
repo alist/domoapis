@@ -14,7 +14,9 @@ AuthorSchema = new Schema {
 
   token: {type: String}
   facebookID: {type: Number, index: {unique: true}}
+  userID: {type: Number, index: {unique: true}}
   isAdmin: {type: Boolean}
+  permissions: [{type: String}]
 
   activeSessionIDs: [ {type: String, index: {unique: true}} ]
   telephoneNumber: {type: String, index: {unique: false}}

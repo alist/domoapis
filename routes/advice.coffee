@@ -2,7 +2,7 @@ adviceModel = require('../model/advice')
 auth = require('../routes/auth') #middleware
 
 exports.giveadvice_post = (req, res) ->
-  auth.authCurrentUserForPermission req, res, 'supporter', (err, user) =>
+  auth.authCurrentUserForPermission req, @response, 'supporter', (err, user) => #will not return, if not permitted
     if user?
       userDataToStore = {displayName: user.displayName, userID: user.userID}
       adviceModel.addResponse req.body.adviceRequestID, req.body.advice, userDataToStore, (err, newResponse) =>
@@ -15,14 +15,14 @@ exports.giveadvice_post = (req, res) ->
       @send {status: 'fail', reason: "not-authed"}
 
 exports.advice_detail = (req, res) ->
-  auth.authCurrentUserForPermission req, res, 'supporter', (err, user) =>
+  auth.authCurrentUserForPermission req, @response, 'supporter', (err, user) => #will not return, if not permitted
     adviceModel.getAdviceWithID @params.id, (err, advice) =>
       if advice?
         @render giveadvicedetail: {detailAdvice: advice, user: user}
       else @redirect '/giveadvice'
 
 exports.advice_pending = (req, res) ->
-  auth.authCurrentUserForPermission req, res, 'supporter', (err, user) =>
+  auth.authCurrentUserForPermission req, @response, 'supporter', (err, user) => #will not return, if not permitted
     adviceModel.getAdvice "pendingapproval", (err, pendingAdvice) =>
       @render giveadvice: {pendingAdvice: pendingAdvice, user: user}
 
