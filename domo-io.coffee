@@ -52,6 +52,10 @@ domoApp = require('zappa').app ->
   @get '/supporters', supporters.principles_list
   
   @get '/urllogin', auth.urlLogin_get
+  
+  @get '/getloginurl', auth.shortLoginURLForCurrentUser
+
+  @get '/x/*', shorturl.unShortenRedir
 
   @get '*', (req, res)->
     @redirect '/'
