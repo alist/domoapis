@@ -12,7 +12,7 @@ AuthorSchema = new Schema {
   imageURI: String
   authorID: {type: String, required: true, index: {unique: true}}
 
-  fbAccessToken: {type: String}
+  token: {type: String}
   facebookID: {type: Number, index: {unique: true}}
   isAdmin: {type: Boolean}
 
@@ -32,6 +32,16 @@ Author = mongoose.model 'Author', AuthorSchema
 exports.Author = Author
   
 mongoose.connect(secrets.mongoDBConnectURLSecret)
+
+exports.getAuthorWithToken = (token, callback) => #callback (err, user)
+  if token? == false
+    callback "no token provided for this user"
+    return
+  Author.findOne {token: token},{}, (err, author) =>
+    if err? || author? == false
+        callback "no author found for token: #{token}"
+    else
+      callback null, author
 
 exports.authCurrentAuthorWithIDAndTokenForSession = (authorID, fbAToken, sessionToken, callback) -> #callback(err, author)
     if sessionToken? == false

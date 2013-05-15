@@ -6,6 +6,7 @@ request = require 'request'
 home = require('./routes/home')
 roughdraft = require('./routes/roughdraft')
 advice = require('./routes/advice')
+auth = require './routes/auth'
 redirstat = require('./routes/redirstat')
 supporters = require('./routes/supporters')
 shorturl = require('./routes/shorturl')
@@ -49,6 +50,8 @@ domoApp = require('zappa').app ->
   @get '/giveadvice/:id', advice.advice_detail
   
   @get '/supporters', supporters.principles_list
+  
+  @get '/urllogin', auth.urlLogin_get
 
   @get '*', (req, res)->
     @redirect '/'

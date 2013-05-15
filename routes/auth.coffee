@@ -14,3 +14,14 @@ exports.authCurrentUserForPermission = (req, res, permission, callback ) -> #cal
   ###
   testUser = {displayName: "Alexander List", userID: "100000103231001"}
   callback null, testUser
+
+
+exports.urlLogin_get  = (req, res, callback) -> #callback(err, user)
+  cookieToken = req.query.token #url.split(path.split('*')?[0])?[1]
+  userModel.getAuthorWithToken cookieToken, (err, user) =>
+    if user?
+      req.response.cookie 'sessiontoken', cookieToken, {httpOnly: true,  maxAge: 90000000000 }
+      @redirect '/'
+    else
+      console.log "user corresponding to token doesnt exist in database w/ err #{err}"
+      @redirect '/'
