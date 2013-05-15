@@ -12,6 +12,7 @@ AdviceSchema = new Schema {
   adviceRequest: {type: String} #rename to request
   responses: []
   adviceContact: {type: String}
+  status: {type: String}
 }
 
 Advice = mongoose.model 'Advice', AdviceSchema
@@ -37,7 +38,7 @@ exports.addResponse = (adviceID, adviceResponse, userInfoToStore, callback) -> #
 
 exports.addAdvice = (adviceRequest, adviceContact, userInfo, callback) -> #callback (err)
   if adviceRequest? == true && adviceRequest.length > 0
-   advice = new Advice {modifiedDate: new Date(), adviceRequest: adviceRequest, adviceContact: adviceContact, userInfo: userInfo}
+   advice = new Advice {modifiedDate: new Date(), adviceRequest: adviceRequest, adviceContact: adviceContact, userInfo: userInfo, status: 'PAPP'}
    advice.save (err) ->
     if err?
       callback "error for advice save #{err}"
@@ -48,12 +49,12 @@ exports.addAdvice = (adviceRequest, adviceContact, userInfo, callback) -> #callb
     callback "no advice given"
 
 exports.getAdviceSinceDate = (date, callback) ->
-  Advice.find {modifiedDate : {$gt: date}}, {}, (err, advice) =>
+  Advice.find {modifiedDate : {$gt: date}}, {},{sort: { modifiedDate: -1 }}, (err, advice) =>
     callback err, advice
 
 
 exports.getAdvice = (status, callback) ->
-  Advice.find {}, {}, (err, advice) =>
+  Advice.find {}, {},{ sort: { modifiedDate: -1 }}, (err, advice) =>
     callback err, advice
 
 objectIDWithID = (id) ->
@@ -64,6 +65,18 @@ objectIDWithID = (id) ->
     console.log "not a objID #{id} err #{err}"
   return null
  
+exports.approveAdviceRequest = (adviceID, callback) -> #callback(err)
+  exports.getAdviceWithID adviceID, (err, advice) ->
+    if advice?
+      newStatus = "PRES"
+      if advice.status == newStatus
+        callback "advice for id #{adivceID} is already #{newStatus}"
+      else
+        advice.status = newStatus
+        advice.save (err) =>
+          callback err
+    else callback "no advice for id #{adivceID}"
+    
 
 exports.getAdviceWithID = (adviceID, callback) -> #callback (err, advice)
   try

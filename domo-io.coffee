@@ -15,8 +15,6 @@ mongoose = require('mongoose')
 Schema = mongoose.Schema
 
 
-#authorModel = require('./model/author')
-#adviceModel = require('./model/advice')
 communicationsModel = require('./model/communications')
 
 `Array.prototype.unique = function() {    var o = {}, i, l = this.length, r = [];    for(i=0; i<l;i+=1) o[this[i]] = this[i];    for(i in o) r.push(o[i]);    return r;};`
@@ -48,6 +46,8 @@ domoApp = require('zappa').app ->
   @post '/giveadvice', advice.giveadvice_post
 
   @get '/giveadvice/:id', advice.advice_detail
+
+  @get '/approveadvicerequest/:id', advice.approveAdviceRequest_get
   
   @get '/supporters', supporters.principles_list
   

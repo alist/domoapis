@@ -21,6 +21,16 @@ exports.advice_detail = (req, res) ->
         @render giveadvicedetail: {detailAdvice: advice, user: user}
       else @redirect '/giveadvice'
 
+exports.approveAdviceRequest_get = (req, res) ->
+  auth.authCurrentUserForPermission req, @response, 'admin', (err, user) => #will not return, if not permitted
+    adviceRequestID = @params.id
+    adviceModel.approveAdviceRequest adviceRequestID, (err) ->
+      if err?
+        console.log "err approving advice: #{err}"
+        @send "didn't approve advicerequestID: #{adviceRequestID} w/ err: #{err}"
+      else
+        @send "approved advicerequestID: #{adviceRequestID}"
+
 exports.advice_pending = (req, res) ->
   auth.authCurrentUserForPermission req, @response, 'supporter', (err, user) => #will not return, if not permitted
     adviceModel.getAdvice "pendingapproval", (err, pendingAdvice) =>
