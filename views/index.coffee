@@ -11,7 +11,6 @@ section id:'index-about', ->
      text 'Domo brings support with human compassion' #hnk
   p 'mission', -> 'Help with anxiety, depression, and other life struggles from an group of awesome and validated peers who care.'
   br ->
-  p 'lead', -> 'Currently in beta for the MIT community'
 
   if @redirectURL? #if for example, index is rendered from offer/:id
     script "window.redirectURL = '#{@redirectURL}'"
@@ -21,5 +20,7 @@ section id:'index-about', ->
 
       a {class: "btn btn-primary btn-large btn-success",id:"giveAdviceButton", href:"mailto:domo@domo.io?subject=Applying%20to%20Give%20Advice"}, -> 'Give advice'
 
+
+  p 'lead', -> 'Currently in beta for the MIT community'
 
 text '</ div>'

@@ -19,7 +19,7 @@
   src: url("/fonts/Arimo-Italic-Latin.eot");
 /* IE */
   src: local('Arimo'), url("/fonts/Arimo-Italic-Latin.ttf") format('truetype');
-  font-weight: bold;
+  font-weight: normal;
   font-style: italic;
 }
 @font-face {
@@ -66,7 +66,7 @@ body {
   padding-left: 110px;
 }
 .media-body a {
-  color: #414042;
+  color: #414043;
 }
 .media-body a:hover {
   color: #2861aa;
@@ -273,17 +273,69 @@ section#apps .page-header {
   margin-top: 5px;
 }
 #index-about h1 {
-  line-height: 1.4;
-  margin-bottom: 5px;
+  line-height: 1.3;
+  margin-bottom: 10px;
 }
-#index-about .mission {
+.mission {
   line-height: 1.3;
   font-size: 24px;
   font-weight: normal;
   color: #999;
 }
+@media (max-width:420px) {
+  #index-about .mission {
+    line-height: 1.2;
+  }
+  #index-about h1 {
+    line-height: 1.2;
+    margin-top: -8px;
+  }
+}
 #giveAdviceButton {
   margin-left: 10px;
+}
+#content-supporters {
+  color: #414043;
+}
+#content-supporters .page-header {
+  margin-bottom: 0;
+  border-bottom: none;
+}
+#content-supporters #principlesHeader {
+  padding-top: 40px;
+}
+#content-supporters p {
+  font-size: 20px;
+  line-height: 1.2;
+}
+#content-supporters section {
+  border-top: 1px solid #eee;
+  height: 400px;
+  padding-left: 20px;
+  padding-right: 20px;
+  margin-left: -20px;
+  margin-right: -20px;
+  margin-bottom: 0;
+}
+#content-supporters h2 {
+  font-weight: normal;
+}
+#content-supporters .cornerNumber {
+  font-weight: bold;
+  margin-top: 0;
+  padding-top: 10px;
+}
+#content-supporters #s1 {
+  background-color: #e6e6fa;
+  background-image: url("/img/patternsquare_green.png");
+}
+#content-supporters #s2 {
+  background-image: url("/img/patternsquare_green.png");
+  background-color: #add8e6;
+}
+#content-supporters #s3 {
+  background-color: #d3d3d3;
+  background-image: url("/img/patternsquare_green.png");
 }
 .label {
   padding: 3px 4px 2px;

@@ -51,7 +51,7 @@ text '<div class="content container-fluid">'
 
 form method:'GET', id:'adviceForm', action:"#", onsubmit: 'window.submitPressed.apply(); return false;', ->
   h1 ->
-     text 'Get advice with Domo' #hnk
+     text 'Get advice through Domo' #hnk
      br ->
   legend -> "Through this anonymous request, vetted peers will engage you with empathy and support."
   

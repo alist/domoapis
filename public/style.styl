@@ -18,7 +18,7 @@
   font-family 'Arimo'
   src url("/fonts/Arimo-Italic-Latin.eot"); /* IE */
   src local('Arimo'), url('/fonts/Arimo-Italic-Latin.ttf') format('truetype');
-  font-weight bold
+  font-weight normal 
   font-style italic
 
 @font-face
@@ -30,7 +30,7 @@
 
 
 blue = #377ad0 
-dBlack = #414042 
+dBlack = #414043 
 dGreen = #01a351;
 *
   border 0
@@ -262,16 +262,58 @@ section#apps
 //index
 #index-about
  h1
-  line-height 1.4
-  margin-bottom 5px
- .mission
+  line-height 1.3
+  margin-bottom 10px
+.mission
   line-height 1.3
   font-size: 24px;
   font-weight: normal;
   color: #999;
+@media (max-width:420px)
+ #index-about
+  .mission
+   line-height 1.2
+  h1
+   line-height 1.2
+   margin-top -8px
 
 #giveAdviceButton
   margin-left 10px
+
+//supporters
+#content-supporters
+ color dBlack
+ .page-header
+  margin-bottom 0
+  border-bottom: none
+ #principlesHeader
+  padding-top 40px
+ p
+  font-size: 20px;
+  line-height: 1.2;
+ section
+  border-top: 1px solid #eee;
+  height 400px
+  padding-left 20px
+  padding-right 20px
+  margin-left -20px
+  margin-right -20px
+  margin-bottom 0
+ h2
+  font-weight normal
+ .cornerNumber
+  font-weight bold
+  margin-top 0
+  padding-top 10px
+ #s1
+  background-color: lavender
+  background-image url("/img/patternsquare_green.png")
+ #s2
+  background-image url("/img/patternsquare_green.png")
+  background-color: lightblue
+ #s3
+  background-color: lightgray
+  background-image url("/img/patternsquare_green.png")
 
 //bootstrap overrides
 .label
