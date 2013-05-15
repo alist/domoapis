@@ -291,6 +291,10 @@ section#apps .page-header {
     margin-top: -8px;
   }
 }
+.lead {
+  font-size: 17px;
+  font-style: italic;
+}
 #giveAdviceButton {
   margin-left: 10px;
 }
