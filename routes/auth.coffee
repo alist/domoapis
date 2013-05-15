@@ -1,7 +1,7 @@
 userModel = require '../model/user'
 shorturlModel = require('../model/shorturl')
 
-userLoginURLBase = "http://oh.domo.io/urllogin?token=?"
+userLoginURLBase = "http://oh.domo.io/urllogin?token="
 
 #will not return, if not permitted
 exports.authCurrentUserForPermission = (req, res, permission, callback ) -> #callback(err, user)
