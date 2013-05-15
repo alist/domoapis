@@ -50,9 +50,18 @@ a
   &:active
     top 1px
 
-body
-  font-family 'Arimo', 'Helvetica Neue'
 
+h1
+ line-height 1.2
+ small
+  line-height 1.2
+
+body
+ font-family 'Arimo', 'Helvetica Neue'
+ background-color #f0f0f0;
+ background-image url("/img/patternsquare_green.png")
+ background-repeat repeat
+  
 .media-body
  padding-left 110px
  a
@@ -86,15 +95,18 @@ section#apps
 
  text-shadow 0px 2px 7px #000000
 
-.contentHeader
+.contentHeaderBG
  background-color #F0F0F0 
+ background-image url("/img/patternsquare_green.png")
+ background-repeat repeat
+
+.contentHeader
  background-image url("/img/domo-website-home-header-bg.png")
  background-size contain
  width 100%
  height 0
  padding-bottom: 25%;
  background-repeat no-repeat
- background-position center 15px
  border-bottom-color #E1E1E1
  border-bottom-style solid
  border-bottom-width 0px
@@ -102,6 +114,12 @@ section#apps
  border-top-style solid
  border-top-width 0px
  box-shadow inset 0px -2px 3px #AAA
+@media (max-width:800px)
+ .contentHeader
+  background-position center 5px
+@media (min-width: 800px)
+ .contentHeader
+  background-position center 10px
 
 .container-fluid
   margin-left auto
@@ -113,7 +131,7 @@ section#apps
   margin-top 20px
 
 .content h1
-  coLor: dGreen
+ color: dGreen
 
 @media (max-width:480px)
   .hidden-phone
@@ -125,11 +143,12 @@ section#apps
     display none
 
 .content
-  margin-top 5px
-  background-color white
-  border-bottom-color #E1E1E1
-  border-bottom-style solid
-  border-bottom-width 1px
+ margin-top 15px
+ background-color white
+ border-bottom-color #E1E1E1
+ border-bottom-style solid
+ border-bottom-width 1px
+
 
 .homeHeader
   height 54px
@@ -202,17 +221,61 @@ section#apps
    border-radius 50%
 }
 
+//giveadvicedetail
+.adviceRequestText
+ font-size 18px
+ line-height 25px
+ font-weight normal
+
+.adviceResponseText
+ font-size 17px
+ line-height 21px
+ font-weight normal
+
+.adviceRow
+ border-bottom 1px dashed lightgray
+ margin-bottom 20px
+ padding-bottom 10px
+ line-height 20px
+ //border-bottom: 1px solid #eee;
+
+.adviceResponseRow
+ border-bottom 1px dashed lightgray
+ h5
+  font-size 15px
+
+//giveadvice
+.giveAdviceAdviceRequest
+ font-size: 14px;
+ line-height: 20px; 
+ font-weight: normal;
+ margin: 10px 0;
+ font-family: inherit;
+ text-rendering: optimizelegibility;
+
 //getadvice
 #adviceContactInput
   height 30px
   width 95px
   margin-top 5px
 
+//index
+#index-about
+ h1
+  line-height 1.4
+  margin-bottom 5px
+ .mission
+  line-height 1.3
+  font-size: 24px;
+  font-weight: normal;
+  color: #999;
+
 #giveAdviceButton
   margin-left 10px
 
-//index
-#index-about
-  h1
-    line-height 60px
-    font-f
+//bootstrap overrides
+.label
+ padding: 3px 4px 2px;
+
+.thumbnail
+ box-shadow: 3px 3px 3px rgba(0,0,0,0.055);

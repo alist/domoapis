@@ -37,24 +37,19 @@ text '<div class="content container-fluid">'
 div 'page-header', ->
   a href: '/giveadvice', ->
     h1 "Give advice"
-div 'row-fluid', ->
-  ul 'thumbnails', ->
-    li 'span12', ->
-      div 'thumbnail alert-success', ->
-        div 'caption', ->
-          h4 'text-info', -> "#{@detailAdvice.modifiedDate.toString()}"
-          h4 @detailAdvice.adviceRequest
-            #a 'btn btn-primary', href: reward.redeemURL, -> 'Redeem'
+div 'row-fluid adviceRow', ->
+  li 'span12', ->
+    div 'caption', ->
+      h4 'text-info', -> "#{@detailAdvice.modifiedDate.toString()}"
+      p 'adviceRequestText', -> @detailAdvice.adviceRequest
 
 drawResponseBox = (response) ->
-  div 'row-fluid', ->
-    ul 'thumbnails', ->
-      li 'span12', ->
-        div 'thumbnail', ->
-          div 'caption', ->
-            h4 'text-success', -> response.user.displayName
-            h4 'text-info', -> "#{response.modifiedDate.toString()}"
-            h4 response.adviceResponse
+  div 'row-fluid adviceRow adviceResponseRow', ->
+    li 'span12', ->
+      div 'caption', ->
+        h4 'text-success', -> response.user.displayName
+        h5 'text-info', -> "#{response.modifiedDate.toString()}"
+        p 'adviceResponseText', -> response.adviceResponse
 
 for response in @detailAdvice.responses
   drawResponseBox(response)

@@ -34,7 +34,6 @@ coffeescript ->
           $('#thankYouText').removeClass('hidden')
           $('#adviceForm').addClass('hidden')).error(errorAction)
 
-
     else
       $('#submitStatus').removeClass('hidden')
       if advice?.length > 0 && advice != adviceDefaultText #then it's definitely the phone # we need
@@ -52,9 +51,8 @@ text '<div class="content container-fluid">'
 
 form method:'GET', id:'adviceForm', action:"#", onsubmit: 'window.submitPressed.apply(); return false;', ->
   h1 ->
-     text 'Domo brings support with human compassion' #hnk
+     text 'Get advice with Domo' #hnk
      br ->
-     small 'Help with anxiety, depression, and other life struggles from an group of awesome and validated peers who care.'
   legend -> "Through this anonymous request, vetted peers will engage you with empathy and support."
   
   onText = null

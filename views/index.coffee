@@ -1,16 +1,15 @@
 @title = 'Hey!'
 @hideToolbar = true
 
-body ->
-div 'contentHeader', ->
-    p 'contentHeaderText', -> ""
+body style:"background-color: #fff; background-image: none;", ->
+div 'contentHeaderBG', ->
+  div 'contentHeader', ->
 text '<div class="content container-fluid">'
 
 section id:'index-about', ->
   h1 ->
      text 'Domo brings support with human compassion' #hnk
-     br ->
-     small 'Help with anxiety, depression, and other life struggles from an group of awesome and validated peers who care.'
+  p 'mission', -> 'Help with anxiety, depression, and other life struggles from an group of awesome and validated peers who care.'
   br ->
   p 'lead', -> 'Currently in beta for the MIT community'
 
