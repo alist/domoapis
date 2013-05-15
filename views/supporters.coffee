@@ -7,27 +7,30 @@ text '<div id="content-supporters" class="content container-fluid">'
 div 'page-header', ->
   h1 ->
     text "Be a Domosapien  "
-    small 'support your peers on Domo'
-
-  p 'Your role is to support, providing one message choc-full of empathy that others can appreciate that links them to resources based on your prior experience. There is no notion of a follow-up messages within Domo. Do your best to answer each response fully.'
+    small 'support your peers through Domo'
+  p "The role of Domosapien is to support anonymous peers that ask for help, responding with empathy and resources based on their prior experience. Each response of a Domosapien is voluntary."
   h2 id:'principlesHeader', -> 'Three core principles of Domodom'
 section id:'s1', ->
   h2 'cornerNumber', -> 'One:'
-  h2 'p1', -> 'The Domosapien promises to keep exchanges confidential.'
+  h2 'p1', -> 'The Domosapien keeps exchanges confidential.'
 section id:'i1', 'data-type':"background", 'data-speed':"10", 'data-offsety':"0", ->
 section id:'s2',->
   h2 'cornerNumber', -> 'Two:'
-  h2 'p2', -> 'Though most of us are not mental health professionals, we’re all Domosapiens. '
-  h4 -> 'We’re on an equal level with everyone seeking support.'
-  h4 -> "As Domosapiens, we're simply on a mission to help our fellow human."
+  h2 'p2', ->
+    text "We’re all Domosapiens."
+    br ->
+    text "We don't work alone."
+  h4 -> "We're not mental health professionals, but we offer our perspectives and support because we care."
+  h4 -> "We bring more than one voice when advising a person in need."
 
-section id:'i2', 'data-type':"background", 'data-speed':"8", 'data-offsety':"100", ->
+section id:'i2', 'data-type':"background", 'data-speed':"14", 'data-offsety':"70", ->
   section id:'i2-s', 'data-type':"background", 'data-speed':"-8", 'data-offsety':"-150", ->
 
 section id:'s3',->
   h2 'cornerNumber', -> 'Three:'
-  h2 'p3', -> 'Domo-sapiens are connectors, both to support services and to support groups.'
-  h4 -> 'here are some resources you should be familiar with'
+  h2 'p3', -> 'Domo-sapiens are connectors.'
+  h4 -> 'We connect people to the services and groups we feel are relevant.'
+  h4 -> 'Here are some resources to be familiar with:'
   h5 ->
     ul ->
       li ->
