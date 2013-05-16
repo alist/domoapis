@@ -33,7 +33,8 @@ blue = #377ad0
 dLogoBlack = #2b2b30
 dBlack = dLogoBlack
 //black was #414043;
-dGreen = #01a351;
+dGreen = #00B147
+//green was #01a351;
 dGray = #57575b
 *
   border 0
@@ -45,11 +46,11 @@ footer
   
 a
   position relative
-  color blue
+  color dGray
   text-decoration none
   &:hover
-    color darken(blue, 20%)
-    text-decoration underline
+    color dGreen
+    text-decoration none
   &:active
     top 1px
 
@@ -151,6 +152,8 @@ section#apps
  border-bottom-color #E1E1E1
  border-bottom-style solid
  border-bottom-width 1px
+ h1
+  text-transform capitalize 
 
 
 .homeHeader

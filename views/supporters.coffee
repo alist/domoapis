@@ -2,6 +2,14 @@
 
 @localScripts = ['/js/jquery.min','/js/bootstrap', '/js/parallax']
 
+coffeescript ->
+  $(document).ready =>
+    if ($.browser.mobile)
+      console.log "mobile"
+      $('section[data-type="background"]').attr('data-type','')
+    else
+      console.log "not mobile"
+
 text '<div id="content-supporters" class="content container-fluid">'
 
 div 'page-header', ->
@@ -23,7 +31,7 @@ section id:'s2',->
   h4 -> "We're not mental health professionals, but we offer our perspectives and support because we care."
   h4 -> "We bring more than one voice when advising a person in need."
 
-section id:'i2', 'data-type':"background", 'data-speed':"14", 'data-offsety':"70", ->
+section id:'i2', 'data-type':"background", 'data-speed':"14", 'data-offsety':"40", ->
   section id:'i2-s', 'data-type':"background-disabled", 'data-speed':"-8", 'data-offsety':"-150", ->
 
 section id:'s3',->

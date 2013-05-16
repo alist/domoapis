@@ -40,12 +40,12 @@ footer {
 }
 a {
   position: relative;
-  color: #377ad0;
+  color: #57575b;
   text-decoration: none;
 }
 a:hover {
-  color: #2861aa;
-  text-decoration: underline;
+  color: #00b147;
+  text-decoration: none;
 }
 a:active {
   top: 1px;
@@ -139,7 +139,7 @@ section#apps .page-header {
   margin-top: 20px;
 }
 .content h1 {
-  color: #01a351;
+  color: #00b147;
 }
 @media (max-width:480px) {
   .hidden-phone {
@@ -160,6 +160,9 @@ section#apps .page-header {
   border-bottom-color: #e1e1e1;
   border-bottom-style: solid;
   border-bottom-width: 1px;
+}
+.content h1 {
+  text-transform: capitalize;
 }
 .homeHeader {
   height: 54px;
@@ -330,7 +333,7 @@ section#apps .page-header {
   font-weight: bold;
   margin-top: 0;
   padding-top: 10px;
-  color: #01a351;
+  color: #00b147;
 }
 #content-supporters #s1 {
   background-color: #e6e6fa;
