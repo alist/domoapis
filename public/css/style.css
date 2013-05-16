@@ -240,6 +240,11 @@ section#apps .page-header {
   -moz-border-radius: 50%;
   border-radius: 50%;
 }
+.helpful-label {
+  float: right;
+  margin-top: 0;
+  margin-right: 30px;
+}
 .adviceRequestText {
   font-size: 18px;
   line-height: 25px;

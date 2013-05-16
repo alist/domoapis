@@ -1,6 +1,7 @@
 secrets = require ('../secrets')
 
 communicationsModel = require('./communications')
+crypto = require('crypto')
 
 mongoose = require('mongoose')
 Schema = mongoose.Schema
@@ -52,7 +53,7 @@ exports.addResponse = (adviceID, adviceResponse, userInfoToStore, callback) -> #
 exports.addAdvice = (adviceRequest, adviceContact, userInfo, callback) -> #callback (err)
   if adviceRequest? == true && adviceRequest.length > 0
    accessToken = genCode 12, adviceContact
-   authToken = genCode 4, adviceToken
+   authToken = genCode 4, accessToken
    advice = new Advice {modifiedDate: new Date(), adviceRequest: adviceRequest, adviceContact: adviceContact, userInfo: userInfo, status: 'PAPP', authToken: authToken, accessToken: accessToken}
    advice.save (err) ->
     if err?

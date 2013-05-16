@@ -14,6 +14,11 @@ script type:'text/javascript', ->
 
 
 coffeescript ->
+  $(document).ready =>
+    if advice?
+      $('#authCodeForm').addClass('hidden')
+      updateForAdviceRequest response.advice
+
   @window.submitPressed = () ->
     code = $('#codeInput').val()
 

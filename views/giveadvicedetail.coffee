@@ -47,6 +47,9 @@ drawResponseBox = (response) ->
   div 'row-fluid adviceRow adviceResponseRow', ->
     li 'span12', ->
       div 'caption', ->
+        h5 'helpful-label', -> 'Helpful! :-)'
+        h5 'wasit-helpful-label', ->
+          a action: 'window.setHelpful.apply(); return false;', -> 'Helpful?'
         h4 'text-success', -> response.user.displayName
         h5 'text-info', -> "#{response.modifiedDate.toString()}"
         p 'adviceResponseText', -> response.adviceResponse
