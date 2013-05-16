@@ -329,6 +329,9 @@ section#apps .page-header {
   font-weight: normal;
   text-transform: capitalize;
 }
+#content-supporters h4 {
+  font-weight: normal;
+}
 #content-supporters .cornerNumber {
   font-weight: bold;
   margin-top: 0;
@@ -366,12 +369,12 @@ section#apps .page-header {
   background-repeat: no-repeat;
 }
 #content-supporters #i2-s {
-  background-image: url("/img/domo-logo-supporters.png");
-  -webkit-background-size: 100%;
-  -moz-background-size: 100%;
-  background-size: 100%;
+  background-image: url("/img/domo-logo-green-supporters.png");
+  -webkit-background-size: cover;
+  -moz-background-size: cover;
+  background-size: cover;
   background-repeat: no-repeat;
-  height: 500px;
+  height: 400px;
   width: 100%;
 }
 #content-supporters .p1 {
@@ -411,11 +414,6 @@ section#apps .page-header {
   #content-supporters .p3 {
     margin-top: 30px;
     font-size: 37px;
-  }
-}
-@media (max-width: 800px) {
-  section #i2-s {
-    background-position-y: 30%;
   }
 }
 #getInvolvedButton {
