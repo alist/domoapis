@@ -53,6 +53,7 @@ form method:'GET', id:'adviceForm', action:"#", onsubmit: 'window.submitPressed.
   h1 ->
      text 'Get advice through Domo' #hnk
      br ->
+  h4 'supporterCount', -> '12 MIT Supporters since May 16, 2013'
   legend -> "Through this anonymous request, vetted peers will engage you with empathy and support."
   
   onText = null
