@@ -50,6 +50,7 @@ coffeescript ->
     drawAdviceRequestBox adviceRequest
     for response in adviceRequest.responses
       drawResponseBox response
+    $('.adviceRow').hide().fadeIn("fast")
 
 
 text '<div class="content container-fluid">'
