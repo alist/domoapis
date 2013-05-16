@@ -5,6 +5,7 @@ if !@localScripts
 
 head ->
   meta charset: 'utf-8'
+  meta copyright: "ExoMachina, Inc. ExoMachina.com"
   meta name:"viewport", content:"width=device-width, initial-scale=1.0, user-scalable = no"
   meta name: "apple-mobile-web-app-capable", content:"yes"
   link rel:"icon", type:"image/png", href:"/icons/favicon.png"
@@ -70,7 +71,14 @@ head ->
 
 body ->
  footer ->
-  text 'Domo Sapience, Inc.'
+  a href:"mailto:domo@domo.io", -> "domo@domo.io"
+  text ' | '
+  a href:"/privacynterms", -> "privacy&terms"
+  br ->
+  text 'made for MIT by students '
+  a target:'_blank', href:'http://alist.im', -> 'Alex List'
+  text ' and '
+  a target:'_blank', href:'http://hnk.im', -> 'Harish Kamath'
 
 body ->
   if @scripts

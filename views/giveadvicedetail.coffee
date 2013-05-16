@@ -40,18 +40,18 @@ div 'page-header', ->
 div 'row-fluid adviceRow', ->
   li 'span12', ->
     div 'caption', ->
-      h4 'text-info', -> "#{@detailAdvice.modifiedDate.toString()}"
+      h4 'grayLabel', -> "#{@detailAdvice.modifiedDate.toString()}"
       p 'adviceRequestText', -> @detailAdvice.adviceRequest
 
 drawResponseBox = (response) ->
   div 'row-fluid adviceRow adviceResponseRow', ->
     li 'span12', ->
       div 'caption', ->
-        h5 'helpful-label', -> 'Helpful! :-)'
-        h5 'wasit-helpful-label', ->
+        h5 'helpfulLabel', -> 'Helpful! :-)'
+        h5 'wasitHelpfulLabel', ->
           a action: 'window.setHelpful.apply(); return false;', -> 'Helpful?'
         h4 'text-success', -> response.user.displayName
-        h5 'text-info', -> "#{response.modifiedDate.toString()}"
+        h5 'grayLabel', -> "#{response.modifiedDate.toString()}"
         p 'adviceResponseText', -> response.adviceResponse
 
 for response in @detailAdvice.responses
@@ -68,7 +68,7 @@ div 'row-fluid', id: 'giveAdviceBox', ->
             input id: 'guidlinesAcceptedBox', type: 'checkbox', ->
             text 'to the best of my ability, this adheres to the advice-giving guidlines'
           input 'btn btn-success right', id:"submitButton", type: 'submit', -> 'Submit'
-        p 'text-warning hidden', id:'submitStatus', -> 'Thank you for supporting!!'
+        h4 'text-warning hidden', id:'submitStatus', -> 'Thank you for supporting!!'
 
 
 text '</ div>'

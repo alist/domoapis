@@ -8,8 +8,8 @@ adviceRequestWrite = (adviceRequest) ->
     div 'thumbnail', ->
       a href: "/giveadvice/#{adviceRequest._id.toString()}", ->
         div 'caption', ->
-          h5 'text-info', -> "#{adviceRequest.modifiedDate.toString()}"
-          h5 'text-info', -> "#{if adviceRequest.responses? then adviceRequest.responses?.length else 0} responses"
+          h5 'darkGreenLabel', -> "#{adviceRequest.modifiedDate.toString()}"
+          h5 'darkGreenLabel', -> "#{if adviceRequest.responses? then adviceRequest.responses?.length else 0} responses"
           p 'giveAdviceAdviceRequest', -> adviceRequest.adviceRequest
           #a 'btn btn-primary', href: reward.redeemURL, -> 'Redeem'
 

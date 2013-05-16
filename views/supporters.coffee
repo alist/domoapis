@@ -38,9 +38,9 @@ section id:'s3',->
   h5 ->
     ul ->
       li ->
-        a href: "http://web.mit.edu/student/digest/asking.html?utm_source=2013-05#personal", -> "MIT Q/A page w. tons of resources"
+        a target:'_blank', href: "http://web.mit.edu/student/digest/asking.html?utm_source=2013-05#personal", -> "MIT Q/A page w. tons of resources"
       li ->
-        a href: "http://www.suicidepreventionlifeline.org/GetHelp/Online", -> "National Suicide Prevention Hotline"
+        a target:'_blank', href: "http://www.suicidepreventionlifeline.org/GetHelp/Online", -> "National Suicide Prevention Hotline"
    
 section id:'s4',->
   h2 'cornerNumber', -> 'Sound good?'

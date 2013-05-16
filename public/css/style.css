@@ -37,6 +37,8 @@ footer {
   margin-top: 30px;
   text-align: center;
   margin-bottom: 5px;
+  color: #57575b;
+  font-size: 13px;
 }
 a {
   position: relative;
@@ -55,6 +57,24 @@ h1 {
 }
 h1 small {
   line-height: 1.2;
+  text-transform: none;
+}
+.lightSmall {
+  color: #57575b;
+  font-size: 14px;
+}
+h2,
+h3,
+h4,
+h5 {
+  font-weight: normal;
+  line-height: 1.2;
+}
+.grayLabel {
+  color: #999;
+}
+.darkGreenLabel {
+  color: #1b9e36;
 }
 body {
   font-family: 'Arimo', 'Helvetica Neue';
@@ -154,15 +174,26 @@ section#apps .page-header {
     display: none;
   }
 }
-.content {
+.content,
+.content-index {
   margin-top: 15px;
   background-color: #fff;
   border-bottom-color: #e1e1e1;
   border-bottom-style: solid;
   border-bottom-width: 1px;
+  -webkit-box-shadow: 3px 3px 3px rgba(0,0,0,0.06);
+  -moz-box-shadow: 3px 3px 3px rgba(0,0,0,0.06);
+  box-shadow: 3px 3px 3px rgba(0,0,0,0.06);
+  margin-bottom: 20px;
 }
-.content h1 {
+.content h1,
+.content-index h1 {
   text-transform: capitalize;
+}
+.content-index {
+  -webkit-box-shadow: none;
+  -moz-box-shadow: none;
+  box-shadow: none;
 }
 .homeHeader {
   height: 54px;
@@ -240,7 +271,8 @@ section#apps .page-header {
   -moz-border-radius: 50%;
   border-radius: 50%;
 }
-.helpful-label {
+.helpfulLabel,
+.wasitHelpfulLabel {
   float: right;
   margin-top: 0;
   margin-right: 30px;
@@ -279,6 +311,20 @@ section#apps .page-header {
   height: 30px;
   width: 95px;
   margin-top: 5px;
+}
+.limitText {
+  margin: 0;
+}
+#howItWorks h4 {
+  margin-top: 0px;
+}
+@media (max-width:980px) {
+  #howItWorks {
+    width: auto;
+  }
+  #adviceForm {
+    width: 96%;
+  }
 }
 #index-about h1 {
   line-height: 1.3;
