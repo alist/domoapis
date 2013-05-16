@@ -80,7 +80,7 @@ div class:'row-fluid', ->
     div class:'controls-row row-flexible', ->
       input class:'', type: "text", placeholder: "US phone #", id: "adviceContactInput", ->
       input 'btn btn-success right', id:"submitButton", type: 'submit', style: 'margin-top: 5px;', -> 'Submit'
-      label class: 'checkbox', ->
+      label class: 'checkbox hidden', ->
         input id: 'guidlinesAcceptedBox', type: 'checkbox', ->
         text 'no thanks, just give me a URL to check later'
     p 'text-warning hidden', id:'submitStatus', -> 'Thanks for using Domo!!'

@@ -10,14 +10,14 @@ text '<div id="content-supporters" class="content container-fluid">'
 
 div 'page-header', ->
   h1 ->
-    text "Be a Domosapien  "
+    text "Give Advice. Be a Domosapien  "
     small 'support your peers through Domo'
   p "The role of Domosapien is to support anonymous peers that ask for help, responding with empathy and resources based on their prior experience. Each response of a Domosapien is voluntary."
   h2 id:'principlesHeader', -> 'Three core principles of Domodom'
 section id:'s1', ->
   h2 'cornerNumber', -> '1:'
   h2 'p1', -> 'The Domosapien keeps exchanges confidential.'
-section id:'i1', 'data-type':"background", 'data-speed':"10", 'data-offsety':"0", ->
+section id:'i1', 'data-type':"background", 'data-speed':"8", 'data-offsety':"0", ->
 section id:'s2',->
   h2 'cornerNumber', -> '2:'
   h2 'p2', ->
