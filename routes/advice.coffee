@@ -1,5 +1,9 @@
 adviceModel = require('../model/advice')
 auth = require('../routes/auth') #middleware
+crypto = require('crypto')
+
+
+
 
 exports.giveadvice_post = (req, res) ->
   auth.authCurrentUserForPermission req, @response, 'supporter', (err, user) => #will not return, if not permitted
@@ -49,3 +53,29 @@ exports.getadvice_post = (req, res) ->
       @send  {status: 'fail'}
     else
       @send  {status: 'success'}
+
+
+#for advice-requestors
+
+exports.adviceViewWithAdviceToken = (req, res) ->
+  accessToken = @params.accessToken
+  adviceModel.getAdviceWithToken accessToken, (err, advice) =>
+    if advice?
+      #do NOT pass the advice here! Users WILL enter an auth code
+      @render adviceview: {accessToken: accessToken}
+    else
+      console.log "advice find err: #{err}"
+      @render index: {err: 'advice not found'}
+  
+  
+
+exports.getAdviceWithAdviceTokenAndPostedAuthToken = (req, res) ->
+  accessToken = @params.accessToken
+  authToken = req.body.authToken
+  adviceModel.getAdviceWithToken accessToken, (err, advice) =>
+    if advice? && advice.authToken == authToken
+      @send {status: 'success', advice: advice}
+    else
+      if advice?
+        console.log "advice authMatch fail for accessToken: #{accessToken} forAuthToken: #{advice.authToken}, attempt: #{authToken}"
+      @send {status: 'bad'}

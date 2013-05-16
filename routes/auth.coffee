@@ -1,7 +1,7 @@
 userModel = require '../model/user'
 shorturlModel = require('../model/shorturl')
 
-userLoginURLBase = "http://oh.domo.io/urllogin?token="
+userLoginURLBase = "https://oh.domo.io/urllogin?token="
 
 #will not return, if not permitted
 exports.authCurrentUserForPermission = (req, res, permission, callback ) -> #callback(err, user)
@@ -26,7 +26,7 @@ exports.shortLoginURLForCurrentUser = (req, res) ->
       shorturlModel.shorten shortenURI, 4, null, true, null, null, (err, shortURL) =>
         if err?
           console.log "shortening error #{err}"
-        @send "short url code is http://oh.domo.io/x/#{shortURL.shortURICode}"
+        @send "short url code is https://oh.domo.io/x/#{shortURL.shortURICode}"
     else
       console.log "no user w. token #{cookieToken} w. err #{err}"
       @redirect '/supporters'

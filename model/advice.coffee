@@ -13,12 +13,25 @@ AdviceSchema = new Schema {
   responses: []
   adviceContact: {type: String}
   status: {type: String}
+  authToken: {type: String}
+  accessToken: {type: String, index: {unique: true}}
 }
 
 Advice = mongoose.model 'Advice', AdviceSchema
 exports.Advice = Advice
   
 mongoose.connect(secrets.mongoDBConnectURLSecret)
+
+genCode = (length, salt) ->
+  current_date = (new Date()).valueOf().toString()
+  random = Math.random().toString()
+  hash = crypto.createHash('sha1').update(current_date + random + salt).digest('base64')
+  #assuming not all characters are forward slashes
+  hash = hash.replace(/\//g,'')
+  if length > hash.length
+    return hash
+  else return hash.substr(0, length)
+
 
 exports.addResponse = (adviceID, adviceResponse, userInfoToStore, callback) -> #callback (err, responseUpsert)
   if adviceResponse? == true && adviceResponse.length > 0
@@ -38,7 +51,9 @@ exports.addResponse = (adviceID, adviceResponse, userInfoToStore, callback) -> #
 
 exports.addAdvice = (adviceRequest, adviceContact, userInfo, callback) -> #callback (err)
   if adviceRequest? == true && adviceRequest.length > 0
-   advice = new Advice {modifiedDate: new Date(), adviceRequest: adviceRequest, adviceContact: adviceContact, userInfo: userInfo, status: 'PAPP'}
+   accessToken = genCode 12, adviceContact
+   authToken = genCode 4, adviceToken
+   advice = new Advice {modifiedDate: new Date(), adviceRequest: adviceRequest, adviceContact: adviceContact, userInfo: userInfo, status: 'PAPP', authToken: authToken, accessToken: accessToken}
    advice.save (err) ->
     if err?
       callback "error for advice save #{err}"
@@ -85,3 +100,9 @@ exports.getAdviceWithID = (adviceID, callback) -> #callback (err, advice)
     console.log "not a objID #{adviceID}"
   Advice.findOne {_id : objID}, (err, advice) =>
     callback err, advice
+
+exports.getAdviceWithToken = (token, callback) -> #callback (err, advice)
+  Advice.findOne {accessToken : token}, (err, advice) =>
+    callback err, advice
+
+
