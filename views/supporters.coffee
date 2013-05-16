@@ -27,7 +27,7 @@ section id:'s2',->
   h4 -> "We're not mental health professionals, but we offer our perspectives and support because we care."
   h4 -> "We bring more than one voice when advising a person in need."
 
-section id:'i2', 'data-type':"background", 'data-speed':"10", 'data-offsety':"40", ->
+section id:'i2', 'data-type':"background-disabled", 'data-speed':"10", 'data-offsety':"40", ->
   section id:'i2-s', 'data-type':"background-disabled", 'data-speed':"-8", 'data-offsety':"-150", ->
 
 section id:'s3',->

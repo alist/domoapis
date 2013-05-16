@@ -63,8 +63,10 @@ div class:'row-fluid', ->
     h4 '', -> "How it works:"
     ol ->
       li -> "You descibe what's up"
-      li -> "Supporter Domosapiens respond on domo.io"
-      li -> "You get an SMS alert to your responses"
+      li ->
+        a href: '/supporters', -> "Supporter Domosapiens"
+        text " respond at domo.io"
+      li -> "You get SMS alerts about your responses"
       li -> "You're free to follow-up, but responses might be by different people"
 
   form method:'GET', class:'span9 pull-right', id:'adviceForm', action:"#", onsubmit: 'window.submitPressed.apply(); return false;', ->
@@ -80,7 +82,7 @@ div class:'row-fluid', ->
     div class:'controls-row row-flexible', ->
       input class:'', type: "text", placeholder: "US phone #", id: "adviceContactInput", ->
       input 'btn btn-success right', id:"submitButton", type: 'submit', style: 'margin-top: 5px;', -> 'Submit'
-      label class: 'checkbox hidden', ->
+      label class: 'checkbox', ->
         input id: 'guidlinesAcceptedBox', type: 'checkbox', ->
         text 'no thanks, just give me a URL to check later'
     p 'text-warning hidden', id:'submitStatus', -> 'Thanks for using Domo!!'
