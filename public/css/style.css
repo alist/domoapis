@@ -66,7 +66,7 @@ body {
   padding-left: 110px;
 }
 .media-body a {
-  color: #414043;
+  color: #2b2b30;
 }
 .media-body a:hover {
   color: #2861aa;
@@ -299,7 +299,7 @@ section#apps .page-header {
   margin-left: 10px;
 }
 #content-supporters {
-  color: #414043;
+  color: #2b2b30;
 }
 #content-supporters .page-header {
   margin-bottom: 0;
@@ -324,11 +324,13 @@ section#apps .page-header {
 }
 #content-supporters h2 {
   font-weight: normal;
+  text-transform: capitalize;
 }
 #content-supporters .cornerNumber {
   font-weight: bold;
   margin-top: 0;
   padding-top: 10px;
+  color: #01a351;
 }
 #content-supporters #s1 {
   background-color: #e6e6fa;
@@ -406,6 +408,11 @@ section#apps .page-header {
   #content-supporters .p3 {
     margin-top: 30px;
     font-size: 37px;
+  }
+}
+@media (max-width: 800px) {
+  section #i2-s {
+    background-position-y: 30%;
   }
 }
 #getInvolvedButton {

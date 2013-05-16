@@ -30,8 +30,11 @@
 
 
 blue = #377ad0 
-dBlack = #414043 
+dLogoBlack = #2b2b30
+dBlack = dLogoBlack
+//black was #414043;
 dGreen = #01a351;
+dGray = #57575b
 *
   border 0
 
@@ -306,10 +309,12 @@ section#apps
   background-position-x: 50%;
  h2
   font-weight normal
+  text-transform: capitalize
  .cornerNumber
   font-weight bold
   margin-top 0
   padding-top 10px
+  color dGreen
  #s1
   background-color: lavender
   background-image url("/img/patternsquare_green.png")
@@ -372,6 +377,11 @@ section#apps
   .p3
    margin-top 30px
    font-size 37px
+
+@media (max-width: 800px)
+ section
+  #i2-s
+   background-position-y 30%
 
 #getInvolvedButton
  width 250px 
