@@ -32,7 +32,7 @@ coffeescript ->
         if response?.status != "success"
           errorAction()
         else
-          adviceURL = "https://oh.domo.io/viewadvice/#{response.adviceInfo.accessToken}?authToken=#{response.adviceInfo.authToken}"
+          adviceURL = "https://oh.domo.io/viewadvice/#{response.adviceInfo.accessToken}/#{response.adviceInfo.authToken}"
           $('#adviceURL').attr('href', adviceURL)
           $('#adviceURL').text(adviceURL)
           $('#thankYouText').fadeIn('fast')

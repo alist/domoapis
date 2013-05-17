@@ -57,7 +57,7 @@ exports.getadvice_post = (req, res) ->
 
 exports.adviceViewWithAdviceToken = (req, res) ->
   accessToken = @params.accessToken
-  authToken = @query.authToken #if query contains authToken, let's use it!
+  authToken = @query.authToken or @params.authToken #if query contains authToken, let's use it!
   
   if authToken?
     #pass back the advice if there's a match
