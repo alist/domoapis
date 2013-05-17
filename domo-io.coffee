@@ -50,7 +50,10 @@ domoApp = require('zappa').app ->
   @get '/approveadvicerequest/:id', advice.approveAdviceRequest_get
 
   @get '/viewadvice/:accessToken', advice.adviceViewWithAdviceToken
+
   @post '/viewadvice/:accessToken', advice.getAdviceWithAdviceTokenAndPostedAuthToken
+  
+  @post '/setadvicehelpful/:accessToken', advice.postAdviceHelpfulWithAdviceTokenAndPostedAuthToken
   
   @get '/supporters', supporters.principles_list
   

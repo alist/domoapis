@@ -271,8 +271,7 @@ section#apps .page-header {
   -moz-border-radius: 50%;
   border-radius: 50%;
 }
-.helpfulLabel,
-.wasitHelpfulLabel {
+.helpfulLabel {
   float: right;
   margin-top: 0;
   margin-right: 30px;

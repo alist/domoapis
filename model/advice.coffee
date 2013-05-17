@@ -8,10 +8,18 @@ Schema = mongoose.Schema
 
 ObjectId = mongoose.SchemaTypes.ObjectId
 
+ResponseSchema = new Schema {
+adviceResponse: String
+user: {displayName: String, userID: String}
+modifiedDate: Date
+helpful: Number
+}
+
 AdviceSchema = new Schema {
   modifiedDate: {type: Date, index: {unique: false}}
+  createdDate: {type: Date, index: {unique: false}}
   adviceRequest: {type: String} #rename to request
-  responses: []
+  responses: [ResponseSchema]
   adviceContact: {type: String}
   status: {type: String}
   authToken: {type: String}
@@ -38,7 +46,7 @@ exports.addResponse = (adviceID, adviceResponse, userInfoToStore, callback) -> #
   if adviceResponse? == true && adviceResponse.length > 0
     exports.getAdviceWithID adviceID, (err, advice) =>
       if advice?
-        responseUpsert = {adviceResponse: adviceResponse, user: userInfoToStore, modifiedDate: new Date()}
+        responseUpsert = {adviceResponse: adviceResponse, user: userInfoToStore, modifiedDate: new Date(), createdDate: new Date()}
         Advice.update {_id: objectIDWithID(adviceID)},{$set: {modifiedDate: new Date()}, $push: {responses: responseUpsert}}, {upsert: 0}, (err) =>
           console.log "updated advice: ", responseUpsert
           if err? == false
@@ -50,7 +58,7 @@ exports.addResponse = (adviceID, adviceResponse, userInfoToStore, callback) -> #
   else callback "no advice response given"
     
 
-exports.addAdvice = (adviceRequest, adviceContact, userInfo, callback) -> #callback (err)
+exports.addAdvice = (adviceRequest, adviceContact, userInfo, callback) -> #callback (err, advice)
   if adviceRequest? == true && adviceRequest.length > 0
    accessToken = genCode 12, adviceContact
    authToken = genCode 4, accessToken
@@ -60,17 +68,17 @@ exports.addAdvice = (adviceRequest, adviceContact, userInfo, callback) -> #callb
       callback "error for advice save #{err}"
     else
       communicationsModel.notifyAuthor 100000103231001, "new advice at domo.io"
-      callback null
+      callback null, advice
   else
     callback "no advice given"
 
 exports.getAdviceSinceDate = (date, callback) ->
-  Advice.find {modifiedDate : {$gt: date}}, {},{sort: { modifiedDate: -1 }}, (err, advice) =>
+  Advice.find {modifiedDate : {$gt: date}}, {},{sort: {createdDate: -1, modifiedDate: -1 }}, (err, advice) =>
     callback err, advice
 
 
 exports.getAdvice = (status, callback) ->
-  Advice.find {}, {},{ sort: { modifiedDate: -1 }}, (err, advice) =>
+  Advice.find {}, {},{ sort: {createdDate: -1, modifiedDate: -1 }}, (err, advice) =>
     callback err, advice
 
 objectIDWithID = (id) ->
@@ -102,8 +110,22 @@ exports.getAdviceWithID = (adviceID, callback) -> #callback (err, advice)
   Advice.findOne {_id : objID}, (err, advice) =>
     callback err, advice
 
+exports.getAdviceWithAccessAndAuthTokens = (accessToken, authToken, callback) -> #callback (err, advice)
+  Advice.findOne {accessToken : accessToken, authToken: authToken}, (err, advice) =>
+    callback err, advice
+
 exports.getAdviceWithToken = (token, callback) -> #callback (err, advice)
   Advice.findOne {accessToken : token}, (err, advice) =>
     callback err, advice
 
-
+exports.setAdviceHelpfulWithAccessAndAuthTokens = (accessToken, authToken, adviceIndex, callback) -> #callback(err, advice)
+  exports.getAdviceWithAccessAndAuthTokens accessToken, authToken, (err, advice) =>
+    if advice?
+      if advice.responses[adviceIndex]? == true
+        advice.responses[adviceIndex]?.helpful = 1
+        advice.save (err) =>
+          callback err, advice
+      else
+        callback "no response at index #{adviceIndex} for adviceReq with accessToken #{accessToken}"
+    else
+      callback err

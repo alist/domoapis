@@ -47,9 +47,8 @@ drawResponseBox = (response) ->
   div 'row-fluid adviceRow adviceResponseRow', ->
     li 'span12', ->
       div 'caption', ->
-        h5 'helpfulLabel', -> 'Helpful! :-)'
-        h5 'wasitHelpfulLabel', ->
-          a action: 'window.setHelpful.apply(); return false;', -> 'Helpful?'
+        if response?.helpful >= 1
+          h5 'helpfulLabel', -> 'Helpful! :-)'
         h4 'text-success', -> response.user.displayName
         h5 'grayLabel', -> "#{response.modifiedDate.toString()}"
         p 'adviceResponseText', -> response.adviceResponse
@@ -66,7 +65,8 @@ div 'row-fluid', id: 'giveAdviceBox', ->
         div class:'controls-row', ->
           label class: 'checkbox span6', ->
             input id: 'guidlinesAcceptedBox', type: 'checkbox', ->
-            text 'to the best of my ability, this adheres to the advice-giving guidlines'
+            text 'to the best of my ability, this adheres to the '
+            a href:'/supporters', -> 'advice-giving guidlines'
           input 'btn btn-success right', id:"submitButton", type: 'submit', -> 'Submit'
         h4 'text-warning hidden', id:'submitStatus', -> 'Thank you for supporting!!'
 

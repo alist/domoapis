@@ -2,9 +2,6 @@ adviceModel = require('../model/advice')
 auth = require('../routes/auth') #middleware
 crypto = require('crypto')
 
-
-
-
 exports.giveadvice_post = (req, res) ->
   auth.authCurrentUserForPermission req, @response, 'supporter', (err, user) => #will not return, if not permitted
     if user?
@@ -48,34 +45,57 @@ exports.form = (req, res) ->
 exports.getadvice_post = (req, res) ->
   x_ip = req?.request?.headers?['x-forwarded-for']
   unless x_ip? then x_ip = req?.request?.connection?.remoteAddress
-  adviceModel.addAdvice req.body.adviceRequest, req.body.adviceContact, {userIP: x_ip}, (err) =>
-    if err?
+  adviceModel.addAdvice req.body.adviceRequest, req.body.adviceContact, {userIP: x_ip}, (err, advice) =>
+    if err? || advice? == false
       @send  {status: 'fail'}
     else
-      @send  {status: 'success'}
+      adviceInfo = {accessToken: advice.accessToken, authToken: advice.authToken, status: advice.status}
+      @send  {status: 'success', adviceInfo:adviceInfo}
 
 
 #for advice-requestors
 
 exports.adviceViewWithAdviceToken = (req, res) ->
   accessToken = @params.accessToken
-  adviceModel.getAdviceWithToken accessToken, (err, advice) =>
-    if advice?
-      #do NOT pass the advice here! Users WILL enter an auth code
-      @render adviceview: {accessToken: accessToken}
-    else
-      console.log "advice find err: #{err}"
-      @render index: {err: 'advice not found'}
+  authToken = @query.authToken #if query contains authToken, let's use it!
   
+  if authToken?
+    #pass back the advice if there's a match
+    adviceModel.getAdviceWithAccessAndAuthTokens accessToken, authToken, (err, advice) =>
+      if advice?
+        @render adviceview: {accessToken: accessToken, advice:advice}
+      else
+        console.log "advice find err: #{err}"
+        @render index: {err: 'advice not found'}
+  else #authToken == 0
+    #do NOT pass back the access token here
+    adviceModel.getAdviceWithToken accessToken, (err, advice) =>
+      if advice?
+        @render adviceview: {accessToken: accessToken}
+      else
+        console.log "advice find err: #{err}"
+        @render index: {err: 'advice not found'}
+
   
 
 exports.getAdviceWithAdviceTokenAndPostedAuthToken = (req, res) ->
   accessToken = @params.accessToken
   authToken = req.body.authToken
-  adviceModel.getAdviceWithToken accessToken, (err, advice) =>
-    if advice? && advice.authToken == authToken
+  adviceModel.getAdviceWithAccessAndAuthTokens accessToken, authToken, (err, advice) =>
+    if advice?
       @send {status: 'success', advice: advice}
     else
-      if advice?
-        console.log "advice authMatch fail for accessToken: #{accessToken} forAuthToken: #{advice.authToken}, attempt: #{authToken}"
+      console.log "advice authMatch fail for accessToken: #{accessToken} forAuthToken: #{authToken}"
       @send {status: 'bad'}
+
+exports.postAdviceHelpfulWithAdviceTokenAndPostedAuthToken = (req, res) ->
+  accessToken = @params.accessToken
+  authToken = req.body.authToken
+  adviceIndex = req.body.adviceIndex
+  adviceModel.setAdviceHelpfulWithAccessAndAuthTokens accessToken, authToken, adviceIndex, (err, advice) =>
+    if err? == false && advice?
+      @send {status: 'success'}
+    else
+      console.log "couldn't set helpful on AT: #{accessToken} w/ err #{err}"
+      @send {status: 'bad'}
+

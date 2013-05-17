@@ -75,10 +75,11 @@ body ->
   text ' | '
   a href:"/privacynterms", -> "privacy&terms"
   br ->
-  text 'made for the MIT community by students '
+  text 'made by '
   a target:'_blank', href:'http://alist.im', -> 'Alex List'
-  text ' and '
+  text ', '
   a target:'_blank', href:'http://hnk.im', -> 'Harish Kamath'
+  text ' and the Domo team at MIT'
 
 body ->
   if @scripts
