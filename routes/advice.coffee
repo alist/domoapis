@@ -59,7 +59,7 @@ exports.approveResponseWithAdviceRequestID_get = (req, res) ->
 exports.advice_pending = (req, res) ->
   adminWanted = @request.url.split('/')?[2] == "admin"
   permission = if adminWanted then "admin" else "supporter"
-  console.log "permission #{permission}"
+  #console.log "permission #{permission}"
   auth.authCurrentUserForPermission req, @response, permission, (err, user) => #will not return, if not permitted
     status = if permission == "admin" then "PAPP" else "PRES"
     adviceModel.getAdvice status, (err, pendingAdvice) =>
@@ -125,6 +125,7 @@ exports.postAdviceHelpfulWithAdviceTokenAndPostedAuthToken = (req, res) ->
   authToken = req.body.authToken
   adviceIndex = req.body.adviceIndex
   adviceModel.setAdviceHelpfulWithAccessAndAuthTokens accessToken, authToken, adviceIndex, (err, advice) =>
+    console.log err, advice
     if err? == false && advice?
       @send {status: 'success'}
     else

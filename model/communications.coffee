@@ -1,23 +1,26 @@
 secrets = require ('../secrets')
-authorModel = require('./user')
+userModel = require('./user')
 twilioClient = require('twilio').Client
 Twiml = require 'twilio/lib/twiml'
 
-exports.notifyAuthor = (authorID, message) ->
-  authorModel.getAuthorWithID authorID, (err, author, abrv) =>
+exports.notifyUser = (userID, message, callback) -> #callback(err)
+  userModel.getUserWithID userID, (err, author, abrv) =>
     if author?
       timeInterval = Math.abs(author.lastNotificationDate?.getTime() - new Date().getTime())
       if ((timeInterval > author.notificationInterval) || (author.overIntervalMessageAllowanceCount > author.messageCount) || (author.lastNotificationDate? == false))
         exports.processMessageToRecipientForSMS message, author.telephoneNumber, exports.sendSMS, (error, recipient) =>
-          if error?
-            console.log "sms error to #{recipient}: #{error}"
+          if error? && callback?
+            callback "sms error to #{recipient}: #{error}"
           else
-            authorModel.Author.update {authorID: author.authorID},{$set: {lastNotificationDate: new Date()}, $inc: {messageCount: 1} }, {upsert: 0}, (error) ->
-              if error?
-                console.log "couldn't update author to new notify date"
+            userModel.User.update {userID: author.userID},{$set: {lastNotificationDate: new Date()}, $inc: {messageCount: 1} }, {upsert: 0}, (error) ->
+              if error? && callback?
+                callback "couldn't update author to new notify date"
+              else if callback?
+                callback null
             console.log "notified #{recipient}"
       else
-        console.log "no notify; only #{timeInterval}# of seconds since last notfiy."
+        if callback?
+          callback "no notify; only #{timeInterval}# of seconds since last notfiy."
 
 
 twilio = null

@@ -128,6 +128,14 @@ exports.notifyAdviceOwnerOfUpdate = (advice, callback) -> #callback(err)
     comsModel.processMessageToRecipientForSMS message, phone, comsModel.sendSMS, (err, recipient) =>
       callback err
 
+exports.notifyAdviceGiverOfHelpfulResponse = (advice, userID, callback) -> #callback(err)
+  adviceGiverURL = "https://oh.domo.io/giveadvice/#{advice._id.toString()}"
+  shorturlModel.shorten adviceGiverURL, 4, null, true, null, null, (err, shortURL) =>
+    message = "your response was appreciated at http://domo.io/x/#{shortURL.shortURICode} ! Check it out where you're logged-in!"
+    comsModel.notifyUser userID, message, (err) =>
+      console.log "ahh #{err}"
+      callback err
+
 exports.approveResponseWithAdviceRequestIDAndIndex = (adviceRequestID, adviceIndex, callback) -> #callback(err, advice)
   exports.getAdviceWithID adviceRequestID, (err, advice) =>
     if advice?
@@ -187,7 +195,10 @@ exports.setAdviceHelpfulWithAccessAndAuthTokens = (accessToken, authToken, advic
       if advice.responses[adviceIndex]? == true
         advice.responses[adviceIndex]?.helpful = 1
         advice.save (err) =>
-          callback err, advice
+          exports.notifyAdviceGiverOfHelpfulResponse advice, advice.responses[adviceIndex].user.userID, (err) ->
+            if err?
+              err1 = "err in advice-giver helpful notification: #{err}"
+            callback err1, advice
       else
         callback "no response at index #{adviceIndex} for adviceReq with accessToken #{accessToken}"
     else

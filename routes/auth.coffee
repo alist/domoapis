@@ -6,7 +6,7 @@ userLoginURLBase = "https://oh.domo.io/urllogin?token="
 #will not return, if not permitted
 exports.authCurrentUserForPermission = (req, res, permission, callback ) -> #callback(err, user)
   cookieToken = req.request?.cookies?.sessiontoken
-  userModel.getAuthorWithToken cookieToken, (err, user) =>
+  userModel.getUserWithToken cookieToken, (err, user) =>
     if user?
       permissions = user.permissions
       if (permissions.indexOf(permission) >= 0)
@@ -20,7 +20,7 @@ exports.authCurrentUserForPermission = (req, res, permission, callback ) -> #cal
 
 exports.shortLoginURLForCurrentUser = (req, res) ->
   cookieToken = req.request?.cookies?.sessiontoken
-  userModel.getAuthorWithToken cookieToken, (err, user) =>
+  userModel.getUserWithToken cookieToken, (err, user) =>
     shortenURI = userLoginURLBase + cookieToken
     if user?
       shorturlModel.shorten shortenURI, 4, null, true, null, null, (err, shortURL) =>
@@ -33,7 +33,7 @@ exports.shortLoginURLForCurrentUser = (req, res) ->
 
 exports.urlLogin_get  = (req, res, callback) -> #callback(err, user)
   cookieToken = req.query.token #url.split(path.split('*')?[0])?[1]
-  userModel.getAuthorWithToken cookieToken, (err, user) =>
+  userModel.getUserWithToken cookieToken, (err, user) =>
     if user?
       req.response.cookie 'sessiontoken', cookieToken, {httpOnly: true,  maxAge: 90000000000 }
       @redirect '/giveadvice'

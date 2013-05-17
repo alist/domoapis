@@ -6,15 +6,15 @@ Schema = mongoose.Schema
 ObjectId = mongoose.SchemaTypes.ObjectId
 
 #authors are users
-AuthorSchema = new Schema {
+UserSchema = new Schema {
   modifiedDate: {type: Date, index: {unique: false}}
   displayName: String
   imageURI: String
-  authorID: {type: String, required: true, index: {unique: true}}
+  userID: {type: String, required: true, index: {unique: true}}
 
   token: {type: String}
   facebookID: {type: Number, index: {unique: true}}
-  userID: {type: Number, index: {unique: true}}
+  
   isAdmin: {type: Boolean}
   permissions: [{type: String}]
 
@@ -30,56 +30,56 @@ AuthorSchema = new Schema {
   notificationInterval: {type: Number}
 }
 
-Author = mongoose.model 'Author', AuthorSchema
-exports.Author = Author
+User = mongoose.model 'Author', UserSchema
+exports.User = User
   
 mongoose.connect(secrets.mongoDBConnectURLSecret)
 
-exports.getAuthorWithToken = (token, callback) => #callback (err, user)
+exports.getUserWithToken = (token, callback) => #callback (err, user)
   if token? == false
     callback "no token provided for this user"
     return
-  Author.findOne {token: token},{}, (err, author) =>
+  User.findOne {token: token},{}, (err, author) =>
     if err? || author? == false
         callback "no author found for token: #{token}"
     else
       callback null, author
 
-exports.authCurrentAuthorWithIDAndTokenForSession = (authorID, fbAToken, sessionToken, callback) -> #callback(err, author)
+exports.authCurrentUserWithIDAndTokenForSession = (userID, fbAToken, sessionToken, callback) -> #callback(err, author)
     if sessionToken? == false
-      callback "no sessionToken included for authorID author lookup"
+      callback "no sessionToken included for userID author lookup"
       return
     
     #Strategy 1: find existing session
-    Author.findOne {activeSessionIDs: sessionToken},{}, (err, author) =>
-      #console.log "found author w. ID #{author?.authorID} for session #{sessionToken}"
+    User.findOne {activeSessionIDs: sessionToken},{}, (err, author) =>
+      #console.log "found author w. ID #{author?.userID} for session #{sessionToken}"
       if err? || author? == false
-        if authorID? == false && fbAToken? == false
+        if userID? == false && fbAToken? == false
           #console.log "impossible to re-auth"
           callback "invalid session- and no re-auth route possible"
           return
-        #strategy 2: query fb with fbAToken, then check for existing authorIDs of equal to FB's response
-        authUserWithFacebookOfIDAndToken authorID, fbAToken, (err, fbUserID, fbResponse) =>
-          if err? || ((fbUserID != authorID) && authorID? == true) ##if there is mismatch when authorID!=nil
-            callback "could not find author with pre-id #{authorID} with fbID #{fbUserID} with error #{err}"
+        #strategy 2: query fb with fbAToken, then check for existing userIDs of equal to FB's response
+        authUserWithFacebookOfIDAndToken userID, fbAToken, (err, fbUserID, fbResponse) =>
+          if err? || ((fbUserID != userID) && userID? == true) ##if there is mismatch when userID!=nil
+            callback "could not find author with pre-id #{userID} with fbID #{fbUserID} with error #{err}"
           else
-            if authorID? == false
-              #if prior authorID was unknown by request, we'll check to see if we have a match right now from FB
+            if userID? == false
+              #if prior userID was unknown by request, we'll check to see if we have a match right now from FB
               console.log "using recursion to determine if fbUserID exists, now that we know it's #{fbUserID}"
-              authCurrentAuthorWithIDAndTokenForSession fbUserID, fbAToken, sessionToken, callback
+              authCurrentUserWithIDAndTokenForSession fbUserID, fbAToken, sessionToken, callback
             else
               #we've authed the token using FB, and the userID probably exists
               imgURI = "https://graph.facebook.com/#{fbUserID}/picture?type=large&return_ssl_resources=1"
-              authorInfo = {authorID: fbUserID, facebookID: fbUserID, fbAccessToken: fbAToken, imageURI: imgURI, authorDisplayName: fbResponse.name, modifiedDate: new Date()}
+              authorInfo = {userID: fbUserID, facebookID: fbUserID, fbAccessToken: fbAToken, imageURI: imgURI, authorDisplayName: fbResponse.name, modifiedDate: new Date()}
               authorInfo.metroAreaDisplayName = fbResponse.location?.name
               
               console.log "create the author! with info #{authorInfo}"
-              Author.update {authorID: fbUserID},{$set: authorInfo, $push: { activeSessionIDs: sessionToken}}, {upsert: 1}, (err) ->
+              User.update {userID: fbUserID},{$set: authorInfo, $push: { activeSessionIDs: sessionToken}}, {upsert: 1}, (err) ->
                 if err?
                   callback "error for author save #{err} with info #{authorInfo}"
                 else
                   console.log "saved new author with info #{authorInfo}, using recursion for auth"
-                  authCurrentAuthorWithIDAndTokenForSession fbUserID, fbAToken, sessionToken, callback
+                  authCurrentUserWithIDAndTokenForSession fbUserID, fbAToken, sessionToken, callback
       else
         callback null, author
 
@@ -101,10 +101,10 @@ exports.authUserWithFacebookOfIDAndToken = (fbID, fbToken, callback) -> #callbac
       else
         callback null, resObjects.id, resObjects
 
-exports.getAuthorWithID = (authorID, callback) -> #callback(err, author, abreviatedInfo)
-    Author.findOne {authorID: authorID},{fbAccessToken:0, facebookID: 0}, (err, author) =>
+exports.getUserWithID = (userID, callback) -> #callback(err, author, abreviatedInfo)
+    User.findOne {userID: userID},{fbAccessToken:0, facebookID: 0}, (err, author) =>
       if err? || author? == false
-        callback "could not find author of id #{authorID} with error #{err}"
+        callback "could not find author of id #{userID} with error #{err}"
       else
-        authorInfo = {imageURI: author.imageURI, authorID: author.authorID.toString(), metroAreaDisplayName: author.metroAreaDisplayName, authorDisplayName: author.authorDisplayName, ratingCount: author.ratingCount}
+        authorInfo = {imageURI: author.imageURI, userID: author.userID.toString(), metroAreaDisplayName: author.metroAreaDisplayName, authorDisplayName: author.authorDisplayName, ratingCount: author.ratingCount}
         callback null, author, authorInfo
