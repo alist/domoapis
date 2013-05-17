@@ -36,7 +36,7 @@ coffeescript ->
           $('#adviceURL').attr('href', adviceURL)
           $('#adviceURL').text(adviceURL)
           $('#thankYouText').fadeIn('fast')
-          $('#adviceForm').hide()).error(errorAction)
+          $('#domoGetAdviceHolder').hide()).error(errorAction)
 
     else
       $('#submitStatus').removeClass('hidden')
@@ -57,11 +57,10 @@ coffeescript ->
 text '<div class="content container-fluid">'
 
 
-
-form method:'GET', class:'', id:'adviceForm', action:"#", onsubmit: 'window.submitPressed.apply(); return false;', ->
+div id: 'domoGetAdviceHolder', ->
   h1 ->
-    text 'Get advice through Domo' #hnk
-    br ->
+     text 'Get advice through Domo' #hnk
+     br ->
   h4 'supporterCount', -> '12 MIT Supporters since May 16, 2013'
   legend -> "Through this anonymous request, vetted peers will engage you with empathy and support."
   div class:'row-fluid', ->
@@ -74,11 +73,13 @@ form method:'GET', class:'', id:'adviceForm', action:"#", onsubmit: 'window.subm
           text " respond at domo.io"
         li -> "You get SMS alerts about your responses"
         li -> "You're free to follow-up, but responses might be by different people"
-        
-    if @adviceOn? == true
-       onText = "advice on: \n#{@adviceOn} \n\nthoughts:\n\n"
-    
-    div 'span9 pull-right', ->
+
+    form method:'GET', class:'span9 pull-right', id:'adviceForm', action:"#", onsubmit: 'window.submitPressed.apply(); return false;', ->
+      
+      onText = null
+      if @adviceOn? == true
+         onText = "advice on: \n#{@adviceOn} \n\nthoughts:\n\n"
+      
       div 'right row', ->
         h5 'grayLabel limitText inline', -> 'characters remaining: '
         h5 'limitText grayLabel inline', id: "infiniteLimit", -> '–'
@@ -90,7 +91,6 @@ form method:'GET', class:'', id:'adviceForm', action:"#", onsubmit: 'window.subm
           input id: 'skipContactBox', type: 'checkbox', ->
           text 'no thanks, just give me a URL to check later'
       h4 'text-warning hidden', id:'submitStatus', -> 'Thanks for using Domo!!'
-
 
 div class:'hidden', id:'thankYouText', ->
   h1 'text-success', ->
@@ -107,6 +107,6 @@ div class:'hidden', id:'thankYouText', ->
     text "Here's a URL to copy if you ever want to visit your advice page before/without getting an SMS from us. If you didn't leave a phone #, you'll need this:"
     br ->
     br ->
-    a id:'adviceURL', href: '/s', target: '_blank', -> 'helo'
+    a id:'adviceURL', href: '/s', target: '_blank', -> '//ttstsatstatsatsats'
 
 text '</ div>'

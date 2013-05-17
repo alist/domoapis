@@ -311,6 +311,9 @@ section#apps .page-header {
   width: 95px;
   margin-top: 5px;
 }
+#adviceURL {
+  margin-left: 20px;
+}
 .limitText {
   margin: 0;
 }
