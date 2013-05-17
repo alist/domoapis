@@ -51,7 +51,7 @@ exports.usersdetail_get = (req, res) ->
     if user.userID == userID || user.permissions.indexOf('admin') >= 0
       #authed
       userModel.getUserWithID userID, (err, detailUser, info) =>
-        @send {user: detailUser}
+        @render usersdetail:{user: detailUser}
     else
       @redirect '/supporters'
 
