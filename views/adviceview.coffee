@@ -12,7 +12,7 @@ script type:'text/javascript', ->
   text "badCodeText = #{JSON.stringify(badCodeText)};"
   text "errorText = #{JSON.stringify(errorText)};"
   text "helpfulLabel = \"<h5 class='helpfulLabel'>Helpful! :-)</h5>\";"
-  text "wasitHelpfulLabel = \"<h5 class='helpfulLabel'><a class='wasitHelpfulLink'>Helpful?</a></h5>\";"
+  text "wasitHelpfulLabel = \"<h3 class='helpfulLabel'><a href='#' class='wasitHelpfulLink'>Helpful?</a></h5>\";"
 
 
 
