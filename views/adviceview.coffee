@@ -12,23 +12,23 @@ script type:'text/javascript', ->
   text "badCodeText = #{JSON.stringify(badCodeText)};"
   text "errorText = #{JSON.stringify(errorText)};"
   text "helpfulLabel = \"<h5 class='helpfulLabel'>Helpful! :-)</h5>\";"
-  text "wasitHelpfulLabel = \"<h3 class='helpfulLabel'><a href='#' class='wasitHelpfulLink'>Helpful?</a></h5>\";"
+  text "wasitHelpfulLabel = \"<h5 class='helpfulLabel'><a class='wasitHelpfulLink'>Helpful?</a></h5>\";"
 
 
 
 coffeescript ->
   #warning: if approved advices are made beneath non-approved ones, helpful breaks here 
   @window.helpfulPressed = (element) ->
-    helpfulIndex = advice.responses?.length-1-( $('h5.helpfulLabel').last().parent().parent().parent().index() - element.parent().parent().parent().index())
-    element.hide()
+    helpfulIndex = advice.responses?.length-1-( $('.helpfulLabel').last().parent().parent().parent().index() - element.parent().parent().parent().parent().index())
+    element.parent().hide()
     helpfulErrorAction = () =>
-      element.fadeIn()
+      element.parent().fadeIn()
     $.post("/setadvicehelpful/#{accessToken}", {authToken: authToken, adviceIndex:helpfulIndex}, (response)=>
       console.log response
       if response?.status != "success"
          helpfulErrorAction()
       else
-        element.after($(helpfulLabel).hide().fadeIn())
+        element.parent().after($(helpfulLabel).hide().fadeIn())
     ).error helpfulErrorAction
   
   $(document).ready =>
@@ -79,7 +79,7 @@ coffeescript ->
     for response in adviceRequest.responses
       drawResponseBox response
     #was it helpful link
-    $('.wasitHelpfulLink').parent().click  (e) =>
+    $('.wasitHelpfulLink').click  (e) =>
       @window.helpfulPressed($(e.currentTarget))
     
     if animate == true
