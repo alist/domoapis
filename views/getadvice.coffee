@@ -58,7 +58,7 @@ text '<div class="content container-fluid">'
 
 
 
-form method:'GET', class:'span9 pull-right', id:'adviceForm', action:"#", onsubmit: 'window.submitPressed.apply(); return false;', ->
+form method:'GET', class:'', id:'adviceForm', action:"#", onsubmit: 'window.submitPressed.apply(); return false;', ->
   h1 ->
     text 'Get advice through Domo' #hnk
     br ->
@@ -78,17 +78,18 @@ form method:'GET', class:'span9 pull-right', id:'adviceForm', action:"#", onsubm
     if @adviceOn? == true
        onText = "advice on: \n#{@adviceOn} \n\nthoughts:\n\n"
     
-    div 'right row', ->
-      h5 'grayLabel limitText inline', -> 'characters remaining: '
-      h5 'limitText grayLabel inline', id: "infiniteLimit", -> '–'
-    textarea 'input-block-level', id:'adviceTextArea', type:'textarea', rows:6, placeholder: defaultPlaceholderText, -> onText
-    div class:'controls-row row-flexible', ->
-      input class:'', type: "text", placeholder: "US phone #", id: "adviceContactInput", ->
-      input 'btn btn-success right', id:"submitButton", type: 'submit', style: 'margin-top: 5px;', -> 'Submit'
-      label class: 'checkbox', ->
-        input id: 'skipContactBox', type: 'checkbox', ->
-        text 'no thanks, just give me a URL to check later'
-    h4 'text-warning hidden', id:'submitStatus', -> 'Thanks for using Domo!!'
+    div 'span9 pull-right', ->
+      div 'right row', ->
+        h5 'grayLabel limitText inline', -> 'characters remaining: '
+        h5 'limitText grayLabel inline', id: "infiniteLimit", -> '–'
+      textarea 'input-block-level', id:'adviceTextArea', type:'textarea', rows:6, placeholder: defaultPlaceholderText, -> onText
+      div class:'controls-row row-flexible', ->
+        input class:'', type: "text", placeholder: "US phone #", id: "adviceContactInput", ->
+        input 'btn btn-success right', id:"submitButton", type: 'submit', style: 'margin-top: 5px;', -> 'Submit'
+        label class: 'checkbox', ->
+          input id: 'skipContactBox', type: 'checkbox', ->
+          text 'no thanks, just give me a URL to check later'
+      h4 'text-warning hidden', id:'submitStatus', -> 'Thanks for using Domo!!'
 
 
 div class:'hidden', id:'thankYouText', ->
