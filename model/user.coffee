@@ -1,11 +1,12 @@
 secrets = require ('../secrets')
 
+crypto = require('crypto')
 mongoose = require('mongoose')
 Schema = mongoose.Schema
 
 ObjectId = mongoose.SchemaTypes.ObjectId
 
-#authors are users
+#users are users
 UserSchema = new Schema {
   modifiedDate: {type: Date, index: {unique: false}}
   displayName: String
@@ -13,7 +14,6 @@ UserSchema = new Schema {
   userID: {type: String, required: true, index: {unique: true}}
 
   token: {type: String}
-  facebookID: {type: Number, index: {unique: true}}
   
   isAdmin: {type: Boolean}
   permissions: [{type: String}]
@@ -30,7 +30,7 @@ UserSchema = new Schema {
   notificationInterval: {type: Number}
 }
 
-User = mongoose.model 'Author', UserSchema
+User = mongoose.model 'User', UserSchema
 exports.User = User
   
 mongoose.connect(secrets.mongoDBConnectURLSecret)
@@ -51,29 +51,29 @@ exports.getUserWithToken = (token, callback) => #callback (err, user)
   if token? == false
     callback "no token provided for this user"
     return
-  User.findOne {token: token},{}, (err, author) =>
-    if err? || author? == false
-        callback "no author found for token: #{token}"
+  User.findOne {token: token},{}, (err, user) =>
+    if err? || user? == false
+        callback "no user found for token: #{token}"
     else
-      callback null, author
+      callback null, user
 
-exports.authCurrentUserWithIDAndTokenForSession = (userID, fbAToken, sessionToken, callback) -> #callback(err, author)
+exports.authCurrentUserWithIDAndTokenForSession = (userID, fbAToken, sessionToken, callback) -> #callback(err, user)
     if sessionToken? == false
-      callback "no sessionToken included for userID author lookup"
+      callback "no sessionToken included for userID user lookup"
       return
     
     #Strategy 1: find existing session
-    User.findOne {activeSessionIDs: sessionToken},{}, (err, author) =>
-      #console.log "found author w. ID #{author?.userID} for session #{sessionToken}"
-      if err? || author? == false
-        if userID? == false && fbAToken? == false
+    User.findOne {activeSessionIDs: sessionToken},{}, (err, user) =>
+      #console.log "found user w. ID #{user?.userID} for session #{sessionToken}"
+      if err? || user? == false
+        if userID? == false && fbAToken? == fals#{user.userID}e
           #console.log "impossible to re-auth"
           callback "invalid session- and no re-auth route possible"
           return
         #strategy 2: query fb with fbAToken, then check for existing userIDs of equal to FB's response
         authUserWithFacebookOfIDAndToken userID, fbAToken, (err, fbUserID, fbResponse) =>
           if err? || ((fbUserID != userID) && userID? == true) ##if there is mismatch when userID!=nil
-            callback "could not find author with pre-id #{userID} with fbID #{fbUserID} with error #{err}"
+            callback "could not find user with pre-id #{userID} with fbID #{fbUserID} with error #{err}"
           else
             if userID? == false
               #if prior userID was unknown by request, we'll check to see if we have a match right now from FB
@@ -82,18 +82,18 @@ exports.authCurrentUserWithIDAndTokenForSession = (userID, fbAToken, sessionToke
             else
               #we've authed the token using FB, and the userID probably exists
               imgURI = "https://graph.facebook.com/#{fbUserID}/picture?type=large&return_ssl_resources=1"
-              authorInfo = {userID: fbUserID, facebookID: fbUserID, fbAccessToken: fbAToken, imageURI: imgURI, authorDisplayName: fbResponse.name, modifiedDate: new Date()}
-              authorInfo.metroAreaDisplayName = fbResponse.location?.name
+              userInfo = {userID: fbUserID, facebookID: fbUserID, fbAccessToken: fbAToken, imageURI: imgURI, userDisplayName: fbResponse.name, modifiedDate: new Date()}
+              userInfo.metroAreaDisplayName = fbResponse.location?.name
               
-              console.log "create the author! with info #{authorInfo}"
-              User.update {userID: fbUserID},{$set: authorInfo, $push: { activeSessionIDs: sessionToken}}, {upsert: 1}, (err) ->
+              console.log "create the user! with info #{userInfo}"
+              User.update {userID: fbUserID},{$set: userInfo, $push: { activeSessionIDs: sessionToken}}, {upsert: 1}, (err) ->
                 if err?
-                  callback "error for author save #{err} with info #{authorInfo}"
+                  callback "error for user save #{err} with info #{userInfo}"
                 else
-                  console.log "saved new author with info #{authorInfo}, using recursion for auth"
+                  console.log "saved new user with info #{userInfo}, using recursion for auth"
                   authCurrentUserWithIDAndTokenForSession fbUserID, fbAToken, sessionToken, callback
       else
-        callback null, author
+        callback null, user
 
 exports.authUserWithFacebookOfIDAndToken = (fbID, fbToken, callback) -> #callback (err, fbUserID, responseData) #with err if invalid token
     if fbToken? == false
@@ -113,34 +113,36 @@ exports.authUserWithFacebookOfIDAndToken = (fbID, fbToken, callback) -> #callbac
       else
         callback null, resObjects.id, resObjects
 
-exports.getUserWithID = (userID, callback) -> #callback(err, author, abreviatedInfo)
-    User.findOne {userID: userID},{fbAccessToken:0, facebookID: 0}, (err, author) =>
-      if err? || author? == false
-        callback "could not find author of id #{userID} with error #{err}"
+exports.getUserWithID = (userID, callback) -> #callback(err, user, abreviatedInfo)
+    User.findOne {userID: userID},{fbAccessToken:0, facebookID: 0}, (err, user) =>
+      if err? || user? == false
+        callback "could not find user of id #{userID} with error #{err}"
       else
-        authorInfo = {imageURI: author.imageURI, userID: author.userID.toString(), metroAreaDisplayName: author.metroAreaDisplayName, authorDisplayName: author.authorDisplayName, ratingCount: author.ratingCount}
-        callback null, author, authorInfo
+        userInfo = {imageURI: user.imageURI, userID: user.userID.toString(), metroAreaDisplayName: user.metroAreaDisplayName, userDisplayName: user.userDisplayName, ratingCount: user.ratingCount}
+        callback null, user, userInfo
 
 exports.allUsers = (callback) -> #callback(err, users)
-  User.find {},{}, (err, authors) =>
-    callback err, authors
+  User.find {},{}, (err, users) =>
+    callback err, users
 
-exports.newUser = (displayName, permissions, callback) -> #callback(err, newUser)
+exports.newUser = (displayName, permissions, telephoneNumber, callback) -> #callback(err, newUser)
   userProperties = {
     "displayName": displayName,
     "modifiedDate": new Date,
     "notificationInterval": 21600000,
     "overIntervalMessageAllowanceCount": 40,
     "permissions": permissions,
+    "telephoneNumber":telephoneNumber,
     "token": genCode(20, displayName),
     "userID": genCode(10, displayName)
-  }
+    }
   user = new User userProperties
-  user.save(err, user2) ->
-    if err? || user2? == false
+  user.save (err) =>
+    if err?
+      console.log user, err
       callback "failed creating user w/ err #{err}"
     else
-      callback null, user2
+      callback null, user
 
 exports.updateUserWithID = (userID, displayName, phoneNumber, callback) ->#callback(err, user)
   exports.getUserWithID userID, (err, user, info) =>

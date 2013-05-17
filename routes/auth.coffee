@@ -71,7 +71,12 @@ exports.usersdetail_post = (req, res) ->
 #new user!
 exports.users_post = (req, res) ->
   exports.authCurrentUserForPermission req, @response, 'admin', (err, user) => #will not return, if not permitted
+    console.log req.body
     displayName = req.body.displayName
     permissions = req.body.permissions
-    userModel.newUser displayName, permissions, (err, newUser) ->
-      @send {user: newUser}
+    telephoneNumber = req.body.telephoneNumber
+    userModel.newUser displayName, permissions, telephoneNumber, (err, newUser) =>
+      if err? || newUser? == false
+        @send {status: "bad"}
+      else
+        @send {status:'success',newUser: newUser}
