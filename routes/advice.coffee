@@ -5,7 +5,7 @@ crypto = require('crypto')
 exports.giveadvice_post = (req, res) ->
   auth.authCurrentUserForPermission req, @response, 'supporter', (err, user) => #will not return, if not permitted
     if user?
-      userDataToStore = {displayName: user.displayName, userID: user.userID}
+      userDataToStore = {displayName: user.displayName, userID: user.userID, status:"PAPP"}
       adviceModel.addResponse req.body.adviceRequestID, req.body.advice, userDataToStore, (err, newResponse) =>
         if err?
           console.log "failed with reason #{err}"
@@ -22,19 +22,47 @@ exports.advice_detail = (req, res) ->
         @render giveadvicedetail: {detailAdvice: advice, user: user}
       else @redirect '/giveadvice'
 
+exports.flagAdviceRequest_get = (req, res) ->
+  auth.authCurrentUserForPermission req, @response, 'admin', (err, user) => #will not return, if not permitted
+    adviceRequestID = @params.id
+    adviceModel.flagAdviceRequest adviceRequestID, (err) =>
+      if err?
+        console.log "err approving advice: #{err}"
+        @send "didn't flag advicerequestID: #{adviceRequestID} w/ err: #{err}"
+      else
+        @redirect '/giveadvice/admin'
+        #@send "flagged advicerequestID: #{adviceRequestID}"
+
 exports.approveAdviceRequest_get = (req, res) ->
   auth.authCurrentUserForPermission req, @response, 'admin', (err, user) => #will not return, if not permitted
     adviceRequestID = @params.id
-    adviceModel.approveAdviceRequest adviceRequestID, (err) ->
+    adviceModel.approveAdviceRequest adviceRequestID, (err) =>
       if err?
         console.log "err approving advice: #{err}"
         @send "didn't approve advicerequestID: #{adviceRequestID} w/ err: #{err}"
       else
-        @send "approved advicerequestID: #{adviceRequestID}"
+        @redirect '/giveadvice/admin'
+        #@send "approved advicerequestID: #{adviceRequestID}"
+
+exports.approveResponseWithAdviceRequestID_get = (req, res) ->
+  adviceRequestID = @params.id
+  adviceIndex = @params.adviceIndex
+  auth.authCurrentUserForPermission req, @response, 'admin', (err, user) => #will not return, if not permitted
+    adviceModel.approveResponseWithAdviceRequestIDAndIndex adviceRequestID, adviceIndex, (err, advice) =>
+      if err? == false && advice?
+        @redirect "/giveadvice/#{adviceRequestID}"
+        #@send {status: 'success'}
+      else
+        console.log "couldn't set helpful on ID: #{adviceRequestID} w/ err #{err}"
+        @send {status: 'bad'}
 
 exports.advice_pending = (req, res) ->
-  auth.authCurrentUserForPermission req, @response, 'supporter', (err, user) => #will not return, if not permitted
-    adviceModel.getAdvice "pendingapproval", (err, pendingAdvice) =>
+  adminWanted = @request.url.split('/')?[2] == "admin"
+  permission = if adminWanted then "admin" else "supporter"
+  console.log "permission #{permission}"
+  auth.authCurrentUserForPermission req, @response, permission, (err, user) => #will not return, if not permitted
+    status = if permission == "admin" then "PAPP" else "PRES"
+    adviceModel.getAdvice status, (err, pendingAdvice) =>
       @render giveadvice: {pendingAdvice: pendingAdvice, user: user}
 
 exports.form = (req, res) ->
@@ -63,7 +91,8 @@ exports.adviceViewWithAdviceToken = (req, res) ->
     #pass back the advice if there's a match
     adviceModel.getAdviceWithAccessAndAuthTokens accessToken, authToken, (err, advice) =>
       if advice?
-        @render adviceview: {accessToken: accessToken, advice:advice}
+        sanitizedAdvice = adviceModel.sanatizedAdviceForPermission advice,'user'
+        @render adviceview: {accessToken: accessToken, advice:sanitizedAdvice}
       else
         console.log "advice find err: #{err}"
         @render index: {err: 'advice not found'}
@@ -87,6 +116,9 @@ exports.getAdviceWithAdviceTokenAndPostedAuthToken = (req, res) ->
     else
       console.log "advice authMatch fail for accessToken: #{accessToken} forAuthToken: #{authToken}"
       @send {status: 'bad'}
+
+
+
 
 exports.postAdviceHelpfulWithAdviceTokenAndPostedAuthToken = (req, res) ->
   accessToken = @params.accessToken

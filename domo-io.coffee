@@ -42,12 +42,16 @@ domoApp = require('zappa').app ->
   @post '/getadvice', advice.getadvice_post
   
   @get '/giveadvice', advice.advice_pending
+  @get '/giveadvice/admin', advice.advice_pending
   
   @post '/giveadvice', advice.giveadvice_post
 
   @get '/giveadvice/:id', advice.advice_detail
 
-  @get '/approveadvicerequest/:id', advice.approveAdviceRequest_get
+  @get '/approve/:id', advice.approveAdviceRequest_get
+  @get '/approve/:id/:adviceIndex', advice.approveResponseWithAdviceRequestID_get
+  
+  @get '/flag/:id', advice.flagAdviceRequest_get
 
   @get '/viewadvice/:accessToken', advice.adviceViewWithAdviceToken
   

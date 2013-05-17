@@ -1,7 +1,8 @@
 secrets = require ('../secrets')
 
-communicationsModel = require('./communications')
+comsModel = require('./communications')
 crypto = require('crypto')
+shorturlModel = require('../model/shorturl')
 
 mongoose = require('mongoose')
 Schema = mongoose.Schema
@@ -13,6 +14,7 @@ adviceResponse: String
 user: {displayName: String, userID: String}
 modifiedDate: Date
 helpful: Number
+status: String
 }
 
 AdviceSchema = new Schema {
@@ -48,10 +50,9 @@ exports.addResponse = (adviceID, adviceResponse, userInfoToStore, callback) -> #
       if advice?
         responseUpsert = {adviceResponse: adviceResponse, user: userInfoToStore, modifiedDate: new Date(), createdDate: new Date()}
         Advice.update {_id: objectIDWithID(adviceID)},{$set: {modifiedDate: new Date()}, $push: {responses: responseUpsert}}, {upsert: 0}, (err) =>
-          console.log "updated advice: ", responseUpsert
           if err? == false
             console.log "saved advice response on id: #{adviceID}"
-            communicationsModel.notifyAuthor 100000103231001, "new advice response at domo.io"
+            comsModel.notifyAuthor 100000103231001, "new advice response at domo.io"
             callback err, responseUpsert
           else callback "error for advice save #{err}"
       else callback "no advice with adviceID #{adviceID}"
@@ -67,7 +68,7 @@ exports.addAdvice = (adviceRequest, adviceContact, userInfo, callback) -> #callb
     if err?
       callback "error for advice save #{err}"
     else
-      communicationsModel.notifyAuthor 100000103231001, "new advice at domo.io"
+      comsModel.notifyAuthor 100000103231001, "new advice at domo.io"
       callback null, advice
   else
     callback "no advice given"
@@ -78,7 +79,7 @@ exports.getAdviceSinceDate = (date, callback) ->
 
 
 exports.getAdvice = (status, callback) ->
-  Advice.find {}, {},{ sort: {createdDate: -1, modifiedDate: -1 }}, (err, advice) =>
+  Advice.find {status: status}, {},{ sort: {createdDate: -1, modifiedDate: -1 }}, (err, advice) =>
     callback err, advice
 
 objectIDWithID = (id) ->
@@ -89,18 +90,63 @@ objectIDWithID = (id) ->
     console.log "not a objID #{id} err #{err}"
   return null
  
+
+exports.flagAdviceRequest = (adviceID, callback) -> #callback(err)
+  exports.getAdviceWithID adviceID, (err, advice) ->
+    if advice?
+      newStatus = "FLAG"
+      if advice.status == newStatus
+        callback "advice for id #{adviceID} is already #{newStatus}"
+      else
+        advice.status = newStatus
+        advice.save (err) =>
+          callback err
+    else callback "no advice for id #{adviceID}"
+    
 exports.approveAdviceRequest = (adviceID, callback) -> #callback(err)
   exports.getAdviceWithID adviceID, (err, advice) ->
     if advice?
       newStatus = "PRES"
       if advice.status == newStatus
-        callback "advice for id #{adivceID} is already #{newStatus}"
+        callback "advice for id #{adviceID} is already #{newStatus}"
       else
         advice.status = newStatus
         advice.save (err) =>
           callback err
-    else callback "no advice for id #{adivceID}"
-    
+    else callback "no advice for id #{adviceID}"
+ 
+exports.notifyAdviceOwnerOfUpdate = (advice, callback) -> #callback(err)
+  phone = advice.adviceContact
+  if phone?.length <6
+    callback "no phone number for advice of accessToken #{advice.accessToken}"
+    return
+  adviceAccessURL = "https://oh.domo.io/viewadvice/#{advice.accessToken}"
+  shorturlModel.shorten adviceAccessURL, 4, null, true, null, null, (err, shortURL) =>
+    if err?
+      console.log "shortening error #{err}"
+    message = "new advice at http://domo.io/x/#{shortURL.shortURICode} with auth code #{advice.authToken}"
+    comsModel.processMessageToRecipientForSMS message, phone, comsModel.sendSMS, (err, recipient) =>
+      callback err
+
+exports.approveResponseWithAdviceRequestIDAndIndex = (adviceRequestID, adviceIndex, callback) -> #callback(err, advice)
+  exports.getAdviceWithID adviceRequestID, (err, advice) =>
+    if advice?
+      if advice.responses[adviceIndex]? == true
+        advice.responses[adviceIndex]?.status = "APPR"
+        advice.save (err) =>
+          if err?
+            callback err, advice
+            return
+          #notify owner of this advice
+          exports.notifyAdviceOwnerOfUpdate advice, (err) =>
+            if err?
+              err1 = "err in advice-owner notification: #{err}"
+            callback err1, advice
+
+      else
+        callback "no response at index #{adviceIndex} for adviceReq with accessToken #{adviceRequestID}"
+    else
+      callback err
 
 exports.getAdviceWithID = (adviceID, callback) -> #callback (err, advice)
   try
@@ -117,6 +163,23 @@ exports.getAdviceWithAccessAndAuthTokens = (accessToken, authToken, callback) ->
 exports.getAdviceWithToken = (token, callback) -> #callback (err, advice)
   Advice.findOne {accessToken : token}, (err, advice) =>
     callback err, advice
+
+#returns an advice obj appropiate for display for a particular permission
+exports.sanatizedAdviceForPermission = (advice, permission) ->
+  if advice? == false
+    return null
+  if permission == "admin"
+    return advice
+  else if permission == "supporter"
+    return advice
+  else #prob a user
+    apprResponses = []
+    for response in advice?.responses
+      if response.status == "APPR"
+        apprResponses.push(response)
+    advice.responses = apprResponses
+    return advice
+     
 
 exports.setAdviceHelpfulWithAccessAndAuthTokens = (accessToken, authToken, adviceIndex, callback) -> #callback(err, advice)
   exports.getAdviceWithAccessAndAuthTokens accessToken, authToken, (err, advice) =>

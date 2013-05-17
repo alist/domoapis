@@ -17,6 +17,7 @@ script type:'text/javascript', ->
 
 
 coffeescript ->
+  #warning: if approved advices are made beneath non-approved ones, helpful breaks here 
   @window.helpfulPressed = (element) ->
     helpfulIndex = advice.responses?.length-1-( $('h5.helpfulLabel').last().parent().parent().parent().index() - element.parent().parent().parent().index())
     element.hide()

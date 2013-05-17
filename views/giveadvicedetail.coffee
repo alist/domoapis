@@ -1,7 +1,9 @@
 @title = 'give advice'
 
+adviceRequestID = @detailAdvice?._id.toString()
+
 script type:'text/javascript', ->
-  text "adviceRequestID = #{JSON.stringify(@detailAdvice._id.toString())};"
+  text "adviceRequestID = #{JSON.stringify(adviceRequestID)};"
 
 coffeescript ->
   @window.submitPressed = () ->
@@ -21,6 +23,7 @@ coffeescript ->
         if response?.status != "success"
           errorAction()
         else
+          drawResponseBox response.newResponse
           $('#adviceForm').addClass('hidden')
           $('#giveAdviceBox').addClass('hidden') ).error(errorAction)
     else
@@ -31,6 +34,8 @@ coffeescript ->
         $('#submitStatus').text "your advice, please!"
     return false
 
+  drawResponseBox = (response) ->
+    $('.adviceRow').last().after($("""<div class="row-fluid adviceRow adviceResponseRow"><li class="span12"><div class="caption"><h4 class="text-success">#{response.user.displayName}</h4><h5 class="grayLabel">#{response.modifiedDate.toString()}</h5><p class="adviceResponseText">#{response.adviceResponse}</p></div></li></div>""").hide().fadeIn())
   
 text '<div class="content container-fluid">'
 
@@ -43,18 +48,20 @@ div 'row-fluid adviceRow', ->
       h4 'grayLabel', -> "#{@detailAdvice.modifiedDate.toString()}"
       p 'adviceRequestText', -> @detailAdvice.adviceRequest
 
-drawResponseBox = (response) ->
+drawResponseBox = (response, index) ->
   div 'row-fluid adviceRow adviceResponseRow', ->
     li 'span12', ->
       div 'caption', ->
         if response?.helpful >= 1
           h5 'helpfulLabel', -> 'Helpful! :-)'
+        if response?.status != "APPR" && @user?.permissions?.indexOf("admin") >= 0
+          a href:"/approve/#{adviceRequestID}/#{index}", -> "approve me"
         h4 'text-success', -> response.user.displayName
         h5 'grayLabel', -> "#{response.modifiedDate.toString()}"
         p 'adviceResponseText', -> response.adviceResponse
 
 for response in @detailAdvice.responses
-  drawResponseBox(response)
+  drawResponseBox response, @detailAdvice.responses.indexOf(response)
 
 div 'row-fluid', id: 'giveAdviceBox', ->
   ul 'thumbnails', ->
