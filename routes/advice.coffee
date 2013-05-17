@@ -5,7 +5,7 @@ crypto = require('crypto')
 exports.giveadvice_post = (req, res) ->
   auth.authCurrentUserForPermission req, @response, 'supporter', (err, user) => #will not return, if not permitted
     if user?
-      userDataToStore = {displayName: user.displayName, userID: user.userID, status:"PAPP"}
+      userDataToStore = {displayName: user.displayName, userID: user.userID}
       adviceModel.addResponse req.body.adviceRequestID, req.body.advice, userDataToStore, (err, newResponse) =>
         if err?
           console.log "failed with reason #{err}"
@@ -112,7 +112,8 @@ exports.getAdviceWithAdviceTokenAndPostedAuthToken = (req, res) ->
   authToken = req.body.authToken
   adviceModel.getAdviceWithAccessAndAuthTokens accessToken, authToken, (err, advice) =>
     if advice?
-      @send {status: 'success', advice: advice}
+      sanitizedAdvice = adviceModel.sanatizedAdviceForPermission advice,'user'
+      @send {status: 'success', advice: sanitizedAdvice}
     else
       console.log "advice authMatch fail for accessToken: #{accessToken} forAuthToken: #{authToken}"
       @send {status: 'bad'}

@@ -43,7 +43,7 @@ section id:'s3',->
         a target:'_blank', href: "http://www.suicidepreventionlifeline.org/GetHelp/Online", -> "National Suicide Prevention Hotline"
    
 section id:'s4',->
-  h2 'cornerNumber', -> 'Sound good?'
+  h2 'soundGood', -> 'Sound good?'
   br ->
   br ->
   a {class: "btn btn-primary btn-large btn-success",id:"getInvolvedButton", href:"mailto:domo@domo.io?subject=Applying%20to%20Give%20Advice"}, -> 'email us to get involved with Domo'

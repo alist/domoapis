@@ -48,11 +48,11 @@ exports.addResponse = (adviceID, adviceResponse, userInfoToStore, callback) -> #
   if adviceResponse? == true && adviceResponse.length > 0
     exports.getAdviceWithID adviceID, (err, advice) =>
       if advice?
-        responseUpsert = {adviceResponse: adviceResponse, user: userInfoToStore, modifiedDate: new Date(), createdDate: new Date()}
+        responseUpsert = {adviceResponse: adviceResponse, status:'PAPP', user: userInfoToStore, modifiedDate: new Date(), createdDate: new Date()}
         Advice.update {_id: objectIDWithID(adviceID)},{$set: {modifiedDate: new Date()}, $push: {responses: responseUpsert}}, {upsert: 0}, (err) =>
           if err? == false
             console.log "saved advice response on id: #{adviceID}"
-            comsModel.notifyAuthor 100000103231001, "new advice response at domo.io"
+            comsModel.notifyUser 100000103231001, "new advice response at domo.io"
             callback err, responseUpsert
           else callback "error for advice save #{err}"
       else callback "no advice with adviceID #{adviceID}"
@@ -68,7 +68,7 @@ exports.addAdvice = (adviceRequest, adviceContact, userInfo, callback) -> #callb
     if err?
       callback "error for advice save #{err}"
     else
-      comsModel.notifyAuthor 100000103231001, "new advice at domo.io"
+      comsModel.notifyUser 100000103231001, "new advice at domo.io"
       callback null, advice
   else
     callback "no advice given"

@@ -364,6 +364,7 @@ section#apps .page-header {
 }
 #content-supporters #principlesHeader {
   padding-top: 40px;
+  font-weight: normal;
 }
 #content-supporters p {
   font-size: 20px;
@@ -380,15 +381,20 @@ section#apps .page-header {
   background-position-x: 50%;
 }
 #content-supporters h2 {
-  font-weight: normal;
+  font-weight: bold;
   text-transform: capitalize;
 }
 #content-supporters h4 {
   font-weight: normal;
+  font-size: 21px;
 }
 #content-supporters .cornerNumber {
   font-weight: bold;
   margin-top: 0;
+  padding-top: 10px;
+  color: #fff;
+}
+#content-supporters .soundGood {
   padding-top: 10px;
   color: #00b147;
 }
@@ -459,6 +465,12 @@ section#apps .page-header {
   font-style: italic;
 }
 @media (max-width: 600px) {
+  #content-supporters h2 {
+    font-size: 33px;
+  }
+  #content-supporters h4 {
+    font-size: 18px;
+  }
   #content-supporters .p1 {
     margin-top: 30px;
   }

@@ -35,6 +35,18 @@ exports.User = User
   
 mongoose.connect(secrets.mongoDBConnectURLSecret)
 
+exports.userLoginURLBase = "https://oh.domo.io/urllogin?token="
+
+genCode = (length, salt) ->
+  current_date = (new Date()).valueOf().toString()
+  random = Math.random().toString()
+  hash = crypto.createHash('sha1').update(current_date + random + salt).digest('base64')
+  #assuming not all characters are forward slashes
+  hash = hash.replace(/\//g,'')
+  if length > hash.length
+    return hash
+  else return hash.substr(0, length)
+
 exports.getUserWithToken = (token, callback) => #callback (err, user)
   if token? == false
     callback "no token provided for this user"
@@ -108,3 +120,33 @@ exports.getUserWithID = (userID, callback) -> #callback(err, author, abreviatedI
       else
         authorInfo = {imageURI: author.imageURI, userID: author.userID.toString(), metroAreaDisplayName: author.metroAreaDisplayName, authorDisplayName: author.authorDisplayName, ratingCount: author.ratingCount}
         callback null, author, authorInfo
+
+exports.allUsers = (callback) -> #callback(err, users)
+  User.find {},{}, (err, authors) =>
+    callback err, authors
+
+exports.newUser = (displayName, permissions, callback) -> #callback(err, newUser)
+  userProperties = {
+    "displayName": displayName,
+    "modifiedDate": new Date,
+    "notificationInterval": 21600000,
+    "overIntervalMessageAllowanceCount": 40,
+    "permissions": permissions,
+    "token": genCode(20, displayName),
+    "userID": genCode(10, displayName)
+  }
+  user = new User userProperties
+  user.save(err, user2) ->
+    if err? || user2? == false
+      callback "failed creating user w/ err #{err}"
+    else
+      callback null, user2
+
+exports.updateUserWithID = (userID, displayName, phoneNumber, callback) ->#callback(err, user)
+  exports.getUserWithID userID, (err, user, info) =>
+    if displayName?
+      user.displayName = displayName
+    if phoneNumber?
+      user.telephoneNumber = phoneNumber
+    user.save(err) =>
+      callback err, user

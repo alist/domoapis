@@ -1,7 +1,6 @@
 userModel = require '../model/user'
 shorturlModel = require('../model/shorturl')
 
-userLoginURLBase = "https://oh.domo.io/urllogin?token="
 
 #will not return, if not permitted
 exports.authCurrentUserForPermission = (req, res, permission, callback ) -> #callback(err, user)
@@ -21,7 +20,7 @@ exports.authCurrentUserForPermission = (req, res, permission, callback ) -> #cal
 exports.shortLoginURLForCurrentUser = (req, res) ->
   cookieToken = req.request?.cookies?.sessiontoken
   userModel.getUserWithToken cookieToken, (err, user) =>
-    shortenURI = userLoginURLBase + cookieToken
+    shortenURI = userModel.userLoginURLBase + cookieToken
     if user?
       shorturlModel.shorten shortenURI, 4, null, true, null, null, (err, shortURL) =>
         if err?
@@ -40,3 +39,39 @@ exports.urlLogin_get  = (req, res, callback) -> #callback(err, user)
     else
       console.log "user corresponding to token doesnt exist in database w/ err #{err}"
       @redirect '/'
+
+exports.userslist_get = (req, res) ->
+  exports.authCurrentUserForPermission req, @response, 'admin', (err, user) => #will not return, if not permitted
+    userModel.allUsers (err, users) =>
+      @render users:{users: users}
+
+exports.usersdetail_get = (req, res) ->
+  userID = @params.id
+  exports.authCurrentUserForPermission req, @response, 'supporter', (err, user) => #will not return, if not permitted
+    if user.userID == userID || user.permissions.indexOf('admin') >= 0
+      #authed
+      userModel.getUserWithID userID, (err, detailUser, info) =>
+        @send {user: detailUser}
+    else
+      @redirect '/supporters'
+
+#update user
+exports.usersdetail_post = (req, res) ->
+  userID = @params.id
+  exports.authCurrentUserForPermission req, @response, 'supporter', (err, user) => #will not return, if not permitted
+    if user.userID == userID || user.permissions.indexOf('admin') >= 0
+      #authed
+      telephoneNumber = req.body.telelphoneNumber
+      displayName = req.body.displayName
+      userModel.updateUserWithID userID, displayName, telephoneNumber, (err, detailUser) =>
+        @send {user: detailUser}
+    else
+      @redirect '/supporters'
+
+#new user!
+exports.users_post = (req, res) ->
+  exports.authCurrentUserForPermission req, @response, 'admin', (err, user) => #will not return, if not permitted
+    displayName = req.body.displayName
+    permissions = req.body.permissions
+    userModel.newUser displayName, permissions, (err, newUser) ->
+      @send {user: newUser}

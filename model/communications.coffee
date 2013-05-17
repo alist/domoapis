@@ -17,7 +17,7 @@ exports.notifyUser = (userID, message, callback) -> #callback(err)
                 callback "couldn't update author to new notify date"
               else if callback?
                 callback null
-            console.log "notified #{recipient}"
+                console.log "notified #{recipient}"
       else
         if callback?
           callback "no notify; only #{timeInterval}# of seconds since last notfiy."
