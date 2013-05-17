@@ -85,7 +85,7 @@ div class:'row-fluid', ->
       label class: 'checkbox', ->
         input id: 'guidlinesAcceptedBox', type: 'checkbox', ->
         text 'no thanks, just give me a URL to check later'
-    p 'text-warning hidden', id:'submitStatus', -> 'Thanks for using Domo!!'
+    h4 'text-warning hidden', id:'submitStatus', -> 'Thanks for using Domo!!'
 
 
 div class:'hidden', id:'thankYouText', ->
