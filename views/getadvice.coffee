@@ -17,13 +17,14 @@ coffeescript ->
   @window.submitPressed = () ->
     advice = $('#adviceTextArea').val()
     adviceContact = $('#adviceContactInput').val()
+    checkBoxChecked = $('#skipContactBox').is(":checked")
     
     errorAction = () ->
       $("#submitButton").removeClass('disabled')
       $('#submitStatus').removeClass('hidden')
       $('#submitStatus').text "Sorry there was an error. Save your text and let domo@domo.io know if it keeps up!"
     
-    if adviceContact?.length >0 && advice?.length > 0 && advice != adviceDefaultText
+    if (adviceContact?.length >0 || checkBoxChecked == true) && advice?.length > 0 && advice != adviceDefaultText
       $('#submitStatus').addClass('hidden')
       $("#submitButton").addClass('disabled')
       $.post("/getadvice", {adviceRequest: advice, adviceContact: adviceContact}, (response)=>
@@ -31,8 +32,11 @@ coffeescript ->
         if response?.status != "success"
           errorAction()
         else
-          $('#thankYouText').removeClass('hidden')
-          $('#adviceForm').addClass('hidden')).error(errorAction)
+          adviceURL = "https://oh.domo.io/viewadvice/#{response.adviceInfo.accessToken}?authToken=#{response.adviceInfo.authToken}"
+          $('#adviceURL').attr('href', adviceURL)
+          $('#adviceURL').text(adviceURL)
+          $('#thankYouText').fadeIn('fast')
+          $('#adviceForm').hide()).error(errorAction)
 
     else
       $('#submitStatus').removeClass('hidden')
@@ -53,25 +57,24 @@ coffeescript ->
 text '<div class="content container-fluid">'
 
 
-h1 ->
-   text 'Get advice through Domo' #hnk
-   br ->
-h4 'supporterCount', -> '12 MIT Supporters since May 16, 2013'
-legend -> "Through this anonymous request, vetted peers will engage you with empathy and support."
-div class:'row-fluid', ->
-  div class: 'span3 pull-left ', id:"howItWorks", ->
-    h4 '', -> "How it works:"
-    ol ->
-      li -> "You descibe what's up"
-      li ->
-        a href: '/supporters', -> "Supporter Domosapiens"
-        text " respond at domo.io"
-      li -> "You get SMS alerts about your responses"
-      li -> "You're free to follow-up, but responses might be by different people"
 
-  form method:'GET', class:'span9 pull-right', id:'adviceForm', action:"#", onsubmit: 'window.submitPressed.apply(); return false;', ->
-    
-    onText = null
+form method:'GET', class:'span9 pull-right', id:'adviceForm', action:"#", onsubmit: 'window.submitPressed.apply(); return false;', ->
+  h1 ->
+    text 'Get advice through Domo' #hnk
+    br ->
+  h4 'supporterCount', -> '12 MIT Supporters since May 16, 2013'
+  legend -> "Through this anonymous request, vetted peers will engage you with empathy and support."
+  div class:'row-fluid', ->
+    div class: 'span3 pull-left ', id:"howItWorks", ->
+      h4 '', -> "How it works:"
+      ol ->
+        li -> "You descibe what's up"
+        li ->
+          a href: '/supporters', -> "Supporter Domosapiens"
+          text " respond at domo.io"
+        li -> "You get SMS alerts about your responses"
+        li -> "You're free to follow-up, but responses might be by different people"
+        
     if @adviceOn? == true
        onText = "advice on: \n#{@adviceOn} \n\nthoughts:\n\n"
     
@@ -83,7 +86,7 @@ div class:'row-fluid', ->
       input class:'', type: "text", placeholder: "US phone #", id: "adviceContactInput", ->
       input 'btn btn-success right', id:"submitButton", type: 'submit', style: 'margin-top: 5px;', -> 'Submit'
       label class: 'checkbox', ->
-        input id: 'guidlinesAcceptedBox', type: 'checkbox', ->
+        input id: 'skipContactBox', type: 'checkbox', ->
         text 'no thanks, just give me a URL to check later'
     h4 'text-warning hidden', id:'submitStatus', -> 'Thanks for using Domo!!'
 
@@ -92,12 +95,17 @@ div class:'hidden', id:'thankYouText', ->
   h1 'text-success', ->
     text 'Thanks for trusting Domo!'
     small -> " We'll get back to you within a few hours "
-  h4 ->
+  h3 ->
     text "If you need help NOW, you should call "
     b "911"
     text " or visit "
     a href:"http://medweb.mit.edu/directory/services/emergency_care.html", -> "MIT Mental Health"
     text '.'
-
+  br ->
+  h4 ->
+    text "Here's a URL to copy if you ever want to visit your advice page before/without getting an SMS from us. If you didn't leave a phone #, you'll need this:"
+    br ->
+    br ->
+    a id:'adviceURL', href: '/s', target: '_blank', -> 'helo'
 
 text '</ div>'
