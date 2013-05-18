@@ -30,8 +30,8 @@ userWrite = (user) ->
           h5 'darkGreenLabel', -> "#{user.displayName}"
           h5 'darkGreenLabel', -> "tel: #{user.telephoneNumber}"
           h5 'darkGreenLabel', -> "id: #{user.userID}"
-        loginURL = "https://oh.domo.io/urllogin?token=#{user.token}"
-        a href: loginURL, -> "oh.domo.io/urllogin?toke..."
+        loginURL = "https://oh.domo.io/urllogin/#{user.token}"
+        a href: loginURL, -> "oh.domo.io/urllogin/#{if user.token.length > 20 then user.token.substring(0, 19) + "..." else user.token}"
 
 
 div 'page-header', ->
