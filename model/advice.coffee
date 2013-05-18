@@ -146,10 +146,11 @@ exports.approveResponseWithAdviceRequestIDAndIndex = (adviceRequestID, adviceInd
             callback err, advice
             return
           #notify owner of this advice
-          exports.notifyAdviceOwnerOfUpdate advice, (err) =>
-            if err?
-              err1 = "err in advice-owner notification: #{err}"
-            callback err1, advice
+          callback err, advice
+          if advice.adviceContact?
+            exports.notifyAdviceOwnerOfUpdate advice, (errComs) =>
+              if errComs?
+                console.log "err in advice-owner of:#{adviceRequestID} notification: #{err}"
 
       else
         callback "no response at index #{adviceIndex} for adviceReq with accessToken #{adviceRequestID}"

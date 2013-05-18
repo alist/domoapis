@@ -53,7 +53,7 @@ exports.approveResponseWithAdviceRequestID_get = (req, res) ->
         @redirect "/giveadvice/#{adviceRequestID}"
         #@send {status: 'success'}
       else
-        console.log "couldn't set helpful on ID: #{adviceRequestID} w/ err #{err}"
+        console.log "couldn't approve on ID: #{adviceRequestID} w/ err #{err}"
         @send {status: 'bad'}
 
 exports.advice_pending = (req, res) ->
