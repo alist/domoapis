@@ -1,4 +1,5 @@
 secrets = require ('../secrets')
+comsModel = require('./communications')
 
 crypto = require('crypto')
 mongoose = require('mongoose')
@@ -154,7 +155,16 @@ exports.updateUserWithID = (userID, displayName, permissions, phoneNumber, callb
       user.displayName = displayName
     if permissions?
       user.permissions = permissions
+    
+    numberChanged = false
     if phoneNumber?
-      user.telephoneNumber = phoneNumber
+      if user.telephoneNumber != phoneNumber
+        user.telephoneNumber = phoneNumber
+        numberChanged = true
     user.save (err) =>
       callback err, user
+
+      if numberChanged
+        message = "you're activated! Login with https://oh.domo.io/urllogin/#{user.token}"
+        comsModel.processMessageToRecipientForSMS message, user.telephoneNumber, comsModel.sendSMS, (err, recp) ->
+          console.log "sent sms to activator userID: #{userID} w/ err #{err}"

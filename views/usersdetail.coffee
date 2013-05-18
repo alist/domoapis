@@ -48,7 +48,7 @@ div 'page-header', ->
       a class: "btn btn-primary btn-large btn-success right", href:'/giveadvice', -> "Give Advice Now"
 
 form 'form-horizontal',id:'newUserForm', method:'GET', action:"#", onsubmit: 'window.submitPressed.apply(); return false;', ->
-  legend -> 'notification phone #'
+  legend -> 'notification phone # for active account'
   p 'text-success ', -> "When you enter your phone number, we'll start sending you SMS-notifications when requests are available to answer"
   div 'span3 row-fluid', id: 'usersNameSpan', ->
     div 'control-group', id: 'displayNameGroup', ->
