@@ -29,7 +29,7 @@ text '<div class="content container-fluid">'
 
 userWrite = (user) ->
   li 'span6', ->
-    div 'thumbnail', ->
+    div 'thumbnail userInfoBox', ->
       div 'caption', ->
         a href: "/users/#{user.userID}", ->
           h5 'darkGreenLabel', -> "#{user.permissions.toString()}"
@@ -41,29 +41,29 @@ userWrite = (user) ->
 
 
 div 'page-header', ->
-  h1 "Give advice"
+  h1 "User info"
   div 'row-fluid', ->
     ul 'thumbnails', ->
       userWrite @user
-
+      a class: "btn btn-primary btn-large btn-success right", href:'/giveadvice', -> "Give Advice Now"
 
 form 'form-horizontal',id:'newUserForm', method:'GET', action:"#", onsubmit: 'window.submitPressed.apply(); return false;', ->
-  legend -> 'update user'
-  div 'span4 row-fluid', id: 'usersNameSpan', ->
+  legend -> 'notification phone #'
+  p 'text-success ', -> "When you enter your phone number, we'll start sending you SMS-notifications when requests are available to answer"
+  div 'span3 row-fluid', id: 'usersNameSpan', ->
     div 'control-group', id: 'displayNameGroup', ->
       label 'control-label', for: "displayNameInput", -> "Display Name:"
       div 'controls', ->
-        input 'span1', style:'height: 30px; width: 200px;', type:'text', id:'displayNameInput', placeholder:'Display name',value: @user.displayName, ->
+        input 'span1', style:'height: 30px; width: 110px;', type:'text', id:'displayNameInput', placeholder:'Display name',value: @user.displayName, ->
     div 'control-group', id: 'phoneNumberGroup', ->
       label 'control-label', for: "phoneNumberInput", -> "Phone number:"
       div 'controls', ->
-        input 'span1', maxlength:'10', style:'height: 30px; width: 200px;', type:'text', id:'phoneNumberInput', placeholder:'3213214567',value:@user.telephoneNumber, ->
-
+        input 'span1', maxlength:'10', style:'height: 30px; width: 110px;', type:'text', id:'phoneNumberInput', placeholder:'3213214567',value:@user.telephoneNumber, ->
     div 'control-group', id: 'permissionsGroup', ->
       p 'text-error hidden' , id:'badPermissionsGroupLabel', -> 'whoops, bad permissions, try again'
       label 'control-label', for: "permissionsInput", -> "Permissions:"
       div 'controls', ->
-        input 'span1', style:'height: 30px; width: 200px;', type:'text', id:'permissionsInput', placeholder:"[&quot;admin&quot;, &quot;supporter&quot;]", value:JSON.stringify(@user.permissions).replace(/\"/g,"&quot;"), ->
+        input 'span2', style:'height: 30px; width: 110px;', type:'text', id:'permissionsInput', placeholder:"[&quot;admin&quot;, &quot;supporter&quot;]", value:JSON.stringify(@user.permissions).replace(/\"/g,"&quot;"), ->
     div 'control-group', ->
       div 'controls', ->
         input 'btn btn-success', id:"submitButton", type: 'submit', -> 'Generate access URL'

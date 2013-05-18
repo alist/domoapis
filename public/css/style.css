@@ -488,6 +488,12 @@ section#apps .page-header {
   margin-left: auto;
   margin-right: auto;
 }
+.userInfoBox {
+  min-width: 270px;
+}
+#usersNameSpan {
+  margin-left: 0;
+}
 .label {
   padding: 3px 4px 2px;
 }
@@ -495,4 +501,5 @@ section#apps .page-header {
   -webkit-box-shadow: 3px 3px 3px rgba(0,0,0,0.06);
   -moz-box-shadow: 3px 3px 3px rgba(0,0,0,0.06);
   box-shadow: 3px 3px 3px rgba(0,0,0,0.06);
+  overflow: hidden;
 }

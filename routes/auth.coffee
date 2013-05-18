@@ -38,7 +38,7 @@ exports.urlLogin_get  = (req, res, callback) -> #callback(err, user)
   userModel.getUserWithToken tokenForCookie, (err, user) =>
     if user?
       req.response.cookie 'sessiontoken', tokenForCookie, {path:'/', httpOnly: true,  maxAge: 90000000000 }
-      @redirect '/giveadvice'
+      @redirect "/users/#{user.userID}"
     else
       console.log "user corresponding to token doesnt exist in database w/ err #{err}"
       @redirect '/'
@@ -66,7 +66,8 @@ exports.usersdetail_post = (req, res) ->
       #authed
       telephoneNumber = req.body.telephoneNumber
       displayName = req.body.displayName
-      permissions = req.body.permissions
+      if user.permissions?.indexOf("admin") >= 0
+        permissions = req.body.permissions
       userModel.updateUserWithID userID, displayName, permissions, telephoneNumber, (err, detailUser) =>
         @send {status:'success', user: detailUser}
     else
