@@ -64,12 +64,13 @@ exports.usersdetail_post = (req, res) ->
   exports.authCurrentUserForPermission req, @response, 'supporter', (err, user) => #will not return, if not permitted
     if user.userID == userID || user.permissions.indexOf('admin') >= 0
       #authed
-      telephoneNumber = req.body.telelphoneNumber
+      telephoneNumber = req.body.telephoneNumber
       displayName = req.body.displayName
-      userModel.updateUserWithID userID, displayName, telephoneNumber, (err, detailUser) =>
-        @send {user: detailUser}
+      permissions = req.body.permissions
+      userModel.updateUserWithID userID, displayName, permissions, telephoneNumber, (err, detailUser) =>
+        @send {status:'success', user: detailUser}
     else
-      @redirect '/supporters'
+      @send {status: "bad"}
 
 #new user!
 exports.users_post = (req, res) ->

@@ -144,11 +144,13 @@ exports.newUser = (displayName, permissions, telephoneNumber, callback) -> #call
     else
       callback null, user
 
-exports.updateUserWithID = (userID, displayName, phoneNumber, callback) ->#callback(err, user)
+exports.updateUserWithID = (userID, displayName, permissions, phoneNumber, callback) -> #callback(err, user)
   exports.getUserWithID userID, (err, user, info) =>
     if displayName?
       user.displayName = displayName
+    if permissions?
+      user.permissions = permissions
     if phoneNumber?
       user.telephoneNumber = phoneNumber
-    user.save(err) =>
+    user.save (err) =>
       callback err, user

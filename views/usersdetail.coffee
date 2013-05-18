@@ -7,6 +7,8 @@ script type:'text/javascript', ->
 
 coffeescript ->
   @window.submitPressed = () ->
+    $('#submitButton').addClass('disabled')
+    
     errorAction = () ->
       $("#submitButton").removeClass('disabled')
       $('#submitStatus').removeClass('hidden')
@@ -17,7 +19,7 @@ coffeescript ->
     permissions = JSON.parse($('#permissionsInput').val())
     $.post("/users/#{userID}", {displayName: displayName, telephoneNumber:phoneNumber,permissions:permissions}, (response)=>
       console.log response
-      if response?.status != "success" || response?.newUser? == false
+      if response?.status != "success" || response?.user? == false
         errorAction()
       else
         window.location = "/users/#{userID}"

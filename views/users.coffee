@@ -3,7 +3,11 @@
 
 coffeescript ->
   @window.submitPressed = () ->
+  
+    $('#submitButton').fadeOut()
+    
     errorAction = () ->
+      $('#submitButton').fadeIn()
       $("#submitButton").removeClass('disabled')
       $('#submitStatus').removeClass('hidden')
       $('#submitStatus').text 'server-error!'
@@ -12,7 +16,6 @@ coffeescript ->
     phoneNumber = $('#phoneNumberInput').val()
     permissions = JSON.parse($('#permissionsInput').val())
     $.post("/users", {displayName: displayName, telephoneNumber:phoneNumber,permissions:permissions}, (response)=>
-      console.log response
       if response?.status != "success" || response?.newUser? == false
         errorAction()
       else
