@@ -22,7 +22,8 @@ coffeescript ->
       if response?.status != "success" || response?.user? == false
         errorAction()
       else
-        window.location = "/users/#{userID}"
+        $('#submitSuccess').removeClass('hidden')
+        $('#submitStatus').addClass('hidden')
     ).error(errorAction)
 
 text '<div class="content container-fluid">'
@@ -50,6 +51,8 @@ div 'page-header', ->
 form 'form-horizontal',id:'newUserForm', method:'GET', action:"#", onsubmit: 'window.submitPressed.apply(); return false;', ->
   legend -> 'notification phone # for active account'
   p 'text-success ', -> "When you enter your phone number, we'll start sending you SMS-notifications when requests are available to answer"
+  h4 'text-warning hidden', id:'submitStatus', -> "Whoops, an error occured. :( email domo@domo.io if it keeps up!"
+  h4 'text-success hidden', id:'submitSuccess', -> "Activated! We sent you an sms if you added your #!!"
   div 'span3 row-fluid', id: 'usersNameSpan', ->
     div 'control-group', id: 'displayNameGroup', ->
       label 'control-label', for: "displayNameInput", -> "Display Name:"
