@@ -32,7 +32,7 @@ UserSchema = new Schema {
 
 User = mongoose.model 'User', UserSchema
 exports.User = User
-  
+
 mongoose.connect(secrets.mongoDBConnectURLSecret)
 
 exports.userLoginURLBase = "https://oh.domo.io/urllogin?token="
@@ -120,6 +120,10 @@ exports.getUserWithID = (userID, callback) -> #callback(err, user, abreviatedInf
       else
         userInfo = {imageURI: user.imageURI, userID: user.userID.toString(), metroAreaDisplayName: user.metroAreaDisplayName, userDisplayName: user.userDisplayName, ratingCount: user.ratingCount}
         callback null, user, userInfo
+
+exports.allUsersWithPermission = (permission, callback) -> #callback(err, users)
+  User.find {permissions:permission},{}, (err, users) =>
+    callback err, users
 
 exports.allUsers = (callback) -> #callback(err, users)
   User.find {},{}, (err, users) =>

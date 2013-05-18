@@ -10,6 +10,7 @@ adviceRequestWrite = (adviceRequest) ->
       div 'caption', ->
         if adviceRequest?.status != "PRES" && @user?.permissions?.indexOf("admin") >= 0
           a href:"/approve/#{adviceRequestID}", -> "approve me"
+          a class:'right grayLabel', href:"/flag/#{adviceRequestID}", -> "reject me"
         a href: "/giveadvice/#{adviceRequest._id.toString()}", ->
           h5 'darkGreenLabel', -> "#{adviceRequest.modifiedDate.toString()}"
           h5 'darkGreenLabel', -> "#{if adviceRequest.responses? then adviceRequest.responses?.length else 0} responses"

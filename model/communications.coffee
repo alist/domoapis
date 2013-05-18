@@ -22,6 +22,13 @@ exports.notifyUser = (userID, message, callback) -> #callback(err)
         if callback?
           callback "no notify; only #{timeInterval}# of seconds since last notfiy."
 
+exports.notifyAllUsersOfPermission = (permission, message, callback) -> #callback(err)
+  userModel.allUsersWithPermission permission, (err, users) =>
+    for user in users
+      exports.notifyUser user.userID, message, (err) =>
+        if err?
+          console.log "err w. sms to userID #{user.userID} err: #{err}"
+    callback err
 
 twilio = null
 phone = null

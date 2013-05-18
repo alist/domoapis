@@ -51,9 +51,8 @@ exports.addResponse = (adviceID, adviceResponse, userInfoToStore, callback) -> #
         responseUpsert = {adviceResponse: adviceResponse, status:'PAPP', user: userInfoToStore, modifiedDate: new Date(), createdDate: new Date()}
         Advice.update {_id: objectIDWithID(adviceID)},{$set: {modifiedDate: new Date()}, $push: {responses: responseUpsert}}, {upsert: 0}, (err) =>
           if err? == false
-            console.log "saved advice response on id: #{adviceID}"
-            comsModel.notifyUser 100000103231001, "new advice response at domo.io"
-            callback err, responseUpsert
+            comsModel.notifyAllUsersOfPermission 'admin', "new pending advice response at http://domo.io/giveadvice/#{adviceID}", (err)->
+              callback err, responseUpsert
           else callback "error for advice save #{err}"
       else callback "no advice with adviceID #{adviceID}"
   else callback "no advice response given"
@@ -68,7 +67,8 @@ exports.addAdvice = (adviceRequest, adviceContact, userInfo, callback) -> #callb
     if err?
       callback "error for advice save #{err}"
     else
-      comsModel.notifyUser 100000103231001, "new advice at domo.io"
+      comsModel.notifyAllUsersOfPermission 'admin',"new advice to approve at http://domo.io/giveadvice/admin", (err) ->
+        console.log "notified everyone who's admin with err #{err}"
       callback null, advice
   else
     callback "no advice given"
