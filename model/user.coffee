@@ -166,5 +166,5 @@ exports.updateUserWithID = (userID, displayName, permissions, phoneNumber, callb
 
       if numberChanged
         message = "you're activated! Login with https://oh.domo.io/urllogin/#{user.token}"
-        comsModel.processMessageToRecipientForSMS message, user.telephoneNumber, comsModel.sendSMS, (err, recp) ->
+        comsModel.processMessageToRecipientForSMS message, user.telephoneNumber, comsModel.sendSMS, (err, recp) =>
           console.log "sent sms to activator userID: #{userID} w/ err #{err}"
