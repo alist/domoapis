@@ -4,8 +4,8 @@ hostURL = "https://#{primaryHost}"
 request = require 'request'
 
 home = require('./routes/home')
-roughdraft = require('./routes/roughdraft')
 advice = require('./routes/advice')
+privacyTerms = require('./routes/privacyandterms')
 auth = require './routes/auth'
 redirstat = require('./routes/redirstat')
 supporters = require('./routes/supporters')
@@ -62,6 +62,7 @@ domoApp = require('zappa').app ->
   @post '/setadvicehelpful/:accessToken', advice.postAdviceHelpfulWithAdviceTokenAndPostedAuthToken
   
   @get '/supporters', supporters.principles_list
+  @get '/privacyandterms', privacyTerms.privacyandterms_get
   
   @get '/urllogin', auth.urlLogin_get
   @get '/urllogin/:token', auth.urlLogin_get

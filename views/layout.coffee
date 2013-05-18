@@ -73,7 +73,7 @@ body ->
  footer ->
   a href:"mailto:domo@domo.io", -> "domo@domo.io"
   text ' | '
-  a href:"/privacynterms", -> "privacy&terms"
+  a href:"/privacyandterms", -> "privacy&terms"
   br ->
   text 'made by '
   a target:'_blank', href:'http://alist.im', -> 'Alex List'
