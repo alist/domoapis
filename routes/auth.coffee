@@ -31,14 +31,13 @@ exports.shortLoginURLForCurrentUser = (req, res) ->
       @redirect '/supporters'
 
 exports.urlLogin_get  = (req, res, callback) -> #callback(err, user)
-  console.log @params, req.query
   tokenForCookie = @params?.token
   if tokenForCookie? == false
     tokenForCookie = req.query.token
   
   userModel.getUserWithToken tokenForCookie, (err, user) =>
     if user?
-      req.response.cookie 'sessiontoken', tokenForCookie, {httpOnly: true,  maxAge: 90000000000 }
+      req.response.cookie 'sessiontoken', tokenForCookie, {path:'/', httpOnly: true,  maxAge: 90000000000 }
       @redirect '/giveadvice'
     else
       console.log "user corresponding to token doesnt exist in database w/ err #{err}"
