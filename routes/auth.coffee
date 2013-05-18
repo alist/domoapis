@@ -31,6 +31,7 @@ exports.shortLoginURLForCurrentUser = (req, res) ->
       @redirect '/supporters'
 
 exports.urlLogin_get  = (req, res, callback) -> #callback(err, user)
+  console.log @params, req.query
   tokenForCookie = @params?.token
   if tokenForCookie? == false
     tokenForCookie = req.query.token
