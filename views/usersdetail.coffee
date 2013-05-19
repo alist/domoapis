@@ -50,7 +50,8 @@ div 'page-header', ->
 
 form 'form-horizontal',id:'newUserForm', method:'GET', action:"#", onsubmit: 'window.submitPressed.apply(); return false;', ->
   legend -> 'notification phone # for active account'
-  p 'text-success ', -> "When you enter your phone number, we'll start sending you SMS-notifications when requests are available to answer"
+  p 'text-success ', -> "With your phone number entered, we'll send you SMS-notifications about requests."
+  p 'text-success ', -> "Feel free to change your display name to your first name/ a pseudonym."
   h4 'text-warning hidden', id:'submitStatus', -> "Whoops, an error occured. :( email domo@domo.io if it keeps up!"
   h4 'text-success hidden', id:'submitSuccess', -> "Activated! We sent you an sms if you added your #!!"
   div 'span3 row-fluid', id: 'usersNameSpan', ->

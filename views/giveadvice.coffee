@@ -19,7 +19,8 @@ adviceRequestWrite = (adviceRequest) ->
 
 
 div 'page-header', ->
-  h1 "Give advice"
+  a href: '/giveadvice', ->
+    h1 "Give advice"
 if @pendingAdvice?.length > 0 then for i in [0 .. @pendingAdvice?.length-1]
   if i % 2 != 0
     continue
