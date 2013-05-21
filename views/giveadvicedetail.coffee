@@ -46,7 +46,7 @@ div 'row-fluid adviceRow', ->
   li 'span12', ->
     #supporter notifications
     if @detailAdvice?.status == "PRES" && @user?.permissions?.indexOf("admin") >= 0
-      a href:"/notify/#{adviceRequestID}", -> "notify supporters"
+      a href:"/notify/#{adviceRequestID}", -> "notify all supporters via sms"
 
     div 'caption', ->
       h4 'grayLabel', -> "#{@detailAdvice.modifiedDate.toString()}"
