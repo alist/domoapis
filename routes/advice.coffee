@@ -33,6 +33,22 @@ exports.flagAdviceRequest_get = (req, res) ->
         @redirect '/giveadvice/admin'
         #@send "flagged advicerequestID: #{adviceRequestID}"
 
+exports.notifySupportersForAdviceRequest_get = (req, res) ->
+  auth.authCurrentUserForPermission req, @response, 'admin', (err, user) => #will not return, if not permitted
+    adviceRequestID = @params.id
+    
+    notifyCallback = (err) =>
+      if err?
+        console.log "err notifying re advice: #{err}"
+        @send "didn't notify re advicerequestID: #{adviceRequestID} w/ err: #{err}"
+      else
+        @redirect "/giveadvice/#{adviceRequestID}"
+    if adviceRequestID? == false
+      adviceModel.notifySupportersOfPendingAdvice notifyCallback
+    else if adviceRequestID? == true
+      adviceModel.notifySupportersOfAdviceRequest adviceRequestID, notifyCallback
+    
+
 exports.approveAdviceRequest_get = (req, res) ->
   auth.authCurrentUserForPermission req, @response, 'admin', (err, user) => #will not return, if not permitted
     adviceRequestID = @params.id

@@ -73,11 +73,19 @@ exports.addAdvice = (adviceRequest, adviceContact, userInfo, callback) -> #callb
   else
     callback "no advice given"
 
-exports.getAdviceSinceDate = (date, callback) ->
-  Advice.find {modifiedDate : {$gt: date}}, {},{sort: {createdDate: -1, modifiedDate: -1 }}, (err, advice) =>
-    callback err, advice
+exports.notifySupportersOfAdviceRequest  = (adviceID, callback) -> #callback(err)
+  exports.getAdviceWithID adviceID, (err, advice) ->
+    if advice?.status == "PRES"
+      comsModel.notifyAllUsersOfPermission 'supporter',"new advice help req at https://oh.domo.io/giveadvice/#{advice?._id.toString()} when you can", (err) ->
+        console.log "notified everyone who's supporter with err #{err}"
+        callback err
+    else callback "no advice for id #{adviceID}"
 
-
+exports.notifySupportersOfPendingAdvice  = (callback) -> #callback(err)
+  comsModel.notifyAllUsersOfPermission 'supporter',"unanswered advice request(s) at https://oh.domo.io/giveadvice could use your thought when you can!", (err) ->
+    console.log "notified everyone who's supporter with err #{err}"
+    callback err
+      
 exports.getAdvice = (status, callback) ->
   Advice.find {status: status}, {},{ sort: {createdDate: -1, modifiedDate: -1 }}, (err, advice) =>
     callback err, advice
@@ -133,7 +141,7 @@ exports.notifyAdviceGiverOfHelpfulResponse = (advice, userID, callback) -> #call
   shorturlModel.shorten adviceGiverURL, 4, null, true, null, null, (err, shortURL) =>
     message = "your response was appreciated at http://domo.io/x/#{shortURL.shortURICode} ! Check it out where you're logged-in!"
     comsModel.notifyUser userID, message, (err) =>
-      console.log "ahh #{err}"
+      console.log "appreciated notify err: #{err}"
       callback err
 
 exports.approveResponseWithAdviceRequestIDAndIndex = (adviceRequestID, adviceIndex, callback) -> #callback(err, advice)

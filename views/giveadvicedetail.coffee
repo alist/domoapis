@@ -44,6 +44,10 @@ div 'page-header', ->
     h1 "Give advice"
 div 'row-fluid adviceRow', ->
   li 'span12', ->
+    #supporter notifications
+    if @detailAdvice?.status == "PRES" && @user?.permissions?.indexOf("admin") >= 0
+      a href:"/notify/#{adviceRequestID}", -> "notify supporters"
+
     div 'caption', ->
       h4 'grayLabel', -> "#{@detailAdvice.modifiedDate.toString()}"
       p 'adviceRequestText', -> @detailAdvice.adviceRequest
@@ -56,6 +60,7 @@ drawResponseBox = (response, index) ->
           h5 'helpfulLabel', -> 'Helpful! :-)'
         if response?.status != "APPR" && @user?.permissions?.indexOf("admin") >= 0
           a href:"/approve/#{adviceRequestID}/#{index}", -> "approve me"
+
         h4 'text-success', -> response.user.displayName
         h5 'grayLabel', -> "#{response.modifiedDate.toString()}"
         p 'adviceResponseText', -> response.adviceResponse

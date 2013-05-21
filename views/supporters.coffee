@@ -48,6 +48,6 @@ section id:'s4',->
   br ->
   a {class: "btn btn-primary btn-large btn-success",id:"getInvolvedButton", href:"mailto:domo@domo.io?subject=Applying%20to%20Give%20Advice"}, -> 'email us to get involved with Domo'
 
-  p 'currentyBeta', -> "we're currently in beta for the MIT community"
+  p 'currentyBeta', -> "Currently open for the MIT community"
 
 text '</ div>'
