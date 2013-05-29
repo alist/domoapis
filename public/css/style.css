@@ -311,6 +311,13 @@ section#apps .page-header {
   width: 95px;
   margin-top: 5px;
 }
+.hearFromUs {
+  font-size: 18px;
+  display: inline;
+}
+.findOutAboutSupporting {
+  color: #77777d;
+}
 #adviceURL {
   margin-left: 20px;
 }

@@ -21,6 +21,8 @@ section id:'index-about', ->
       a {class: "btn btn-primary btn-large btn-success",id:"giveAdviceButton", href:"/supporters"}, -> 'Give advice'
 
 
-  p 'lead', -> 'Currently open for the MIT community'
+  p 'lead', ->
+    a 'findOutAboutSupporting', href: '/supporters', -> "now inviting supporters"
+    text ' for our second pilot at MIT'
 
 text '</ div>'

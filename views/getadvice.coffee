@@ -56,7 +56,20 @@ coffeescript ->
 
 text '<div class="content container-fluid">'
 
-
+div id: 'domoGetAdviceHolder', ->
+  h1 ->
+     text 'Get advice through Domo'
+     br ->
+  p 'lead', -> 'MIT pilot one ended May 28, 2013'
+  legend -> "We're using all we learned in pilot one to build support communities for trauma, abuse and other areas complementing our support around academic concerns. "
+  p 'hearFromUs', ->
+    text "You'll hear from us again towards the end of summer! "
+  
+  p 'lead hearFromUs', ->
+    a 'findOutAboutSupporting', href: '/supporters', -> "We're now inviting supporters"
+    text ' for our second pilot at MIT.'
+  
+###
 div id: 'domoGetAdviceHolder', ->
   h1 ->
      text 'Get advice through Domo' #hnk
@@ -108,5 +121,6 @@ div class:'hidden', id:'thankYouText', ->
     br ->
     br ->
     a id:'adviceURL', href: '/s', target: '_blank', -> '//ttstsatstatsatsats'
+###
 
 text '</ div>'
