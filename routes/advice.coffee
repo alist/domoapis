@@ -121,7 +121,27 @@ exports.adviceViewWithAdviceToken = (req, res) ->
         console.log "advice find err: #{err}"
         @render index: {err: 'advice not found'}
 
-  
+exports.adviceGETWithAdviceToken = (req, res) ->
+  accessToken = @params.accessToken
+  authToken = @query.authToken
+  if authToken?
+    #pass back the advice if there's a match
+    adviceModel.getAdviceWithAccessAndAuthTokens accessToken, authToken, (err, advice) =>
+      if advice?
+        sanitizedAdvice = adviceModel.sanatizedAdviceForPermission advice,'user'
+        @send {accessToken: accessToken, advice:sanitizedAdvice}
+      else
+        console.log "advice find err: #{err}"
+        @send {err: 'advice not found'}
+  else #authToken == 0
+    #do NOT pass back the access token here
+    adviceModel.getAdviceWithToken accessToken, (err, advice) =>
+      if advice?
+        @send {accessToken: accessToken}
+      else
+        console.log "advice find err: #{err}"
+        @send {err: 'advice not found'}
+ 
 
 exports.getAdviceWithAdviceTokenAndPostedAuthToken = (req, res) ->
   accessToken = @params.accessToken

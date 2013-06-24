@@ -63,6 +63,10 @@ domoApp = require('zappa').app ->
   
   @post '/setadvicehelpful/:accessToken', advice.postAdviceHelpfulWithAdviceTokenAndPostedAuthToken
   
+  #api
+  @get '/apiv1/advice/:accessToken', advice.adviceGETWithAdviceToken
+  @post '/apiv1/advice', advice.getadvice_post
+
   @get '/supporters', supporters.principles_list
   @get '/privacyandterms', privacyTerms.privacyandterms_get
   
