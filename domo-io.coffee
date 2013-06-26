@@ -19,7 +19,8 @@ communicationsModel = require('./model/communications')
 
 `Array.prototype.unique = function() {    var o = {}, i, l = this.length, r = [];    for(i=0; i<l;i+=1) o[this[i]] = this[i];    for(i in o) r.push(o[i]);    return r;};`
 
-domoApp = require('zappa').app ->
+#domoApp = require('zappa').app -> #hnk06/24/2013-
+domoApp = require('zappajs').app -> #hnk06/24/2013+
   mongoose.connect(secrets.mongoDBConnectURLSecret)
   @use 'bodyParser', 'static', 'cookies', 'cookieParser', session: {secret: secrets.sessionSecret}
 
@@ -63,9 +64,14 @@ domoApp = require('zappa').app ->
   
   @post '/setadvicehelpful/:accessToken', advice.postAdviceHelpfulWithAdviceTokenAndPostedAuthToken
   
+
   #api
   @get '/apiv1/advice/:accessToken', advice.adviceGETWithAdviceToken
   @post '/apiv1/advice', advice.getadvice_post
+  
+  @post '/apiv1/advice/advicethankyou/:accessToken', advice.postAdviceThankyouWithAdviceTokenAndPostedAuthToken    #hnk06/25/13+
+  
+  @post '/apiv1/advice/advicerequestclosed/:accessToken', advice.postAdviceRequestClosedWithAdviceToken            #hnk06/25/13+
 
   @get '/supporters', supporters.principles_list
   @get '/privacyandterms', privacyTerms.privacyandterms_get
@@ -87,6 +93,6 @@ domoApp = require('zappa').app ->
   
  
 port = if process.env.PORT > 0 then process.env.PORT else 3000
-domoApp.app.listen port
+#domoApp.app.listen port #to resolve EADDRINUSE error stemming from zappajs and twilio trying to create a webserver simultaneously hnk06/25/13-
 console.log "starting on port # #{port}"
 communicationsModel.comSetup domoApp

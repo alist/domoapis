@@ -1,6 +1,6 @@
-exports.mongoDBConnectURLSecret = 'mongodb://domomain:CvB8KBKd3qH9db@ds033067.mongolab.com:33067/heroku_app15329132'
+exports.mongoDBConnectURLSecret = 'mongodb://domomain:CvB8KBKd3qH9db@dbh62.mongolab.com:27627/heroku_app15761281' #hnk06/25/13 staging 
 
-exports.primaryHost = "oh.domo.io"
+exports.primaryHost = "domo_io_stage.harishnk.c9.io" #hnk06/25/13 staging 
 
 exports.sessionSecret = 'dasds21dkds22as2jsjsad%'
 
