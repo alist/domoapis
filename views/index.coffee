@@ -8,21 +8,27 @@ text '<div class="content-index container-fluid">'
 
 section id:'index-about', ->
   h1 ->
-     text 'Domo brings support with human compassion' #hnk
-  p 'mission', -> 'Help with anxiety, depression, and IHTFP struggles from a group of awesome and peer-selected MIT students who care.'
+     text 'Peer support made superb.' #hnkincreases engagement through 
+  #p 'mission', -> 'Domo is giving people an anonymous way to get Q/A style support for career or personal issues through peers in their business or academic communities.'
+  p 'mission', -> "By engaging existing community members as mentors, Domo minimizes the time taken for new employees and students to become productive, and enables growing organizations to visualize and maintain the culture they'd like their communities to have. "
+  p 'mission', -> "Domo recently finished a pilot for undergraduates at MIT, and is now accepting requests for invitations to our closed Beta."
   br ->
 
   if @redirectURL? #if for example, index is rendered from offer/:id
     script "window.redirectURL = '#{@redirectURL}'"
 
+
+  p ->
+      a {class: "btn btn-primary btn-large btn-success",id:"getAdviceButton", href:"mailto:domo@domo.io"}, -> 'Get in touch'
+      a {class: "btn btn-primary btn-large btn-info",id:"giveAdviceButton", href:"/supporters"}, -> 'Learn about giving advice on Domo'
+###
   p ->
       a {class: "btn btn-primary btn-large btn-success",id:"getAdviceButton", href:"/getadvice"}, -> 'Get advice'
 
       a {class: "btn btn-primary btn-large btn-success",id:"giveAdviceButton", href:"/supporters"}, -> 'Give advice'
 
-
   p 'lead', ->
     a 'findOutAboutSupporting', href: '/supporters', -> "now inviting supporters"
     text ' for our second pilot at MIT'
-
+###
 text '</ div>'
