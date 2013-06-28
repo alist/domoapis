@@ -359,8 +359,16 @@ section#apps .page-header {
   font-size: 17px;
   font-style: italic;
 }
-#giveAdviceButton {
-  margin-left: 10px;
+@media (max-width: 435) {
+  #giveAdviceButton {
+    margin-left: 0px;
+    margin-top: 10px;
+  }
+}
+@media (min-width: 435) {
+  #giveAdviceButton {
+    margin-left: 10px;
+  }
 }
 #content-supporters {
   color: #2b2b30;

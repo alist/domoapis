@@ -11,7 +11,7 @@ section id:'index-about', ->
      text 'Peer support made superb.' #hnkincreases engagement through 
   #p 'mission', -> 'Domo is giving people an anonymous way to get Q/A style support for career or personal issues through peers in their business or academic communities.'
   p 'mission', -> "By engaging existing community members as mentors, Domo minimizes the time taken for new employees and students to become productive."
-  p 'mission', -> "Through tools to analyze and document the annonymous support mentors give, Domo enables growing organizations to visualize and maintain the culture they'd like their communities to have."
+  p 'mission', -> "Through tools to analyze and document the anonymous support mentors give, Domo enables growing organizations to visualize and maintain the culture they'd like their communities to have."
   p 'lead', -> "Domo recently finished a pilot for undergraduates at MIT."
   br ->
 
