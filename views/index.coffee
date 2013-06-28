@@ -10,8 +10,9 @@ section id:'index-about', ->
   h1 ->
      text 'Peer support made superb.' #hnkincreases engagement through 
   #p 'mission', -> 'Domo is giving people an anonymous way to get Q/A style support for career or personal issues through peers in their business or academic communities.'
-  p 'mission', -> "By engaging existing community members as mentors, Domo minimizes the time taken for new employees and students to become productive, and enables growing organizations to visualize and maintain the culture they'd like their communities to have. "
-  p 'mission', -> "Domo recently finished a pilot for undergraduates at MIT, and is now accepting requests for invitations to our closed Beta."
+  p 'mission', -> "By engaging existing community members as mentors, Domo minimizes the time taken for new employees and students to become productive."
+  p 'mission', -> "Through tools to analyze and document the annonymous support mentors give, Domo enables growing organizations to visualize and maintain the culture they'd like their communities to have."
+  p 'lead', -> "Domo recently finished a pilot for undergraduates at MIT."
   br ->
 
   if @redirectURL? #if for example, index is rendered from offer/:id
