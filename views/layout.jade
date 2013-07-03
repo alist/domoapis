@@ -3,10 +3,7 @@
 - if(typeof localScripts === 'undefined')
   - var localScripts = ['/js/jquery.min','/js/bootstrap']
 
-- if(typeof title === 'undefined')
-  - var title = "Domo"
-- else
-  - title += " | Domo"
+block viewVars
 
 !!! 5
 html
@@ -17,8 +14,8 @@ html
     meta(name= "apple-mobile-web-app-capable", content="yes")
     link(rel="icon", type="image/png", href="/icons/favicon.png")
     link(rel="apple-touch-icon", href="/icons/touch-icon.png")
-    //- link(href= "/css/bootstrap-responsive.css", rel= "stylesheet")
-    title #{title}
+    link(href= "/css/bootstrap-responsive.css", rel= "stylesheet")
+    title #{title} | Domo
 
     each s in stylesheets
       link(rel='stylesheet', href='#{s}.css')
@@ -54,7 +51,7 @@ html
     block footer
 
     //- googlz analytiks lolz //
-      script(type="text/javascript")
+      script(type="text/javascript").
         (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
         (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
         m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
