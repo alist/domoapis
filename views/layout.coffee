@@ -74,12 +74,14 @@ body ->
   a href:"mailto:domo@domo.io", -> "domo@domo.io"
   text ' | '
   a href:"/privacyandterms", -> "privacy&terms"
+###
   br ->
-  text 'made by '
+  text ' by '
   a target:'_blank', href:'http://alist.im', -> 'Alex List'
   text ', '
   a target:'_blank', href:'http://hnk.im', -> 'Harish Kamath'
   text ' and the Domo team at MIT'
+###
 
 body ->
   if @scripts
