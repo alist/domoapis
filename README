@@ -1,10 +1,10 @@
-Welcome to TourBus server!
+Welcome to Domo-io server!
 
 Run the app locally with the following 
-coffee tourBus.coffee 
+coffee domo-io.coffee 
 
 Use node-inspector for realtime debugging of the server
-coffee --nodejs --debug tourBus.coffee
+coffee --nodejs --debug domo-io.coffee
 
 run 
 node-inspector 
