@@ -1,0 +1,30 @@
+extends layout
+
+- var title = 'Supporters'
+- var hideToolbar = true
+
+block body
+  div(style="background-color: #fff; background-image: none;")
+    div.content-supporters.container-fluid
+      section#index-about
+        h1 Peer Support Made Superb.
+        p.mission
+          | By engaging existing community members as mentors, Domo minimizes the time taken for new employees and students to become productive. Through tools to analyze and document the anonymous support mentors give, Domo enables growing organizations to visualize and maintain the culture they'd like their communities to have.
+        br
+        
+        p.lead
+          | Domo recently finished a pilot for undergraduates at MIT.
+        br
+
+        - if(typeof redirectURL !== 'undefined')
+          //- if for example, index is rendered from offer/:id
+          script(type="text/javascript").
+            window.redirectURL = '#{redirectURL}'
+
+        p
+          a#getAdviceButton.btn.btn-primary.btn-large.btn-success(href="/getadvice") Get advice
+          a#giveAdviceButton.btn.btn-primary.btn-large.btn-success(href="/supporters") Give advice
+
+        p.lead
+          a.findOutAboutSupporting(href='/supporters')
+          | now inviting supporters for our second pilot at MIT

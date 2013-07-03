@@ -1,0 +1,25 @@
+extends layout
+
+block body
+  div.row
+    div#login-form.container-fluid
+      form(method='post')
+        h3 #{title}
+        div.divider.row
+          div.columns
+            include includes/errors
+        div.row
+          div.columns
+            input(type='text', name='username', maxlength=96, placeholder='Username')
+        div.row
+          div.columns
+            input(type='text', name='email', maxlength=96, placeholder='E-mail addreess')
+        div.row
+          div.columns
+            input(type='text', name='skills', maxlength=96, placeholder='Skills')
+        div.row
+          div.columns
+            input(type='password', name='password', maxlength=64, placeholder='Password')
+        div.row
+          div.columns
+            input(type='submit', class='medium success button radius', value='Register') Register

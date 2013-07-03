@@ -33,7 +33,8 @@ domoApp = require('zappajs').app -> #hnk06/24/2013+
     if @request.headers['host'] == '127.0.0.1:3000' || @request.headers['host'] == 'localhost:3000'
       @next()
     else if @request.headers['x-forwarded-proto']!='https'
-      @redirect "#{hostURL}#{@request.url}"
+      @next()
+      #@redirect "#{hostURL}#{@request.url}"
     else
       @next()
 
@@ -64,6 +65,7 @@ domoApp = require('zappajs').app -> #hnk06/24/2013+
   
   @post '/setadvicehelpful/:accessToken', advice.postAdviceHelpfulWithAdviceTokenAndPostedAuthToken
   
+  @post '/inviterequest', home.postInviteRequest                                                                  #hnk06/26/2013+
 
   #api
   @get '/apiv1/advice/:accessToken', advice.adviceGETWithAdviceToken
@@ -72,6 +74,8 @@ domoApp = require('zappajs').app -> #hnk06/24/2013+
   @post '/apiv1/advice/advicethankyou/:accessToken', advice.postAdviceThankyouWithAdviceTokenAndPostedAuthToken    #hnk06/25/13+
   
   @post '/apiv1/advice/advicerequestclosed/:accessToken', advice.postAdviceRequestClosedWithAdviceToken            #hnk06/25/13+
+  
+  @post '/apiv1/home/inviterequest/:emailAddress', home.postInviteRequest                                          #hnk06/26/13+
 
   @get '/supporters', supporters.principles_list
   @get '/privacyandterms', privacyTerms.privacyandterms_get
