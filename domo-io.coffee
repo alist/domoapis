@@ -88,6 +88,9 @@ domoApp = require('zappajs').app -> #hnk06/24/2013+
   
   @get '/getloginurl', auth.shortLoginURLForCurrentUser
 
+  @get '/login', -> @render 'login.jade':{}
+ 
+
   @get '/users', auth.userslist_get
   @get '/users/:id', auth.usersdetail_get
   @post '/users', auth.users_post

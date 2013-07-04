@@ -2,7 +2,7 @@ inviteRequestModel = require('../model/inviterequest')
 
 exports.home = (req, res) ->
   #@render index: {}
-  @render 'index.jade', layout: 'layout.jade'
+  @render 'index.jade'
 
 exports.postInviteRequest = (req, res) ->
   emailAddress = req.body.emailAddress
