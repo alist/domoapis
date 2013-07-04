@@ -76,11 +76,10 @@ h5 {
 .darkGreenLabel {
   color: #1b9e36;
 }
-body,
 html {
   height: 100%;
 }
-#supermom {
+body {
   height: 100%;
   font-family: 'Arimo', 'Helvetica Neue';
   background-color: #f0f0f0;

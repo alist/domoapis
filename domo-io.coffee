@@ -16,6 +16,7 @@ _ = require('underscore')
 
 home = require('./routes/home')
 advice = require('./routes/advice')
+organization = require('./routes/organization')
 privacyTerms = require('./routes/privacyandterms')
 auth = require './routes/auth'
 redirstat = require('./routes/redirstat')
@@ -117,8 +118,10 @@ domoApp = require('zappajs').app -> #hnk06/24/2013+
       username: ""
       error: req.flash("error")###
       
-  @get '/login', ->
-    @render 'login.jade', layout: 'layout.jade'
+  ###@get '/login', ->
+    @render 'login.jade', layout: 'layout.jade'###
+    
+  @get '/login', -> @render 'login.jade':{}    
 
   @post "/login", passport.authenticate("local",
       failureRedirect: "/login"
@@ -149,7 +152,9 @@ domoApp = require('zappajs').app -> #hnk06/24/2013+
   
   @post '/setadvicehelpful/:accessToken', advice.postAdviceHelpfulWithAdviceTokenAndPostedAuthToken
   
-  @post '/inviterequest', home.postInviteRequest                                                                  #hnk06/26/2013+
+  @get '/organizations', organization.displayOrgs_get
+
+  @post '/inviterequest', home.postInviteRequest #hnk06/26/2013+
 
   #api
   @get '/apiv1/advice/:accessToken', advice.adviceGETWithAdviceToken

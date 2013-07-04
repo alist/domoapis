@@ -33,7 +33,7 @@ html
     block head
 
 
-  body
+  body(style= bodyStyle)
 
     - if(typeof hideToolbar !== 'undefined' && !hideToolbar)
       include includes/toolbar
