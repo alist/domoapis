@@ -11,22 +11,27 @@ ObjectId = mongoose.SchemaTypes.ObjectId
 UserSchema = new Schema {
   modifiedDate: {type: Date, index: {unique: false}}
   displayName: String
-  imageURI: String
   userID: {type: String, required: true, index: {unique: true}}
 
   token: {type: String}
-  
+
+  roles: [String] # supporter, supportee, admin, pointperson,reporter,omnipotent
+  organizationID: String
+  supportAreas: [{identifier: String, name: String}]
+
+  #need to: unify the coms system 
+
+  # cleanup, cleanup everybody everywhere
   isAdmin: {type: Boolean}
   permissions: [{type: String}]
-
+  imageURI: String
   activeSessionIDs: [ {type: String, index: {unique: true}} ]
   telephoneNumber: {type: String, index: {unique: false}}
-  telephoneVerifyDate: {type: Date}
+  telephoneVerifyDate: {type: Date} 
   telephoneNumberVerifyAttemptCount: {type: Number}
   telelphoneVerifyCode: {type: String}
-  messageCount: {type: Number}
-  overIntervalMessageAllowanceCount: {type: Number}
-
+  messageCount: {type: Number} #how many msgs they've received
+  overIntervalMessageAllowanceCount: {type: Number} #how many msgs allowed to be sent past the notification interval
   lastNotificationDate: {type: Date, index: {unique: false}}
   notificationInterval: {type: Number}
 }
