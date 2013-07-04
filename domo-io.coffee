@@ -111,17 +111,17 @@ domoApp = require('zappajs').app -> #hnk06/24/2013+
       email: ""
 
   
-  ###@get "/login", (req, res) ->
-    return Response(req, res).redirect("/")  if req.isAuthenticated()
-    Response(req, res).render "login.jade",
+  @get '/login', (req, res) ->
+    return Response(req, res).redirect('/')  if req.isAuthenticated()
+    Response(req, res).render 'login.jade',
       title: "Login"
       username: ""
-      error: req.flash("error")###
+      error: req.flash("error")
       
   ###@get '/login', ->
     @render 'login.jade', layout: 'layout.jade'###
     
-  @get '/login', -> @render 'login.jade':{}    
+  #@get '/login', -> @render 'login.jade':{}    
 
   @post "/login", passport.authenticate("local",
       failureRedirect: "/login"

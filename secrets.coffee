@@ -17,7 +17,7 @@ exports.mailConfig =
   auth:
     user: "harishnkamath@gmail.com"
     pass: "hwbo21j81"
-  from: "\"Domo \" <domo@domo.io>"
+  from: "\"Domo \" <harishnkamath@gmail.com>"
   adminEmails: [ 'alex@domo.io', 'harish@domo.io' ]
   
 exports.config = env:
