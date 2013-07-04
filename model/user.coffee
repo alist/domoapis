@@ -16,7 +16,7 @@ UserSchema = new Schema {
   token: {type: String}
 
   roles: [String] # supporter, supportee, admin, pointperson,reporter,omnipotent
-  organizationID: String
+  organization: {type: ObjectId, ref: 'Organization'}
   supportAreas: [{identifier: String, name: String}]
 
   #need to: unify the coms system 
