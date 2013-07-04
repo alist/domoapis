@@ -40,16 +40,16 @@ html
 
     block body
     
-  footer
-    a(href="mailto:domo@domo.io") domo@domo.io
-    |  | 
-    a(href="/privacyandterms") privacy &amp; terms
+    footer
+      a(href="mailto:domo@domo.io") domo@domo.io
+      |  | 
+      a(href="/privacyandterms") privacy &amp; terms
 
-  - if(typeof scripts !== 'undefined')
-    each s in scripts
-      script(src='#{s}.js').
+    - if(typeof scripts !== 'undefined')
+      each s in scripts
+        script(src='#{s}.js').
 
-    block footer
+      block footer
 
     //- googlz analytiks lolz //
       script(type="text/javascript").
