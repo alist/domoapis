@@ -5,9 +5,15 @@
 
 block viewVars
 
+- if(typeof title === 'undefined')
+  - var title = "Domo"
+- else
+  - title += " | Domo"
+
 !!! 5
 html
   head
+    title #{title}      
     meta(charset="utf-8")
     meta(name="copyright", content="ExoMachina, Inc. ExoMachina.com")
     meta(name="viewport", content="width=device-width, initial-scale=1.0, user-scalable = no")
@@ -36,18 +42,12 @@ html
       a(href="mailto:domo@domo.io") domo@domo.io
       |  | 
       a(href="/privacyandterms") privacy &amp; terms
-      br
-      | made by 
-      a(target='_blank', href='http://alist.im') Alex List
-      | , 
-      a(target='_blank', href='http://hnk.im') Harish Kamath
-      |  and the Domo team at MIT
 
     - if(typeof scripts !== 'undefined')
       each s in scripts
-        script(src='#{s}.js')
+        script(src='#{s}.js').
 
-    block footer
+      block footer
 
     //- googlz analytiks lolz //
       script(type="text/javascript").

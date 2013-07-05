@@ -3,6 +3,17 @@ primaryHost = secrets.primaryHost
 hostURL = "https://#{primaryHost}"
 request = require 'request'
 
+#hnk07/03/2013+{
+flash = require('connect-flash')
+Validator = require('validator').Validator
+passport = require('passport')
+LocalStrategy = require('passport-local').Strategy
+Utils = require('./lib/utils')
+Response = Utils.Response
+ResponseStatus = Utils.ResponseStatus
+_ = require('underscore')
+#hnk07/03/2013+}
+
 home = require('./routes/home')
 advice = require('./routes/advice')
 organization = require('./routes/organization')
@@ -18,15 +29,61 @@ Schema = mongoose.Schema
 
 communicationsModel = require('./model/communications')
 
+#hnk07/03/2013+{
+SupporterAccountController = require("./controller/useraccount")["SupporterAccountController"]
+
+configureAuth = ->
+  passport.use new LocalStrategy(
+    passReqToCallback: true
+  , (req, username, password, done) ->
+    SupporterAccountController.auth username, password, done
+  )
+  passport.serializeUser (user, done) ->
+    done null, user
+
+  passport.deserializeUser (user, done) ->
+    SupporterAccountController.findUserById user.id, (err, user) ->
+      done err, user
+
+configureValidator =->
+    Validator::error = (msg) ->
+      @_errors.push msg  unless _.contains(@_errors, msg)
+      this
+    
+    Validator::getErrors = ->
+      @_errors
+
+sessionCheck = (req, res, next) ->
+  return next()   if typeof req.user isnt "undefined"
+  Response(req, res).redirect ResponseStatus.BAD_REQUEST, "/login",
+    message: "You need to authenticate successfully to access this resource."
+#hnk07/03/2013+}
+
 `Array.prototype.unique = function() {    var o = {}, i, l = this.length, r = [];    for(i=0; i<l;i+=1) o[this[i]] = this[i];    for(i in o) r.push(o[i]);    return r;};`
 
 #domoApp = require('zappa').app -> #hnk06/24/2013-
 domoApp = require('zappajs').app -> #hnk06/24/2013+
   mongoose.connect(secrets.mongoDBConnectURLSecret)
-  @use 'bodyParser', 'static', 'cookies', 'cookieParser', session: {secret: secrets.sessionSecret}
-  @set 'view engine': 'jade'
+  
+  #hnk07/03/2013+{
+  @use @express.static(__dirname + '/public'),
+    @express.cookieParser(),
+    @express.bodyParser(),
+    @express.session({secret: secrets.sessionSecret}),
+    passport.initialize(),
+    passport.session(),
+    flash(),
+    @express.methodOverride()
 
-  crypto = require('crypto')
+  @set 'view engine': 'jade'
+  
+  @locals.pretty = true
+  
+  configureAuth()
+  configureValidator()
+  #hnk07/03/2013+}###
+  
+  crypto = require('crypto') #hnk07/03/2013-
  
   @get '/', home.home
   
@@ -44,6 +101,34 @@ domoApp = require('zappajs').app -> #hnk06/24/2013+
   @get '/getadvice', advice.form
 
   @post '/getadvice', advice.getadvice_post
+  
+  #hnk07/03/2013+{
+  @post "/register", SupporterAccountController.register.bind(SupporterAccountController)
+  @get "/register", (req, res) ->
+    return Response(req, res).redirect("/")  if req.isAuthenticated()
+    Response(req, res).render "register.jade",
+      title: "Register"
+      email: ""
+
+  
+  @get '/login', (req, res) ->
+    return Response(req, res).redirect('/')  if req.isAuthenticated()
+    Response(req, res).render 'login.jade',
+      title: "Login"
+      username: ""
+      error: req.flash("error")
+      
+  ###@get '/login', ->
+    @render 'login.jade', layout: 'layout.jade'###
+    
+  #@get '/login', -> @render 'login.jade':{}    
+
+  @post "/login", passport.authenticate("local",
+      failureRedirect: "/login"
+      failureFlash: true
+    ), (req, res) ->
+      Response(req, res).redirect "/"
+  #hnk07/03/13+}
   
   @get '/giveadvice', advice.advice_pending
   @get '/giveadvice/admin', advice.advice_pending
@@ -88,9 +173,6 @@ domoApp = require('zappajs').app -> #hnk06/24/2013+
   @get '/urllogin/:token', auth.urlLogin_get
   
   @get '/getloginurl', auth.shortLoginURLForCurrentUser
-
-  @get '/login', -> @render 'login.jade':{}
- 
 
   @get '/users', auth.userslist_get
   @get '/users/:id', auth.usersdetail_get
