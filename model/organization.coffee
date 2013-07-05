@@ -6,9 +6,14 @@ Schema = mongoose.Schema
 ObjectId = mongoose.SchemaTypes.ObjectId
 
 OrganizationSchema = new Schema {
+  orgURL: {type: String, index: {unique: true}}
   createdDate: {type: Date, index: {unique: false}}
-  permissions: [{role: String, functionality:[String]}] #
+  displayName: String
+  permissions: [{role: String, functionality:[String]}]
+  authCodes: [{code: String, validUntil: Date}]
   supportAreas: [{identifier: String, name: String}]
+  usageDescription: String
+  bannerURL: String
   escalationContact: {name: String, phone: String, email: String}
 }
 
@@ -17,5 +22,9 @@ exports.Organization = Organization
 
 
 exports.allOrganizations = (callback) -> #callback(organizations,error)
-  Organization.find {}, {}, (orgs, err) ->
+  Organization.find {}, {}, (err, orgs) =>
     callback orgs, err
+ 
+exports.organizationWithOrgURL = (orgURL, callback) -> #callback(organization,error)
+  Organization.findOne {orgURL : orgURL}, (err, org) =>
+    callback org, err

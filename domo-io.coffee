@@ -24,6 +24,7 @@ communicationsModel = require('./model/communications')
 domoApp = require('zappajs').app -> #hnk06/24/2013+
   mongoose.connect(secrets.mongoDBConnectURLSecret)
   @use 'bodyParser', 'static', 'cookies', 'cookieParser', session: {secret: secrets.sessionSecret}
+  @set 'view engine': 'jade'
 
   crypto = require('crypto')
  
@@ -97,6 +98,8 @@ domoApp = require('zappajs').app -> #hnk06/24/2013+
   @post '/users/:id', auth.usersdetail_post
 
   @get '/x/*', shorturl.unShortenRedir
+
+  @get '/:org', organization.landing_get
 
   @get '*', (req, res)->
     @redirect '/'

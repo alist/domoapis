@@ -27,7 +27,7 @@ UserSchema = new Schema {
   imageURI: String
   activeSessionIDs: [ {type: String, index: {unique: true}} ]
   telephoneNumber: {type: String, index: {unique: false}}
-  telephoneVerifyDate: {type: Date} 
+  telephoneVerifyDate: {type: Date}
   telephoneNumberVerifyAttemptCount: {type: Number}
   telelphoneVerifyCode: {type: String}
   messageCount: {type: Number} #how many msgs they've received
