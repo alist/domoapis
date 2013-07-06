@@ -21,7 +21,7 @@ var UserController = function(userType) {
 UserController.prototype.register = function(req, res){
   var newUserAttrs = _.pick(req.body, ['username', 'password', 'email', 'skills']);
   var validator = new Validator();
-  validator.check(newUserAttrs.username, 'Invalid username address').len(6, 64);
+  //validator.check(newUserAttrs.username, 'Invalid username address').len(6, 64);
   validator.check(newUserAttrs.email, 'Invalid e-mail address').len(6, 64).isEmail();
   validator.check(newUserAttrs.password, 'Invalid password').len(5, 64);
 
