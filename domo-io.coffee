@@ -166,6 +166,8 @@ domoApp = require('zappajs').app -> #hnk06/24/2013+
   
   @post '/apiv1/home/inviterequest/:emailAddress', home.postInviteRequest                                          #hnk06/26/13+
 
+  @post '/apiv1/organizations/codeAuth', organization.postCodeAuth
+
   @get '/supporters', supporters.principles_list
   @get '/privacyandterms', privacyTerms.privacyandterms_get
   
@@ -182,6 +184,7 @@ domoApp = require('zappajs').app -> #hnk06/24/2013+
   @get '/x/*', shorturl.unShortenRedir
 
   @get '/:org', organization.landing_get
+  @get '/:org/getadvice', organization.adviceForm_get
 
   @get '*', (req, res)->
     @redirect '/'
