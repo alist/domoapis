@@ -10,7 +10,8 @@ block body
 
   .content.container-fluid
     section#index-about
-      h1= organization.displayName
+      a(href="/#{organization.orgURL}")
+        h1= organization.displayName
       #codeInputDiv
         form(method="GET", action="#",onsubmit='window.submitPressed.apply(); return false') 
           p.codePrompt Please enter your organization's code
