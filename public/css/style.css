@@ -36,7 +36,7 @@
 footer {
   margin-top: 30px;
   text-align: center;
-  margin-bottom: 5px;
+  padding-bottom: 5px;
   color: #57575b;
   font-size: 13px;
 }
@@ -54,6 +54,7 @@ a:active {
 }
 h1 {
   line-height: 1.2;
+  font-weight: normal;
 }
 h1 small {
   line-height: 1.2;
@@ -81,7 +82,7 @@ html {
 }
 body {
   height: 100%;
-  font-family: 'Arimo', 'Helvetica Neue';
+  font-family: 'Helvetica-Light', 'Arimo', 'Helvetica Neue';
   background-color: #f0f0f0;
   background-image: url("/img/patternsquare_green.png");
   background-repeat: repeat;
@@ -334,6 +335,19 @@ section#apps .page-header {
   font-family: inherit;
   text-rendering: optimizelegibility;
 }
+#codeInputDiv {
+  max-width: 600px;
+  margin-right: auto;
+  margin-left: auto;
+  text-align: center;
+}
+#organizationCodeInput {
+  line-height: 40px;
+  height: 79px;
+  font-size: 35px;
+  text-align: center;
+  width: 260px;
+}
 #adviceContactInput {
   height: 30px;
   width: 95px;
@@ -374,15 +388,13 @@ section#apps .page-header {
   font-weight: normal;
   color: #999;
 }
-@media (max-width:420px) {
-  #index-about .mission {
-    line-height: 1.2;
-  }
-  #index-about h1 {
-    line-height: 1.2;
-    margin-top: -8px;
-  }
-}
+/* @media (max-width:420px)
+  #index-about
+   .mission
+    line-height 1.2
+   h1
+    line-height 1.2
+*/
 .lead {
   font-size: 17px;
   font-style: italic;

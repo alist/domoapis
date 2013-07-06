@@ -1,7 +1,7 @@
 extends layout
 
 block viewVars
-  -var title = 'Organization'
+  -var title = organization.displayName
 
 block body
   include includes/toolbar  
@@ -17,5 +17,5 @@ block body
       br
 
       p
-        a#getAdviceButton.btn.btn-primary.btn-large.btn-success(href="/getadvice") Get advice
+        a#getAdviceButton.btn.btn-primary.btn-large.btn-success(href="/#{organization.orgURL}/getadvice") Get advice
         a#giveAdviceButton.btn.btn-primary.btn-large.btn-success(href="/supporters") Give advice

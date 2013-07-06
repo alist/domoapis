@@ -44,7 +44,7 @@ dLightGray = #999;
 footer
   margin-top 30px
   text-align center
-  margin-bottom 5px
+  padding-bottom 5px
   color dGray
   font-size 13px
 a
@@ -59,6 +59,7 @@ a
 
 h1
  line-height 1.2
+ font-weight normal
  small
   line-height 1.2
   text-transform none
@@ -82,7 +83,7 @@ html
 
 body
  height 100%
- font-family 'Arimo', 'Helvetica Neue'
+ font-family 'Helvetica-Light', 'Arimo', 'Helvetica Neue'
  background-color #f0f0f0;
  background-image url("/img/patternsquare_green.png")
  background-repeat repeat
@@ -310,6 +311,19 @@ section#apps
  text-rendering: optimizelegibility;
 
 //getadvice
+#codeInputDiv
+ max-width 600px
+ margin-right auto
+ margin-left auto
+ text-align center
+
+#organizationCodeInput
+ line-height 40px
+ height 79px
+ font-size 35px
+ text-align center
+ width 260px
+
 #adviceContactInput
   height 30px
   width 95px
@@ -348,13 +362,14 @@ section#apps
   font-size: 24px;
   font-weight: normal;
   color: #999;
-@media (max-width:420px)
- #index-about
-  .mission
-   line-height 1.2
-  h1
-   line-height 1.2
-   margin-top -8px
+
+/* @media (max-width:420px)
+  #index-about
+   .mission
+    line-height 1.2
+   h1
+    line-height 1.2
+*/
 
 .lead
  font-size 17px

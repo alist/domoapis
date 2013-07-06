@@ -1,0 +1,22 @@
+extends layout
+
+block viewVars
+  -var title = "Get Advice - #{organization.displayName}"
+
+block body
+  include includes/toolbar  
+  .organizationHeader
+    .organizationBG(style=" background-image: url( #{organization.bannerURL} );")
+
+  .content.container-fluid
+    section#index-about
+      h1= organization.displayName
+      #codeInputDiv
+        form(method="GET", action="#",onsubmit='window.submitPressed.apply(); return false') 
+          p.codePrompt Please enter your organization's code
+          input#organizationCodeInput(type="text", placeholder="code!")
+          br
+          input.btn.btn-large.btn-success(type= "submit", style= 'margin-top: 5px; width: 100px;')
+        p.lead
+          | It's on the flyers! Check with someone your organization if you've misplaced it!
+
