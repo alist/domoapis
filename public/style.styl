@@ -105,8 +105,8 @@ section#apps
 
 .header
   height 60px
-  background-color #F8F8F8
-  border-bottom-color #E0E0E0
+  background linear-gradient(top, #fff 0%, #f9f9f9 49%, #f2f2f2 51%, #F8F8F8 100%)
+  border-bottom-color rgb(206, 206, 206)
   border-bottom-style solid
   border-bottom-width 1px
 
@@ -119,6 +119,26 @@ section#apps
  line-height 35px
 
  text-shadow 0px 2px 7px #000000
+
+.organizationHeader
+ width 100%
+ height 270px
+ border-bottom-color #E1E1E1
+ border-bottom-style solid
+ border-bottom-width 3px
+ border-top-color #EBEBEB
+ border-top-style solid
+ border-top-width 0px
+ background-color rgba(0, 0, 0, 1)
+
+.organizationBG
+ height 100%
+ max-width 1400px
+ margin auto
+ background-size cover 
+ background-position center 0px
+ background-repeat no-repeat
+
 
 .contentHeaderBG
  background-color #F0F0F0 
@@ -340,6 +360,8 @@ section#apps
  font-size 17px
  font-style italic
 
+#giveAdviceButton
+  margin-left 10px
 
 @media (max-width: 435)
   #giveAdviceButton

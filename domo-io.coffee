@@ -75,14 +75,14 @@ domoApp = require('zappajs').app -> #hnk06/24/2013+
     flash(),
     @express.methodOverride()
 
-  @locals.pretty = true 
+  @set 'view engine': 'jade'
+  
+  @locals.pretty = true
   
   configureAuth()
-  configureValidator()  
+  configureValidator()
   #hnk07/03/2013+}###
   
-  #@use 'bodyParser', 'static', 'cookies', 'cookieParser', session: {secret: secrets.sessionSecret}
-
   crypto = require('crypto') #hnk07/03/2013-
  
   @get '/', home.home
@@ -180,6 +180,8 @@ domoApp = require('zappajs').app -> #hnk06/24/2013+
   @post '/users/:id', auth.usersdetail_post
 
   @get '/x/*', shorturl.unShortenRedir
+
+  @get '/:org', organization.landing_get
 
   @get '*', (req, res)->
     @redirect '/'
