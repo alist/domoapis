@@ -300,6 +300,28 @@ section#apps .page-header {
   -moz-border-radius: 50%;
   border-radius: 50%;
 }
+#betaEmailUserIcon {
+  background-image: url("");
+  background-repeat: no-repeat;
+  background-position: center;
+}
+#betaEmailInput {
+  max-width: 210px;
+}
+#getAboardBeta {
+  text-align: center;
+}
+#loveit {
+  background-color: rgba(200,200,200,0.10);
+  padding: 10px;
+}
+.loveitHeader {
+  font-size: 17pt;
+  margin-bottom: 5px;
+}
+.loveitReason {
+  font-size: 14pt;
+}
 .helpfulLabel {
   float: right;
   margin-top: 0;
