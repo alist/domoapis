@@ -11,14 +11,20 @@ exports.twilioAppToken = 'AP27f9fc11c73b07373582c10f8cc2cffc'
 exports.userTypes = ["supportee", "supporter", "adopter", "moduleadmin", "admin"]
 
 exports.mailConfig =
-  host: "smtp.google.com"
+  host: "smtp.sendgrid.net"
   port: 587
   secureConnection: false
   auth:
-    user: "harishnkamath@gmail.com"
-    pass: "hwbo21j81"
-  from: "\"Domo \" <harishnkamath@gmail.com>"
+    user: "domo@domo.io"
+    pass: "d0m0 is c##l"
+  from: "\"Domo \" <domo@domo.io>"
   adminEmails: [ 'alex@domo.io', 'harish@domo.io' ]
+  
+###exports.SendGridConfig = 
+    user: 'domo@domo.io'
+    key: 'd0m0 is c##l'
+    optionalParams:
+      smtpapi: new SmtpapiHeaders()###     
   
 exports.config = env:
   port: 8080  

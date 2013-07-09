@@ -18,8 +18,9 @@ var oauthIdenSchema = new Schema({
 
 function newUserSchema(){
   return new Schema({
-      id: { type: String, required: true, index: false },
-      username: { type: String, required: true, lowercase: true, trim: true, index: false },
+      id: { type: String, required: false, index: false },
+      userID: { type: String, required: true, index: false },
+      username: { type: String, required: false, lowercase: false, trim: true, index: false },
       password: { type: String, trim: true },
       recoverPasswordHash: { type: String, trim: true },
       recoverPasswordExpiry: { type: Date },
@@ -84,9 +85,10 @@ function attachMethods(userSchema){
 
         var UserModel = getUserModel(userType);
         var newUser = new UserModel();
-        newUser.username = newUserAttrs.username;
+        //newUser.username = newUserAttrs.username;
         newUser.email = newUserAttrs.email;
-        newUser.profile.skills = newUserAttrs.skills;
+        newUser.userID = newUser.email;
+        //newUser.profile.skills = newUserAttrs.skills;
 
         // id = username for non-OAuth user (id = uniqueId on external network for OAuth user)
         newUser.id = newUser.username;
@@ -203,7 +205,7 @@ function attachMethods(userSchema){
         var lookupQuery = {};
 
         if('string' === typeof lookup){
-            lookupQuery.username = lookup;
+            lookupQuery.email = lookup;
         } else if('object' === typeof lookup){
             lookupQuery = lookup;
         } else {
