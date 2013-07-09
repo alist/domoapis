@@ -154,8 +154,6 @@ domoApp = require('zappajs').app -> #hnk06/24/2013+
   
   @get '/organizations', organization.displayOrgs_get
 
-  @post '/inviterequest', home.postInviteRequest #hnk06/26/2013+
-
   #api
   @get '/apiv1/advice/:accessToken', advice.adviceGETWithAdviceToken
   @post '/apiv1/advice', advice.getadvice_post
@@ -164,7 +162,7 @@ domoApp = require('zappajs').app -> #hnk06/24/2013+
   
   @post '/apiv1/advice/advicerequestclosed/:accessToken', advice.postAdviceRequestClosedWithAdviceToken            #hnk06/25/13+
   
-  @post '/apiv1/home/inviterequest/:emailAddress', home.postInviteRequest                                          #hnk06/26/13+
+  @post '/apiv1/inviterequest', home.postInviteRequest                                          #hnk06/26/13+
 
   @post '/apiv1/organizations/codeAuth', organization.postCodeAuth
 

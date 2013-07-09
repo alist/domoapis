@@ -22,17 +22,16 @@ exports.InviteRequest = InviteRequest
 mongoose.connect(secrets.mongoDBConnectURLSecret)
 
 exports.setEmailAddress = (emailAddress, callback) -> #callback(err)
-  if emailAddress.length > 0
+  if emailAddress?.length > 0
     inviteRequest = new InviteRequest {emailAddress: emailAddress, invitedOn: new Date() }
     inviteRequest.save (err) ->
       if err?
         callback err
       else
-        comsModel.notifyAllUsersOfPermission 'marketing',"new invite request from #{emailAddress}", (err) ->
+        callback null
+        #this doesn't need to be w/in the error handling
+        comsModel.notifyAllUsersOfPermission 'superhuman',"new invite request from #{emailAddress}", (err) ->
           if err?
-            console.log "notified everyone who's admin with err #{err}"
-            callback err
-          else
-            callback null
+            console.log "error notifying with err #{err}"
   else
     callback "empty email address"

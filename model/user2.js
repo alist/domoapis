@@ -46,7 +46,7 @@ function newUserSchema(){
 
       joined: { type: Date, default: Date.now },
       lastUpdated: { type: Date, default: Date.now }
-  });
+    });
 }
 
 function attachMethods(userSchema){
@@ -270,7 +270,6 @@ function buildUserSchema(userType){
 
 
 var models = {};
-
 
 module.exports = function(userType){
     if(userTypes.indexOf(userType) < 0){

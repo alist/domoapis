@@ -31,8 +31,9 @@ block body
       if email.indexOf('@') != -1 && email.substr(email.indexOf('@')+1).indexOf('.') != -1
         console.log "submitting good email #{email}"
         window.setupSubmitting()
-        $.post("/inviterequest", {emailAddress: email}, (response)=>
-          if response?.status != "success" || response?.emailAddress? == false
+        $.post("/apiv1/inviterequest", {emailAddress: email}, (response)=>
+          console.log response
+          if response?.status != "success" 
             window.setupFailedSubmit()
           else
             window.setupSubmitSuccess()
@@ -51,9 +52,10 @@ block body
 
     window.setupSubmitSuccess = () ->
       $('#emailInputRow').fadeOut()
+      $('#submitStatus').removeClass('hidden')
       $('#submitStatus').removeClass('text-warning')
       $('#submitStatus').addClass('text-info')
-      $('#submitStatus').text "Great! We'll try to let you on ASAP."
+      $('#submitStatus').text "Great. We can't let everyone in yet, but we'll send your invite as soon as we can!"
 
   .contentHeaderBG
     .contentHeader

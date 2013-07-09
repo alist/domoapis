@@ -6,23 +6,11 @@ exports.home = (req, res) ->
 
 exports.postInviteRequest = (req, res) ->
   emailAddress = req.body.emailAddress
-  console.log "hit post method"
-  console.log emailAddress
   inviteRequestModel.setEmailAddress emailAddress, (err) =>
-    console.log err
     if err? == false
+      console.log "added email address of #{emailAddress}"
       @send {status: 'success'}
     else
       console.log "couldn't set email address: #{emailAddress} w/ err #{err}"
       @send {status: 'bad'}
       
-exports.registerInviteRequest = (req, res) ->
-  emailAddress = @params.emailAddress
-  console.log emailAddress
-  inviteRequestModel.setEmailAddress emailAddress, (err) =>
-    console.log err
-    if err? == false
-      @send {status: 'success'}
-    else
-      console.log "couldn't set email address: #{emailAddress} w/ err #{err}"
-      @send {status: 'bad'}

@@ -1,6 +1,6 @@
 secrets = require ('../secrets')
 #userModel = require('./user')
-userModel = require('./user2')
+userModel = require('./user')
 twilioClient = require('twilio').Client
 Twiml = require 'twilio/lib/twiml'
 

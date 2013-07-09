@@ -17,7 +17,8 @@ coffeescript ->
 
     emailAddress = $('#emailAddressInput').val()
 
-    $.post("/inviterequest", {emailAddress: emailAddress}, (response)=>
+    $.post("/apiv1/inviterequest", {emailAddress: emailAddress}, (response)=>
+      console.log response
       if response?.status != "success" || response?.emailAddress? == false
         errorAction()
       else
