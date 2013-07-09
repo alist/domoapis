@@ -305,8 +305,15 @@ section#apps .page-header {
   background-repeat: no-repeat;
   background-position: center;
 }
-#betaEmailInput {
-  max-width: 210px;
+@media (max-width: 479px) {
+  #betaEmailInput {
+    width: 129px;
+  }
+}
+@media (min-width: 480px) {
+  #betaEmailInput {
+    width: 210px;
+  }
 }
 #getAboardBeta {
   text-align: center;

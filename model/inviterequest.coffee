@@ -28,7 +28,7 @@ exports.setEmailAddress = (emailAddress, callback) -> #callback(err)
       if err?
         callback err
       else
-        comsModel.notifyAllUsersOfPermission 'admin',"new invite request from #{emailAddress}", (err) ->
+        comsModel.notifyAllUsersOfPermission 'marketing',"new invite request from #{emailAddress}", (err) ->
           if err?
             console.log "notified everyone who's admin with err #{err}"
             callback err

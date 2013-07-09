@@ -18,13 +18,42 @@ block body
 
     window.updateDomainIcon = (domain) ->
       $($('#betaEmailUserIcon').children()[0]).addClass('hidden')
-      $('#joinButton').removeClass('disabled')
+      $('#submitButton').removeClass('disabled')
       $('#betaEmailUserIcon').attr('style', "background-image : url('https://plus.google.com/_/favicon?domain=#{domain}');")
 
     window.resetDomainIcon = (domain) ->
       $($('#betaEmailUserIcon').children()[0]).removeClass('hidden')
-      $('#joinButton').addClass('disabled')
+      $('#submitButton').addClass('disabled')
       $('#betaEmailUserIcon').attr('style', "background-image : url('');")
+
+    window.submitPressed = () ->
+      email = $('#betaEmailInput').val()
+      if email.indexOf('@') != -1 && email.substr(email.indexOf('@')+1).indexOf('.') != -1
+        console.log "submitting good email #{email}"
+        window.setupSubmitting()
+        $.post("/inviterequest", {emailAddress: email}, (response)=>
+          if response?.status != "success" || response?.emailAddress? == false
+            window.setupFailedSubmit()
+          else
+            window.setupSubmitSuccess()
+        ).error(window.setupFailedSubmit)
+      else
+        return
+    window.setupSubmitting = () ->
+      $('#submitButton').addClass('disabled')
+      $('#submitStatus').addClass('hidden')
+
+    window.setupFailedSubmit = () ->
+      $('#submitButton').removeClass('disabled')
+      $('#submitStatus').removeClass('hidden')
+      $('#submitStatus').text "Whoops, our bad-- we're on it."
+
+
+    window.setupSubmitSuccess = () ->
+      $('#emailInputRow').fadeOut()
+      $('#submitStatus').removeClass('text-warning')
+      $('#submitStatus').addClass('text-info')
+      $('#submitStatus').text "Great! We'll try to let you on ASAP."
 
   .contentHeaderBG
     .contentHeader
@@ -44,14 +73,16 @@ block body
 
 
       #getAboardBeta.control-group
-        form(method="GET", action="#",onsubmit='window.submitPressed.apply(); return false') 
+        form(method="GET", action="#",onsubmit='window.submitPressed.apply(); return false')
           label.control-label(for="betaEmailInput") Domo is invite-only during our private beta, but you can get aboard the waitlist.
           .controls
-            .input-prepend
+            #emailInputRow.input-prepend
               span#betaEmailUserIcon.add-on
                 i.icon-envelope
-              input#betaEmailInput.span3(type="text", placeholder="email address")
-              button#joinButton.btn.btn-success.disabled(type="submit") Join the waitlist
+              input#betaEmailInput.span2(type="text", placeholder="email address")
+              button#submitButton.btn.btn-success.disabled(type="submit") Join the list
+        h4#submitStatus.text-warning.hidden Thanks for using Domo!!
+            
 
       - if(typeof redirectURL !== 'undefined')
         //- if for example, index is rendered from offer/:id

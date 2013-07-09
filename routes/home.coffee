@@ -18,7 +18,6 @@ exports.postInviteRequest = (req, res) ->
       
 exports.registerInviteRequest = (req, res) ->
   emailAddress = @params.emailAddress
-  console.log "hit get method"
   console.log emailAddress
   inviteRequestModel.setEmailAddress emailAddress, (err) =>
     console.log err
