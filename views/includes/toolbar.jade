@@ -1,0 +1,37 @@
+div.header.navbar-static-top
+  div.container-fluid
+    a(href="/")
+      img.homeHeader(src="/img/domo-website-header-logo.png")
+    //-
+      div.headerControls.hidden-desktop.visible-phone
+        div.btn-group
+          button.btn.btn-primary.dropdown-toggle(data-toggle="dropdown", href="#")
+            | ! 
+            span.caret
+          ul.dropdown-menu.pull-right
+            - if(localAuthor === true)
+              //- TODO: set active page class
+              li
+                a(href='/code') Enter Code
+              li
+                a(href='/rewards') My Rewards
+              li.divider
+
+            - if(localAuthor !== true)
+                a(href="javascript:void(0)", onclick='window.loginPressed.apply()') Login
+            - else
+                a(href="/logout") Logout
+
+      div.headerControls.hidden-phone
+        - if(typeof message !== 'undefined')
+          div.headerAlert= message
+        ul.nav.nav-pills.inline
+          li
+            a(href='/code') Enter Code
+          li
+            a(href='/rewards') My Rewards
+        
+        - if(localAuthor !== true)
+          a.userLoginOutButton.btn.btn-primary.btn-small(href="javascript:void(0)", onclick="window.loginPressed.apply()") Login
+        - else
+          a.userLoginOutButton.btn.btn-primary.btn-small(href="/logout") Logout

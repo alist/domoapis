@@ -1,0 +1,93 @@
+extends layout 
+
+block viewVars
+  -var title = 'Hey!'
+  -var bodyStyle = "background-color: #fff; background-image: none;"
+
+block body
+  :coffeescript
+    $(document).ready =>
+      $('#betaEmailInput').keyup (event) =>
+        email = $('#betaEmailInput').val()
+        if email.indexOf('@') != -1
+          domain = email.substr(email.indexOf('@')+1)
+          if domain.indexOf('.') != -1
+            window.updateDomainIcon(domain)
+          else
+            window.resetDomainIcon()
+
+    window.updateDomainIcon = (domain) ->
+      $($('#betaEmailUserIcon').children()[0]).addClass('hidden')
+      $('#submitButton').removeClass('disabled')
+      $('#betaEmailUserIcon').attr('style', "background-image : url('https://plus.google.com/_/favicon?domain=#{domain}');")
+
+    window.resetDomainIcon = (domain) ->
+      $($('#betaEmailUserIcon').children()[0]).removeClass('hidden')
+      $('#submitButton').addClass('disabled')
+      $('#betaEmailUserIcon').attr('style', "background-image : url('');")
+
+    window.submitPressed = () ->
+      email = $('#betaEmailInput').val()
+      if email.indexOf('@') != -1 && email.substr(email.indexOf('@')+1).indexOf('.') != -1
+        console.log "submitting good email #{email}"
+        window.setupSubmitting()
+        $.post("/apiv1/inviterequest", {emailAddress: email}, (response)=>
+          console.log response
+          if response?.status != "success" 
+            window.setupFailedSubmit()
+          else
+            window.setupSubmitSuccess()
+        ).error(window.setupFailedSubmit)
+      else
+        return
+    window.setupSubmitting = () ->
+      $('#submitButton').addClass('disabled')
+      $('#submitStatus').addClass('hidden')
+
+    window.setupFailedSubmit = () ->
+      $('#submitButton').removeClass('disabled')
+      $('#submitStatus').removeClass('hidden')
+      $('#submitStatus').text "Whoops, our bad-- we're on it."
+
+
+    window.setupSubmitSuccess = () ->
+      $('#emailInputRow').fadeOut()
+      $('#submitStatus').removeClass('hidden')
+      $('#submitStatus').removeClass('text-warning')
+      $('#submitStatus').addClass('text-info')
+      $('#submitStatus').text "You're on the list! We can't let everyone in yet, but we'll send your invite as soon as we can."
+
+  .contentHeaderBG
+    .contentHeader
+  .content-index.container-fluid
+    section#index-about
+      h1 Domo scales culture.
+      p.mission
+        | By allowing employees to seek anonymous support and advice from mentors at their company, Domo promotes transparency, open communication, and community. 
+      p.mission
+        | Domo gives organizations the tools to visualize and maintain the culture they'd like their communities to have.
+      #loveit
+          h3.loveitHeader Businesses love Domo because:
+          p.loveitReason Domo involves people in their company community and minimizes the time taken for new employees to become productive.
+      br
+
+
+      #getAboardBeta.control-group
+        form(method="GET", action="#",onsubmit='window.submitPressed.apply(); return false')
+          label.control-label(for="betaEmailInput") Domo is invite-only during our private beta, but you can get aboard the waitlist.
+          .controls
+            #emailInputRow.input-prepend
+              span#betaEmailUserIcon.add-on
+                i.icon-envelope
+              input#betaEmailInput.span2(type="text", placeholder="email address")
+              button#submitButton.btn.btn-success.disabled(type="submit") Join the list
+        h4#submitStatus.text-warning.hidden Thanks for using Domo!!
+            
+
+      - if(typeof redirectURL !== 'undefined')
+        //- if for example, index is rendered from offer/:id
+        script(type="text/javascript").
+          window.redirectURL = '#{redirectURL}'
+
+
+          

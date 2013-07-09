@@ -1,0 +1,23 @@
+extends layout
+- var siteSection = 'supporters'
+
+block body
+  div.row
+    div#login-form.container-fluid
+      form(method='post')
+        h3 #{title}
+        div.divider.row
+          div.columns
+            include includes/errors
+        div.row
+          div.columns
+            input(type='text', name='email address, value=username, maxlength=96, placeholder='Your corporate email address please')
+        div.row
+          div.columns
+            input(type='password', name='password', maxlength=64, placeholder='Password')
+        div.row
+          div.columns
+            input(type='submit', class='medium button radius', value='Login') Login
+        div.divider.row        
+          div.columns
+              a(href='/register', class='medium success button radius', value='Register') Register

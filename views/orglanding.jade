@@ -1,0 +1,21 @@
+extends layout
+
+block viewVars
+  -var title = organization.displayName
+
+block body
+  include includes/toolbar  
+  //- 
+  //business' image here
+  .organizationHeader
+    .organizationBG(style=" background-image: url( #{organization.bannerURL} );")
+
+  .content.container-fluid
+    section#index-about
+      h1= organization.displayName
+      p.mission= organization.usageDescription
+      br
+
+      p
+        a#getAdviceButton.btn.btn-primary.btn-large.btn-success(href="/#{organization.orgURL}/getadvice") Get advice
+        a#giveAdviceButton.btn.btn-primary.btn-large.btn-success(href="/supporters") Give advice

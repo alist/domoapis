@@ -1,4 +1,4 @@
-userModel = require '../model/user'
+userModel = require '../model/user2'
 shorturlModel = require('../model/shorturl')
 
 

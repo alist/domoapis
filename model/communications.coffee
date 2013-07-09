@@ -1,4 +1,5 @@
 secrets = require ('../secrets')
+#userModel = require('./user')
 userModel = require('./user')
 twilioClient = require('twilio').Client
 Twiml = require 'twilio/lib/twiml'
@@ -107,7 +108,7 @@ exports.sendSMS = (message, recipient, callback) -> #callback(error)
     return
 
   phone.sendSms recipient, message ,  null, (sms) =>
-    #console.log sms
+    console.log sms #hnktest+
     sendStatus = sms?.smsDetails?.status
     if sendStatus == 'queued'
       callback() #unfortunately, only possible to get callback on server

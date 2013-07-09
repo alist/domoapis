@@ -15,6 +15,7 @@ user: {displayName: String, userID: String}
 modifiedDate: Date
 helpful: Number
 status: String
+thankyou: Number #hnk06/25/13+
 }
 
 AdviceSchema = new Schema {
@@ -144,6 +145,16 @@ exports.notifyAdviceGiverOfHelpfulResponse = (advice, userID, callback) -> #call
       console.log "appreciated notify err: #{err}"
       callback err
 
+#hnk06/25/13+{ 
+exports.notifyAdviceGiverOfThankyouResponse = (advice, userID, callback) -> #callback(err)
+  adviceGiverURL = "https://oh.domo.io/giveadvice/#{advice._id.toString()}"
+  shorturlModel.shorten adviceGiverURL, 4, null, true, null, null, (err, shortURL) =>
+    message = "you received a thank you from the person you supported at http://domo.io/x/#{shortURL.shortURICode} ! Check it out where you're logged-in!"
+    comsModel.notifyUser userID, message, (err) =>
+      console.log "thank you notify err: #{err}"
+      callback err
+#hnk06/25/13+}
+
 exports.approveResponseWithAdviceRequestIDAndIndex = (adviceRequestID, adviceIndex, callback) -> #callback(err, advice)
   exports.getAdviceWithID adviceRequestID, (err, advice) =>
     if advice?
@@ -179,7 +190,7 @@ exports.getAdviceWithAccessAndAuthTokens = (accessToken, authToken, callback) ->
 
 exports.getAdviceWithToken = (token, callback) -> #callback (err, advice)
   Advice.findOne {accessToken : token}, (err, advice) =>
-    callback err, advice
+    callback err, adviceerr
 
 #returns an advice obj appropiate for display for a particular permission
 exports.sanatizedAdviceForPermission = (advice, permission) ->
@@ -212,3 +223,31 @@ exports.setAdviceHelpfulWithAccessAndAuthTokens = (accessToken, authToken, advic
         callback "no response at index #{adviceIndex} for adviceReq with accessToken #{accessToken}"
     else
       callback err
+      
+#hnk06/25/13+{
+exports.setAdviceThankyouWithAccessAndAuthTokens = (accessToken, authToken, adviceIndex, callback) -> #callback(err, advice)
+  exports.getAdviceWithAccessAndAuthTokens accessToken, authToken, (err, advice) =>
+    if advice?
+      if advice.responses[adviceIndex]? == true
+        advice.responses[adviceIndex]?.thankyou = 1
+        advice.save (err) =>
+          exports.notifyAdviceGiverOfThankyouResponse advice, advice.responses[adviceIndex].user.userID, (err) ->
+            if err?
+              err1 = "err in advice-giver thank you notification: #{err}"
+            callback err1, advice
+      else
+        callback "no response at index #{adviceIndex} for adviceReq with accessToken #{accessToken}"
+    else
+      callback err
+      
+exports.setAdviceRequestClosedWithAccessAndAuthTokens = (accessToken, authToken, callback) -> #callback(err, advice)
+  exports.getAdviceWithAccessAndAuthTokens accessToken, authToken, (err, advice) =>
+    if advice?
+      advice.status = "CLOS"
+      advice.save (err) =>
+        if err?
+          err1 = "error in closing advice request"
+        callback err1, advice
+    else
+      callback err      
+#hnk06/25/13+}

@@ -169,3 +169,29 @@ exports.postAdviceHelpfulWithAdviceTokenAndPostedAuthToken = (req, res) ->
       console.log "couldn't set helpful on AT: #{accessToken} w/ err #{err}"
       @send {status: 'bad'}
 
+#hnk06/25/13+{
+exports.postAdviceThankyouWithAdviceTokenAndPostedAuthToken = (req, res) ->
+  accessToken = @params.accessToken
+  authToken = req.body.authToken
+  adviceIndex = req.body.adviceIndex
+  adviceModel.setAdviceThankyouWithAccessAndAuthTokens accessToken, authToken, adviceIndex, (err, advice) =>
+    console.log err, advice
+    if err? == false && advice?
+      @send {status: 'success'}
+    else
+      console.log err
+      #console.log advice.status
+      console.log "couldn't set THANK YOU on AT: #{accessToken} w/ err #{err}"
+      @send {status: 'bad'}
+      
+exports.postAdviceRequestClosedWithAdviceToken = (req, res) ->
+  accessToken = @params.accessToken
+  authToken = req.body.authToken
+  adviceModel.setAdviceRequestClosedWithAccessAndAuthTokens accessToken, authToken, (err, advice) =>
+    console.log err, advice
+    if err? == false && advice?
+      @send {status: 'success'}
+    else
+      console.log "couldn't set helpful on AT: #{accessToken} w/ err #{err}"
+      @send {status: 'bad'}      
+#hnk06/15/13+}

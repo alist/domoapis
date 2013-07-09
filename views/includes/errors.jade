@@ -1,0 +1,9 @@
+- if ('undefined' !== typeof errors && errors.length)
+  - each error in errors
+    span.alert.label.small-font.error= error
+    br
+    br
+- if ('undefined' !== typeof error && error.length)
+  span.alert.label.small-font.error= error
+  br
+  br
