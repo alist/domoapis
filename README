@@ -1,0 +1,20 @@
+Welcome to Domo-io server!
+
+make sure to use 'npm update' as we don't include all modules in git here
+
+the following modules are .gitignore(d):
+bcrypt
+
+Run the app locally with the following 
+coffee domo-io.coffee 
+
+Use node-inspector for realtime debugging of the server
+coffee --nodejs --debug domo-io.coffee
+
+run 
+node-inspector 
+in a new bash
+
+->then open your browser to 
+http://0.0.0.0:8080/debug?port=5858
+

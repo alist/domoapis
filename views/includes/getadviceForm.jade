@@ -1,0 +1,88 @@
+
+- var defaultPlaceholderText = "How have you been feeling recently? What could you use help with?"
+
+- var defaultText = "Recently I've been feeling: \n\n\nI could use some help with: \n"
+
+script(type="text/javascript").
+  window.adviceDefaultText = !{JSON.stringify(defaultText)};
+
+:coffeescript
+  $(document).ready =>
+    console.log "ran getadviceForm code"
+    $('#adviceTextArea').focus (event) =>
+      @window.focusToFeedback()
+ 
+
+  @window.submitAdvicePressed = () ->
+    advice = $('#adviceTextArea').val()
+    adviceContact = $('#adviceContactInput').val()
+    checkBoxChecked = $('#skipContactBox').is(":checked")
+    
+    errorAction = () ->
+      $("#submitButton").removeClass('disabled')
+      $('#submitStatus').removeClass('hidden')
+      $('#submitStatus').text "Sorry there was an error. Save your text and let domo@domo.io know if it keeps up!"
+    
+    if (adviceContact?.length >0 || checkBoxChecked == true) && advice?.length > 0 && advice != adviceDefaultText
+      $('#submitStatus').addClass('hidden')
+      $("#submitButton").addClass('disabled')
+      $.post("/getadvice", {adviceRequest: advice, adviceContact: adviceContact}, (response)=>
+        console.log response
+        if response?.status != "success"
+          errorAction()
+        else
+          adviceURL = "https://oh.domo.io/viewadvice/#{response.adviceInfo.accessToken}/#{response.adviceInfo.authToken}"
+          $('#adviceURL').attr('href', adviceURL)
+          $('#adviceURL').text(adviceURL)
+          $('#thankYouText').fadeIn('fast')
+          $('#getAdviceInputDiv').hide()).error(errorAction)
+
+    else
+      $('#submitStatus').removeClass('hidden')
+      if advice?.length > 0 && advice != adviceDefaultText #then it's definitely the phone # we need
+        $('#submitStatus').text "a way to get back to you, please!"
+      else
+        $('#submitStatus').text "your advice request, please!"
+    return false
+
+  @window.focusToFeedback = () ->
+    advice = $('#adviceTextArea').val()
+    if advice?.length == 0
+      $('#adviceTextArea').text adviceDefaultText
+      $('#infiniteLimit').removeClass('grayLabel')
+      $('#infiniteLimit').addClass('darkGreenLabel')
+      $('#infiniteLimit').text '∞'
+
+
+#getAdviceInputDiv
+  h1 Get advice through Domo
+  br
+  h4.supporterCount 12 MIT Supporters since May 16, 2013
+  legend Through this anonymous request, vetted peers will engage you with empathy and support.
+  .row-fluid
+    #howItWorks.span3.pull-left
+      h4 How it works:
+      ol
+        li You descibe what's up
+        li 
+          a(href: '/supporters') Supporter Domosapiens
+          |  respond at domo.io
+        li You get SMS alerts about your responses
+        li You're free to follow-up, but responses might be by different people.
+
+    form#adviceForm.span9.pull-right(method="GET", action="#",onsubmit='window.submitAdvicePressed.apply(); return false') 
+      
+      .right.row
+        h5.grayLabel.limitText.inline characters remaining: 
+        h5.limitText.grayLabel.inline#infiniteLimit '–'
+      textarea#adviceTextArea.input-block-level(type:'textarea', rows:6, placeholder= defaultPlaceholderText)
+      div.controls-row.row-flexible
+        input#adviceContactInput(type= "text", placeholder= "US phone #")
+        
+        input#submitButton.btn.btn-success.right(type= "submit", style= "margin-top: 5px;'", text= 'Submit')
+        label.checkbox
+          input#skipContactBox(type= 'checkbox')
+          | no thanks, just give me a URL to check later
+        h4.text-warning.hidden#submitStatus Thanks for using Domo!!
+
+

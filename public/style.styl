@@ -1,0 +1,538 @@
+@import '/usr/local/lib/node_modules/nib/lib/nib'
+
+@font-face
+  font-family 'Arimo'
+  src url("/fonts/Arimo-Regular-Latin.eot"); /* IE */
+  src local('Arimo'), url('/fonts/Arimo-Regular-Latin.ttf') format('truetype');
+  font-weight normal
+  font-style normal
+
+@font-face
+  font-family 'Arimo'
+  src url("/fonts/Arimo-Bold-Latin.eot"); /* IE */
+  src local('Arimo'), url('/fonts/Arimo-Bold-Latin.ttf') format('truetype');
+  font-weight bold
+  font-style normal
+
+@font-face
+  font-family 'Arimo'
+  src url("/fonts/Arimo-Italic-Latin.eot"); /* IE */
+  src local('Arimo'), url('/fonts/Arimo-Italic-Latin.ttf') format('truetype');
+  font-weight normal 
+  font-style italic
+
+@font-face
+  font-family 'Arimo'
+  src url("/fonts/Arimo-BoldItalic-Latin.eot"); /* IE */
+  src local('Arimo'), url('/fonts/Arimo-BoldItalic-Latin.ttf') format('truetype');
+  font-weight bold
+  font-style italic
+
+
+blue = #377ad0 
+dLogoBlack = #2b2b30
+dBlack = dLogoBlack
+//black was #414043;
+dGreen = #00B147
+dDarkGreen = rgb(27, 158, 54);
+//green was #01a351;
+dGray = #57575b
+dLightGray = #999;
+*
+  border 0
+
+footer
+  margin-top 30px
+  text-align center
+  padding-bottom 5px
+  color dGray
+  font-size 13px
+a
+  position relative
+  color lighten(dGray, 0%)
+  text-decoration none
+  &:hover
+    color dGreen
+    text-decoration none
+  &:active
+    top 1px
+
+h1
+ line-height 1.2
+ font-weight normal
+ small
+  line-height 1.2
+  text-transform none
+
+.lightSmall
+ color dGray
+ font-size 14px
+
+h2, h3, h4, h5
+ font-weight normal
+ line-height 1.2
+
+.grayLabel
+ color dLightGray
+
+.darkGreenLabel
+ color dDarkGreen
+
+html
+ height 100%
+
+body
+ height 100%
+ font-family 'Helvetica-Light', 'Arimo', 'Helvetica Neue'
+ background-color #f0f0f0;
+ background-image url("/img/patternsquare_green.png")
+ background-repeat repeat
+  
+.media-body
+ padding-left 110px
+ a
+  color dBlack
+  &:hover
+    color darken(blue, 20%)
+    text-decoration none
+
+section
+ margin-bottom 35px
+
+section#apps
+ .page-header
+   border-top: 1px solid #eee;
+   border-bottom: 0px solid #eee;
+
+.header
+  height 60px
+  background linear-gradient(top, #fff 0%, #f9f9f9 49%, #f2f2f2 51%, #F8F8F8 100%)
+  border-bottom-color rgb(206, 206, 206)
+  border-bottom-style solid
+  border-bottom-width 1px
+
+.contentHeaderText
+ color white
+ font-size 36px
+ margin-top 140px
+ font-weight bold
+ float right
+ line-height 35px
+
+ text-shadow 0px 2px 7px #000000
+
+.organizationHeader
+ width 100%
+ height 270px
+ border-bottom-color #E1E1E1
+ border-bottom-style solid
+ border-bottom-width 3px
+ border-top-color #EBEBEB
+ border-top-style solid
+ border-top-width 0px
+ background-color rgba(0, 0, 0, 1)
+
+.organizationBG
+ height 100%
+ max-width 1400px
+ margin auto
+ background-size cover 
+ background-position center 0px
+ background-repeat no-repeat
+
+
+.contentHeaderBG
+ background-color #F0F0F0 
+ background-image url("/img/patternsquare_green.png")
+ background-repeat repeat
+
+.contentHeader
+ background-image url("/img/domo-website-home-header-bg.png")
+ background-size contain
+ width 100%
+ height 0
+ padding-bottom: 25%;
+ background-repeat no-repeat
+ border-bottom-color #E1E1E1
+ border-bottom-style solid
+ border-bottom-width 0px
+ border-top-color #EBEBEB
+ border-top-style solid
+ border-top-width 0px
+ box-shadow inset 0px -2px 3px #AAA
+@media (max-width:800px)
+ .contentHeader
+  background-position center 5px
+@media (min-width: 800px)
+ .contentHeader
+  background-position center 10px
+
+.container-fluid
+  margin-left auto
+  margin-right auto
+  max-width 940px
+
+.headerControls 
+  float right
+  margin-top 20px
+
+.content h1
+ color: dGreen
+
+@media (max-width:480px)
+  .hidden-phone
+    display none
+  .visible-phone
+    display block
+@media (min-width: 768px)
+  .hidden-desktop
+    display none
+
+.content, .content-index
+ margin-top 15px
+ background-color white
+ border-bottom-color #E1E1E1
+ border-bottom-style solid
+ border-bottom-width 1px
+ box-shadow: 3px 3px 3px rgba(0,0,0,0.055);
+ margin-bottom: 20px
+ h1
+  text-transform capitalize 
+.content-index
+ box-shadow: none
+
+
+.homeHeader
+  height 54px
+  display inline
+  margin-top 5px
+
+.headerAlert
+  display inline
+  float left
+  padding 5px 14px 5px 14px
+  color #C09853
+  text-shadow 0 1px 0 rgba(255, 255, 255, 0.5)
+  background-color #FCF8E3
+  border 1px solid #FBEED5
+  -webkit-border-radius 4px
+  -moz-border-radius 4px
+  border-radius 4px
+
+#writeUsButton
+  margin-left 0px
+
+.inline
+  display inline
+
+.hidden
+  display none
+
+.invisible
+  visibility hidden
+
+.text-warning 
+  color: #c09853;
+
+.text-error 
+  color: #b94a48;
+
+.text-info 
+  color: #3a87ad;
+
+.text-success 
+  color: #468847;
+
+.center
+  margin-left auto
+  margin-right auto
+
+.right
+  float right
+
+.userLoginOutButton
+  width 50px
+  margin-top 4px
+  margin-left 5px
+
+.headerButtonRight
+  float right
+  margin-top 18px
+
+@media (max-width: 480px)
+  #rewardBox
+    background-color white
+    border 0
+
+.fade-overlay {
+   position absolute
+   background-position center
+   opacity 0.0
+   width 100%
+   height 100%
+   border-radius 50%
+}
+
+//index 
+#betaEmailUserIcon
+ background-image: url(""); //https://plus.google.com/_/favicon?domain=gmail.com
+ background-repeat: no-repeat;
+ background-position: center;
+
+@media (max-width: 479px) 
+ #betaEmailInput
+  width 129px
+@media (min-width: 480px) 
+ #betaEmailInput
+  width 210px
+#getAboardBeta
+ text-align center
+#loveit
+ background-color: rgba(200,200,200,.1)
+ padding 10px
+
+.loveitHeader
+ font-size 17pt
+ margin-bottom 5px
+
+.loveitReason
+ font-size 14pt
+
+//giveadvicedetail
+.helpfulLabel
+ float right
+ margin-top 0
+ margin-right 30px
+
+.adviceRequestText
+ font-size 18px
+ line-height 25px
+ font-weight normal
+
+.adviceResponseText
+ font-size 17px
+ line-height 21px
+ font-weight normal
+
+.adviceRow
+ border-bottom 1px dashed lightgray
+ margin-bottom 20px
+ padding-bottom 10px
+ line-height 20px
+ //border-bottom: 1px solid #eee;
+
+.adviceResponseRow
+ border-bottom 1px dashed lightgray
+ h5
+  font-size 15px
+
+//giveadvice
+.giveAdviceAdviceRequest
+ font-size: 14px;
+ line-height: 20px; 
+ font-weight: normal;
+ margin: 10px 0;
+ font-family: inherit;
+ text-rendering: optimizelegibility;
+
+//getadvice
+#adviceTextArea
+ height 150px
+
+#codeInputDiv
+ max-width 600px
+ margin-right auto
+ margin-left auto
+ text-align center
+
+#organizationCodeInput
+ line-height 40px
+ height 79px
+ font-size 35px
+ text-align center
+ width 260px
+
+#adviceContactInput
+  height 30px
+  width 95px
+  margin-top 5px
+
+.hearFromUs
+ font-size 18px
+ display inline
+
+.findOutAboutSupporting
+ color lighten(dGray, 20%)
+
+#adviceURL
+ margin-left 20px
+
+.limitText
+ margin: 0
+
+#howItWorks
+ h4
+  margin-top 0px
+@media (max-width:980px)
+ #howItWorks
+  width auto
+ #adviceForm
+  width 96%
+
+//index
+#index-about
+ h1
+  line-height 1.3
+  margin-bottom 10px
+  color dGreen
+.mission
+  line-height 1.3
+  font-size: 24px;
+  font-weight: normal;
+  color: #999;
+
+/* @media (max-width:420px)
+  #index-about
+   .mission
+    line-height 1.2
+   h1
+    line-height 1.2
+*/
+
+.lead
+ font-size 17px
+ font-style italic
+
+#giveAdviceButton
+  margin-left 10px
+
+@media (max-width: 435)
+  #giveAdviceButton
+    margin-left 0px
+    margin-top 10px
+
+@media (min-width: 435)
+  #giveAdviceButton
+    margin-left 10px
+
+//supporters
+#content-supporters
+ color dBlack
+ .page-header
+  margin-bottom 0
+  border-bottom: none
+ #principlesHeader
+  padding-top 40px
+  font-weight normal
+ p
+  font-size: 20px;
+  line-height: 1.2;
+ section
+  border-top: 1px solid #eee;
+  height 400px
+  padding-left 20px
+  padding-right 20px
+  margin-left -20px
+  margin-right -20px
+  margin-bottom 0
+  background-position-x: 50%;
+ h2
+  font-weight bold
+  text-transform: capitalize
+ h4
+  font-weight normal
+  font-size 21px
+ .cornerNumber
+  font-weight bold
+  margin-top 0
+  padding-top 10px
+  color white
+ .soundGood
+  padding-top 10px
+  color dGreen
+ #s1
+  background-color: lavender
+  background-image url("/img/patternsquare_green.png")
+ #s2
+  background-image url("/img/patternsquare_green.png")
+  background-color: lightblue
+  h4
+   text-align right
+ #s3
+  background-color: lightgray
+  background-image url("/img/patternsquare_green.png")
+ #s4
+  background-color: lightcyan
+  background-image none
+  height 224px
+  text-align center
+ #i1
+  background-image url("/img/domo-handheld-supporters.png")
+  background-repeat no-repeat
+  background-position-x: 70%;
+ #i2
+  background-image url("/img/domo-office-supporters.png")
+  background-repeat no-repeat
+  background-position-y -67px
+ #i2-s
+  background-image url("/img/domo-logo-green-supporters.png")
+  background-size cover
+  background-repeat no-repeat
+  height 400px
+  width 100%
+ .p1
+  margin-top: 100px
+  margin-right: 10px
+  font-size: 40px
+  line-height: 1.2
+  text-align: center 
+ .p2
+  margin-top: 100px
+  margin-right: 10px
+  font-size: 40px
+  line-height: 1.2
+  text-align: right
+ .p3
+  margin-top: 100px
+  margin-right: 10px
+  font-size: 40px
+  line-height: 1.2
+  text-align: left
+ .currentyBeta
+  font-size 15px
+  margin-top 3px
+  font-style italic
+
+@media (max-width: 600px)
+ #content-supporters
+  h2
+   font-size 33px
+  h4
+   font-size 18px
+  .p1
+   margin-top 30px
+  .p2
+   margin-top 30px
+   font-size 34px
+  .p3
+   margin-top 30px
+   font-size 37px
+
+#getInvolvedButton
+ width 250px 
+ margin-left auto
+ margin-right auto
+
+//userdetail
+.userInfoBox
+ min-width 270px
+#usersNameSpan
+ margin-left 0
+
+//bootstrap overrides
+.label
+ padding: 3px 4px 2px;
+
+.thumbnail
+ box-shadow: 3px 3px 3px rgba(0,0,0,0.055);
+ overflow hidden

@@ -1,0 +1,59 @@
+extends layout
+
+block viewVars
+  -var title = "Get Advice - " + organization.displayName
+
+p hi
+
+block body
+  script(type="text/javascript").
+    window.orgURL= "#{organization.orgURL}"
+  
+  :coffeescript
+    window.submitPressed = () ->
+      code = $('#organizationCodeInput').val()
+      if code?.length > 0
+        console.log "submitting good code #{code}"
+        window.setupSubmitting()
+        $.get("/apiv1/organization/getAdviceFormInfo", {orgCode: code, orgURL: window.orgURL}, (response)=>
+          console.log response
+          if response?.status != "success"
+            window.setupFailedSubmit()
+          else
+            newDom = $(response?.html)
+            $('#codeInputDiv').before newDom
+            window.setupSubmitSuccess()
+        ).error(window.setupFailedSubmit)
+      else
+        return
+    window.setupSubmitting = () ->
+      $('#submitButton').addClass('disabled')
+      $('#submitStatus').addClass('hidden')
+
+    window.setupFailedSubmit = () ->
+      $('#submitButton').removeClass('disabled')
+      $('#submitStatus').removeClass('hidden')
+      $('#submitStatus').text "Ooops, that's not the code!"
+
+
+    window.setupSubmitSuccess = () ->
+      $('#codeInputDiv').fadeOut()
+
+  include includes/toolbar  
+  .organizationHeader
+    .organizationBG(style=" background-image: url( #{organization.bannerURL} );")
+
+  .content.container-fluid
+      section#index-about
+        a(href="/#{organization.orgURL}")
+          h1= organization.displayName
+      
+      #codeInputDiv
+        form(method="GET", action="#",onsubmit='window.submitPressed.apply(); return false') 
+          p.codePrompt Please enter your organization's code
+          input#organizationCodeInput(type="text", placeholder="code!")
+          br
+          input#submitButton.btn.btn-large.btn-success(type= "submit", style= 'margin-top: 5px; width: 100px;')
+        h4#submitStatus.text-warning.hidden Ooops, that's not the code!
+        p.lead
+          | It's on the flyers! Check with someone your organization if you've misplaced it!

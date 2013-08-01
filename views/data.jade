@@ -1,0 +1,8 @@
+extends layout
+
+block content
+  h2 Data
+  - if ('undefined' !== typeof response)
+    span.alert.label.small-font= response
+    br
+    br
