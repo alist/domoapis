@@ -1,6 +1,6 @@
 var mongoose = require('mongoose')
   , Schema = mongoose.Schema
-  , _ = require("underscore")
+  , _ = require("lodash")
   
  var orgSchema = new Schema({
       id:               { type: String, required: true, unique: true, index: true },

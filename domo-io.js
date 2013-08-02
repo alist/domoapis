@@ -1,34 +1,28 @@
 var express = require('express')
   , app = express()
-  , db = require('./lib/db')
-  ,logger = require('./lib/logger')
-  , routes = require('./lib/routes');
+  , logger = require('./lib/logger')
+  , AppLoader = require('./appLoader')
+  , Config = require('./configLoader')
+  , AuthHooks = require('./auth')
 
-// Load config
-var c = require('./config').init(app, express, function(err, config){
 
-  if(err){
-    logger.error(err);
-    return;
-  }
 
-  // DB Conn
-  db(app, function(err){
-    if(err){
-      // abort!
-      logger.error(err);
-      return;
-    }
-
-    // Config routes and fire up!
-    routes(app, config);
-
-    var httpServer = app.listen(config.env.port, function(){
-      logger.info('Express server listening on port ' + config.env.port);      
-    });
-
+function listen(){
+  var config = Config.getConfig();
+  app.listen(config.app.env.port, function(){
+      logger.info('Express server listening on port ' + config.app.env.port);
   });
+}
+
+
+AuthHooks(AppLoader);
+
+AppLoader.on('done', function(app){
+  listen();
 });
+
+AppLoader.init(app);
+
 
 // For test-hooks
 exports.app = app;

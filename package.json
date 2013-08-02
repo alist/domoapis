@@ -24,11 +24,12 @@
     "bcrypt": "~0.7.5",
     "node-uuid": "~1.4.0",
     "validator": "~1.1.1",
-    "underscore": "~1.4.4",
+    "lodash": "latest",
     "connect-flash": "~0.1.1",
     "zappajs": "~0.4.22",
     "jade": "~0.31.2",
-    "winston": "~0.7.2"
+    "winston": "~0.7.2",
+    "nconf": "~0.6.7"
   },
   "devDependencies": {
     "chai": "1.6.0",
