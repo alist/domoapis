@@ -2,9 +2,7 @@ var Validator = require('validator').Validator
   , config = require('../config').config
   , mailer = require('../lib/mailer')
   , Utils = require('../lib/utils')
-  , Response = Utils.Response
-  , ResponseStatus = Utils.ResponseStatus
-  , _ = require('underscore')
+  , _ = require('lodash')
   // , secrets = require('../secrets')
   , UserModel = require('../model/user').User;
 
@@ -20,22 +18,12 @@ UserController.prototype.register = function(req, res){
   validator.check(newUserAttrs.email, 'Invalid e-mail address').len(6, 64).isEmail();
   validator.check(newUserAttrs.password, 'Invalid password').len(5, 64);
   
-  var response = Response(req, res);
-    // Error handler
-  var fnError = function(errors){
-    if(!!errors)  response.error(errors);
-    return response.render(
-      ResponseStatus.BAD_REQUEST,
-      'register.jade',
-      _.extend(
-        newUserAttrs,
-        { title: 'Register' }
-      )
-    );
-  }
+  var response = res.ext;
+  response.errorView('register.jade');
+  response.viewData(_.extend(newUserAttrs, { title: 'Register' }));
 
   if(validator.hasError()){
-    return fnError(validator.getErrors()).done();
+    return response.error(validator.getErrors()).render();
   }
   
   //newUserAttrs.roles = [ this.primaryRole ]; //hnk07/23/13-
@@ -44,16 +32,16 @@ UserController.prototype.register = function(req, res){
 
   UserModel.register(newUserAttrs, function(err, user){
     if(err){
-      return fnError(err).done();
+      return response.error(err).render();
     }
 
     req.logIn(user, function(err) {
       if (err){
-        return fnError(err).done();
+        return response.error(err).render();
       }
       self.sendApprovalEmail(req, res);
       // Route handler for / will read req.user to check if user has been approved, and will use the appropriate template
-      return response.redirect('/').done();
+      return response.redirect('/');
     });
 
   });
@@ -90,30 +78,6 @@ UserController.prototype.sendApprovalEmail = function(req, res){
 }
 
 
-UserController.prototype.approveAccount = function(req, res){
-  var email = req.query.email;
-  var userApprovalHash = req.query.token;
-  
-  var validator = new Validator();
-  validator.check(email).len(6, 64).isEmail();
-  validator.check(userApprovalHash).notNull().notEmpty();
-  var errors = validator.getErrors();
-  if(errors.length){
-    return Response(req, res).render(ResponseStatus.BAD_REQUEST, 'error.jade', { title: 'Invalid Approval Link', email: (email || ''), errors: errors }).done();
-  }
-
-  // maybe this should display a page that shows a Yes/No action?
-  var self = this;
-  UserModel.approveAccount({ 'userID': email, 'userApprovalHash': userApprovalHash, userApproved: false },
-    function(err, updates){
-      if(err){
-        return Response(req, res).render(ResponseStatus.BAD_REQUEST, 'error.jade', { title: 'Invalid Approval Link', email: (email || ''), errors: [err] }).done();
-      }
-      // Reusing 'error' template for now
-      errors.push('Account for ' + email + ' approved successfully.');
-      return Response(req, res).render(ResponseStatus.BAD_REQUEST, 'error.jade', { title: 'Account Approved', email: (email || ''), errors: errors }).done();
-    });
-}
 
 
 UserController.prototype.logout = function(req, res){

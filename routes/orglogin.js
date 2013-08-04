@@ -1,6 +1,3 @@
- var Utils = require('../lib/utils')
-  , Response = Utils.Response
-  , ResponseStatus = Utils.ResponseStatus
 
 // module.exports.public = function(app) {
 
@@ -35,6 +32,6 @@
   //       };
   //   }
 
-  //   return Response(req, res).render('orglogin', {}).done();
+  //   return res.ext.view('orglogin').render();
   // });
 // };

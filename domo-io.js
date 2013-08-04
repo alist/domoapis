@@ -3,8 +3,14 @@ var express = require('express')
   , logger = require('./lib/logger')
   , AppLoader = require('./appLoader')
   , Config = require('./configLoader')
+  , ResponseExt = require('./lib/responseExt')
   , AuthHooks = require('./auth')
 
+
+function registerHooks(){
+  ResponseExt(AppLoader);
+  AuthHooks(AppLoader);
+}
 
 
 function listen(){
@@ -15,7 +21,7 @@ function listen(){
 }
 
 
-AuthHooks(AppLoader);
+registerHooks();
 
 AppLoader.on('done', function(app){
   listen();

@@ -1,17 +1,14 @@
- var Utils = require('../lib/utils')
-  , Response = Utils.Response
-  , ResponseStatus = Utils.ResponseStatus
-  , InviteRequestController = require('../controller/inviterequest').InviteRequest
-  , passport = require('passport')
+ var InviteRequestController = require('../controller/inviterequest').InviteRequest
+   , passport = require('passport')
 
 module.exports.index = function(req, res) {
-  return Response(req, res).render('index.jade', {}).done();
+  return res.ext.view('index.jade').render();
 };
 
 /*module.exports.public = function(app) {
   // app.post('/register', InviteRequestController.postInviteRequest.bind(InviteRequestController));
   app.get('/orglanding.jade', function(req, res){
-    return Response(req, res).render('orglanding', { title: 'Welcome to Domo'}).done();
+    return res.ext.view('orglanding').data({ title: 'Welcome to Domo' }).render();
   });
 };*/
 

@@ -1,40 +1,26 @@
- var Utils = require('../lib/utils')
-   , Response = Utils.Response
-   , ResponseStatus = Utils.ResponseStatus
-   , OrganizationModel = require("../model/organization").Organization
+ var OrganizationModel = require("../model/organization").Organization
   
 var OrganizationController = function(){
 };
 
-var fnError = function(response, errors){
-    if(!!errors)  response.error(errors);
-    return response.render(
-          ResponseStatus.BAD_REQUEST,
-          'error.jade',
-          _.extend(
-            {},
-            { title: 'Error' }
-          )
-    );
-}
 
 OrganizationController.prototype.login = function(req, res){
-    var response = Response(req, res);
+    var response = res.ext;
 
     if(req.isAuthenticated()){
-      return Response(req, res).redirect('/' + req.extras.organization.orgURL).done();
+      return response.redirect('/' + req.extras.organization.orgURL);
     }
 
-    response.render('orglogin.jade', {});
+    response.view('orglogin.jade').errorView('error.jade');
 
     var data = {
         title: "Login",
         username: ""
     };
 
-    var error = req.flash("error");
-    if(!!error){
-        response.error(error);
+    var errors = req.flash("error");
+    if(!!errors){
+        response.locals({ errors: errors });
     }
 
     var redirTo = req.flash("redirTo");
@@ -42,7 +28,7 @@ OrganizationController.prototype.login = function(req, res){
         data.redirTo = redirTo;
     }
 
-    return response.data(data).done();
+    return response.data(data).render();
 }
 
 OrganizationController.prototype.auth = function(req, res){
@@ -50,27 +36,28 @@ OrganizationController.prototype.auth = function(req, res){
 }
 
 OrganizationController.prototype.getAll = function(req, res){
-    var response = Response(req, res);
+    var response = res.ext;
+    response.view('data.jade').errorView('error.jade');
     
     OrganizationModel.getAll(function(err, orgs){
         if(err){
-            return fnError(response).done();
+            return response.error(err).render();
         }
         orgs = orgs || [];
-        return response.render('data.jade', {}).data({ organizations: orgs }).done();
+        return response.data({ organizations: orgs }).render();
     });
 }
 
 OrganizationController.prototype.giveAdvice = function(req, res){
-    return Response(req, res).render('giveadvice.jade', {}).done();
+    return res.ext.view('giveadvice.jade').render();
 }
  
 OrganizationController.prototype.getAdvice = function(req, res){
-    return Response(req, res).render('getadvice.jade', {}).done();
+    return res.ext.view('getadvice.jade').render();
 }
     
 OrganizationController.prototype.getInfo = function(req, res){
-    return Response(req, res).render('orglanding', {}).done(); 
+    return res.ext.view('orglanding').render(); 
 }
 
     

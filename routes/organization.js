@@ -1,7 +1,4 @@
- var Utils = require('../lib/utils')
-  , Response = Utils.Response
-  , ResponseStatus = Utils.ResponseStatus
-  , OrganizationController = require('../controller/organization').OrganizationController
+ var OrganizationController = require('../controller/organization').OrganizationController
   
 var excludeApi = "^(?!\/api\/)";
   
@@ -18,7 +15,7 @@ function orgLookup(req, res, next){
                 orgURL: '/invalid'
             };
             //render org_not_found view here and don't call next
-            return Response(req, res).render('orglanding', {}).done(); 
+            return res.ext.view('orglanding').render(); 
         }
         
         req.extras = req.extras || {};
@@ -43,7 +40,7 @@ function orgCheck(app){
 
         req.flash('error', 'You need to login to perform this action.');
         req.flash('redirTo', req.path);
-        Response(req, res).redirect('/' + req.params.organization + '/login').done();
+        return res.ext.redirect('/' + req.params.organization + '/login');
     });
 }
 

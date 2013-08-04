@@ -8,7 +8,7 @@ var EventEmitter = require('events').EventEmitter
   , errorHandler = require('./lib/errorHandler')
   , Validator = require('validator').Validator
   , routes = require('./lib/routes')
-
+  , _ = require('lodash')
 
 
 var AppLoader = function(){
@@ -82,7 +82,8 @@ AppLoader.prototype.configSession = function(){
   }
 
   app.use(express.session(sessionConfig));
-
+  app.use(flash());
+  
   this.emit('sessionHook', app);
   this.emit('configSessionDone', app);
 }
@@ -102,14 +103,14 @@ AppLoader.prototype.configMiddleware = function(){
     
   app.use(express.methodOverride());
 
-  // Note: static/public files here are free from routing
-  app.use(app.router);
-
   if (this.env === 'production') {
     app.use(errorHandler({ errView: 'error.jade' }));
   } else {
     app.use(errorHandler({ errView: 'error.jade', showMessage: true, dumpExceptions: true, showStack: true }));
   }
+
+  // Note: static/public files here are free from routing
+  app.use(app.router);
 
   this.emit('configMiddlewareDone', app);
   routes(app);
