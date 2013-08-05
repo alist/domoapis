@@ -188,7 +188,13 @@ userSchema.statics.register = function(newUserAttrs, callback){
       function(passwordHash, next){
         newUser.password = passwordHash;
         newUser.recoverPasswordHash = uuid.v1();
-        createUserRoles(newUserAttrs, next);
+
+        if(newUserAttrs.roles && !!newUserAttrs.roles.length) {
+          createUserRoles(newUserAttrs, next);
+        } else {
+          // is roles mandatory?
+          next(null, []);
+        }
       },
 
       // save roles and _ids of userRole docs in current doc and save
