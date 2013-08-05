@@ -13,26 +13,33 @@ var ConfigLoader = function() {
 };
 
 
-ConfigLoader.prototype.init = function(){
+ConfigLoader.prototype.init = function(env){
   this.config = {};
 
   var self = this;
-	var activeEnv = self.getActiveEnv();
+
 	var validEnvs = self.envList;
 	validEnvs.push(self.defaultsKey);
 
+  this.activeEnv = env || conf.activeEnv;
+  delete conf.activeEnv;
+
+  if(!_.contains(validEnvs, this.activeEnv)) {
+    throw new Error('Invalid env: ' + this.activeEnv);
+  }
+  
 	var validEnvsLen = validEnvs.length;
 
 	_.each(conf, function(v, k){  // app, db, mail, redis
-		if(v instanceof Object && _.difference(validEnvs, _.keys(v)).length < validEnvsLen){
-      self.config[k] = mergeObjects(v[activeEnv] || {}, v.defaults || {});
+		if(_.isObject(v) && _.difference(validEnvs, _.keys(v)).length < validEnvsLen){
+      self.config[k] = mergeObjects(v[self.activeEnv] || {}, v.defaults || {});
 
-      if(!!v.overrides){
+      if(!env && !!v.overrides){
         self.overrideProps(self.config[k], v.overrides);
       }
 		}
 	});
-  
+
   // chainable
   return this;
 }
