@@ -25,7 +25,8 @@ describe("DBTEST: Test User Model", function() {
     var newUserAttrs = {
       email: 'shirishk.87@gmail.com',
       password: 'sa123',
-      roles: [ 'supporter', 'moduleadmin', 'admin' ]
+      roles: [ 'supporter', 'moduleadmin', 'admin' ],
+      supportAreas: [ 'career' ]
     };
 
     User.register(newUserAttrs, function(err, user){
@@ -45,7 +46,7 @@ describe("DBTEST: Test User Model", function() {
 
       // set paths to be populated, based on roles
       user.roles.forEach(function(role){
-        opts.push({ path: role + 'Role', select: 'flag' });
+        opts.push({ path: role + 'Role' });
       });
 
       User.populate(user, opts, function (err, user) {

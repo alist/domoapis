@@ -64,7 +64,11 @@ module.exports.db.development = {
 };
 
 module.exports.db.test = {
-
+  host: "ds059887.mongolab.com",
+  port: "59887",
+  user: "test",
+  password: "c0mpl3xity",
+  db: "domo_test"
 };
 
 // Generate dbUri for all envs
