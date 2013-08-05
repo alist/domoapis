@@ -63,6 +63,7 @@ module.exports = function(dbUri) {
      }
    }
 
+   this.timeout(15000);
    checkState();
   });
 
