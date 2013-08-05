@@ -1,5 +1,4 @@
-var DBConfig = require('../../dbConfig')
-  , mongoose = require('mongoose');
+var mongoose = require('mongoose');
 
 var clearDB = module.exports.clearDB = function(done) {
   var collections = Object.keys(mongoose.connection.collections);
@@ -33,35 +32,44 @@ module.exports.find = function(collec, query, callback) {
     });
 };
 
-before(function(done) {
- function reconnect() {
-   var dbURI = DBConfig.getConfigUrl(process.env.NODE_ENV);
-   mongoose.connect(dbURI, function(err) {
-     if (err) {
-       throw err;
-     }
-     return done();
-   });
- }
 
- function checkState() {
-   switch (mongoose.connection.readyState) {
-   case 0:
-     reconnect();
-     break;
-   case 1:
-     // clearDB();
-     done();
-     break;
-   default:
-     setImmediate(checkState);
+var self = this;
+
+module.exports = function(dbUri) {
+
+  console.log('dbUri', dbUri);
+  
+  before(function(done) {
+   function reconnect() {
+     mongoose.connect(dbUri, function(err) {
+       if (err) {
+         throw err;
+       }
+       return done();
+     });
    }
- }
 
- checkState();
-});
+   function checkState() {
+     switch (mongoose.connection.readyState) {
+     case 0:
+       reconnect();
+       break;
+     case 1:
+       // clearDB();
+       done();
+       break;
+     default:
+       setImmediate(checkState);
+     }
+   }
 
-after(function(done) {
-  mongoose.disconnect();
-  return done();
-});
+   checkState();
+  });
+
+  after(function(done) {
+    mongoose.disconnect();
+    return done();
+  });
+
+  return self;
+}

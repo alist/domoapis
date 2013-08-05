@@ -5,14 +5,74 @@ var mongoose = require('mongoose')
   , uuid = require('node-uuid')
   , crypto = require('crypto')
   , errors = require('./errors').errors
-  // , supportee = require('./supportee').supportee
-  // , Organizations = require('./organization').Organization
+  , async = require('async')
+  , _ = require('lodash')
+
+
+// Import all schemas so they get registered with mongoose
+var SupporteeModel = require('./user_supportee')
+  , SupporterModel = require('./user_supporter')
+  , ModuleAdminModel = require('./user_moduleadmin')
+  , AdminModel = require('./user_admin')
+  , AdopterModel = require('./user_adopter')
 
 
 exports.userLoginURLBase = "https://oh.domo.io/urllogin?token=";
 
+var validRoles = module.exports.validRoles = [ 'supportee', 'supporter', 'moduleadmin', 'admin', 'adopter' ];
 
 var SALT_WORK_FACTOR = 10;
+
+
+function getUserRoleModel(role) {
+  var model = mongoose.model(role);
+  if(!model) {
+    throw new Error('Model not found: ' + role);
+  }
+  return model;
+}
+
+
+function createUserRoles(newUserAttrs, callback) {
+  var roles = newUserAttrs.roles;
+  var newUserRoles = {};
+
+  async.each(roles,
+    function(role, next){
+      getUserRoleModel(role).new(newUserAttrs, function(err, subUser){
+        if(err){
+          return next(err);
+        }
+        newUserRoles[role] = subUser;
+        return next();
+      });
+    },
+    function(err) {
+      if(!err) {
+        return callback(null, newUserRoles);
+      }
+
+      // remove orphans
+      var subDocs = _.toArray(newUserRoles);
+      if(!subDocs.length) {
+        return callback(err);
+      }
+
+      async.each(subDocs,
+        function(doc, next){
+          doc.remove(function(e, d) {
+            if(e) {
+              // continue removing others
+            }
+            return next();
+          });
+        },
+        function(e) {
+          return callback(err);
+        });
+    });
+}
+
 
 var userSchema = new Schema({
   userID: {type: String, required: true, index: { unique: true } },
@@ -45,22 +105,36 @@ var userSchema = new Schema({
 
   joined: { type: Date, default: Date.now },
   modifiedDate: { type: Date, index: { unique: false } },
-  modifiedBy: { type: Schema.Types.ObjectId, ref: 'Admin' },
+
   displayName: String, 
   
   token: { type: String },
 
-  roles: [String], // supporter, supportee, admin, pointperson,reporter,omnipotent
-  organization: { type: Schema.Types.ObjectId, ref: 'organizations' },
-  //supportAreas: [ { identifier: String, name: String } ],
-
-  //need to: unify the coms system 
-
-  // cleanup, cleanup everybody everywhere
-  //isAdmin: {type: Boolean},
-  permissions: [{type: String}],
-  //imageURI: String,
   activeSessionIDs: [ {type: String, index: {unique: true}} ],
+
+  // supporter, supportee, admin, pointperson, reporter, omnipotent
+  roles:              [ { type: String, enum: validRoles } ],
+  supporteeRole:      { type: Schema.Types.ObjectId, ref: 'supportee' },
+  supporterRole:      { type: Schema.Types.ObjectId, ref: 'supporter' },
+  moduleadminRole:    { type: Schema.Types.ObjectId, ref: 'moduleadmin' },
+  adminRole:          { type: Schema.Types.ObjectId, ref: 'admin' },
+  adopterRole:        { type: Schema.Types.ObjectId, ref: 'adopter' },
+
+  organizations: [
+    {
+      id:     { type: Schema.Types.ObjectId, ref: 'organization' },
+      joined:   Date
+    }
+  ],
+
+  modifiedBy: [
+    {
+      id:     Schema.Types.ObjectId,
+      date:   Date,
+      role:   String
+    }
+  ]
+
 });
 
 
@@ -96,10 +170,6 @@ userSchema.statics.register = function(newUserAttrs, callback){
 
     var newUser = new User();
     newUser.userID = newUser.email = newUserAttrs.email;
-
-    newUserAttrs.roles.forEach(function(role){
-      newUser.roles.push(role);
-    });
     
     newUser.emailConfirmed = true;
     newUser.emailVerified = false;
@@ -108,20 +178,42 @@ userSchema.statics.register = function(newUserAttrs, callback){
     newUser.userApproved = false;
     newUser.userApprovalHash = uuid.v4();
 
-    self.generatePasswordHash(newUserAttrs.password, function(err, passwordHash){
-        if(err){
-            return callback(err);
-        }
+    async.waterfall([
+      // generate hash
+      function(next){
+        self.generatePasswordHash(newUserAttrs.password, next);
+      },
+
+      // create userRole docs
+      function(passwordHash, next){
         newUser.password = passwordHash;
         newUser.recoverPasswordHash = uuid.v1();
-        newUser.save(function (err){
-          if(err){
-              return callback(errors['DB_FAIL'](err));
-          }
-          return callback(null, newUser);
+        createUserRoles(newUserAttrs, next);
+      },
+
+      // save roles and _ids of userRole docs in current doc and save
+      function(userRoles, next){
+        _.each(userRoles, function(userRoleDoc, role){
+          // <role> + 'Role' is our convention
+          newUser.set(role + 'Role', userRoleDoc._id);
+          newUser.roles.push(role);
         });
+
+        newUser.save(function(err){
+          if(err){
+              return next(errors['DB_FAIL'](err));
+          }
+          return next(null, newUser);
+        });
+      }
+
+    ], function(err, newUser) {
+      if(err) {
+        return callback(err);
+      }
+      return callback(null, newUser);
     });
-    
+
   });
 
 }
