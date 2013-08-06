@@ -14,6 +14,8 @@ errorMsgs['TOPIC_NOT_FOUND'] = "Invalid topic";
 errorMsgs['TOPIC_USER_NOT_FOUND'] = "Invalid user";
 errorMsgs['NOT_AUTHORISED'] = "Not authorised";
 
+errorMsgs['ORG_NOT_FOUND'] = "Invalid organization";
+
 
 Object.keys(errorMsgs).forEach(function(err){
     errors[err] = function(d){

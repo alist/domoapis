@@ -33,13 +33,13 @@ function getUserRoleModel(role) {
 }
 
 
-function createUserRoles(newUserAttrs, callback) {
-  var roles = newUserAttrs.roles;
+function createUserRoles(userRoleAttrs, callback) {
+  var roles = _.keys(userRoleAttrs);
   var newUserRoles = {};
 
   async.each(roles,
     function(role, next){
-      getUserRoleModel(role).new(newUserAttrs, function(err, subUser){
+      getUserRoleModel(role).new(userRoleAttrs[role], function(err, subUser){
         if(err){
           return next(err);
         }
@@ -112,29 +112,28 @@ var userSchema = new Schema({
 
   activeSessionIDs: [ {type: String, index: {unique: true}} ],
 
-  // supporter, supportee, admin, pointperson, reporter, omnipotent
-  roles:              [ { type: String, enum: validRoles } ],
-  supporteeRole:      { type: Schema.Types.ObjectId, ref: 'supportee' },
-  supporterRole:      { type: Schema.Types.ObjectId, ref: 'supporter' },
-  moduleadminRole:    { type: Schema.Types.ObjectId, ref: 'moduleadmin' },
-  adminRole:          { type: Schema.Types.ObjectId, ref: 'admin' },
-  adopterRole:        { type: Schema.Types.ObjectId, ref: 'adopter' },
 
   organizations: [
     {
-      id:     { type: Schema.Types.ObjectId, ref: 'organization' },
-      joined:   Date
+      id:       { type: Schema.Types.ObjectId, ref: 'organization' },
+      joined:   { type: Date, default: Date.now },
+      roles: {
+        supportee:    { type: Schema.Types.ObjectId, ref: 'supportee' },
+        supporter:    { type: Schema.Types.ObjectId, ref: 'supporter' },
+        moduleadmin:  { type: Schema.Types.ObjectId, ref: 'moduleadmin' },
+        admin:        { type: Schema.Types.ObjectId, ref: 'admin' },
+        adopter:      { type: Schema.Types.ObjectId, ref: 'adopter' }
+      }
     }
   ],
 
   modifiedBy: [
     {
       id:     Schema.Types.ObjectId,
-      date:   Date,
-      role:   String
+      role:   String,
+      date:   Date
     }
   ]
-
 });
 
 
@@ -158,68 +157,92 @@ userSchema.statics.generatePasswordHash = function(password, callback){
 userSchema.statics.register = function(newUserAttrs, callback){
 
   var self = this;
-  this.findUserAll({ id: newUserAttrs.email }, '_id email', function(err, user){
+  
+  var newUser;
 
-    if(!!user){
-      return callback(errors['USERNAME_EXISTS']());
+  async.waterfall([
+
+    // lookup user
+    function(next) {
+
+      self.findUserAll({ id: newUserAttrs.email }, '_id email', function(err, user){
+        if(!!user){
+          return next(errors['USERNAME_EXISTS']());
+        }
+        if(err instanceof Error && (err.id !== 'USER_NOT_FOUND')){
+          return next(err);
+        }
+
+        // create new user
+
+        newUser = new User();
+        newUser.userID = newUser.email = newUserAttrs.email;
+        
+        newUser.emailConfirmed = true;
+        newUser.emailVerified = false;
+        newUser.emailVerificationHash = uuid.v1();
+        
+        newUser.userApproved = false;
+        newUser.userApprovalHash = uuid.v4();
+
+        next();
+      });
+    },
+
+    // generate hash
+    function(next) {
+      self.generatePasswordHash(newUserAttrs.password, function(err, passwordHash) {
+        if(err){
+          return next(err);
+        }
+        return next(null, passwordHash);
+      });
+    },
+
+    // create userRole docs
+    function(passwordHash, next) {
+      newUser.password = passwordHash;
+      newUser.recoverPasswordHash = uuid.v1();
+
+      if(_.isObject(newUserAttrs.roles) && !_.isArray(newUserAttrs.roles)) {
+        createUserRoles(newUserAttrs.roles, next);
+      } else {
+        // is roles mandatory?
+        next(null, []);
+      }
+    },
+
+    // save roles and _ids of userRole docs in current doc and save
+    function(userRoles, next) {
+
+      var organization = {};
+
+      if(!newUserAttrs.organizationId) {
+        return next(errors['ORG_NOT_FOUND']('organizationId not specified'));
+      }
+
+      organization.id = newUserAttrs.organizationId;
+      organization.roles = {};
+
+      _.each(userRoles, function(userRoleDoc, role){
+        organization.roles[role] = userRoleDoc._id;
+      });
+
+      newUser.organizations.push(organization);
+
+      newUser.save(function(err){
+        if(err){
+            return next(errors['DB_FAIL'](err));
+        }
+        return next();
+      });
     }
 
-    if(err instanceof Error && (!err.id || err.id !== 'USER_NOT_FOUND')){
+  ], function(err) {
+    if(err) {
       return callback(err);
     }
-
-    var newUser = new User();
-    newUser.userID = newUser.email = newUserAttrs.email;
-    
-    newUser.emailConfirmed = true;
-    newUser.emailVerified = false;
-    newUser.emailVerificationHash = uuid.v1();
-    
-    newUser.userApproved = false;
-    newUser.userApprovalHash = uuid.v4();
-
-    async.waterfall([
-      // generate hash
-      function(next){
-        self.generatePasswordHash(newUserAttrs.password, next);
-      },
-
-      // create userRole docs
-      function(passwordHash, next){
-        newUser.password = passwordHash;
-        newUser.recoverPasswordHash = uuid.v1();
-
-        if(newUserAttrs.roles && !!newUserAttrs.roles.length) {
-          createUserRoles(newUserAttrs, next);
-        } else {
-          // is roles mandatory?
-          next(null, []);
-        }
-      },
-
-      // save roles and _ids of userRole docs in current doc and save
-      function(userRoles, next){
-        _.each(userRoles, function(userRoleDoc, role){
-          // <role> + 'Role' is our convention
-          newUser.set(role + 'Role', userRoleDoc._id);
-          newUser.roles.push(role);
-        });
-
-        newUser.save(function(err){
-          if(err){
-              return next(errors['DB_FAIL'](err));
-          }
-          return next(null, newUser);
-        });
-      }
-
-    ], function(err, newUser) {
-      if(err) {
-        return callback(err);
-      }
-      return callback(null, newUser);
-    });
-
+    return callback(null, newUser);
   });
 
 }
