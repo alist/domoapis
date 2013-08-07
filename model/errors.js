@@ -15,6 +15,9 @@ errorMsgs['TOPIC_USER_NOT_FOUND'] = "Invalid user";
 errorMsgs['NOT_AUTHORISED'] = "Not authorised";
 
 errorMsgs['ORG_NOT_FOUND'] = "Invalid organization";
+errorMsgs['ROLE_EXISTS'] = "Role already exists";
+errorMsgs['ROLE_NOT_FOUND'] = "Role not found for user";
+errorMsgs['INVALID_ROLE'] = "Invalid role";
 
 
 Object.keys(errorMsgs).forEach(function(err){

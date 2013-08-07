@@ -5,9 +5,16 @@ var Config = require('../configLoader').init(env)
   , Utils = require('./inc/utils')(Config.getConfig().db.dbUri)
   , Helpers = require('./inc/helpers')
   , util = require('util')
+  , _ = require('lodash')
 
-var User = require('../model/user').User
+var UserModel = require('../model/user')
+  , User = UserModel.User
+  , OrgUserModel = require('../model/orguser')
+  , OrgUser = OrgUserModel.OrgUser
   , Organization = require('../model/organization').Organization
+
+var ObjectId = require('mongoose').Types.ObjectId;
+
 
 var should = Helpers.should;
 
@@ -53,16 +60,13 @@ describe("DBTEST: Test User Model", function() {
 
 
   it("should register new user", function(done) {
-    var newUserAttrs = {
+    state.newUserAttrs = {
       email: 'shirishk.87@gmail.com',
       password: 'sa123',
-      organizationId: state.organization._id,
+      orgId: state.organization._id,
       roles: {
         supporter: {
           supportAreas: [ 'career' ]
-        },
-        moduleadmin: {
-
         },
         admin: {
 
@@ -70,7 +74,7 @@ describe("DBTEST: Test User Model", function() {
       }
     };
 
-    User.register(newUserAttrs, function(err, user){
+    User.register(state.newUserAttrs, function(err, user){
       should.not.exist(err);
       should.exist(user);
       state.user = user;
@@ -79,34 +83,80 @@ describe("DBTEST: Test User Model", function() {
   });
 
 
-  it("should find registered user by id and populate", function(done) {
+  // it("should find registered user by id and populate", function(done) {
 
-    User.findById(state.user._id, function(err, user){
+  //   User.findById(state.user._id, function(err, user){
+  //     should.not.exist(err);
+  //     should.exist(user);
+
+  //     var opts = [];
+
+  //     // set paths to be populated, based on roles
+  //     var org;
+  //     user.organizations.forEach(function(org){
+  //       Object.keys(org.roles.toObject()).forEach(function(role){
+  //         opts.push({ path: 'organizations.roles.' + role });
+  //       });
+  //     });
+  //     // console.log('opts', opts);
+
+  //     // pre-populate
+  //     // print('user', user.toObject());
+
+  //     User.populate(user, opts, function (err, user) {
+  //       // print('user', user.toObject());
+  //       var userRoleAttrs = _.keys(state.newUserAttrs.roles)
+  //       var hasRole;
+
+  //       UserModel.validRoles.forEach(function(role){
+  //         hasRole = user.hasRolesInOrg(state.organization._id, role);
+  //         hasRole.should.equal(userRoleAttrs.indexOf(role) > -1)
+  //       });
+
+  //       should.not.exist(err);
+  //       should.exist(user);
+  //       state.user = user;
+  //       done();
+  //     });
+
+  //   });
+  // });
+
+
+  it("should add new role", function(done) {
+    OrgUser.findOne({ userId: state.user._id, orgId: state.organization._id }, function(err, orguser){
       should.not.exist(err);
-      should.exist(user);
+      should.exist(orguser);
 
-      var opts = [];
+      orguser.addRoles({
+        adopter: {
 
-      // set paths to be populated, based on roles
-      var org;
-      user.organizations.forEach(function(org){
-        Object.keys(org.roles.toObject()).forEach(function(role){
-          opts.push({ path: 'organizations.roles.' + role });
-        });
+        }
+      }, function(err, user){
+          should.not.exist(err);
+          should.exist(user);
+          should.exist(user.roles.adopter);
+          done();
       });
-      // console.log('opts', opts);
+    });
 
-      // pre-populate
-      // print('user', user.toObject());
 
-      User.populate(user, opts, function (err, user) {
-        print('user', user.toObject());
+  });
+
+
+  it("should remove a role", function(done) {
+    OrgUser.findOne({ userId: state.user._id, orgId: state.organization._id }, function(err, orguser){
+      should.not.exist(err);
+      should.exist(orguser);
+      
+      orguser.removeRoles([ 'supporter' ], function(err, user){
+        // print(user.toObject())
         should.not.exist(err);
-        should.exist(user);
+        should.not.exist(user.roles.supporter);
         done();
       });
-
     });
+
   });
 
 });

@@ -8,70 +8,13 @@ var mongoose = require('mongoose')
   , async = require('async')
   , _ = require('lodash')
 
-
-// Import all schemas so they get registered with mongoose
-var SupporteeModel = require('./user_supportee')
-  , SupporterModel = require('./user_supporter')
-  , ModuleAdminModel = require('./user_moduleadmin')
-  , AdminModel = require('./user_admin')
-  , AdopterModel = require('./user_adopter')
+var OrgUserModel = require('./orguser')
+  , OrgUser = OrgUserModel.OrgUser
 
 
 exports.userLoginURLBase = "https://oh.domo.io/urllogin?token=";
 
-var validRoles = module.exports.validRoles = [ 'supportee', 'supporter', 'moduleadmin', 'admin', 'adopter' ];
-
 var SALT_WORK_FACTOR = 10;
-
-
-function getUserRoleModel(role) {
-  var model = mongoose.model(role);
-  if(!model) {
-    throw new Error('Model not found: ' + role);
-  }
-  return model;
-}
-
-
-function createUserRoles(userRoleAttrs, callback) {
-  var roles = _.keys(userRoleAttrs);
-  var newUserRoles = {};
-
-  async.each(roles,
-    function(role, next){
-      getUserRoleModel(role).new(userRoleAttrs[role], function(err, subUser){
-        if(err){
-          return next(err);
-        }
-        newUserRoles[role] = subUser;
-        return next();
-      });
-    },
-    function(err) {
-      if(!err) {
-        return callback(null, newUserRoles);
-      }
-
-      // remove orphans
-      var subDocs = _.toArray(newUserRoles);
-      if(!subDocs.length) {
-        return callback(err);
-      }
-
-      async.each(subDocs,
-        function(doc, next){
-          doc.remove(function(e, d) {
-            if(e) {
-              // continue removing others
-            }
-            return next();
-          });
-        },
-        function(e) {
-          return callback(err);
-        });
-    });
-}
 
 
 var userSchema = new Schema({
@@ -114,17 +57,7 @@ var userSchema = new Schema({
 
 
   organizations: [
-    {
-      id:       { type: Schema.Types.ObjectId, ref: 'organization' },
-      joined:   { type: Date, default: Date.now },
-      roles: {
-        supportee:    { type: Schema.Types.ObjectId, ref: 'supportee' },
-        supporter:    { type: Schema.Types.ObjectId, ref: 'supporter' },
-        moduleadmin:  { type: Schema.Types.ObjectId, ref: 'moduleadmin' },
-        admin:        { type: Schema.Types.ObjectId, ref: 'admin' },
-        adopter:      { type: Schema.Types.ObjectId, ref: 'adopter' }
-      }
-    }
+    { type: Schema.Types.ObjectId, ref: 'organization' }
   ],
 
   modifiedBy: [
@@ -145,6 +78,13 @@ userSchema.methods.checkPassword = function(userPwd, callback){
   bcrypt.compare(userPwd, this.password, callback);
 }
 
+userSchema.methods.getUserOrg = function(orgId) {
+  return _.first(this.organizations, function(oId) {
+    return (oId.toString() === orgId.toString()); 
+  });
+}
+
+
 userSchema.statics.generatePasswordHash = function(password, callback){
   bcrypt.genSalt(SALT_WORK_FACTOR, function(err, salt){
       if(err){
@@ -157,7 +97,6 @@ userSchema.statics.generatePasswordHash = function(password, callback){
 userSchema.statics.register = function(newUserAttrs, callback){
 
   var self = this;
-  
   var newUser;
 
   async.waterfall([
@@ -173,24 +112,28 @@ userSchema.statics.register = function(newUserAttrs, callback){
           return next(err);
         }
 
-        // create new user
-
-        newUser = new User();
-        newUser.userID = newUser.email = newUserAttrs.email;
-        
-        newUser.emailConfirmed = true;
-        newUser.emailVerified = false;
-        newUser.emailVerificationHash = uuid.v1();
-        
-        newUser.userApproved = false;
-        newUser.userApprovalHash = uuid.v4();
+        if(!newUserAttrs.orgId) {
+          return callback(errors['ORG_NOT_FOUND']('orgId not specified'));
+        }
 
         next();
       });
     },
 
-    // generate hash
+    // create new user
     function(next) {
+
+      newUser = new User();
+      newUser.userID = newUser.email = newUserAttrs.email;
+      newUser.organizations.push(newUserAttrs.orgId);
+      
+      newUser.emailConfirmed = true;
+      newUser.emailVerified = false;
+      newUser.emailVerificationHash = uuid.v1();
+      
+      newUser.userApproved = false;
+      newUser.userApprovalHash = uuid.v4();
+
       self.generatePasswordHash(newUserAttrs.password, function(err, passwordHash) {
         if(err){
           return next(err);
@@ -199,50 +142,26 @@ userSchema.statics.register = function(newUserAttrs, callback){
       });
     },
 
-    // create userRole docs
+    // save user
     function(passwordHash, next) {
       newUser.password = passwordHash;
       newUser.recoverPasswordHash = uuid.v1();
-
-      if(_.isObject(newUserAttrs.roles) && !_.isArray(newUserAttrs.roles)) {
-        createUserRoles(newUserAttrs.roles, next);
-      } else {
-        // is roles mandatory?
-        next(null, []);
-      }
-    },
-
-    // save roles and _ids of userRole docs in current doc and save
-    function(userRoles, next) {
-
-      var organization = {};
-
-      if(!newUserAttrs.organizationId) {
-        return next(errors['ORG_NOT_FOUND']('organizationId not specified'));
-      }
-
-      organization.id = newUserAttrs.organizationId;
-      organization.roles = {};
-
-      _.each(userRoles, function(userRoleDoc, role){
-        organization.roles[role] = userRoleDoc._id;
-      });
-
-      newUser.organizations.push(organization);
 
       newUser.save(function(err){
         if(err){
             return next(errors['DB_FAIL'](err));
         }
-        return next();
+        return next(null, newUser);
       });
+    },
+    
+    function(newUser, next) {
+      newUserAttrs.userId = newUser._id;
+      OrgUser.new(newUserAttrs, next);
     }
 
-  ], function(err) {
-    if(err) {
-      return callback(err);
-    }
-    return callback(null, newUser);
+  ], function(err, orguser) {
+    return callback(err, newUser);
   });
 
 }
@@ -574,4 +493,4 @@ exports.updateUserWithID = function(userID, displayName, permissions, phoneNumbe
   });
 };
 
-var User = module.exports.User = mongoose.model('User', userSchema, 'users');
+var User = module.exports.User = mongoose.model('user', userSchema, 'user');
