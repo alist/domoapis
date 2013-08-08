@@ -68,9 +68,8 @@ describe("DBTEST: Test User Model", function() {
         supporter: {
           supportAreas: [ 'career' ]
         },
-        admin: {
-
-        }
+        moduleadmin: {},
+        admin: {}
       }
     };
 
@@ -83,44 +82,14 @@ describe("DBTEST: Test User Model", function() {
   });
 
 
-  // it("should find registered user by id and populate", function(done) {
-
-  //   User.findById(state.user._id, function(err, user){
-  //     should.not.exist(err);
-  //     should.exist(user);
-
-  //     var opts = [];
-
-  //     // set paths to be populated, based on roles
-  //     var org;
-  //     user.organizations.forEach(function(org){
-  //       Object.keys(org.roles.toObject()).forEach(function(role){
-  //         opts.push({ path: 'organizations.roles.' + role });
-  //       });
-  //     });
-  //     // console.log('opts', opts);
-
-  //     // pre-populate
-  //     // print('user', user.toObject());
-
-  //     User.populate(user, opts, function (err, user) {
-  //       // print('user', user.toObject());
-  //       var userRoleAttrs = _.keys(state.newUserAttrs.roles)
-  //       var hasRole;
-
-  //       UserModel.validRoles.forEach(function(role){
-  //         hasRole = user.hasRolesInOrg(state.organization._id, role);
-  //         hasRole.should.equal(userRoleAttrs.indexOf(role) > -1)
-  //       });
-
-  //       should.not.exist(err);
-  //       should.exist(user);
-  //       state.user = user;
-  //       done();
-  //     });
-
-  //   });
-  // });
+  it("should find registered user by id and populate orgs", function(done) {
+    User.findById(state.user._id).populate('organizations').exec(function(err, user){
+      should.not.exist(err);
+      should.exist(user);
+      should.exist(user.organizations[0].id);
+      done();
+    });
+  });
 
 
   it("should add new role", function(done) {
@@ -129,9 +98,7 @@ describe("DBTEST: Test User Model", function() {
       should.exist(orguser);
 
       orguser.addRoles({
-        adopter: {
-
-        }
+        adopter: {}
       }, function(err, user){
           should.not.exist(err);
           should.exist(user);
@@ -139,8 +106,6 @@ describe("DBTEST: Test User Model", function() {
           done();
       });
     });
-
-
   });
 
 
@@ -149,10 +114,12 @@ describe("DBTEST: Test User Model", function() {
       should.not.exist(err);
       should.exist(orguser);
       
-      orguser.removeRoles([ 'supporter' ], function(err, user){
+      orguser.removeRoles([ 'supporter' ], function(err, ou){
         // print(user.toObject())
         should.not.exist(err);
-        should.not.exist(user.roles.supporter);
+        ou.hasRole([ 'moduleadmin', 'admin', 'adopter' ]).should.equal(true);
+        ou.hasRole('supporter').should.equal(false);
+        should.not.exist(ou.roles.supporter);
         done();
       });
     });

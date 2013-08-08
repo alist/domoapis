@@ -18,14 +18,26 @@ var validRoles = module.exports.validRoles = [ 'supportee', 'supporter', 'module
 var orgUserSchema = new Schema({
   userId:    { type: Schema.Types.ObjectId, ref: 'user', required: true },
   orgId:     { type: Schema.Types.ObjectId, ref: 'organization', required: true },
-  joined:    { type: Date, default: Date.now },
-  roles: {
-    supportee:    { type: Schema.Types.ObjectId, ref: 'supportee' },
-    supporter:    { type: Schema.Types.ObjectId, ref: 'supporter' }, 
-    moduleadmin:  { type: Schema.Types.ObjectId, ref: 'moduleadmin' },
-    admin:        { type: Schema.Types.ObjectId, ref: 'admin' },
-    adopter:      { type: Schema.Types.ObjectId, ref: 'adopter' }
-  }
+  joined:    { type: Date, default: Date.now }
+});
+
+
+var roles = {};
+_.each(validRoles, function(r) {
+  roles[r] = { type: Schema.Types.ObjectId, ref: r };
+});
+
+// dynamically construct below schema from validRoles
+// roles: {
+//   supportee:    { type: Schema.Types.ObjectId, ref: 'supportee' },
+//   supporter:    { type: Schema.Types.ObjectId, ref: 'supporter' }, 
+//   moduleadmin:  { type: Schema.Types.ObjectId, ref: 'moduleadmin' },
+//   admin:        { type: Schema.Types.ObjectId, ref: 'admin' },
+//   adopter:      { type: Schema.Types.ObjectId, ref: 'adopter' }
+// }
+
+orgUserSchema.add({
+  roles: roles
 });
 
 
@@ -36,7 +48,6 @@ orgUserSchema.statics.new = function(newAttrs, callback){
   orguser.userId = newAttrs.userId;
 
   async.waterfall([
-
     function(next) {
       if(_.isObject(newAttrs.roles) && !_.isArray(newAttrs.roles)) {
         return addRolesToUser(orguser, newAttrs.roles, next);
@@ -56,13 +67,11 @@ orgUserSchema.statics.new = function(newAttrs, callback){
   ], function(err, orguser){
     return callback(err, orguser);
   });
-
 }
 
 
 
-orgUserSchema.methods.hasRolesInOrg = function(roles){
-
+orgUserSchema.methods.hasRole = function(roles){
   if(_.isString(roles)) {
     var t = roles;
     roles = [ t ];
@@ -78,7 +87,6 @@ orgUserSchema.methods.hasRolesInOrg = function(roles){
 
 
 orgUserSchema.methods.addRoles = function(roles, callback) {
-
   if(_.isArray(roles) || !_.isObject(roles)) {
     return callback(errors['INVALID_ARG']('roles should be an object'));
   }
@@ -110,7 +118,6 @@ orgUserSchema.methods.addRoles = function(roles, callback) {
 
 
 orgUserSchema.methods.removeRoles = function(roles, callback) {
-
   if(_.isString(roles)) {
     var t = roles;
     roles = [ t ];
@@ -142,21 +149,17 @@ orgUserSchema.methods.removeRoles = function(roles, callback) {
     }
 
     delDocsTasks.push(
-
         function(next) {
           // Find the "foreign" doc and remove it
           getUserRoleModel(role).findOneAndRemove({ _id: roleDocId }, function (err) {
             if(err) {
               return next(err);
             }
-            
             unsetFields[unsetPrefix + role] = 1;
             return next();
           });
         }
-
     );
-
   });
 
 
@@ -176,10 +179,18 @@ orgUserSchema.methods.removeRoles = function(roles, callback) {
     });
 
   });
-
 }
 
 
+orgUserSchema.statics.get = function(userId, orgId, callback) {
+  this.findOne({ userId: userId, orgId: orgId}, function(err, orguser) {
+
+  });
+}
+
+orgUserSchema.statics.getPopulated = function(userId, orgId, callback) {
+  this.findOne({ userId: userId, orgId: orgId})
+}
 
 var OrgUser = module.exports.OrgUser = mongoose.model('orguser', orgUserSchema, 'orguser');
 
@@ -225,14 +236,21 @@ function removeDocs(docs, callback){
 
 function addRolesToUser(orguser, userRoleAttrs, callback) {
   var roles = _.keys(userRoleAttrs);
+  var newRoles = {};
 
   async.each(roles,
     function(role, next){
-      getUserRoleModel(role).new(userRoleAttrs[role], function(err, subUser){
+      var newRole = userRoleAttrs[role];
+      if(_.isArray(newRole) || !_.isObject(newRole)) {
+        return next(new Error('Expected object for role: ' + role));
+      }
+
+      getUserRoleModel(role).new(newRole, function(err, subUser){
         if(err){
           return next(err);
         }
         orguser.roles[role] = subUser._id;
+        newRoles[role] = subUser;
         return next();
       });
     },
