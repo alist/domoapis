@@ -1,6 +1,5 @@
- var OrganizationController = require('../controller/organization').OrganizationController
-  
-var excludeApi = ""; //^(?!\/api\/)";
+var OrganizationController = require('../controller/organization').OrganizationController
+
 
 function loadOrgInfo(app){
     app.param('organization', function(req, res, next, orgUrl) {
@@ -27,7 +26,7 @@ function loadOrgInfo(app){
 }
 
 function orgCheck(app){
-    app.all(excludeApi + '/:organization*', function(req, res, next){
+    app.all('/:organization*', function(req, res, next){
         if(!req.extras || !req.extras.organization) {
             // not an org route. someone else handles this
             return next();
@@ -40,12 +39,12 @@ function orgCheck(app){
 
         req.flash('error', 'You need to login to perform this action.');
         req.flash('redirTo', req.path);
-        return res.ext.redirect('/' + req.extras.organization.orgURL + '/login');
+        return res.ext.redirect('/login');
     });
 }
 
 module.exports.private = function(app) {
-    app.get(excludeApi + '/:organization/giveadvice', OrganizationController.giveAdvice.bind(OrganizationController));
+    app.get('/:organization/giveadvice', OrganizationController.giveAdvice.bind(OrganizationController));
 }
 
 module.exports.verif = function(app) {
@@ -54,10 +53,9 @@ module.exports.verif = function(app) {
 
 module.exports.public = function(app) {
   loadOrgInfo(app);
-  
-  app.get(excludeApi + '/:organization/login', OrganizationController.login.bind(OrganizationController));
-  app.get(excludeApi + '/:organization/getadvice', OrganizationController.getAdvice.bind(OrganizationController));  
-  app.get(excludeApi + '/:organization', OrganizationController.getInfo.bind(OrganizationController));
+
+  app.get('/:organization/getadvice', OrganizationController.getAdvice.bind(OrganizationController));  
+  app.get('/:organization', OrganizationController.getInfo.bind(OrganizationController));
 
 };
 

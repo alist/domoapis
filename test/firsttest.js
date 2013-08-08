@@ -44,6 +44,7 @@ describe("DBTEST: Test User Model", function() {
       "id": "1",
       "displayName": "Massachusetts Institute of Technology",
       "orgURL": "mit",
+      "code": "mitl",
       "city": "Cambridge",
       "region": "MA",
       "bannerURL": "/img/banners/mit.png"
@@ -63,7 +64,8 @@ describe("DBTEST: Test User Model", function() {
     state.newUserAttrs = {
       email: 'shirishk.87@gmail.com',
       password: 'sa123',
-      orgId: state.organization._id,
+      orgId: state.organization.id,
+      orgCode: state.organization.code,
       roles: {
         supporter: {
           supportAreas: [ 'career' ]

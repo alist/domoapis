@@ -8,7 +8,9 @@ var mongoose = require('mongoose')
   , async = require('async')
   , _ = require('lodash')
 
-var OrgUserModel = require('./orguser')
+var OrganizationModel = require('./organization')
+  , Organization = OrganizationModel.Organization
+  , OrgUserModel = require('./orguser')
   , OrgUser = OrgUserModel.OrgUser
 
 
@@ -97,7 +99,7 @@ userSchema.statics.generatePasswordHash = function(password, callback){
 userSchema.statics.register = function(newUserAttrs, callback){
 
   var self = this;
-  var newUser;
+  var newUser, org;
 
   async.waterfall([
 
@@ -112,12 +114,30 @@ userSchema.statics.register = function(newUserAttrs, callback){
           return next(err);
         }
 
-        if(!newUserAttrs.orgId) {
-          return callback(errors['ORG_NOT_FOUND']('orgId not specified'));
-        }
-
         next();
       });
+    },
+
+    // verify org membership
+    function(next) {
+
+      // validations belong in the controller, not here
+      // if(!newUserAttrs.orgId) {
+      //   return callback(errors['ORG_NOT_FOUND']('orgId not specified'));
+      // }
+
+      Organization.getByIdAndCode(newUserAttrs.orgId, newUserAttrs.orgCode, function(err, o) {
+        if(err) {
+          return next(err);
+        }
+        if(!o) {
+          return next(errors['ORG_NOT_FOUND']());
+        }
+
+        org = o;
+        return next();
+      });
+
     },
 
     // create new user
@@ -125,7 +145,7 @@ userSchema.statics.register = function(newUserAttrs, callback){
 
       newUser = new User();
       newUser.userID = newUser.email = newUserAttrs.email;
-      newUser.organizations.push(newUserAttrs.orgId);
+      newUser.organizations.push(org._id);
       
       newUser.emailConfirmed = true;
       newUser.emailVerified = false;
@@ -156,8 +176,11 @@ userSchema.statics.register = function(newUserAttrs, callback){
     },
     
     function(newUser, next) {
-      newUserAttrs.userId = newUser._id;
-      OrgUser.new(newUserAttrs, next);
+      OrgUser.new({
+        userId: newUser._id,
+        orgId: org._id,
+        roles: newUserAttrs.roles
+      }, next);
     }
 
   ], function(err, orguser) {
