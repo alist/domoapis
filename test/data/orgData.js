@@ -528,7 +528,7 @@ module.exports.orgData = [
   {
     "id": "76",
     "displayName": "Pede Cras Vulputate Institute",
-    "orgURL": "pedecras",
+    "orgURL": "pedecrasv",
     "city": "Lafayette",
     "region": "LA"
   },
