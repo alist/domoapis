@@ -2,5 +2,5 @@
   , OrganizationController = require('../controller/organization').OrganizationController
   
 module.exports.public = function(app){
-    app.get(apiConfig.path + '/organizations', OrganizationController.getAll.bind(OrganizationController));
+  app.get(apiConfig.path + '/organizations', OrganizationController.getAll.bind(OrganizationController));
 }

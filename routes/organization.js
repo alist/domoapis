@@ -1,40 +1,37 @@
  var OrganizationController = require('../controller/organization').OrganizationController
   
-var excludeApi = "^(?!\/api\/)";
-  
-function orgLookup(req, res, next){
-
-    var orgUrl = req.params.organization; // validate
-    OrganizationController.getByOrgUrl(orgUrl, function(err, org){
-        
-        if(err || !org){      
-            res.ext.code(res.ext.STATUS.NOT_FOUND);
-            res.ext.data({ 
-                organization : {
-                    error: 'ORG_NOT_FOUND',
-                    displayName: 'Invalid organization',
-                    bannerURL: '/invalid/logo.png',
-                    orgURL: '/invalid'
-                }
-            }, true);
-            //render org_not_found view here and don't call next
-            return res.ext.view('orglanding').render(); 
-        }
-        
-        req.extras = req.extras || {};
-        req.extras.organization = res.locals.organization = org;
-        return next();
-    });
-        
-}
+var excludeApi = ""; //^(?!\/api\/)";
 
 function loadOrgInfo(app){
-    app.all(excludeApi + '/:organization*', orgLookup);
+    app.param('organization', function(req, res, next, orgUrl) {
+        OrganizationController.getByOrgUrl(orgUrl, function(err, org){
+            if(err || !org){      
+                res.ext.code(res.ext.STATUS.NOT_FOUND);
+                res.ext.data({ 
+                    organization : {
+                        error: 'ORG_NOT_FOUND',
+                        displayName: 'Invalid organization',
+                        bannerURL: '/invalid/logo.png',
+                        orgURL: '/invalid'
+                    }
+                }, true);
+                //render org_not_found view here and don't call next
+                return res.ext.view('orglanding').render(); 
+            }
+            
+            req.extras = req.extras || {};
+            req.extras.organization = res.locals.organization = org;
+            return next();
+        });
+    });
 }
 
 function orgCheck(app){
     app.all(excludeApi + '/:organization*', function(req, res, next){
-        console.log('Imma gonna check too: ' + req.extras.organization.displayName); 
+        if(!req.extras || !req.extras.organization) {
+            // not an org route. someone else handles this
+            return next();
+        }
         
         if (req.isAuthenticated()) {
             // continues the request, sending it to the next matching route
@@ -43,7 +40,7 @@ function orgCheck(app){
 
         req.flash('error', 'You need to login to perform this action.');
         req.flash('redirTo', req.path);
-        return res.ext.redirect('/' + req.params.organization + '/login');
+        return res.ext.redirect('/' + req.extras.organization.orgURL + '/login');
     });
 }
 

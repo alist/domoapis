@@ -44,7 +44,7 @@ OrganizationController.prototype.getAll = function(req, res){
             return response.error(err).render();
         }
         orgs = orgs || [];
-        return response.data({ organizations: orgs }).render();
+        return response.data({ organizations: orgs }).json().render();
     });
 }
 
