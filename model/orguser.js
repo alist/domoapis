@@ -183,13 +183,30 @@ orgUserSchema.methods.removeRoles = function(roles, callback) {
 
 
 orgUserSchema.statics.get = function(userId, orgId, callback) {
-  this.findOne({ userId: userId, orgId: orgId}, function(err, orguser) {
-
+  this.findOne({ userId: userId, orgId: orgId }, function(err, orguser) {
+    return callback(err, orguser);
   });
 }
 
 orgUserSchema.statics.getPopulated = function(userId, orgId, callback) {
-  this.findOne({ userId: userId, orgId: orgId})
+  this.get(userId, orgId, function(err, orguser) {
+    if(err) {
+      return callback(err);
+    }
+
+    if(!_.isObject(orguser.roles) || _.isEmpty(orguser.roles)) {
+      return callback(orguser);
+    }
+
+    var popOpts = [];
+    _.each(orguser.roles, function(roleDocId, role) {
+      popOpts.push({ path: 'roles.' +  role });
+    });
+
+    orguser.populate(popOpts, function(err, ou) {
+      return callback(err, ou);
+    });
+  });
 }
 
 var OrgUser = module.exports.OrgUser = mongoose.model('orguser', orgUserSchema, 'orguser');

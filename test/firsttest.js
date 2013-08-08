@@ -92,8 +92,21 @@ describe("DBTEST: Test User Model", function() {
   });
 
 
-  it("should add new role", function(done) {
-    OrgUser.findOne({ userId: state.user._id, orgId: state.organization._id }, function(err, orguser){
+  it("should find an orguser and populate roles", function(done) {
+    OrgUser.getPopulated(state.user._id, state.organization._id, function(err, orguser){
+      // print(orguser.toObject());
+      should.not.exist(err);
+      should.exist(orguser);
+      _.each(state.newUserAttrs.roles, function(rId, role) {
+        should.exist(orguser.roles[role]._id);
+      });
+      done();
+    });
+  });
+
+  it("should add new role: adopter ", function(done) {
+    OrgUser.get(state.user._id, state.organization._id, function(err, orguser){
+      // print(orguser.toObject());
       should.not.exist(err);
       should.exist(orguser);
 
@@ -109,13 +122,13 @@ describe("DBTEST: Test User Model", function() {
   });
 
 
-  it("should remove a role", function(done) {
-    OrgUser.findOne({ userId: state.user._id, orgId: state.organization._id }, function(err, orguser){
+  it("should remove a role: supporter", function(done) {
+    OrgUser.get(state.user._id, state.organization._id, function(err, orguser){
       should.not.exist(err);
       should.exist(orguser);
       
       orguser.removeRoles([ 'supporter' ], function(err, ou){
-        // print(user.toObject())
+        // print(user.toObject());
         should.not.exist(err);
         ou.hasRole([ 'moduleadmin', 'admin', 'adopter' ]).should.equal(true);
         ou.hasRole('supporter').should.equal(false);
