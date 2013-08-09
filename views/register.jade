@@ -1,19 +1,113 @@
 extends layout
 
+block head
+  script(src='//cdnjs.cloudflare.com/ajax/libs/underscore.js/1.5.1/underscore-min.js')
+  script(src='//cdnjs.cloudflare.com/ajax/libs/backbone.js/1.0.0/backbone-min.js')
+  script(src='/js/typeahead.min.js')
+  script(src='//cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.11.1/jquery.validate.min.js')
+
+  link(rel='stylesheet', href='/css/typeahead.css')
+  link(rel='stylesheet', href='/css/app/register.css')
+
 block body
-  div.row
-    div#login-form.container-fluid
-      form(method='post')
-        h3 #{title}
-        div.divider.row
-          div.columns
-            include includes/errors
-        div.row
-          div.columns
-            input(type='text', name='email', maxlength=96, placeholder='E-mail address')
-        div.row
-          div.columns
-            input(type='password', name='password', maxlength=64, placeholder='Password')
-        div.row
-          div.columns
-            input(type='submit', class='medium success button radius', value='Register') Register
+  style(type='text/css').
+
+
+
+  div.row-fluid
+    div.span12
+      form#form-register(method='post')
+        h3#form-register-heading Register
+        include includes/errors
+        input.input-block-level.required(type='text', name='email', maxlength=96, placeholder='E-mail address')
+        input.input-block-level.required(type='password', name='password', maxlength=64, placeholder='Password')
+
+        div.control-group
+          div.controls
+            input#org.input-block-level(type='text', name='org', placeholder='Organization')
+
+        br
+        br
+        button.btn.btn-large.btn-success(type='submit') Register
+
+
+  script(type='text/javascript').
+
+    var orgFilter = [];
+    var orgElem = '#org';
+
+    function isValidOrg() {
+      if(_.isArray(orgFilter) && orgFilter.length > 0) {
+        var inpVal = $(orgElem).val().toLowerCase();
+
+        var matches = _.any(orgFilter, function(o) {
+          console.log(inpVal + ' | ' + o.displayName.toLowerCase())
+          if(inpVal === o.displayName.toLowerCase()) {
+            $(orgElem).val(o.displayName);
+            return true;
+          }
+          return false;
+        });
+
+        if(matches) {
+          return true;
+        }
+      }
+      return false;
+    }
+
+
+
+    function setupOrg() {
+
+      $(orgElem).typeahead({
+        name: 'organizations',
+        valueKey: 'displayName',
+        limit: 15,
+        prefetch: '/api/v1/organizations?src=typeahead',
+        remote: {
+          url: '/api/v1/organizations?src=typeahead&q=%QUERY',
+          filter: function(parsedResponse) {
+            orgFilter = parsedResponse;
+            return parsedResponse;
+          }
+        }
+      });
+    }
+
+    $(document).ready(function() {
+
+      $('html').click(function() {
+        if(!isValidOrg()) {
+          $(orgElem).typeahead('setQuery', '');
+        }
+      });
+
+      $('#org').parent().click(function(event){
+          event.stopPropagation();
+      });
+
+      setupOrg();
+
+     //$.validator.addMethod('vld-org', function(value) {
+     //  console.log(value)
+     //  return isValidOrg();
+     //}, 'Please enter "buga"!');
+
+     //$('#form-register').validate({
+     //  rules: {
+     //    org: 'vld-org'
+     //  },
+     //  highlight: function(element) {
+     //    $(element).closest('.control-group').removeClass('success').addClass('error');
+     //  },
+     //  success: function(element) {
+     //    element
+     //    .text('OK!').addClass('valid')
+     //    .closest('.control-group').removeClass('error').addClass('success');
+     //  }
+     //});
+
+     // $.extend($("#form-register").validate().settings, { onkeyup: false, onfocusout: false });
+
+    });

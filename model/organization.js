@@ -13,11 +13,7 @@ var orgSchema = new Schema({
 });
 
 var schemaAttrs = _.keys(orgSchema.paths);
- 
 
-orgSchema.statics.getAll = function(callback) {
-  this.find({}).sort({ displayName: 'asc' }).exec(callback);
-}
 
 orgSchema.statics.getByOrgUrl = function(orgURL, callback) {
   this.findOne({ orgURL: orgURL }, callback);

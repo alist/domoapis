@@ -1,5 +1,8 @@
- var OrganizationModel = require("../model/organization").Organization
+var OrganizationModel = require("../model/organization").Organization
+  , Validator = require('validator').Validator
+  , _ = require('lodash')
   
+
 var OrganizationController = function(){
 };
 
@@ -38,12 +41,28 @@ OrganizationController.prototype.auth = function(req, res){
 OrganizationController.prototype.getAll = function(req, res){
     var response = res.ext;
     response.view('data.jade').errorView('error.jade');
-    
-    OrganizationModel.getAll(function(err, orgs){
-        if(err){
+
+    var isTypeahead = (!!req.query.src && req.query.src === 'typeahead');
+
+    var lookup = {};
+    if(!!req.query.q) {
+        // TODO: [SECURITY] sanitize req.query.src
+        lookup.displayName = new RegExp(req.query.q, 'i');
+    }
+
+    OrganizationModel.find(lookup, { displayName: 1 }).sort({ displayName: 'asc' }).limit(15).exec(function(err, orgs) {
+        if(err) {
+            if(isTypeahead) {
+                return res.json([]);
+            }
             return response.error(err).render();
         }
         orgs = orgs || [];
+
+        if(isTypeahead) {
+            return res.json(orgs);
+        }
+
         return response.data({ organizations: orgs }).json().render();
     });
 }
@@ -63,7 +82,7 @@ OrganizationController.prototype.getInfo = function(req, res){
     
 OrganizationController.prototype.getByOrgUrl = function(orgUrl, callback){
     // lookup dbn
-    OrganizationModel.findByOrgUrl(orgUrl, function(err, org){
+    OrganizationModel.getByOrgUrl(orgUrl, function(err, org){
         if(err){
             return callback(new Error('ORG_NOT_FOUND'));
         }
