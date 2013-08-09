@@ -126,7 +126,7 @@ userSchema.statics.register = function(newUserAttrs, callback){
       //   return callback(errors['ORG_NOT_FOUND']('orgId not specified'));
       // }
 
-      Organization.getByIdAndCode(newUserAttrs.orgId, newUserAttrs.orgCode, function(err, o) {
+      Organization.getById(newUserAttrs.orgId, function(err, o) {
         if(err) {
           return next(err);
         }
