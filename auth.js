@@ -21,11 +21,14 @@ module.exports = function(AppLoader){
     ));
 
     passport.serializeUser(function(user, done) {
-      done(null, user);
+      var sessionObj = {
+        userID: user.userID
+      };
+      done(null, sessionObj);
     });
 
-    passport.deserializeUser(function(user, done) {
-      UserController.findUserById(user.id, function (err, user) {
+    passport.deserializeUser(function(sessionObj, done) {
+      UserController.findUserById(sessionObj.userID, function (err, user) {
         done(err, user);
       });
     });

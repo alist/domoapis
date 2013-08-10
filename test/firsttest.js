@@ -65,7 +65,6 @@ describe("DBTEST: Test User Model", function() {
       email: 'shirishk.87@gmail.com',
       password: 'sa123',
       orgId: state.organization.id,
-      orgCode: state.organization.code,
       roles: {
         supporter: {
           supportAreas: [ 'career' ]

@@ -84,16 +84,15 @@ Object.keys(module.exports.db).forEach(function(k){
 module.exports.mail = {};
 
 module.exports.mail.defaults = {
-  host: "smtp.gallop.in",
+  host: "smtp.buggycoder.com",
   port: 587,
   secureConnection: false,
   auth: {
-    user: "ping@gallop.in",
-    pass: "lOV*XUs1"
+    user: "shirish@buggycoder.com",
+    pass: "VTkrZ(%7"
   },
-  from: '"Gallop Services" <ping@gallop.in>',
-  sendTo: 'shirishk.87@gmail.com',
-  sendBcc: 'shirishk.87@gmail.com'
+  from: "\"Buggy Coder, Inc.\" <shirish@buggycoder.com>",
+  adminEmails: ['shirishk.87@gmail.com', 'harishnk@gmail.com']
 };
 
 

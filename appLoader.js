@@ -4,6 +4,7 @@ var EventEmitter = require('events').EventEmitter
   , express = require('express')
   , flash = require('connect-flash')
   , mongoose = require('mongoose')
+  , mailer = require('./lib/mailer')
   , logger = require('./lib/logger')
   , errorHandler = require('./lib/errorHandler')
   , Validator = require('validator').Validator
@@ -22,6 +23,7 @@ AppLoader.prototype.init = function(app){
   this.app = app;
 
   this.loadConfig();
+  mailer.init();
 
   this.configExceptions();
   this.configValidator();

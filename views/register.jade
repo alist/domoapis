@@ -9,10 +9,10 @@ block head
   link(rel='stylesheet', href='/css/typeahead.css')
   link(rel='stylesheet', href='/css/app/register.css')
 
+block viewVars
+  - title = 'Register'
+
 block body
-  style(type='text/css').
-
-
 
   div.row-fluid
     div.span12
@@ -21,13 +21,9 @@ block body
         include includes/errors
         input.input-block-level.required(type='text', name='email', maxlength=96, placeholder='E-mail address')
         input.input-block-level.required(type='password', name='password', maxlength=64, placeholder='Password')
-
-        div.control-group
-          div.controls
-            input#org.input-block-level(type='text', name='org', placeholder='Organization')
-
-        br
-        br
+        input#org.input-block-level(type='text', name='org', placeholder='Organization')
+        input#orgId(type='hidden', name='orgId')
+        input.input-block-level(type='text', name='skills', maxlength=120, placeholder='Skills')
         button.btn.btn-large.btn-success(type='submit') Register
 
 
@@ -35,15 +31,17 @@ block body
 
     var orgFilter = [];
     var orgElem = '#org';
+    var orgIdElem = '#orgId';
 
     function isValidOrg() {
       if(_.isArray(orgFilter) && orgFilter.length > 0) {
         var inpVal = $(orgElem).val().toLowerCase();
-
+        console.log(orgFilter)
         var matches = _.any(orgFilter, function(o) {
-          console.log(inpVal + ' | ' + o.displayName.toLowerCase())
           if(inpVal === o.displayName.toLowerCase()) {
             $(orgElem).val(o.displayName);
+            $(orgIdElem).val(o.id);
+            selOrg = o;
             return true;
           }
           return false;
@@ -57,57 +55,55 @@ block body
     }
 
 
-
     function setupOrg() {
-
       $(orgElem).typeahead({
         name: 'organizations',
         valueKey: 'displayName',
         limit: 15,
-        prefetch: '/api/v1/organizations?src=typeahead',
+        prefetch: '#{apiOrgUrl}',
         remote: {
-          url: '/api/v1/organizations?src=typeahead&q=%QUERY',
+          url: '#{apiOrgUrl}&q=%QUERY',
           filter: function(parsedResponse) {
             orgFilter = parsedResponse;
             return parsedResponse;
           }
         }
+      }).on('typeahead:selected', function() {
+        $(orgElem).valid();
       });
     }
 
-    $(document).ready(function() {
 
+    $(document).ready(function() {
       $('html').click(function() {
-        if(!isValidOrg()) {
-          $(orgElem).typeahead('setQuery', '');
+        if($(orgElem).val().length) {
+          $(orgElem).valid();
         }
       });
 
       $('#org').parent().click(function(event){
-          event.stopPropagation();
+        event.stopPropagation();
       });
 
       setupOrg();
 
-     //$.validator.addMethod('vld-org', function(value) {
-     //  console.log(value)
-     //  return isValidOrg();
-     //}, 'Please enter "buga"!');
+      $.validator.addMethod('vld-org', function(value) {
+        return isValidOrg();
+      }, 'Please select an organization');
 
-     //$('#form-register').validate({
-     //  rules: {
-     //    org: 'vld-org'
-     //  },
-     //  highlight: function(element) {
-     //    $(element).closest('.control-group').removeClass('success').addClass('error');
-     //  },
-     //  success: function(element) {
-     //    element
-     //    .text('OK!').addClass('valid')
-     //    .closest('.control-group').removeClass('error').addClass('success');
-     //  }
-     //});
+      $('#form-register').validate({
+        rules: {
+         org: 'vld-org'
+        },
+        highlight: function(element) {
+         $(element).closest('.control-group').removeClass('success').addClass('error');
+        },
+        success: function(element) {
+         element.addClass('valid')
+         .closest('.control-group').removeClass('error').addClass('success');
+        }
+      });
 
-     // $.extend($("#form-register").validate().settings, { onkeyup: false, onfocusout: false });
+      $.extend($("#form-register").validate().settings, { onkeyup: false, onfocusout: false });
 
     });

@@ -1,32 +1,37 @@
 var Validator = require('validator').Validator
-  , config = require('../config').config
   , mailer = require('../lib/mailer')
   , Utils = require('../lib/utils')
   , _ = require('lodash')
-  // , secrets = require('../secrets')
   , UserModel = require('../model/user').User;
 
 
 
-var UserController = module.exports.UserController = function() {
+var UserController = function() {
+}
+
+
+UserController.prototype.getRegister = function(req, res){
+  var apiOrgUrl = "/api/v1/organizations?src=typeahead";
+  res.ext.view('register')
+    .data({ apiOrgUrl: apiOrgUrl })
+    .render();
 }
 
 
 UserController.prototype.register = function(req, res){
-  var newUserAttrs = _.pick(req.body, ['email', 'password']);
+  var newUserAttrs = _.pick(req.body, [ 'email', 'password', 'skills', 'orgId' ]);
   var validator = new Validator();
   validator.check(newUserAttrs.email, 'Invalid e-mail address').len(6, 64).isEmail();
   validator.check(newUserAttrs.password, 'Invalid password').len(5, 64);
+  validator.check(newUserAttrs.orgId, 'Invalid organization').notEmpty();
   
   var response = res.ext;
   response.errorView('register.jade');
-  response.viewData(_.extend(newUserAttrs, { title: 'Register' }));
+  response.viewData(_.extend(newUserAttrs));
 
   if(validator.hasError()){
     return response.error(validator.getErrors()).render();
   }
-  
-  //newUserAttrs.roles = [ this.primaryRole ]; //hnk07/23/13-
 
   var self = this;
 
@@ -40,7 +45,6 @@ UserController.prototype.register = function(req, res){
         return response.error(err).render();
       }
       self.sendApprovalEmail(req, res);
-      // Route handler for / will read req.user to check if user has been approved, and will use the appropriate template
       return response.redirect('/');
     });
 
@@ -73,7 +77,6 @@ UserController.prototype.sendApprovalEmail = function(req, res){
   mailer.dispatchApprovalMail(Utils.getDomainFromRequest(req), req.user,
     function(err){
       if(err)   return console.log("Sending email: Error: " + err);
-      console.log("Dispatched approval-request e-mail to: " + config.mailConfig.adminEmails.join(', '));
     });
 }
 
@@ -91,3 +94,6 @@ UserController.prototype.findUserById = function(userId, callback){
       return callback(null, user);
     });
 }
+
+
+module.exports.UserController = new UserController();
