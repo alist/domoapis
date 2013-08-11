@@ -3,7 +3,11 @@ var Validator = require('validator').Validator
   , Utils = require('../lib/utils')
   , _ = require('lodash')
   , UserModel = require('../model/user').User
+  , OrgUserModel = require('../model/orguser').OrgUser
   , Config = require('../configLoader')
+  , jade = require('jade')
+  , path = require('path')
+  , async = require('async')
 
 
 
@@ -53,7 +57,13 @@ UserController.prototype.register = function(req, res){
 
   var self = this;
 
-  UserModel.register(newUserAttrs, function(err, user){
+  newUserAttrs.roles = {
+    supporter: {
+      skills: newUserAttrs.skills
+    }
+  };
+
+  UserModel.register(newUserAttrs, function(err, user, orguser, org){
     if(err){
       return response.error(err).render();
     }
@@ -62,10 +72,19 @@ UserController.prototype.register = function(req, res){
       if (err){
         return response.error(err).render();
       }
-      self.sendApprovalEmail(req, res);
-      return response.redirect('/');
-    });
 
+      // async, don't wait for email to be dispatched
+      self.sendApprovalEmail(req, {
+        user: user,
+        org: org
+      }, function(err){
+        if(err) {
+          console.log(err);
+        }
+      });
+      
+      return response.data(user.toObject()).data(orguser.toObject()).redirect('/');
+    });
   });
 }
 
@@ -88,14 +107,40 @@ UserController.prototype.auth = function(email, password, permissions, done){ //
     });
 }
 
-UserController.prototype.sendApprovalEmail = function(req, res){
-  // User shouldn't have to wait for e-mail to be dispatched
-  // E-mail sending needs to be a part of a larger queue-based subsystem anyway
+
+UserController.prototype.sendApprovalEmail = function(req, data, callback){
+
   console.log('Sending approval-request email')
-  mailer.dispatchApprovalMail(Utils.getDomainFromRequest(req), req.user,
-    function(err){
-      if(err)   return console.log("Sending email: Error: " + err);
-    });
+  data = data || {};
+  data.approvalLink = Utils.getDomainFromRequest(req)
+                        + '/account/approval?token='
+                        + data.user.userApprovalHash 
+                        + '&email=' + data.user.email;
+
+  async.waterfall([
+    // fetch populated orguser
+    function(next) {
+      OrgUserModel.getPopulated(data.user._id, data.org._id, function(err, orguser) {
+        data.orguser = orguser;
+        next(err);
+      });
+    },
+    // generate html from jade template
+    function(next) {
+      var tmplPath = path.join(Config.getConfig().app.env.rootDir, 'views', 'mailer', 'approveSupporter.jade');
+      jade.renderFile(tmplPath, data, next);
+    },
+    // mail
+    function(html, next) {
+      var parcel = {
+        to: data.user.getMailRecipient(),
+        subject: 'Domo: Account Approval Request',
+        html: html
+      };
+
+      mailer.sendMessage(parcel, next);
+    }
+  ], callback); 
 }
 
 

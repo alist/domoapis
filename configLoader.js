@@ -20,9 +20,13 @@ ConfigLoader.prototype.init = function(env){
 
 	var validEnvs = self.envList;
 	validEnvs.push(self.defaultsKey);
+  this.activeEnv = conf.activeEnv;
 
-  this.activeEnv = env || conf.activeEnv;
-  delete conf.activeEnv;
+  if(_.contains(validEnvs, env)) {
+    this.activeEnv = env;
+  }
+  
+  var skipOverrides = (this.activeEnv === 'test');
 
   if(!_.contains(validEnvs, this.activeEnv)) {
     throw new Error('Invalid env: ' + this.activeEnv);
@@ -34,7 +38,7 @@ ConfigLoader.prototype.init = function(env){
 		if(_.isObject(v) && _.difference(validEnvs, _.keys(v)).length < validEnvsLen){
       self.config[k] = mergeObjects(v[self.activeEnv] || {}, v.defaults || {});
 
-      if(!env && !!v.overrides){
+      if(!!v.overrides && !skipOverrides){
         self.overrideProps(self.config[k], v.overrides);
       }
 		}

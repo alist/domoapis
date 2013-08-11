@@ -86,6 +86,17 @@ userSchema.methods.getUserOrg = function(orgId) {
   });
 }
 
+userSchema.methods.getMailRecipient = function() {
+  var fullName = this.profile && ((this.profile.fname || '') + " " + (this.profile.lname || ''));
+  var sendTo = '';
+  if('string' === typeof fullName && fullName.trim().length){
+    sendTo = (fullName.trim().length ? "'" + fullName.trim() + "'" : "")  + " <" + this.email + ">";
+  } else {
+    sendTo = this.email;
+  }
+  return sendTo;
+}
+
 
 userSchema.statics.generatePasswordHash = function(password, callback){
   bcrypt.genSalt(SALT_WORK_FACTOR, function(err, salt){
@@ -184,7 +195,7 @@ userSchema.statics.register = function(newUserAttrs, callback){
     }
 
   ], function(err, orguser) {
-    return callback(err, newUser);
+    return callback(err, newUser, orguser, org);
   });
 
 }

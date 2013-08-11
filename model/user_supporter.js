@@ -9,7 +9,7 @@ var validSupportAreas = module.exports.validSupportAreas = [ 'career', 'mental-h
 var supporterSchema = new Schema({
   supportAreas:                       [ { type: String, enum: validSupportAreas } ],
   joined:                             { type: Date, default: Date.now },
-
+  skills:                             { type: String },
   // Following attribs belong in a message dispatch collection and not here
   messageCount:                       { type: Number },       //how many msgs they've received
   overIntervalMessageAllowanceCount:  { type: Number },       //how many msgs allowed to be sent past the notification interval
