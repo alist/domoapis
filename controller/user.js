@@ -12,14 +12,27 @@ var UserController = function() {
 
 
 UserController.prototype.getRegister = function(req, res){
+
   res.ext.view('register')
     .viewData({ apiOrgUrl: Config.getConfig().app.api.path + "/organizations?src=typeahead" })
-    .render();
+
+  var reqOrg;
+  if(!!req.extras && !_.isEmpty(req.extras.organization) && !req.extras.organization.error) {
+    reqOrg = req.extras.organization;
+    res.ext.viewData({ disableOrgSel: true, orgId: reqOrg.id, org: reqOrg.displayName });
+  }
+
+  res.ext.render();
 }
 
 
 UserController.prototype.register = function(req, res){
   var newUserAttrs = _.pick(req.body, [ 'email', 'password', 'skills', 'orgId', 'org' ]);
+  var reqOrg;
+  if(!!req.extras && !_.isEmpty(req.extras.organization) && !req.extras.organization.error) {
+    reqOrg = req.extras.organization;
+  }
+
   var validator = new Validator();
   validator.check(newUserAttrs.email, 'Invalid e-mail address').len(6, 64).isEmail();
   validator.check(newUserAttrs.password, 'Invalid password').len(5, 64);
@@ -30,8 +43,12 @@ UserController.prototype.register = function(req, res){
   response.viewData({ apiOrgUrl: Config.getConfig().app.api.path + "/organizations?src=typeahead" })
   response.viewData(newUserAttrs);
 
+  if(reqOrg) {
+    response.viewData({ disableOrgSel: true, orgId: reqOrg.id, org: reqOrg.displayName });
+  }
+
   if(validator.hasError()){
-    return response.error(validator.getErrors()).render();
+    return response.error(validator.getErrors()).debug().render();
   }
 
   var self = this;

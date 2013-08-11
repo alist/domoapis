@@ -24,9 +24,11 @@ html
     each s in stylesheets
       link(rel='stylesheet', href='#{s}')
 
+    block styles
+
     each s in localScripts
       script(src='#{s}')
-
+      
     block head
 
 
@@ -44,8 +46,13 @@ html
           |  | 
           a(href="/privacyandterms") privacy &amp; terms
 
+      block footer
+
+
+
+
+    block scripts
+
     - if(typeof scripts !== 'undefined')
       each s in scripts
         script(src='#{s}.js').
-
-      block footer

@@ -1,3 +1,5 @@
+- var disableOrgSel = (disableOrgSel === true)
+
 extends layout
 
 block head
@@ -12,98 +14,115 @@ block head
 block viewVars
   - title = 'Register'
 
-block body
 
+block body
   div.row-fluid
     div.span12
       form#form-register(method='post')
         h3#form-register-heading Register
-        include includes/errors
+        p#form-register-errors
+          include includes/errors
         input.input-block-level.required(type='text', name='email', value=email, maxlength=96, placeholder='E-mail address')
         input.input-block-level.required(type='password', name='password', maxlength=64, placeholder='Password')
-        input#org.input-block-level(type='text', name='org', value=org, placeholder='Organization')
+        - if(!disableOrgSel)
+          input#org.input-block-level(type='text', name='org', value=org, placeholder='Organization')
         input#orgId(type='hidden', name='orgId', value=orgId)
         input.input-block-level(type='text', name='skills', value=skills, maxlength=120, placeholder='Skills')
         button.btn.btn-large.btn-success(type='submit') Register
 
+  - if(!disableOrgSel)
+    script(type='text/javascript').
+      var orgFilter = [!{ (!!orgId && !!org) ? "{ id: " + orgId + ", displayName: '" + org + "' } " : "" }];
+      var orgElem = '#org';
+      var orgIdElem = '#orgId';
 
-  script(type='text/javascript').
+      function isValidOrg() {
+        if(_.isArray(orgFilter) && orgFilter.length > 0) {
+          var inpVal = $(orgElem).val().toLowerCase();
+          var matches = _.any(orgFilter, function(o) {
+            if(inpVal === o.displayName.toLowerCase()) {
+              $(orgElem).val(o.displayName);
+              $(orgIdElem).val(o.id);
+              selOrg = o;
+              return true;
+            }
+            return false;
+          });
 
-    var orgFilter = [];
-    var orgElem = '#org';
-    var orgIdElem = '#orgId';
-
-    function isValidOrg() {
-      if(_.isArray(orgFilter) && orgFilter.length > 0) {
-        var inpVal = $(orgElem).val().toLowerCase();
-        console.log(orgFilter)
-        var matches = _.any(orgFilter, function(o) {
-          if(inpVal === o.displayName.toLowerCase()) {
-            $(orgElem).val(o.displayName);
-            $(orgIdElem).val(o.id);
-            selOrg = o;
+          if(matches) {
             return true;
           }
-          return false;
+        }
+        return false;
+      }
+
+
+      function setupOrg() {
+        $(orgElem).typeahead({
+          name: 'organizations',
+          valueKey: 'displayName',
+          limit: 15,
+          prefetch: '#{apiOrgUrl}',
+          remote: {
+            url: '#{apiOrgUrl}&q=%QUERY',
+            filter: function(parsedResponse) {
+              orgFilter = parsedResponse;
+              return parsedResponse;
+            }
+          }
+        }).on('typeahead:selected', function() {
+          $(orgElem).valid();
+        });
+      }
+
+
+      $(document).ready(function() {
+        $('html').click(function() {
+          if($(orgElem).val().length) {
+            $(orgElem).valid();
+          }
         });
 
-        if(matches) {
-          return true;
-        }
-      }
-      return false;
-    }
+        $('#org').parent().click(function(event){
+          event.stopPropagation();
+        });
 
+        setupOrg();
 
-    function setupOrg() {
-      $(orgElem).typeahead({
-        name: 'organizations',
-        valueKey: 'displayName',
-        limit: 15,
-        prefetch: '#{apiOrgUrl}',
-        remote: {
-          url: '#{apiOrgUrl}&q=%QUERY',
-          filter: function(parsedResponse) {
-            orgFilter = parsedResponse;
-            return parsedResponse;
+        $.validator.addMethod('vld-org', function(value) {
+          return isValidOrg();
+        }, 'Please select an organization');
+
+        $('#form-register').submit(function(){
+          $('#form-register-errors').html('');
+        }).validate({
+          rules: {
+           org: 'vld-org'
+          },
+          highlight: function(element) {
+           $(element).closest('.control-group').removeClass('success').addClass('error');
+          },
+          success: function(element) {
+           element.addClass('valid')
+           .closest('.control-group').removeClass('error').addClass('success');
           }
-        }
-      }).on('typeahead:selected', function() {
-        $(orgElem).valid();
-      });
-    }
+        });
 
-
-    $(document).ready(function() {
-      $('html').click(function() {
-        if($(orgElem).val().length) {
-          $(orgElem).valid();
-        }
+        $.extend($("#form-register").validate().settings, { onkeyup: false, onfocusout: false });
       });
 
-      $('#org').parent().click(function(event){
-        event.stopPropagation();
+  - else
+    script(type='text/javascript').
+
+      $(document).ready(function() {
+        $('#form-register').validate({
+          highlight: function(element) {
+           $(element).closest('.control-group').removeClass('success').addClass('error');
+          },
+          success: function(element) {
+           element.addClass('valid')
+           .closest('.control-group').removeClass('error').addClass('success');
+          }
+        });
       });
 
-      setupOrg();
-
-      $.validator.addMethod('vld-org', function(value) {
-        return isValidOrg();
-      }, 'Please select an organization');
-
-      $('#form-register').validate({
-        rules: {
-         org: 'vld-org'
-        },
-        highlight: function(element) {
-         $(element).closest('.control-group').removeClass('success').addClass('error');
-        },
-        success: function(element) {
-         element.addClass('valid')
-         .closest('.control-group').removeClass('error').addClass('success');
-        }
-      });
-
-      $.extend($("#form-register").validate().settings, { onkeyup: false, onfocusout: false });
-
-    });
