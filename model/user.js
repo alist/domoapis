@@ -106,7 +106,7 @@ userSchema.statics.register = function(newUserAttrs, callback){
     // lookup user
     function(next) {
 
-      self.findUserAll({ id: newUserAttrs.email }, '_id email', function(err, user){
+      self.findUserAll({ email: newUserAttrs.email }, '_id email', function(err, user){
         if(!!user){
           return next(errors['USERNAME_EXISTS']());
         }

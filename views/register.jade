@@ -19,11 +19,11 @@ block body
       form#form-register(method='post')
         h3#form-register-heading Register
         include includes/errors
-        input.input-block-level.required(type='text', name='email', maxlength=96, placeholder='E-mail address')
+        input.input-block-level.required(type='text', name='email', value=email, maxlength=96, placeholder='E-mail address')
         input.input-block-level.required(type='password', name='password', maxlength=64, placeholder='Password')
-        input#org.input-block-level(type='text', name='org', placeholder='Organization')
-        input#orgId(type='hidden', name='orgId')
-        input.input-block-level(type='text', name='skills', maxlength=120, placeholder='Skills')
+        input#org.input-block-level(type='text', name='org', value=org, placeholder='Organization')
+        input#orgId(type='hidden', name='orgId', value=orgId)
+        input.input-block-level(type='text', name='skills', value=skills, maxlength=120, placeholder='Skills')
         button.btn.btn-large.btn-success(type='submit') Register
 
 

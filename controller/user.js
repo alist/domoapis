@@ -2,7 +2,8 @@ var Validator = require('validator').Validator
   , mailer = require('../lib/mailer')
   , Utils = require('../lib/utils')
   , _ = require('lodash')
-  , UserModel = require('../model/user').User;
+  , UserModel = require('../model/user').User
+  , Config = require('../configLoader')
 
 
 
@@ -11,15 +12,14 @@ var UserController = function() {
 
 
 UserController.prototype.getRegister = function(req, res){
-  var apiOrgUrl = "/api/v1/organizations?src=typeahead";
   res.ext.view('register')
-    .data({ apiOrgUrl: apiOrgUrl })
+    .viewData({ apiOrgUrl: Config.getConfig().app.api.path + "/organizations?src=typeahead" })
     .render();
 }
 
 
 UserController.prototype.register = function(req, res){
-  var newUserAttrs = _.pick(req.body, [ 'email', 'password', 'skills', 'orgId' ]);
+  var newUserAttrs = _.pick(req.body, [ 'email', 'password', 'skills', 'orgId', 'org' ]);
   var validator = new Validator();
   validator.check(newUserAttrs.email, 'Invalid e-mail address').len(6, 64).isEmail();
   validator.check(newUserAttrs.password, 'Invalid password').len(5, 64);
@@ -27,7 +27,8 @@ UserController.prototype.register = function(req, res){
   
   var response = res.ext;
   response.errorView('register.jade');
-  response.viewData(_.extend(newUserAttrs));
+  response.viewData({ apiOrgUrl: Config.getConfig().app.api.path + "/organizations?src=typeahead" })
+  response.viewData(newUserAttrs);
 
   if(validator.hasError()){
     return response.error(validator.getErrors()).render();
