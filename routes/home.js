@@ -14,7 +14,7 @@ module.exports.public = function(app) {
   app.get('/register', UserController.getRegister.bind(UserController));
   app.post('/register', UserController.register.bind(UserController));
 
-  app.get('/user/:id/account/approval', UserController.approveAccount.bind(UserController));
+  app.get('/o/:orgId/u/:userId/account/approval', UserController.approveAccount.bind(UserController));
 
   app.get('/orglanding.jade', function(req, res){
     return res.ext.view('orglanding').data({ title: 'Welcome to Domo' }).render();

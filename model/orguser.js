@@ -1,9 +1,11 @@
 var mongoose = require('mongoose')
   , Schema = mongoose.Schema
   , ObjectId = mongoose.Types.ObjectId
+  , uuid = require('node-uuid')
   , async = require('async')
   , _ = require('lodash')
   , errors = require('./errors').errors
+  , Config = require('../configLoader')
 
 
 // Import all schemas so they get registered with mongoose
@@ -16,10 +18,16 @@ var SupporteeModel = require('./user_supportee')
 
 var validRoles = module.exports.validRoles = [ 'supportee', 'supporter', 'moduleadmin', 'admin', 'adopter' ];
 
+var adminRoles = module.exports.adminRoles = [ 'moduleadmin', 'admin', 'adopter' ];
+
+
 var orgUserSchema = new Schema({
-  userId:    { type: Schema.Types.ObjectId, ref: 'user', required: true },
-  orgId:     { type: Schema.Types.ObjectId, ref: 'organization', required: true },
-  joined:    { type: Date, default: Date.now }
+  userId:                 { type: Schema.Types.ObjectId, ref: 'user', required: true },
+  orgId:                  { type: Schema.Types.ObjectId, ref: 'organization', required: true },
+  joined:                 { type: Date, default: Date.now },
+  heldRoleAttrs:          { type: Schema.Types.Mixed },
+  accApproved:            { type: Boolean, default: true },
+  accApprovalHash:        { type: String }
 });
 
 
@@ -28,7 +36,7 @@ _.each(validRoles, function(r) {
   roles[r] = { type: Schema.Types.ObjectId, ref: r };
 });
 
-// dynamically construct below schema from validRoles
+// dynamically constructs below schema from validRoles
 // roles: {
 //   supportee:    { type: Schema.Types.ObjectId, ref: 'supportee' },
 //   supporter:    { type: Schema.Types.ObjectId, ref: 'supporter' }, 
@@ -48,20 +56,26 @@ orgUserSchema.statics.new = function(newAttrs, callback){
   orguser.orgId = newAttrs.orgId;
   orguser.userId = newAttrs.userId;
 
+  // do not mandate account approval for supporter
+  // if user is also being added as an admin (adopter/admin/moduleadmin)
+  var holdRoles = !_.some(newAttrs.roles || {}, function(v, k) {
+    return _.contains(adminRoles, k);
+  });
+
   async.waterfall([
     function(next) {
+
       if(_.isObject(newAttrs.roles) && !_.isArray(newAttrs.roles)) {
+        if(holdRoles)  resolveHeldRoles(orguser, newAttrs.roles);
         return addRolesToUser(orguser, newAttrs.roles, next);
       }
+
       return next(null, orguser);
     },
 
-    function(orguser, next) {
+    function(orguser, newRoles, next) {
       orguser.save(function(err){
-        if(err){
-          return next(err);
-        }
-        return next(null, orguser);
+        return next(err, orguser);
       });
     }
 
@@ -210,6 +224,41 @@ orgUserSchema.statics.getPopulated = function(userId, orgId, callback) {
   });
 }
 
+
+orgUserSchema.statics.approveAccount = function(approvalAttrs, callback){
+
+  this.findOne({ userId: approvalAttrs.userId, orgId: approvalAttrs.orgId, accApproved: false },
+    function(err, orguser) {
+      if(err) {
+        return callback(err);
+      }
+
+      if(!orguser) {
+        return callback(errors['USER_NOT_FOUND']());
+      }
+
+      orguser.accApproved = true;
+
+      addRolesToUser(orguser, orguser.heldRoleAttrs, function(err, orguser, newRoles) {
+        if(err) {
+          return callback(err);
+        }
+
+        _.each(newRoles, function(v, k) {
+          delete orguser.heldRoleAttrs[k];
+        });
+
+        orguser.markModified('heldRoleAttrs');
+        orguser.save(function(err) {
+          return callback(err, orguser);
+        });
+
+      });
+
+    });
+}
+
+
 var OrgUser = module.exports.OrgUser = mongoose.model('orguser', orgUserSchema, 'orguser');
 
 function getUserRoleModel(role) {
@@ -252,7 +301,31 @@ function removeDocs(docs, callback){
 }
 
 
+function resolveHeldRoles(orguser, userRoleAttrs) {
+  var roleApprovalReq = Config.getConfig().app.roleApprovalReq;
+  orguser.heldRoleAttrs = orguser.heldRoleAttrs || {};
+
+  _.each(_.keys(userRoleAttrs), function(role) {
+    var heldRole = _.contains(roleApprovalReq, role);
+
+    if(heldRole) {
+      orguser.heldRoleAttrs[role] = userRoleAttrs[role];
+      orguser.accApproved = false;
+      delete userRoleAttrs[role];
+    }
+
+  });
+
+  if(!orguser.accApproved) {
+    orguser.accApprovalHash = uuid.v4();
+  }
+
+  return orguser;
+}
+
+
 function addRolesToUser(orguser, userRoleAttrs, callback) {
+
   var roles = _.keys(userRoleAttrs);
   var newRoles = {};
 
@@ -274,7 +347,7 @@ function addRolesToUser(orguser, userRoleAttrs, callback) {
     },
     function(err) {
       if(!err) {
-        return callback(null, orguser);
+        return callback(null, orguser, newRoles);
       }
 
       // remove orphans, if any

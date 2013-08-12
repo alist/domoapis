@@ -68,9 +68,7 @@ describe("DBTEST: Test User Model", function() {
       roles: {
         supporter: {
           supportAreas: [ 'career' ]
-        },
-        moduleadmin: {},
-        admin: {}
+        }
       }
     };
 
@@ -86,8 +84,30 @@ describe("DBTEST: Test User Model", function() {
     OrgUser.get(state.user._id, state.organization._id, function(err, orguser){
       should.not.exist(err);
       should.exist(orguser);
-      should.exist(orguser.roles.moduleadmin);
       should.not.exist(orguser.roles.supporter);
+      done();
+    });
+  });
+
+
+  it("should register new user 2", function(done) {
+    state.newUserAttrs = {
+      email: 'harishnk@gmail.com',
+      password: 'sa123',
+      orgId: state.organization.id,
+      roles: {
+        supporter: {
+          supportAreas: [ 'career' ]
+        },
+        moduleadmin: {},
+        admin: {}
+      }
+    };
+
+    User.register(state.newUserAttrs, function(err, user){
+      should.not.exist(err);
+      should.exist(user);
+      state.user = user;
       done();
     });
   });

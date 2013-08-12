@@ -115,8 +115,10 @@ UserController.prototype.sendApprovalEmail = function(req, data, callback){
 
   data = data || {};
   data.approvalLink = Utils.getDomainFromRequest(req)
-                        + '/user/' + data.user._id + '/account/approval?token='
-                        + data.user.userApprovalHash;
+    + '/o/' + data.org._id
+    + '/u/' + data.user._id
+    + '/account/approval?token='
+    + data.user.userApprovalHash;
 
   async.waterfall([
     // fetch populated orguser
@@ -148,12 +150,14 @@ UserController.prototype.sendApprovalEmail = function(req, data, callback){
 UserController.prototype.approveAccount = function(req, res){
 
   var approvalAttrs = {
-    id: req.params.id,
+    userId: req.params.userId,
+    orgId: req.params.orgId,
     token: req.query.token
   };
   
   var validator = new Validator();
-  validator.check(approvalAttrs.id).notEmpty().len(6, 64);
+  validator.check(approvalAttrs.userId).notEmpty().len(6, 64);
+  validator.check(approvalAttrs.orgId).notEmpty().len(6, 64);
   validator.check(approvalAttrs.token).notNull().notEmpty();
 
   var response = res.ext;
@@ -165,14 +169,13 @@ UserController.prototype.approveAccount = function(req, res){
   }
 
   var self = this;
-  UserModel.approveAccount({ '_id': approvalAttrs.id, 'userApprovalHash': approvalAttrs.token, userApproved: false },
-    function(err, updates){
-      if(err){
-        return response.error(err).render();
-      }
-      response.flash('accountApproved', true);
-      return response.redirect('/');
-    });
+  OrgUserModel.approveAccount(approvalAttrs, function(err, updates){
+    if(err){
+      return response.error(err).render();
+    }
+    response.flash('accountApproved', true);
+    return response.redirect('/');
+  });
 }
 
 

@@ -82,16 +82,26 @@ describe("HTTP: Register new user", function() {
           should.not.exist(err);
           should.exist(user);
           state.user = user;
-          done();
+
+          OrgUser.get(state.user._id, state.organization._id, function(err, orguser) {
+            should.not.exist(err);
+            should.exist(orguser);
+            state.orguser = orguser;
+            done();
+          });
+          
         });
     });
   });
 
   it("approve supporter account", function(done) {
+
+    var approvalLink = '/o/' + state.organization._id + '/u/' + state.user._id + '/account/approval?' + qs.stringify({
+        token: state.orguser.accApprovalHash
+      });
+
     request()
-      .get('/user/' + state.user._id + '/account/approval?' + qs.stringify({
-        token: state.user.userApprovalHash
-      }))
+      .get(approvalLink)
       .send({ 
         email: 'shirishk.87@gmail.com',
         password: 'sa123',
@@ -103,6 +113,8 @@ describe("HTTP: Register new user", function() {
       .end(function (res) {
         res.should.be.json;
         res.should.have.status(200);
+        should.exist(res.body.response.accountApproved);
+        res.body.response.accountApproved.should.equal(true);
         done();
     });
   });
