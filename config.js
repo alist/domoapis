@@ -14,7 +14,7 @@ module.exports.app = {};
 module.exports.app.defaults = {
   primaryhost: "domo-io.herokuapp.com",
   env: {
-    port: 3000,
+    port: process.env.PORT || 3000,
     rootDir: __dirname
   },
   api: {
@@ -22,8 +22,7 @@ module.exports.app.defaults = {
     version: '1',
     path: '/api/v1'
   },
-  userTypes: [ 'supporter', 'supportee', 'moduleadmin', 'admin', 'adopter' ],
-  defaultUserType: 'supporter'
+  roleApprovalReq: ['supporter']
 };
 
 
