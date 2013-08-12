@@ -1,16 +1,41 @@
  var UserController = require('../controller/user').UserController
    , passport = require('passport')
+   , _ = require('lodash')
 
 
 module.exports.index = function(req, res) {
-  if(!!req.flash('accountApproved')) {
-    res.ext.data({ accountApproved: true });
+
+  if(_.first(req.flash('accApproved')) === true) {
+    res.ext.data({ accApproved: true, roles: req.flash('roles').join(', ') });
+    return res.ext.view('supporterApprovalStatus.jade').render();
   }
+
+  if(req.user) {
+    res.ext.data({ user: req.user });
+    return res.ext.view('userIndex.jade').render();
+  }
+
   return res.ext.view('index.jade').render();
 };
 
 
 module.exports.public = function(app) {
+
+  app.get('/login', function(req, res){
+    return res.ext.view('login.jade').render();
+  });
+
+  app.post('/login',
+    passport.authenticate('local'),
+    function(req, res) {
+      res.ext.redirect('/');
+    });
+
+  app.get('/logout', function(req, res){
+    req.logout();
+    res.redirect('/');
+  });
+
   app.get('/register', UserController.getRegister.bind(UserController));
   app.post('/register', UserController.register.bind(UserController));
 
@@ -20,4 +45,3 @@ module.exports.public = function(app) {
     return res.ext.view('orglanding').data({ title: 'Welcome to Domo' }).render();
   });
 };
-

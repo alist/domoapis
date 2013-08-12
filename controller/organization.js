@@ -1,4 +1,5 @@
 var OrganizationModel = require("../model/organization").Organization
+  , OrgUser = require('../model/orguser').OrgUser
   , Validator = require('validator').Validator
   , _ = require('lodash')
   
@@ -67,8 +68,19 @@ OrganizationController.prototype.getAll = function(req, res){
     });
 }
 
+
 OrganizationController.prototype.giveAdvice = function(req, res){
-    return res.ext.view('giveadvice.jade').render();
+    OrgUser.get(req.user._id, req.extras.organization._id, function(err, orguser) {
+        if(err) {
+            return res.ext.errorView('error.jade').error(err).render();
+        }
+
+        if(!orguser.accApproved) {
+            return res.ext.view('supporterApprovalPending.jade').render();
+        }
+
+        return res.ext.view('giveadvice.jade').render();
+    });
 }
  
 OrganizationController.prototype.getAdvice = function(req, res){

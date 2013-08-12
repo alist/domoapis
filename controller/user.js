@@ -92,8 +92,7 @@ UserController.prototype.register = function(req, res){
 }
 
 
-//UserController.prototype.auth = function(email, password, done){ //hnk07/23/13-
-UserController.prototype.auth = function(email, password, permissions, done){ //hnk07/23/13+
+UserController.prototype.auth = function(email, password, done){
   var validator = new Validator();
   validator.check(email, 'Invalid e-mail address.').notEmpty().len(5, 64);
   validator.check(password, 'Invalid password.').notEmpty().len(5, 64);
@@ -113,13 +112,6 @@ UserController.prototype.auth = function(email, password, permissions, done){ //
 
 UserController.prototype.sendApprovalEmail = function(req, data, callback){
 
-  data = data || {};
-  data.approvalLink = Utils.getDomainFromRequest(req)
-    + '/o/' + data.org._id
-    + '/u/' + data.user._id
-    + '/account/approval?token='
-    + data.user.userApprovalHash;
-
   async.waterfall([
     // fetch populated orguser
     function(next) {
@@ -130,6 +122,13 @@ UserController.prototype.sendApprovalEmail = function(req, data, callback){
     },
     // generate html from jade template
     function(next) {
+
+      data.approvalLink = Utils.getDomainFromRequest(req)
+        + '/o/' + data.org._id
+        + '/u/' + data.user._id
+        + '/account/approval?token='
+        + data.orguser.accApprovalHash;
+
       var tmplPath = path.join(Config.getConfig().app.env.rootDir, 'views', 'mailer', 'approveSupporter.jade');
       jade.renderFile(tmplPath, data, next);
     },
@@ -165,15 +164,16 @@ UserController.prototype.approveAccount = function(req, res){
   response.viewData({ title: 'Invalid Approval Link' });
 
   if(validator.hasError()){
-    return response.error(validator.getErrors()).render();
+    return response.error(validator.getErrors()).debug().render();
   }
 
   var self = this;
-  OrgUserModel.approveAccount(approvalAttrs, function(err, updates){
+  OrgUserModel.approveAccount(approvalAttrs, function(err, orguser){
     if(err){
-      return response.error(err).render();
+      return response.error(err).debug().render();
     }
-    response.flash('accountApproved', true);
+    response.flash('accApproved', true);
+    response.flash('roles', _.keys(orguser.roles.toObject()));
     return response.redirect('/');
   });
 }

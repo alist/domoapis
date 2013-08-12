@@ -8,8 +8,9 @@ block head
   script(src='/js/typeahead.min.js')
   script(src='//cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.11.1/jquery.validate.min.js')
 
+block styles
   link(rel='stylesheet', href='/css/typeahead.css')
-  link(rel='stylesheet', href='/css/app/register.css')
+  link(rel='stylesheet', href='/css/app/form.css')
 
 block viewVars
   - title = 'Register'
@@ -19,9 +20,9 @@ block body
 
   div.row-fluid
     div.span12
-      form#form-register(method='post')
-        h3#form-register-heading Register
-        p#form-register-errors
+      form#form-register.form(method='post')
+        h3#form-register-heading.form-heading Register
+        p#form-register-errors.form-errors
           include includes/errors
         input.input-block-level.required(type='text', name='email', value=email, maxlength=96, placeholder='E-mail address')
         input.input-block-level.required(type='password', name='password', maxlength=64, placeholder='Password')
