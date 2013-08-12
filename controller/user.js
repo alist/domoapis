@@ -112,6 +112,9 @@ UserController.prototype.auth = function(email, password, done){
 
 UserController.prototype.sendApprovalEmail = function(req, data, callback){
 
+  var config = Config.getConfig();
+  var adminEmails = config.mail.adminEmails.join(','); // for now
+
   async.waterfall([
     // fetch populated orguser
     function(next) {
@@ -129,13 +132,13 @@ UserController.prototype.sendApprovalEmail = function(req, data, callback){
         + '/account/approval?token='
         + data.orguser.accApprovalHash;
 
-      var tmplPath = path.join(Config.getConfig().app.env.rootDir, 'views', 'mailer', 'approveSupporter.jade');
+      var tmplPath = path.join(config.app.env.rootDir, 'views', 'mailer', 'approveSupporter.jade');
       jade.renderFile(tmplPath, data, next);
     },
     // mail
     function(html, next) {
       var parcel = {
-        to: data.user.getMailRecipient(),
+        to: adminEmails,
         subject: 'Domo: Account Approval Request',
         html: html
       };
