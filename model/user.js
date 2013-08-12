@@ -7,6 +7,7 @@ var mongoose = require('mongoose')
   , errors = require('./errors').errors
   , async = require('async')
   , _ = require('lodash')
+  , Config = require('../configLoader')
 
 var OrganizationModel = require('./organization')
   , Organization = OrganizationModel.Organization
@@ -68,7 +69,9 @@ var userSchema = new Schema({
       role:   String,
       date:   Date
     }
-  ]
+  ],
+
+  tmpAttrs: Schema.Types.Mixed
 });
 
 
@@ -157,6 +160,11 @@ userSchema.statics.register = function(newUserAttrs, callback){
       newUser = new User();
       newUser.userID = newUser.email = newUserAttrs.email;
       newUser.organizations.push(org._id);
+
+      var password = newUserAttrs.password;
+      delete newUserAttrs.password;
+      
+      newUser.tmpAttrs = newUserAttrs;
       
       newUser.emailConfirmed = true;
       newUser.emailVerified = false;
@@ -165,7 +173,7 @@ userSchema.statics.register = function(newUserAttrs, callback){
       newUser.userApproved = false;
       newUser.userApprovalHash = uuid.v4();
 
-      self.generatePasswordHash(newUserAttrs.password, function(err, passwordHash) {
+      self.generatePasswordHash(password, function(err, passwordHash) {
         if(err){
           return next(err);
         }
@@ -186,11 +194,20 @@ userSchema.statics.register = function(newUserAttrs, callback){
       });
     },
     
+    // create orguser and roles
     function(newUser, next) {
+
+      var roleApprovalReq = Config.getConfig().app.roleApprovalReq;
+
+      // don't create a supporter until approval
+      var roles = _.pick(newUser.tmpAttrs.roles, function(roleAttrs, role) {
+        return !_.contains(roleApprovalReq, role);
+      });
+
       OrgUser.new({
         userId: newUser._id,
         orgId: org._id,
-        roles: newUserAttrs.roles
+        roles: roles
       }, next);
     }
 

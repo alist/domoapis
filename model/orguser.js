@@ -3,6 +3,7 @@ var mongoose = require('mongoose')
   , ObjectId = mongoose.Types.ObjectId
   , async = require('async')
   , _ = require('lodash')
+  , errors = require('./errors').errors
 
 
 // Import all schemas so they get registered with mongoose

@@ -52,16 +52,19 @@ UserController.prototype.register = function(req, res){
   }
 
   if(validator.hasError()){
-    return response.error(validator.getErrors()).debug().render();
+    return response.error(validator.getErrors()).render();
   }
 
   var self = this;
 
   newUserAttrs.roles = {
     supporter: {
-      skills: newUserAttrs.skills
+      skills: newUserAttrs.skills,
+      joined: new Date()
     }
   };
+
+  delete newUserAttrs.skills;
 
   UserModel.register(newUserAttrs, function(err, user, orguser, org){
     if(err){
@@ -110,12 +113,10 @@ UserController.prototype.auth = function(email, password, permissions, done){ //
 
 UserController.prototype.sendApprovalEmail = function(req, data, callback){
 
-  console.log('Sending approval-request email')
   data = data || {};
   data.approvalLink = Utils.getDomainFromRequest(req)
-                        + '/account/approval?token='
-                        + data.user.userApprovalHash 
-                        + '&email=' + data.user.email;
+                        + '/user/' + data.user._id + '/account/approval?token='
+                        + data.user.userApprovalHash;
 
   async.waterfall([
     // fetch populated orguser
@@ -144,6 +145,35 @@ UserController.prototype.sendApprovalEmail = function(req, data, callback){
 }
 
 
+UserController.prototype.approveAccount = function(req, res){
+
+  var approvalAttrs = {
+    id: req.params.id,
+    token: req.query.token
+  };
+  
+  var validator = new Validator();
+  validator.check(approvalAttrs.id).notEmpty().len(6, 64);
+  validator.check(approvalAttrs.token).notNull().notEmpty();
+
+  var response = res.ext;
+  response.errorView('error.jade');
+  response.viewData({ title: 'Invalid Approval Link' });
+
+  if(validator.hasError()){
+    return response.error(validator.getErrors()).render();
+  }
+
+  var self = this;
+  UserModel.approveAccount({ '_id': approvalAttrs.id, 'userApprovalHash': approvalAttrs.token, userApproved: false },
+    function(err, updates){
+      if(err){
+        return response.error(err).render();
+      }
+      response.flash('accountApproved', true);
+      return response.redirect('/');
+    });
+}
 
 
 UserController.prototype.logout = function(req, res){

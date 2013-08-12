@@ -7,6 +7,7 @@ var app = require('../app').app
   , Helpers = require('./inc/helpers')
   , util = require('util')
   , _ = require('lodash')
+  , qs = require('querystring')
 
 var UserModel = require('../model/user')
   , User = UserModel.User
@@ -61,10 +62,36 @@ describe("HTTP: Register new user", function() {
     });
   });
 
-  it("register new user", function(done) {
-    this.timeout(15000)
+  it("register new supporter", function(done) {
     request()
       .post('/register')
+      .send({ 
+        email: 'shirishk.87@gmail.com',
+        password: 'sa123',
+        skills: 'fake empathy',
+        orgId: state.organization.id,
+        org: state.organization.name
+      })
+      .set('Accept', 'application/json')
+      .end(function (res) {
+        res.should.be.json;
+        res.should.have.status(200);
+        should.exist(res.body.response.userID);
+
+        User.findOne({ userID: res.body.response.userID }, function(err, user) {
+          should.not.exist(err);
+          should.exist(user);
+          state.user = user;
+          done();
+        });
+    });
+  });
+
+  it("approve supporter account", function(done) {
+    request()
+      .get('/user/' + state.user._id + '/account/approval?' + qs.stringify({
+        token: state.user.userApprovalHash
+      }))
       .send({ 
         email: 'shirishk.87@gmail.com',
         password: 'sa123',

@@ -82,6 +82,16 @@ describe("DBTEST: Test User Model", function() {
     });
   });
 
+  it("should not have role: supporter ", function(done) {
+    OrgUser.get(state.user._id, state.organization._id, function(err, orguser){
+      should.not.exist(err);
+      should.exist(orguser);
+      should.exist(orguser.roles.moduleadmin);
+      should.not.exist(orguser.roles.supporter);
+      done();
+    });
+  });
+
 
   it("should find registered user by id and populate orgs", function(done) {
     User.findById(state.user._id).populate('organizations').exec(function(err, user){
@@ -98,7 +108,7 @@ describe("DBTEST: Test User Model", function() {
       // print(orguser.toObject());
       should.not.exist(err);
       should.exist(orguser);
-      _.each(state.newUserAttrs.roles, function(rId, role) {
+      _.each(_.without(state.newUserAttrs.roles, 'supporter'), function(rId, role) {
         should.exist(orguser.roles[role]._id);
       });
       done();
@@ -123,17 +133,17 @@ describe("DBTEST: Test User Model", function() {
   });
 
 
-  it("should remove a role: supporter", function(done) {
+  it("should remove a role: moduleadmin", function(done) {
     OrgUser.get(state.user._id, state.organization._id, function(err, orguser){
       should.not.exist(err);
       should.exist(orguser);
       
-      orguser.removeRoles([ 'supporter' ], function(err, ou){
+      orguser.removeRoles([ 'moduleadmin' ], function(err, ou){
         // print(user.toObject());
         should.not.exist(err);
-        ou.hasRole([ 'moduleadmin', 'admin', 'adopter' ]).should.equal(true);
-        ou.hasRole('supporter').should.equal(false);
-        should.not.exist(ou.roles.supporter);
+        ou.hasRole([ 'admin', 'adopter' ]).should.equal(true);
+        ou.hasRole('moduleadmin').should.equal(false);
+        should.not.exist(ou.roles.moduleadmin);
         done();
       });
     });
