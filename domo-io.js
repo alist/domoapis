@@ -1,6 +1,5 @@
 var express = require('express')
   , app = express()
-  , logger = require('./lib/logger')
   , AppLoader = require('./appLoader')
   , Config = require('./configLoader')
   , ResponseExt = require('./lib/responseExt')
@@ -16,7 +15,7 @@ function registerHooks(){
 function listen(){
   var config = Config.getConfig();
   app.listen(config.app.env.port, function(){
-      logger.info('Express server listening on port ' + config.app.env.port);
+      console.log('Express server listening on port ' + config.app.env.port);
   });
 }
 

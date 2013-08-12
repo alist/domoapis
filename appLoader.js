@@ -5,7 +5,6 @@ var EventEmitter = require('events').EventEmitter
   , flash = require('connect-flash')
   , mongoose = require('mongoose')
   , mailer = require('./lib/mailer')
-  , logger = require('./lib/logger')
   , errorHandler = require('./lib/errorHandler')
   , Validator = require('validator').Validator
   , routes = require('./lib/routes')
@@ -144,7 +143,7 @@ AppLoader.prototype.configValidator = function(){
 AppLoader.prototype.configExceptions = function(){
   process.on('uncaughtException', function (err) {
     console.log(err.stack);
-    logger.error('uncaughtException', err.message, err.stack);
+    console.log('uncaughtException', err.message);
     process.exit(1);
   });
 
@@ -158,12 +157,12 @@ AppLoader.prototype.connectDb = function(){
 
   mongoose.connect(uristring, function(err, res) {
     if(err){ 
-      logger.error('ERROR connecting to: ' + uristring + '. ' + err);
+      console.log('ERROR connecting to: ' + uristring + '. ' + err);
       self.emit('connectDbDone', err, uristring);
       return;
     }
     self.emit('connectDbDone', null, uristring);
-    return logger.info('Connnected to ' + uristring);
+    return console.log('Connnected to ' + uristring);
   });
 }
 
