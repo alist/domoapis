@@ -53,7 +53,7 @@ describe("HTTP: Register new user", function() {
       "bannerURL": "/img/banners/mit.png"
     };
 
-    Organization.newOrganization(newOrgAttrs, function(err, newOrg){
+    Organization.new(newOrgAttrs, function(err, newOrg){
       // console.log(newOrg);
       should.not.exist(err);
       should.exist(newOrg);
@@ -113,8 +113,8 @@ describe("HTTP: Register new user", function() {
       .end(function (res) {
         res.should.be.json;
         res.should.have.status(200);
-        should.exist(res.body.response.accountApproved);
-        res.body.response.accountApproved.should.equal(true);
+        should.exist(res.body.response.accApproved);
+        res.body.response.accApproved.should.equal(true);
         done();
     });
   });

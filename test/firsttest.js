@@ -50,7 +50,7 @@ describe("DBTEST: Test User Model", function() {
       "bannerURL": "/img/banners/mit.png"
     };
 
-    Organization.newOrganization(newOrgAttrs, function(err, newOrg){
+    Organization.new(newOrgAttrs, function(err, newOrg){
       // console.log(newOrg);
       should.not.exist(err);
       should.exist(newOrg);

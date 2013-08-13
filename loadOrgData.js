@@ -57,7 +57,7 @@ connectDb(function(err){
            }
            
            newItems++;
-           OrganizationModel.newOrganization(o, function(err, newOrg){
+           OrganizationModel.new(o, function(err, newOrg){
                if(err){
                    console.log('err: ' + err);
                }

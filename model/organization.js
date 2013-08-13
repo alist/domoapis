@@ -27,7 +27,7 @@ orgSchema.statics.getByIdAndCode = function(id, code, callback) {
   this.findOne({ id: id, code: code }, callback);
 }
 
-orgSchema.statics.newOrganization = function(orgAttrs, callback){
+orgSchema.statics.new = function(orgAttrs, callback){
   var org = new Organization();
   org = _.merge(org, _.pick(orgAttrs, schemaAttrs));
   org.save(function(err){
