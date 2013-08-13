@@ -1,6 +1,7 @@
 var mongoose = require('mongoose')
   , Schema = mongoose.Schema
   , _ = require("lodash")
+  , errors = require('./errors').errors
   
 var orgSchema = new Schema({
   id:               { type: String, required: true, unique: true, index: true },
@@ -16,15 +17,30 @@ var schemaAttrs = _.keys(orgSchema.paths);
 
 
 orgSchema.statics.getByOrgUrl = function(orgURL, callback) {
-  this.findOne({ orgURL: orgURL }, callback);
+  this.findOne({ orgURL: orgURL }, function(err, org) {
+      if(!org) {
+          return callback(errors['ORG_NOT_FOUND']());
+      }
+      return callback(err, org);
+  });
 }
 
 orgSchema.statics.getById = function(id, callback) {
-  this.findOne({ id: id }, callback);
+  this.findOne({ id: id }, function(err, org) {
+      if(!org) {
+          return callback(errors['ORG_NOT_FOUND']());
+      }
+      return callback(err, org);
+  });
 }
 
 orgSchema.statics.getByIdAndCode = function(id, code, callback) {
-  this.findOne({ id: id, code: code }, callback);
+  this.findOne({ id: id, code: code }, function(err, org) {
+      if(!org) {
+          return callback(errors['ORG_NOT_FOUND']());
+      }
+      return callback(err, org);
+  });
 }
 
 orgSchema.statics.new = function(orgAttrs, callback){

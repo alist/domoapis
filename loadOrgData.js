@@ -41,7 +41,7 @@ connectDb(function(err){
     
     orgData.forEach(function(o){
        OrganizationModel.getById(o.id, function(err, org){
-           if(err){
+           if(err && err.id !== 'ORG_NOT_FOUND'){
                console.log(err);
                return checkDone();
            }
