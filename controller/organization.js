@@ -2,42 +2,12 @@ var OrganizationModel = require("../model/organization").Organization
   , OrgUser = require('../model/orguser').OrgUser
   , Validator = require('validator').Validator
   , _ = require('lodash')
+  , errors = require('../model/errors').errors
   
 
 var OrganizationController = function(){
 };
 
-
-OrganizationController.prototype.login = function(req, res){
-    var response = res.ext;
-
-    if(req.isAuthenticated()){
-      return response.redirect('/' + req.extras.organization.orgURL);
-    }
-
-    response.view('orglogin.jade').errorView('error.jade');
-
-    var data = {
-        title: "Login",
-        username: ""
-    };
-
-    var errors = req.flash("error");
-    if(!!errors){
-        response.locals({ errors: errors });
-    }
-
-    var redirTo = req.flash("redirTo");
-    if(!!redirTo){
-        data.redirTo = redirTo;
-    }
-
-    return response.data(data).render();
-}
-
-OrganizationController.prototype.auth = function(req, res){
-
-}
 
 OrganizationController.prototype.getAll = function(req, res){
     var response = res.ext;
@@ -91,16 +61,60 @@ OrganizationController.prototype.getInfo = function(req, res){
     return res.ext.view('orglanding').render(); 
 }
 
+
+OrganizationController.prototype.getUser = function(req, res){
+    var response = res.ext.json();
+
+    if(!req.params.userId) {
+        return response.error(errors['INVALID_ARG']()).render();
+    }
+
+    OrgUser.findOne({ orgId: req.extras.organization._id, userId: req.params.userId }, function(err, orguser) {
+        if(err) {
+            return response.error(err).render();
+        }
+        if(!orguser) {
+            return response.error(errors['ORG_NOT_FOUND']()).render();
+        }
+        return response.data({ user: orguser }).render();
+    });
+}
+
+
+OrganizationController.prototype.getUsersByOrgId = function(req, res){
+    var response = res.ext.json();
+
+    var query  = { orgId: req.extras.organization._id };
+    if(!!req.params.userId) {
+        query.userId = req.params.userId;
+    }
+
+    OrgUser.find(query, function(err, orgusers) {
+        if(err) {
+            return response.error(err).render();
+        }
+        if(!orgusers) {
+            return response.error(errors['ORG_NOT_FOUND']()).render();
+        }
+        return response.data({ users: orgusers }).render();
+    });
+}
+
+
     
 OrganizationController.prototype.getByOrgUrl = function(orgUrl, callback){
     // lookup dbn
     OrganizationModel.getByOrgUrl(orgUrl, function(err, org){
         if(err){
-            return callback(new Error('ORG_NOT_FOUND'));
+            return callback(errors['ORG_NOT_FOUND'](err));
+        }
+        if(!org) {
+            return callback(errors['ORG_NOT_FOUND']());
         }
         return callback(null, org);
     });
 }
+
 
 module.exports.OrganizationController = new OrganizationController();
 
