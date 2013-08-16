@@ -1,0 +1,21 @@
+.navbar.navbar-inverse
+  .navbar-inner
+    .container
+      a.btn.btn-navbar(data-toggle='collapse', data-target='.nav-collapse')
+        span.icon-bar
+        span.icon-bar
+        span.icon-bar
+      .nav-collapse
+        ul.nav
+          li.dropdown
+            a.dropdown-toggle(href='#', data-toggle='dropdown')
+              | System
+              span.caret
+            ul.dropdown-menu
+              li.nav-header User Admin
+              li
+                a(href='/admin/users/') Supporters
+              li
+                a(href='/admin/accounts/') Module Administrators
+              li
+                a(href='/admin/administrators/') Administrators

@@ -1,0 +1,22 @@
+div.container-fluid
+  div.row-fluid
+    div.span12
+      div.pull-right
+        | Search:
+        input(type='text', ng-model='query')
+        | Sort by:
+        select(ng-model='orderProp')
+          option(value='roles') Roles
+          option(value='joined') Joined
+
+
+  div.row-fluid
+    div.span12
+      table.table.table-striped
+        thead
+          tr
+            th Roles
+            th Joined
+          tr(ng-repeat='user in users | filter:query | orderBy:orderProp')
+            td {{user.roles | arrayToCSV}}
+            td.stretch {{user.joined | date: 'medium'}}

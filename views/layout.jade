@@ -11,7 +11,7 @@ block viewVars
   - title += " | Domo"
 
 !!! 5
-html
+html(ng-app=ngApp)
   head
     title #{title}
     meta(charset="utf-8")
@@ -52,7 +52,3 @@ html
 
 
     block scripts
-
-    - if(typeof scripts !== 'undefined')
-      each s in scripts
-        script(src='#{s}.js').

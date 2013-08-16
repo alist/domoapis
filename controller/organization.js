@@ -3,6 +3,7 @@ var OrganizationModel = require("../model/organization").Organization
   , Validator = require('validator').Validator
   , _ = require('lodash')
   , errors = require('../model/errors').errors
+  , async = require('async')
   
 
 var OrganizationController = function(){
@@ -89,15 +90,38 @@ OrganizationController.prototype.getUsersByOrgId = function(req, res){
         query.userId = req.params.userId;
     }
 
-    OrgUser.find(query, function(err, orgusers) {
+    async.waterfall([
+
+        function(next) {
+            OrgUser.find(query, function(err, orgusers) {
+                if(!orgusers) {
+                    return next(errors['ORG_NOT_FOUND']());
+                }
+                next(err, orgusers);
+            });
+        },
+
+        function(orgusers, next) {
+
+            async.each(orgusers, 
+                function(orguser, n){
+                    orguser.roles = _.keys(orguser.roles.toObject());
+                    n();
+                },
+                function(err) {
+                    if(err) {
+                        return next(err);
+                    }
+                    next(err, orgusers);
+                });
+        }
+
+    ], function(err, orgusers) {
         if(err) {
             return response.error(err).render();
         }
-        if(!orgusers) {
-            return response.error(errors['ORG_NOT_FOUND']()).render();
-        }
         return response.data({ users: orgusers }).render();
-    });
+    })
 }
 
 

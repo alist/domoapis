@@ -4,10 +4,13 @@ var express = require('express')
   , Config = require('./configLoader')
   , ResponseExt = require('./lib/responseExt')
   , RouteParams = require('./lib/routeParams')
+  , Partials = require('./lib/partials')
   , AuthHooks = require('./auth')
 
 
+
 function registerHooks(){
+  Partials(AppLoader);
   ResponseExt(AppLoader);
   RouteParams(AppLoader)
   AuthHooks(AppLoader);

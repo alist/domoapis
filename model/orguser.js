@@ -229,7 +229,6 @@ orgUserSchema.statics.getPopulated = function(userId, orgId, callback) {
 
 
 orgUserSchema.statics.approveAccount = function(approvalAttrs, callback){
-
   this.findOne({ userId: approvalAttrs.userId, orgId: approvalAttrs.orgId, accApproved: false },
     function(err, orguser) {
       if(err) {
