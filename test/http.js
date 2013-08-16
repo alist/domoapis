@@ -1,9 +1,9 @@
 var env = process.env.NODE_ENV = (typeof process.env.NODE_ENV !== 'undefined') ? process.env.NODE_ENV : 'test';
-if(env !== 'test') throw new Error('Invalid env');
+// if(env !== 'test') throw new Error('Invalid env');
 
-var app = require('../app').app
-  , config = require('../configLoader').init(env).getConfig()
-  , Utils = require('./inc/utils')(config.db.dbUri)
+var config = require('../configLoader').forceEnv(env, true).init().getConfig()
+  , app = require('../app').app
+  , Utils = require('./inc/dbutils')(config.db.dbUri)
   , Helpers = require('./inc/helpers')
   , util = require('util')
   , _ = require('lodash')
@@ -30,7 +30,7 @@ var print = function(name, obj){
 }
 
 
-describe("DBTEST: -- Clearing DB --", function() {
+describe("HTTP: -- Clearing DB --", function() {
   it(".", function(done) {
     Utils.clearDB(function(){
       done();

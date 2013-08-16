@@ -12,21 +12,27 @@ var ConfigLoader = function() {
 
 };
 
+ConfigLoader.prototype.forceEnv = function(env, skipOverrides){
+  this.forcedEnv = env;
+  this.skipOverrides = skipOverrides;
+  return this;
+}
 
-ConfigLoader.prototype.init = function(env){
+ConfigLoader.prototype.init = function(){
   this.config = {};
 
   var self = this;
 
 	var validEnvs = self.envList;
 	validEnvs.push(self.defaultsKey);
-  this.activeEnv = conf.activeEnv;
 
-  if(_.contains(validEnvs, env)) {
-    this.activeEnv = env;
+  if(this.forcedEnv) {
+    this.activeEnv = this.forcedEnv;
+  } else {
+    this.activeEnv = conf.activeEnv;
   }
   
-  var skipOverrides = (this.activeEnv === 'test');
+  var skipOverrides = this.skipOverrides || false;
 
   if(!_.contains(validEnvs, this.activeEnv)) {
     throw new Error('Invalid env: ' + this.activeEnv);
@@ -83,7 +89,7 @@ var configLoader = new ConfigLoader();
 
 module.exports.ConfigLoader = ConfigLoader;
 
-[ 'init', 'getConfig' ].forEach(function(f){
+[ 'init', 'forceEnv', 'getConfig' ].forEach(function(f){
   module.exports[f] = configLoader[f].bind(configLoader);
 });
 

@@ -1,8 +1,8 @@
 var env = process.env.NODE_ENV = (typeof process.env.NODE_ENV !== 'undefined') ? process.env.NODE_ENV : 'test';
-if(env !== 'test') throw new Error('Invalid env');
+// if(env !== 'test') throw new Error('Invalid env');
 
-var config = require('../configLoader').init(env).getConfig()
-  , Utils = require('./inc/utils')(config.db.dbUri)
+var config = require('../configLoader').forceEnv(env, true).init().getConfig()
+  , Utils = require('./inc/dbutils')(config.db.dbUri)
   , Helpers = require('./inc/helpers')
   , util = require('util')
   , _ = require('lodash')
