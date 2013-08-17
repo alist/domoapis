@@ -19,13 +19,6 @@ module.exports.registerHooks = function(appLoader) {
     configValidator();
   });
 
-  appLoader.once('sessionHook', function(app) {
-    app.use(function(err, req, res, next) {
-      console.log('sessionHook')
-      next();
-    });
-  });
-
   appLoader.once('routerHook', function(app) {
     app.disable('x-powered-by');
     responseExt(app);

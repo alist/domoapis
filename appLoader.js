@@ -1,5 +1,6 @@
 var EventEmitter = require('events').EventEmitter
   , util = require('util')
+  , path = require('path')
   , Config = require('./configLoader')
   , express = require('express')
   , flash = require('connect-flash')
@@ -118,7 +119,7 @@ AppLoader.prototype.configStatic = function(){
   var app = this.app;
 
   // Note: static/public files here are free from routing
-  var publicFolder = require('path').join(this.config.app.env.rootDir, 'public');
+  var publicFolder = path.join(this.config.app.env.rootDir, 'public');
   app.use(express.static(publicFolder));
 }
 
