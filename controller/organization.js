@@ -1,5 +1,6 @@
 var OrganizationModel = require("../model/organization").Organization
-  , OrgUser = require('../model/orguser').OrgUser
+  , OrgUser = require('../model/orguser')
+  , OrgUserModel = OrgUser.OrgUser
   , Validator = require('validator').Validator
   , _ = require('lodash')
   , errors = require('../model/errors').errors
@@ -41,7 +42,7 @@ OrganizationController.prototype.getAll = function(req, res){
 
 
 OrganizationController.prototype.giveAdvice = function(req, res){
-    OrgUser.get(req.user._id, req.extras.organization._id, function(err, orguser) {
+    OrgUserModel.get(req.user._id, req.extras.organization._id, function(err, orguser) {
         if(err) {
             return res.ext.errorView('error.jade').error(err).render();
         }
@@ -70,7 +71,7 @@ OrganizationController.prototype.getUser = function(req, res){
         return response.error(errors['INVALID_ARG']()).render();
     }
 
-    OrgUser.findOne({ orgId: req.extras.organization._id, userId: req.params.userId }, function(err, orguser) {
+    OrgUserModel.findOne({ orgId: req.extras.organization._id, userId: req.params.userId }, function(err, orguser) {
         if(err) {
             return response.error(err).render();
         }
@@ -81,6 +82,13 @@ OrganizationController.prototype.getUser = function(req, res){
     });
 }
 
+var print = function(name, obj){
+  if(arguments.length == 1){
+    obj = name;
+    name = '';
+  }
+  console.log(name, require('util').inspect(obj, { depth: null }));
+}
 
 OrganizationController.prototype.getUsersByOrgId = function(req, res){
     var response = res.ext.json();
@@ -93,7 +101,14 @@ OrganizationController.prototype.getUsersByOrgId = function(req, res){
     async.waterfall([
 
         function(next) {
-            OrgUser.find(query, function(err, orgusers) {
+
+            var popOpts = { path: '', select: '-__v -flag' };
+
+            _.each(OrgUser.validRoles, function(role) {
+                popOpts.path += 'roles.' +  role + ' ';
+            });
+
+            OrgUserModel.find(query).select('userId roles joined').populate(popOpts).populate('userId', 'email').lean().exec(function(err, orgusers) {
                 if(!orgusers) {
                     return next(errors['ORG_NOT_FOUND']());
                 }
@@ -102,10 +117,21 @@ OrganizationController.prototype.getUsersByOrgId = function(req, res){
         },
 
         function(orgusers, next) {
-
             async.each(orgusers, 
                 function(orguser, n){
-                    orguser.roles = _.keys(orguser.roles.toObject());
+
+                    _.each(['email'], function(attr) {
+                        if(!orguser.userId[attr]) return;
+                        orguser[attr] = orguser.userId[attr];
+                    });
+                    delete orguser.userId;
+
+                    orguser.roles = _.reduce(orguser.roles, function(res, val, key){
+                        if(_.isObject(val)) {
+                            res[key] = val;
+                        }
+                        return res;
+                    }, {});
                     n();
                 },
                 function(err) {
