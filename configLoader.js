@@ -50,6 +50,8 @@ ConfigLoader.prototype.init = function(){
 		}
 	});
 
+  self.config.env = this.activeEnv;
+
   // chainable
   return this;
 }
@@ -61,10 +63,6 @@ ConfigLoader.prototype.overrideProps = function(dest, overrides){
       return overrideVal;
     }
   });
-}
-
-ConfigLoader.prototype.getActiveEnv = function(){
-	return this.activeEnv;
 }
 
 ConfigLoader.prototype.getConfig = function(){

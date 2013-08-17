@@ -4,11 +4,7 @@ var EventEmitter = require('events').EventEmitter
   , express = require('express')
   , flash = require('connect-flash')
   , mongoose = require('mongoose')
-  , mailer = require('./lib/mailer')
-  , errorHandler = require('./lib/errorHandler')
-  , Validator = require('validator').Validator
-  , routes = require('./lib/routes')
-  , _ = require('lodash')
+  , async = require('async')
 
 
 var AppLoader = function(){
@@ -20,23 +16,58 @@ util.inherits(AppLoader, EventEmitter);
 
 AppLoader.prototype.init = function(app){
   this.app = app;
-
-  this.loadConfig();
-  mailer.init();
-
-  this.configExceptions();
-  this.configValidator();
-
-  this.configApp();
-  this.configSession();
-  this.configMiddleware();
-
   var self = this;
-  this.on('connectDbDone', function(){
-    self.emit('done', self.app);
-  });
 
-  this.connectDb();
+  this.emit('preConfigHook', app);
+  this.loadConfig();
+  this.configExceptions(function(err) {
+    self.emit('exceptionHook', err, app);
+  });
+  this.emit('postConfigHook', app);
+
+  async.parallel([
+    // Configure Express
+    function(done) {
+      self.emit('preAppHook', app);
+      self.configApp();
+      self.emit('postAppHook', app);
+
+      self.emit('preSessionHook', app);
+      self.configSession(function(sessionConfig) {
+        self.emit('sessionHook', app, sessionConfig);
+      });
+      self.emit('postSessionHook', app);
+
+      self.emit('preStaticHook', app);
+      self.configStatic();
+      self.emit('postStaticHook', app);
+
+      self.emit('preRouterHook', app);
+      self.configRouter(function() {
+        self.emit('routerHook', app);
+      });
+      self.emit('postRouterHook', app);
+
+      done();
+    },
+    // Connect Db
+    function(done) {
+      self.emit('preDbHook', app);
+      self.connectDb(function(err, dbUri) {
+        if(err) {
+          self.emit('dbErrorHook', err, app, dbUri);
+        }
+        self.emit('dbConnectHook', app, dbUri);
+        self.emit('postDbHook', app);
+        done(err);
+      });
+    }
+  ], function(err, results) {
+    if(err) {
+      return self.emit('error', err, app);
+    }
+    return self.emit('done', app);
+  });
   
   return this;
 }
@@ -45,27 +76,25 @@ AppLoader.prototype.init = function(app){
 
 AppLoader.prototype.loadConfig = function(){
   Config.init();
-  this.emit('loadConfigDone', Config.getConfig());
+  this.config = Config.getConfig();
+  this.env = this.config.env;
 }
 
 
 
 AppLoader.prototype.configApp = function(){
   var app = this.app;
-  var config = Config.getConfig();
 
-  app.set('views', config.app.env.rootDir + '/views');
+  app.set('views', this.config.app.env.rootDir + '/views');
   app.set('view engine', 'jade');
 
   app.use(express.favicon());
   app.use(express.bodyParser());
-
-  this.emit('configAppDone', app);
 }
 
 
 
-AppLoader.prototype.configSession = function(){
+AppLoader.prototype.configSession = function(fnSessionHook){
   var app = this.app;
 
   // session support
@@ -76,93 +105,50 @@ AppLoader.prototype.configSession = function(){
     secret: 'dasds21dkds22as2jsjsad%'
   };
 
-  if (this.env === 'production') {
-      
-  } else {
-     app.locals.pretty = true;
+  if(typeof fnSessionHook === 'function') {
+    fnSessionHook(sessionConfig);
   }
 
   app.use(express.session(sessionConfig));
   app.use(flash());
-  
-  this.emit('sessionHook', app);
-  this.emit('configSessionDone', app);
 }
 
 
-
-
-
-AppLoader.prototype.configMiddleware = function(){
+AppLoader.prototype.configStatic = function(){
   var app = this.app;
-  var config = Config.getConfig();
-
-  var publicFolder = require('path').join(config.app.env.rootDir, 'public');
-  app.use(express.static(publicFolder));
-  
-  this.emit('middlewareHook', app);
-    
-  app.use(express.methodOverride());
-
-  if (this.env === 'production') {
-    app.use(errorHandler({ errView: 'error.jade' }));
-  } else {
-    app.use(errorHandler({ errView: 'error.jade', showMessage: true, dumpExceptions: true, showStack: true }));
-  }
 
   // Note: static/public files here are free from routing
+  var publicFolder = require('path').join(this.config.app.env.rootDir, 'public');
+  app.use(express.static(publicFolder));
+}
+
+
+AppLoader.prototype.configRouter = function(fnRouterHook){
+  var app = this.app;
+
+  app.use(express.methodOverride());
+
+  if(typeof fnRouterHook === 'function') {
+    fnRouterHook();
+  }
   app.use(app.router);
-
-  this.emit('configMiddlewareDone', app);
-  routes(app);
 }
 
 
-
-
-AppLoader.prototype.configValidator = function(){
-  Validator.prototype.hasError = function () {
-    return !!(this._errors.length);
-  }
-
-  Validator.prototype.error = function (msg) {
-      if(!_.contains(this._errors, msg)){
-        this._errors.push(msg);
-      }
-      return this;
-  }
-
-  Validator.prototype.getErrors = function () {
-      return this._errors;
-  }
-
-  this.emit('configValidatorDone');
-}
-
-
-AppLoader.prototype.configExceptions = function(){
+AppLoader.prototype.configExceptions = function(fnException){
   process.on('uncaughtException', function (err) {
-    console.log(err.stack);
-    console.log('uncaughtException', err.message);
-    process.exit(1);
+    if(typeof fnException === 'function') {
+      fnException(err);
+    }
   });
-
-  this.emit('configExceptionsDone');
 }
 
 
-AppLoader.prototype.connectDb = function(){
-  var self = this;
-  var uristring = Config.getConfig().db.dbUri;
+AppLoader.prototype.connectDb = function(done){
+  var dbUri = this.config.db.dbUri;
 
-  mongoose.connect(uristring, function(err, res) {
-    if(err){ 
-      console.log('ERROR connecting to: ' + uristring + '. ' + err);
-      self.emit('connectDbDone', err, uristring);
-      return;
-    }
-    self.emit('connectDbDone', null, uristring);
-    return console.log('Connnected to ' + uristring);
+  mongoose.connect(dbUri, function(err, res) {
+    return done(err, dbUri);
   });
 }
 
@@ -170,4 +156,3 @@ AppLoader.prototype.connectDb = function(){
 
 
 module.exports = new AppLoader();
-
