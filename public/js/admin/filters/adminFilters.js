@@ -5,6 +5,6 @@
 angular.module('domo.filters', []).
   filter('arrayToCSV', function() {
     return function(input) {
-      return input.sort().join(", ");
+      return Object.keys(input).sort().join(', ');
     }
   })
