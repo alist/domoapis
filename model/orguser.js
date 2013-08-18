@@ -135,6 +135,24 @@ orgUserSchema.methods.addRoles = function(roles, callback) {
 
 
 orgUserSchema.methods.removeRoles = function(roles, callback) {
+
+  var self = this;
+
+  this.removeRoleDocs(roles, function(err, unsetFields) {
+
+    OrgUser.findOneAndUpdate({
+      _id: self._id
+    }, {
+      $unset: unsetFields
+    }, function(err, doc){
+      return callback(err, doc);
+    });
+
+  });
+}
+
+
+orgUserSchema.methods.removeRoleDocs = function(roles, callback) {
   if(_.isString(roles)) {
     var t = roles;
     roles = [ t ];
@@ -168,7 +186,7 @@ orgUserSchema.methods.removeRoles = function(roles, callback) {
     delDocsTasks.push(
         function(next) {
           // Find the "foreign" doc and remove it
-          getUserRoleModel(role).findOneAndRemove({ _id: roleDocId }, function (err) {
+          getUserRoleModel(role).remove({ _id: roleDocId }, function (err) {
             if(err) {
               return next(err);
             }
@@ -179,22 +197,11 @@ orgUserSchema.methods.removeRoles = function(roles, callback) {
     );
   });
 
-
-  var self = this;
-
   return async.parallel(delDocsTasks, function(err, results){
     if(err) {
       return callback(err);
     }
-    
-    OrgUser.findOneAndUpdate({
-      _id: self._id
-    }, {
-      $unset: unsetFields
-    }, function(err, doc){
-      return callback(err, doc);
-    });
-
+    return callback(null, unsetFields);
   });
 }
 
@@ -263,15 +270,18 @@ orgUserSchema.statics.approveAccount = function(approvalAttrs, callback){
 }
 
 
-var OrgUser = module.exports.OrgUser = mongoose.model('orguser', orgUserSchema, 'orguser');
-
-function getUserRoleModel(role) {
+var getUserRoleModel = module.exports.getUserRoleModel = function(role) {
   var model = mongoose.model(role);
   if(!model) {
     throw new Error('Model not found: ' + role);
   }
   return model;
 }
+
+
+var OrgUser = module.exports.OrgUser = mongoose.model('orguser', orgUserSchema, 'orguser');
+
+
 
 
 function removeDocs(docs, callback){

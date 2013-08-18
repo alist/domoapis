@@ -64,50 +64,6 @@ OrganizationController.prototype.getInfo = function(req, res){
 }
 
 
-OrganizationController.prototype.getUsersByOrgId = function(req, res){
-    var response = res.ext.json();
-
-    var isCollectionQuery = true;
-
-    var query  = { orgId: req.extras.organization._id };
-    if(!!req.params.userId) {
-        query._id = req.params.userId;
-        isCollectionQuery = false;
-    }
-
-    var popOpts = { path: '', select: '-__v -flag' };
-
-    _.each(OrgUser.validRoles, function(role) {
-        popOpts.path += 'roles.' +  role + ' ';
-    });
-
-    var orgusers = [];
-
-    var stream = OrgUserModel
-        .find(query)
-        .select('email roles joined')
-        .populate(popOpts)
-        .lean()
-        .stream()
-        .on('data', function(orguser) {
-            orgusers.push(orguser);
-        })
-        .on('error', function(err) {
-            response.error(errors['ORG_NOT_FOUND'](err));
-        })
-        .on('close', function() {
-            if(!orgusers.length) {
-                return response.error(errors['ORG_NOT_FOUND'](err)).render();
-            }
-            if(isCollectionQuery) {
-                return response.data({ users: orgusers }).render();
-            }
-            return response.data({ user: orgusers[0] }).render();
-        });
-}
-
-
-    
 OrganizationController.prototype.getByOrgUrl = function(orgUrl, callback){
     // lookup dbn
     OrganizationModel.getByOrgUrl(orgUrl, function(err, org){
