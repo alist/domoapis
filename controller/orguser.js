@@ -60,7 +60,7 @@ OrgUserController.prototype.deleteUser = function(req, res){
   var response = res.ext.json();
   // TODO: validate
   var query  = { orgId: req.extras.organization._id, _id: req.params.userId };
-  console.log('query', query)
+
   OrgUserModel.findOne(query, function(err, orguser) {
     if(err || !orguser) {
       return response.error(errors['USER_NOT_FOUND'](err)).render();
@@ -97,5 +97,71 @@ OrgUserController.prototype.deleteUser = function(req, res){
   });
 
 }
+
+
+OrgUserController.prototype.addRole = function(req, res){
+  var response = res.ext.json();
+  // TODO: validate
+  var query  = { orgId: req.extras.organization._id, _id: req.params.userId };
+
+  var newRole = req.params.role;
+  var validRoles = OrgUser.validRoles;
+
+  if(!_.contains(validRoles, newRole)) {
+    return response.error(errors['INVALID_ROLE']()).render();
+  }
+
+  var newRoleAttrs = req.body[newRole];
+  if(!_.isObject(newRoleAttrs)) {
+    return response.error(errors['INVALID_ARG']('Invalid request body')).render();
+  }
+
+  OrgUserModel.findOne(query, function(err, orguser) {
+    if(err || !orguser) {
+      return response.error(errors['USER_NOT_FOUND'](err)).render();
+    }
+
+    if(orguser.hasRole(newRole)) {
+      return response.error(errors['ROLE_EXISTS']()).render();
+    }
+
+    var role = {};
+    role[newRole] = newRoleAttrs;
+
+    orguser.addRoles(role, function(err, orguser) {
+      if(err) {
+        return response.error(errors['OP_FAIL'](err)).render();
+      }
+      return response.data({ user: orguser.toObject() }).render();
+    });
+  });
+}
+
+
+OrgUserController.prototype.deleteRole = function(req, res){
+  var response = res.ext.json();
+  // TODO: validate
+  var query  = { orgId: req.extras.organization._id, _id: req.params.userId };
+  var deleteRole = req.params.role;
+
+  OrgUserModel.findOne(query, function(err, orguser) {
+    if(err || !orguser) {
+      return response.error(errors['USER_NOT_FOUND'](err)).render();
+    }
+
+    if(!orguser.hasRole(deleteRole)) {
+      return response.error(errors['ROLE_NOT_FOUND']()).render();
+    }
+
+    orguser.removeRoles([ deleteRole ], function(err, orguser) {
+      if(err) {
+        return response.error(errors['OP_FAIL'](err)).render();
+      }
+      return response.data({ user: orguser.toObject() }).render();
+    });
+  });
+}
+
+
 
 module.exports.OrgUserController = new OrgUserController();
