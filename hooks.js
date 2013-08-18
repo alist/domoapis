@@ -1,7 +1,7 @@
 var errorHandler = require('./lib/errorHandler')
   , mailer = require('./lib/mailer')
   , routes = require('./lib/routes')
-  , responseExt = require('./lib/responseExt')
+  , responseExt = require('./lib/responseExt').ResponseExt
   , routeParams = require('./lib/routeParams')
   , partials = require('./lib/partials')
   , authHooks = require('./auth')
