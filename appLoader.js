@@ -85,7 +85,8 @@ AppLoader.prototype.loadConfig = function(){
 
 AppLoader.prototype.configApp = function(){
   var app = this.app;
-
+  
+  app.set('apiPath', this.config.app.api.path);
   app.set('views', this.config.app.env.rootDir + '/views');
   app.set('view engine', 'jade');
 
