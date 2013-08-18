@@ -60,44 +60,20 @@ OrganizationController.prototype.getAdvice = function(req, res){
 }
     
 OrganizationController.prototype.getInfo = function(req, res){
-    return res.ext.view('orglanding').render(); 
+    return res.ext.data({ organization: req.extras.organization }).view('orglanding').render();
 }
 
-
-OrganizationController.prototype.getUser = function(req, res){
-    var response = res.ext.json();
-
-    if(!req.params.userId) {
-        return response.error(errors['INVALID_ARG']()).render();
-    }
-
-    OrgUserModel.findOne({ orgId: req.extras.organization._id, userId: req.params.userId }, function(err, orguser) {
-        if(err) {
-            return response.error(err).render();
-        }
-        if(!orguser) {
-            return response.error(errors['ORG_NOT_FOUND']()).render();
-        }
-        return response.data({ user: orguser }).render();
-    });
-}
-
-var print = function(name, obj){
-  if(arguments.length == 1){
-    obj = name;
-    name = '';
-  }
-  console.log(name, require('util').inspect(obj, { depth: null }));
-}
 
 OrganizationController.prototype.getUsersByOrgId = function(req, res){
     var response = res.ext.json();
 
+    var isCollectionQuery = true;
+
     var query  = { orgId: req.extras.organization._id };
     if(!!req.params.userId) {
-        query.userId = req.params.userId;
+        query._id = req.params.userId;
+        isCollectionQuery = false;
     }
-
 
     var popOpts = { path: '', select: '-__v -flag' };
 
@@ -105,7 +81,7 @@ OrganizationController.prototype.getUsersByOrgId = function(req, res){
         popOpts.path += 'roles.' +  role + ' ';
     });
 
-    var resData = { users: [] };
+    var orgusers = [];
 
     var stream = OrgUserModel
         .find(query)
@@ -114,13 +90,19 @@ OrganizationController.prototype.getUsersByOrgId = function(req, res){
         .lean()
         .stream()
         .on('data', function(orguser) {
-            resData.users.push(orguser);
+            orgusers.push(orguser);
         })
         .on('error', function(err) {
             response.error(errors['ORG_NOT_FOUND'](err));
         })
         .on('close', function() {
-            response.data(resData).render();
+            if(!orgusers.length) {
+                return response.error(errors['ORG_NOT_FOUND'](err)).render();
+            }
+            if(isCollectionQuery) {
+                return response.data({ users: orgusers }).render();
+            }
+            return response.data({ user: orgusers[0] }).render();
         });
 }
 
