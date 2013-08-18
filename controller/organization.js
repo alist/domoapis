@@ -98,56 +98,30 @@ OrganizationController.prototype.getUsersByOrgId = function(req, res){
         query.userId = req.params.userId;
     }
 
-    async.waterfall([
 
-        function(next) {
+    var popOpts = { path: '', select: '-__v -flag' };
 
-            var popOpts = { path: '', select: '-__v -flag' };
+    _.each(OrgUser.validRoles, function(role) {
+        popOpts.path += 'roles.' +  role + ' ';
+    });
 
-            _.each(OrgUser.validRoles, function(role) {
-                popOpts.path += 'roles.' +  role + ' ';
-            });
+    var resData = { users: [] };
 
-            OrgUserModel.find(query).select('userId roles joined').populate(popOpts).populate('userId', 'email').lean().exec(function(err, orgusers) {
-                if(!orgusers) {
-                    return next(errors['ORG_NOT_FOUND']());
-                }
-                next(err, orgusers);
-            });
-        },
-
-        function(orgusers, next) {
-            async.each(orgusers, 
-                function(orguser, n){
-
-                    _.each(['email'], function(attr) {
-                        if(!orguser.userId[attr]) return;
-                        orguser[attr] = orguser.userId[attr];
-                    });
-                    delete orguser.userId;
-
-                    orguser.roles = _.reduce(orguser.roles, function(res, val, key){
-                        if(_.isObject(val)) {
-                            res[key] = val;
-                        }
-                        return res;
-                    }, {});
-                    n();
-                },
-                function(err) {
-                    if(err) {
-                        return next(err);
-                    }
-                    next(err, orgusers);
-                });
-        }
-
-    ], function(err, orgusers) {
-        if(err) {
-            return response.error(err).render();
-        }
-        return response.data({ users: orgusers }).render();
-    })
+    var stream = OrgUserModel
+        .find(query)
+        .select('email roles joined')
+        .populate(popOpts)
+        .lean()
+        .stream()
+        .on('data', function(orguser) {
+            resData.users.push(orguser);
+        })
+        .on('error', function(err) {
+            response.error(errors['ORG_NOT_FOUND'](err));
+        })
+        .on('close', function() {
+            response.data(resData).render();
+        });
 }
 
 
