@@ -24,6 +24,7 @@ var adminRoles = module.exports.adminRoles = [ 'moduleadmin', 'admin', 'adopter'
 var orgUserSchema = new Schema({
   userId:                 { type: Schema.Types.ObjectId, ref: 'user', required: true },
   orgId:                  { type: Schema.Types.ObjectId, ref: 'organization', required: true },
+  email:                  { type: String, required: true, index: { unique: true } },
   joined:                 { type: Date, default: Date.now },
   heldRoleAttrs:          { type: Schema.Types.Mixed },
   accApproved:            { type: Boolean, default: true },
@@ -55,6 +56,7 @@ orgUserSchema.statics.new = function(newAttrs, callback){
   var orguser = new OrgUser();
   orguser.orgId = newAttrs.orgId;
   orguser.userId = newAttrs.userId;
+  orguser.email = newAttrs.email;
 
   // do not mandate account approval for supporter
   // if user is also being added as an admin (adopter/admin/moduleadmin)
