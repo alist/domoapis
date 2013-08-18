@@ -20,10 +20,11 @@ div.container-fluid
       table.table.table-striped
         thead
           tr
-            th Email
+            th E-mail
             th Roles
             th Joined
-          tr(ng-repeat='user in users | filter:query | filter: filterByRole | orderBy:orderProp')
+        tbody
+          tr(ng-repeat='user in users | filter:query | filter: filterByRole | orderBy:orderProp', ng-click='showUserDetails(user)')
             td {{user.email}}
-            td {{user.roles | arrayToCSV}}
+            td {{user | userRoleList}}
             td.stretch {{user.joined | date: 'medium'}}

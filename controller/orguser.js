@@ -34,7 +34,7 @@ OrgUserController.prototype.getUsersByOrgId = function(req, res){
 
     var stream = OrgUserModel
       .find(query)
-      .select('email roles joined')
+      .select('email roles joined accApproved')
       .populate(popOpts)
       .lean()
       .stream()
@@ -68,13 +68,11 @@ OrgUserController.prototype.deleteUser = function(req, res){
 
     async.parallel([
       function(next) {
-        console.log('orguser.userId', {_id: orguser.userId })
         UserModel.remove({ _id: orguser.userId }, function(err) {
           return next(err);
         });
       },
       function(next) {
-        console.log('orguser.roles', _.keys(orguser.roles.toObject()))
         orguser.removeRoleDocs(_.keys(orguser.roles.toObject()), function(err, unsetFields) {
           return next(err);
         });

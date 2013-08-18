@@ -7,6 +7,8 @@ block viewVars
 block scripts
   script.
     var organization='!{organization.orgURL}';
+    
+  script(src='/components/typeahead.js/dist/typeahead.min.js')
   script(src='/components/angular/angular.min.js')
   script(src='/components/angular-resource/angular-resource.min.js')
   script(src='/js/admin/admin.js')
@@ -15,6 +17,8 @@ block scripts
   script(src='/js/admin/filters/adminFilters.js')
   script(src='/js/admin/directives/adminDirectives.js')
   
+block styles
+  link(rel='stylesheet', href='/css/typeahead.css')
 
 block body
   include menu
@@ -24,23 +28,5 @@ block body
     #main.container-fluid
       .page-header
         h2 Admin Area
-      table.table
-        tbody
-          tr
-            td 
-              b ID
-            td !{organization.id}
-          tr
-            td 
-              b Name
-            td !{organization.displayName}
-          tr
-            td 
-              b Code
-            td !{organization.code}
-          tr
-            td 
-              b URL
-            td /!{organization.orgURL}
 
       div(ng-view)
