@@ -57,8 +57,7 @@ reload(){
 
 npm_install(){
   log "Updating modules..."
-  npm install --production --save
-  npm install --dev --save
+  npm install
 }
 
 forever_list(){
