@@ -42,6 +42,7 @@ load(){
 	log "Loading Server..."
 	mkdir -p "${APP_ROOT}/logs"
 	export NODE_ENV='production'
+  export PORT=4000
 	forever start -m 20 --minUptime 5000 --spinSleepTime 2000 --pidFile "${APP_ROOT}/logs/pid" -l "${APP_ROOT}/logs/forever.log" --append -o "${APP_ROOT}/logs/out.log" -e "${APP_ROOT}/logs/err.log" "${APP_ROOT}/app.js"
 }
 
