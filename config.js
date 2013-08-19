@@ -55,11 +55,11 @@ module.exports.db.overrides = {
 }
 
 module.exports.db.production = {
-
+  dbUri: process.env.MONGODB_URI
 };
 
 module.exports.db.development = {
-
+  dbUri: process.env.MONGODB_URI
 };
 
 module.exports.db.test = {
