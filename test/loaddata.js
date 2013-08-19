@@ -86,8 +86,6 @@ function genRandomRoles(u) {
 
 describe("LOAD_DATA", function() {
 
-  this.timeout(5000);
-
   it("Load organizations", function(done) {
     var orgData = require('./data/orgData').orgData;
 
