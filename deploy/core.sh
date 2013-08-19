@@ -29,6 +29,7 @@ setup(){
 
 setup_db(){
   export SETUPDB_USE_ENV=1
+  export MONGODB_URI='mongodb://app1:swbo10a87@127.0.0.1:18001/domo'
   node "${APP_ROOT}/deploy/setupDb.js"
 }
 
