@@ -69,8 +69,14 @@ module.exports.orgData = [
     "orgURL": "loremeu",
     "city": "Kaneohe",
     "region": "Hawaii"
-  },
-  {
+  }];
+
+
+
+
+
+
+module.exports.orgData2 = [{
     "id": "11",
     "displayName": "Venenatis Lacus Ltd",
     "orgURL": "venenatislacus",

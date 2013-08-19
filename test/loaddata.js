@@ -3,7 +3,6 @@ var env = process.env.NODE_ENV = (typeof process.env.NODE_ENV !== 'undefined') ?
 
 var config = require('../configLoader').forceEnv(env, true).init().getConfig()
   , Utils = require('./inc/dbutils')(config.db.dbUri)
-  , Helpers = require('./inc/helpers')
   , util = require('util')
   , _ = require('lodash')
   , async = require('async')
@@ -17,8 +16,6 @@ var UserModel = require('../model/user')
 
 var ObjectId = require('mongoose').Types.ObjectId;
 
-
-var should = Helpers.should;
 
 var state = {};
 
@@ -85,8 +82,6 @@ function genRandomRoles(u) {
 
 
 describe("LOAD_DATA", function() {
-
-  this.timeout(5000);
 
   it("Load organizations", function(done) {
     var orgData = require('./data/orgData').orgData;

@@ -1,0 +1,30 @@
+div.container-fluid
+  div.row-fluid
+    div.span12
+      div.pull-right
+        | Search:
+        input(type='text', ng-model='query')
+        | Role:
+        select(ng-model='roleFilter', ng-options='value for value in validRoles')
+          option(value='') All
+
+        | Sort by:
+        select(ng-model='orderProp')
+          option(value='email') E-mail &#9650;
+          option(value='-email') E-mail &#9660;
+          option(value='joined') Joined &#9650;
+          option(value='-joined') Joined &#9660;
+
+  div.row-fluid
+    div.span12
+      table.table.table-striped
+        thead
+          tr
+            th E-mail
+            th Roles
+            th Joined
+        tbody
+          tr(ng-repeat='user in users | filter:query | filter: filterByRole | orderBy:orderProp', ng-click='showUserDetails(user)')
+            td {{user.email}}
+            td {{user | userRoleList}}
+            td.stretch {{user.joined | date: 'medium'}}

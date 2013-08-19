@@ -7,13 +7,7 @@ var passport = require('passport')
 
 module.exports = function(AppLoader){
 
-  AppLoader.on('sessionHook', function(app){
-    app.use(passport.initialize());
-    app.use(passport.session());
-  });
-
-
-  AppLoader.on('middlewareHook', function(app){
+  AppLoader.once('postConfigHook', function(app){
     passport.use(new LocalStrategy({ passReqToCallback: true },
       function(req, username, password, done) {
         return UserController.auth(username, password, done);
@@ -34,4 +28,9 @@ module.exports = function(AppLoader){
     });
   });
 
+
+  AppLoader.once('postSessionHook', function(app){
+    app.use(passport.initialize());
+    app.use(passport.session());
+  });
 }

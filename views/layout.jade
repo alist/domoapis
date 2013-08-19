@@ -1,7 +1,7 @@
 - if(typeof stylesheets === 'undefined')
-  - var stylesheets = ['//cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/2.3.1/css/bootstrap.min.css', '/css/style.css']
+  - var stylesheets = ['//cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/2.3.2/css/bootstrap.min.css', '/css/style.css']
 - if(typeof localScripts === 'undefined')
-  - var localScripts = ['//cdnjs.cloudflare.com/ajax/libs/jquery/2.0.3/jquery.min.js', '//cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/2.3.1/js/bootstrap.min.js']
+  - var localScripts = ['//cdnjs.cloudflare.com/ajax/libs/jquery/2.0.3/jquery.min.js', '//cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/2.3.2/js/bootstrap.min.js']
 
 block viewVars
 
@@ -11,7 +11,7 @@ block viewVars
   - title += " | Domo"
 
 !!! 5
-html
+html(ng-app=ngApp)
   head
     title #{title}
     meta(charset="utf-8")
@@ -52,7 +52,3 @@ html
 
 
     block scripts
-
-    - if(typeof scripts !== 'undefined')
-      each s in scripts
-        script(src='#{s}.js').

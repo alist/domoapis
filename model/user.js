@@ -22,7 +22,7 @@ var SALT_WORK_FACTOR = 10;
 
 var userSchema = new Schema({
   userID: {type: String, required: true, index: { unique: true } },
-  email: { type: String, lowercase: true, trim: true, index: { unique: true } },
+  email: { type: String, index: { unique: true } },
   emailConfirmed: { type: Boolean, default: false },
   emailVerified: { type: Boolean, default: false },
   emailVerificationHash: { type: String },
@@ -188,6 +188,7 @@ userSchema.statics.register = function(newUserAttrs, callback){
       OrgUser.new({
         userId: newUser._id,
         orgId: org._id,
+        email: newUser.email,
         roles: newUserAttrs.roles
       }, next);
     }

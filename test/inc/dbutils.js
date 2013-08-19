@@ -62,8 +62,6 @@ module.exports = function(dbUri) {
        setImmediate(checkState);
      }
    }
-
-   this.timeout(15000);
    checkState();
   });
 

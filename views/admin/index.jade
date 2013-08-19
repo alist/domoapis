@@ -1,0 +1,32 @@
+
+extends ../layout
+
+block viewVars
+  -var ngApp = 'domo'
+
+block scripts
+  script.
+    var organization='!{organization.orgURL}';
+    
+  script(src='/components/typeahead.js/dist/typeahead.min.js')
+  script(src='/components/angular/angular.min.js')
+  script(src='/components/angular-resource/angular-resource.min.js')
+  script(src='/js/admin/admin.js')
+  script(src='/js/admin/controllers/adminControllers.js')
+  script(src='/js/admin/services/adminServices.js')
+  script(src='/js/admin/filters/adminFilters.js')
+  script(src='/js/admin/directives/adminDirectives.js')
+  
+block styles
+  link(rel='stylesheet', href='/css/typeahead.bootstrap.css')
+
+block body
+  include menu
+
+
+  .page
+    #main.container-fluid
+      .page-header
+        h2 Admin Area
+
+      div(ng-view)

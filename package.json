@@ -1,13 +1,14 @@
 {
   "name": "domo-io-server",
-  "version": "0.0.1",
+  "version": "1.0.0",
   "scripts": {
     "start": "node app.js",
-    "test": "node_modules/.bin/mocha -R spec"
+    "test": "node_modules/.bin/mocha --reporter spec --timeout 15000",
+    "load": "mocha --reporter spec --grep '^LOAD' --timeout 15000",
+    "http": "mocha --reporter spec --grep '^HTTP' --timeout 15000"
   },
   "engines": {
-    "node": "0.8.x",
-    "npm": "1.1.x"
+    "node": "0.10.x"
   },
   "dependencies": {
     "coffee-script": "1.2.0",

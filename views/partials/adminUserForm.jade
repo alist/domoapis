@@ -1,0 +1,20 @@
+div.container-fluid
+  div.row-fluid
+    div.span12
+      form(name='user', novalidate)
+        input(type='text', name='email', ng-model='user.email', placeholder='E-mail', readonly)
+
+        .controls.permissions(ng-repeat='(role, v) in user.roles')
+          .input-append
+            span.uneditable-input {{role}}
+            button.btn.btn-danger.btn-delete(type='button', ng-click='deleteRole(role, user)', ng-disabled='delDisabled')
+              i.icon-trash.icon-white
+
+        .control-group
+          .controls
+            .input-append
+              input(type='text', name='newRole', ng-model='newRole', placeholder='New Role Name')
+              button.btn.btn-success.btn-add(type='button', ng-click='addRole(user)', ng-disabled='addDisabled') Add Role
+  div.row-fluid
+    div.span12
+        button.btn.btn-danger.btn-large(type='button', ng-click='deleteUser(user)', ng-disabled='delUserDisabled') Delete User

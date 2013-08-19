@@ -24,6 +24,7 @@ var adminRoles = module.exports.adminRoles = [ 'moduleadmin', 'admin', 'adopter'
 var orgUserSchema = new Schema({
   userId:                 { type: Schema.Types.ObjectId, ref: 'user', required: true },
   orgId:                  { type: Schema.Types.ObjectId, ref: 'organization', required: true },
+  email:                  { type: String, required: true, index: { unique: true } },
   joined:                 { type: Date, default: Date.now },
   heldRoleAttrs:          { type: Schema.Types.Mixed },
   accApproved:            { type: Boolean, default: true },
@@ -55,6 +56,7 @@ orgUserSchema.statics.new = function(newAttrs, callback){
   var orguser = new OrgUser();
   orguser.orgId = newAttrs.orgId;
   orguser.userId = newAttrs.userId;
+  orguser.email = newAttrs.email;
 
   // do not mandate account approval for supporter
   // if user is also being added as an admin (adopter/admin/moduleadmin)
@@ -133,6 +135,24 @@ orgUserSchema.methods.addRoles = function(roles, callback) {
 
 
 orgUserSchema.methods.removeRoles = function(roles, callback) {
+
+  var self = this;
+
+  this.removeRoleDocs(roles, function(err, unsetFields) {
+
+    OrgUser.findOneAndUpdate({
+      _id: self._id
+    }, {
+      $unset: unsetFields
+    }, function(err, doc){
+      return callback(err, doc);
+    });
+
+  });
+}
+
+
+orgUserSchema.methods.removeRoleDocs = function(roles, callback) {
   if(_.isString(roles)) {
     var t = roles;
     roles = [ t ];
@@ -166,7 +186,7 @@ orgUserSchema.methods.removeRoles = function(roles, callback) {
     delDocsTasks.push(
         function(next) {
           // Find the "foreign" doc and remove it
-          getUserRoleModel(role).findOneAndRemove({ _id: roleDocId }, function (err) {
+          getUserRoleModel(role).remove({ _id: roleDocId }, function (err) {
             if(err) {
               return next(err);
             }
@@ -177,22 +197,11 @@ orgUserSchema.methods.removeRoles = function(roles, callback) {
     );
   });
 
-
-  var self = this;
-
   return async.parallel(delDocsTasks, function(err, results){
     if(err) {
       return callback(err);
     }
-    
-    OrgUser.findOneAndUpdate({
-      _id: self._id
-    }, {
-      $unset: unsetFields
-    }, function(err, doc){
-      return callback(err, doc);
-    });
-
+    return callback(null, unsetFields);
   });
 }
 
@@ -229,7 +238,6 @@ orgUserSchema.statics.getPopulated = function(userId, orgId, callback) {
 
 
 orgUserSchema.statics.approveAccount = function(approvalAttrs, callback){
-
   this.findOne({ userId: approvalAttrs.userId, orgId: approvalAttrs.orgId, accApproved: false },
     function(err, orguser) {
       if(err) {
@@ -262,15 +270,18 @@ orgUserSchema.statics.approveAccount = function(approvalAttrs, callback){
 }
 
 
-var OrgUser = module.exports.OrgUser = mongoose.model('orguser', orgUserSchema, 'orguser');
-
-function getUserRoleModel(role) {
+var getUserRoleModel = module.exports.getUserRoleModel = function(role) {
   var model = mongoose.model(role);
   if(!model) {
     throw new Error('Model not found: ' + role);
   }
   return model;
 }
+
+
+var OrgUser = module.exports.OrgUser = mongoose.model('orguser', orgUserSchema, 'orguser');
+
+
 
 
 function removeDocs(docs, callback){

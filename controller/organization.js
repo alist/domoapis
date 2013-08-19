@@ -1,8 +1,10 @@
 var OrganizationModel = require("../model/organization").Organization
-  , OrgUser = require('../model/orguser').OrgUser
+  , OrgUser = require('../model/orguser')
+  , OrgUserModel = OrgUser.OrgUser
   , Validator = require('validator').Validator
   , _ = require('lodash')
   , errors = require('../model/errors').errors
+  , async = require('async')
   
 
 var OrganizationController = function(){
@@ -40,7 +42,7 @@ OrganizationController.prototype.getAll = function(req, res){
 
 
 OrganizationController.prototype.giveAdvice = function(req, res){
-    OrgUser.get(req.user._id, req.extras.organization._id, function(err, orguser) {
+    OrgUserModel.get(req.user._id, req.extras.organization._id, function(err, orguser) {
         if(err) {
             return res.ext.errorView('error.jade').error(err).render();
         }
@@ -58,50 +60,10 @@ OrganizationController.prototype.getAdvice = function(req, res){
 }
     
 OrganizationController.prototype.getInfo = function(req, res){
-    return res.ext.view('orglanding').render(); 
+    return res.ext.data({ organization: req.extras.organization }).view('orglanding').render();
 }
 
 
-OrganizationController.prototype.getUser = function(req, res){
-    var response = res.ext.json();
-
-    if(!req.params.userId) {
-        return response.error(errors['INVALID_ARG']()).render();
-    }
-
-    OrgUser.findOne({ orgId: req.extras.organization._id, userId: req.params.userId }, function(err, orguser) {
-        if(err) {
-            return response.error(err).render();
-        }
-        if(!orguser) {
-            return response.error(errors['ORG_NOT_FOUND']()).render();
-        }
-        return response.data({ user: orguser }).render();
-    });
-}
-
-
-OrganizationController.prototype.getUsersByOrgId = function(req, res){
-    var response = res.ext.json();
-
-    var query  = { orgId: req.extras.organization._id };
-    if(!!req.params.userId) {
-        query.userId = req.params.userId;
-    }
-
-    OrgUser.find(query, function(err, orgusers) {
-        if(err) {
-            return response.error(err).render();
-        }
-        if(!orgusers) {
-            return response.error(errors['ORG_NOT_FOUND']()).render();
-        }
-        return response.data({ users: orgusers }).render();
-    });
-}
-
-
-    
 OrganizationController.prototype.getByOrgUrl = function(orgUrl, callback){
     // lookup dbn
     OrganizationModel.getByOrgUrl(orgUrl, function(err, org){

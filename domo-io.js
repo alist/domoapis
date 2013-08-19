@@ -1,34 +1,26 @@
 var express = require('express')
   , app = express()
-  , AppLoader = require('./appLoader')
-  , Config = require('./configLoader')
-  , ResponseExt = require('./lib/responseExt')
-  , RouteParams = require('./lib/routeParams')
-  , AuthHooks = require('./auth')
+  , appLoader = require('./appLoader')
+  , hooks = require('./hooks')
 
 
-function registerHooks(){
-  ResponseExt(AppLoader);
-  RouteParams(AppLoader)
-  AuthHooks(AppLoader);
-}
+hooks.registerHooks(appLoader);
 
+appLoader.on('done', function(app){
+  var port = appLoader.config.app.env.port;
 
-function listen(){
-  var config = Config.getConfig();
-  app.listen(config.app.env.port, function(){
-      console.log('Express server listening on port ' + config.app.env.port);
+  app.listen(port, function(){
+      console.log('Express server listening on port ' + port);
   });
-}
-
-
-registerHooks();
-
-AppLoader.on('done', function(app){
-  listen();
 });
 
-AppLoader.init(app);
+
+appLoader.on('error', function(err, app){
+  console.log('ERROR:', err);
+});
+
+
+appLoader.init(app);
 
 
 // For test-hooks
