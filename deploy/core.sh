@@ -28,8 +28,7 @@ setup(){
 
 
 setup_db(){
-  node "${APP_ROOT}/deploy/genDbConfig.js"
-	mongo --port 18001 --host 127.0.0.1 "${APP_ROOT}/deploy/mongodbSetup.js"
+  node "${APP_ROOT}/deploy/setupDb.js"
 }
 
 
