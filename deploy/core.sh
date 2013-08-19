@@ -21,6 +21,8 @@ setup(){
 			log "Error creating logs directory: ${APP_ROOT}/logs"
 		fi
 	fi
+
+  npm_install
 	setup_db
 }
 
