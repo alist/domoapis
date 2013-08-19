@@ -28,6 +28,7 @@ setup(){
 
 
 setup_db(){
+  export SETUPDB_USE_ENV=1
   node "${APP_ROOT}/deploy/setupDb.js"
 }
 
@@ -57,10 +58,6 @@ reload(){
 npm_install(){
   log "Updating modules..."
   npm install --production --save
-  if (test $? -ne 0)
-  then
-    sudo npm install --production
-  fi
   npm install --dev --save
 }
 
