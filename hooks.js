@@ -15,7 +15,7 @@ module.exports.registerHooks = function(appLoader) {
 
   appLoader.once('postConfigHook', function(app) {
     console.log('ENV:', appLoader.config.env);
-    mailer.init(appLoader.config.mail);
+    mailer.init(appLoader.config);
     configValidator();
   });
 

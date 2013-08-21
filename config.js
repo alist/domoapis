@@ -79,29 +79,16 @@ Object.keys(module.exports.db).forEach(function(k){
 });
 
 
-
 module.exports.mail = {};
 
 module.exports.mail.defaults = {
-  host: "smtp.buggycoder.com",
-  port: 587,
-  secureConnection: false,
-  auth: {
-    user: "shirish@buggycoder.com",
-    pass: "VTkrZ(%7"
-  },
-  from: "\"Buggy Coder, Inc.\" <shirish@buggycoder.com>",
-  adminEmails: ['shirishk.87@gmail.com', 'harishnk@gmail.com']
-};
+  retry: 3,
+  adminEmails: [ 'shirishk.87@gmail.com', 'harishnk@gmail.com' ]
+}
 
+module.exports.redis = {};
 
-
-// module.exports.redis = {};
-
-// module.exports.redis.defaults = {
-//   type: 'redis',
-//   redis: require('redis'),
-//   db: 0,
-//   port: 6379,
-//   host: '127.0.0.1'
-// }
+module.exports.redis.defaults = {
+  host: '127.0.0.1',
+  port: 6379
+}
