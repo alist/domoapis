@@ -5,7 +5,7 @@ var OrganizationModel = require("../model/organization").Organization
   , _ = require('lodash')
   , errors = require('../model/errors').errors
   , async = require('async')
-  
+
 
 var OrganizationController = function(){
 };
@@ -54,14 +54,41 @@ OrganizationController.prototype.giveAdvice = function(req, res){
         return res.ext.view('giveadvice.jade').render();
     });
 }
- 
+
 OrganizationController.prototype.getAdvice = function(req, res){
     return res.ext.view('getadvice.jade').render();
 }
-    
+
 OrganizationController.prototype.getInfo = function(req, res){
-    return res.ext.data({ organization: req.extras.organization }).view('orglanding').render();
+    var org = req.extras.organization.toObject();
+    delete org.code;
+    return res.ext.data({ organization: org }, true).view('orglanding').render();
 }
+
+
+OrganizationController.prototype.validateCode = function(req, res, next) {
+    var response = res.ext;
+
+    if(!req.query.code || !req.query.code.length) {
+        return response.error('missing code').render();
+    }
+
+    // check org code. no need for db lookup
+    if(req.query.code !== req.extras.organization.code) {
+        return response.error('incorrect code').render();
+    }
+
+    // Correct org code
+    next();
+}
+
+
+OrganizationController.prototype.codeCheck = function(req, res){
+    // code is already checked; write organization object as response
+    return res.ext.data({ organization: req.extras.organization }).render();
+}
+
+
 
 
 OrganizationController.prototype.getByOrgUrl = function(orgUrl, callback){
@@ -76,6 +103,7 @@ OrganizationController.prototype.getByOrgUrl = function(orgUrl, callback){
         return callback(null, org);
     });
 }
+
 
 
 module.exports.OrganizationController = new OrganizationController();

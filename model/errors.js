@@ -19,6 +19,8 @@ errorMsgs['ROLE_EXISTS'] = "Role already exists";
 errorMsgs['ROLE_NOT_FOUND'] = "Role not found for user";
 errorMsgs['INVALID_ROLE'] = "Invalid role";
 
+errorMsgs['ADVICEREQUEST_NOT_FOUND'] = "Advice request not found";
+
 
 Object.keys(errorMsgs).forEach(function(err){
     errors[err] = function(d){
