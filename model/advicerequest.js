@@ -6,7 +6,7 @@ var mongoose = require('mongoose')
 
 
 var ResponseSchema = new Schema({
-  responseId: { type: String, required: true, unique: true, index: true }, // every subdoc will have an autogen _id. Use that
+  // responseId: { type: String, required: true, unique: true, index: true }, // every subdoc will have an autogen _id. Use that
   adviceResponse: {type: String},
   adviceGiver: { type: Schema.Types.ObjectId, ref: 'orguser', required: true },
   modifiedDate: {type: Date},
@@ -36,15 +36,6 @@ var adviceRequestSchema = new Schema({
 
 var schemaAttrs = _.keys(adviceRequestSchema.paths);
 
-
-adviceRequestSchema.statics.getById = function(id, callback) {
-  this.findOne({ _id: id }, function(err, adviceRequest) {
-      if(!adviceRequest) {
-          return callback(errors['ADVICEREQUEST_NOT_FOUND']());
-      }
-      return callback(err, adviceRequest);
-  });
-}
 
 adviceRequestSchema.statics.getByAccessURL = function(accessURL, callback) {
   this.findOne({ accessURL: accessURL }, function(err, adviceRequest) {

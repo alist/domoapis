@@ -17,15 +17,14 @@ module.exports.public = function(app){
   app.delete(apiConfig.path + '/organizations/:organization/users/:userId', OrgUserController.deleteUser.bind(OrgUserController));
 
   app.get(apiConfig.path + '/organizations/:organization', OrganizationController.getInfo.bind(OrganizationController));
-
+  app.get(apiConfig.path + '/organizations/:organization/users', OrgUserController.getUsersByOrgId.bind(OrgUserController));
 
   // middleware protects all routes below it
   app.all(apiConfig.path + '/organizations/:organization/*', OrganizationController.validateCode.bind(OrganizationController));
 
   // all following routes require ?code=<code> to be correct
   app.get(apiConfig.path + '/organizations/:organization/codecheck', OrganizationController.codeCheck.bind(OrganizationController));
-  app.get(apiConfig.path + '/organizations/:organization/users', OrgUserController.getUsersByOrgId.bind(OrgUserController));
-
   app.post(apiConfig.path + '/organizations/:organization/advicerequest', AdviceRequestController.newAdviceRequest.bind(AdviceRequestController));
+  app.get(apiConfig.path + '/organizations/:organization/advicerequest/:advicerequest', AdviceRequestController.getInfo.bind(AdviceRequestController));
 
 }
