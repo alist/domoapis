@@ -20,7 +20,12 @@ module.exports.app.defaults = {
   api: {
     endpoint: '/api/',
     version: '1',
-    path: '/api/v1'
+    path: '/api/v1',
+    tokenOptions: {
+      secret: 'unpr3d1ct@bl3str1ngF0ll0ws-owkcfjefoe93msl4',
+      timeStep: 7 * 24 * 60 * 60,
+      schemaKey: '_id'
+    }
   },
   roleApprovalReq: ['supporter']
 };

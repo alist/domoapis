@@ -10,7 +10,7 @@ module.exports = function(AppLoader){
   AppLoader.once('postConfigHook', function(app){
     passport.use(new LocalStrategy({ passReqToCallback: true },
       function(req, username, password, done) {
-        return UserController.auth(username, password, done);
+        return UserController.auth(req, username, password, done);
       }
     ));
 

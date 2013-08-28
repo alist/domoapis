@@ -41,7 +41,7 @@ UserController.prototype.register = function(req, res){
   validator.check(newUserAttrs.email, 'Invalid e-mail address').len(6, 64).isEmail();
   validator.check(newUserAttrs.password, 'Invalid password').len(5, 64);
   validator.check(newUserAttrs.orgId, 'Invalid organization').notEmpty();
-  
+
   var response = res.ext;
   response.errorView('register.jade');
   response.viewData({ apiOrgUrl: Config.getConfig().app.api.path + "/organizations?src=typeahead" })
@@ -85,14 +85,14 @@ UserController.prototype.register = function(req, res){
           console.log(err);
         }
       });
-      
+
       return response.data(user.toObject()).data(orguser.toObject()).redirect('/');
     });
   });
 }
 
 
-UserController.prototype.auth = function(email, password, done){
+UserController.prototype.auth = function(req, email, password, done){
   var validator = new Validator();
   validator.check(email, 'Invalid e-mail address.').notEmpty().len(5, 64);
   validator.check(password, 'Invalid password.').notEmpty().len(5, 64);
@@ -100,12 +100,23 @@ UserController.prototype.auth = function(email, password, done){
   if(validator.hasError()){
     return done(null, false, { message: validator.getErrors().join(' ') });
   }
-  
+
   return UserModel.getAuthenticated(email, password,
     function(err, user){
       if(err) return done(null, false, { message: err });
-      //get user permissions? hnk07/23/13+
-      return done(null, user);
+
+      if(~(req.headers.accept || '').indexOf('json')) {
+        // api client
+        var clientId = req.query.clientId;
+
+        user.getToken(!!clientId ? clientId : 'api', function(err, user, token) {
+          user.activeToken = token;
+          done(null, user);
+        });
+        return;
+      }
+
+      done(null, user);
     });
 }
 
@@ -145,7 +156,7 @@ UserController.prototype.sendApprovalEmail = function(req, data, callback){
 
       mailer.sendMessage(parcel, next);
     }
-  ], callback); 
+  ], callback);
 }
 
 
@@ -156,7 +167,7 @@ UserController.prototype.approveAccount = function(req, res){
     orgId: req.params.orgId,
     token: req.query.token
   };
-  
+
   var validator = new Validator();
   validator.check(approvalAttrs.userId).notEmpty().len(6, 64);
   validator.check(approvalAttrs.orgId).notEmpty().len(6, 64);

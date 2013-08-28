@@ -121,6 +121,29 @@ describe("HTTP: Register new user", function() {
   });
 
 
+  it("should login successfully", function(done) {
+    request()
+    .post('/login?clientId=phone')
+    .send({ username: 'shirishk.87@gmail.com', password: 'sa123' })
+    .set('Accept', 'application/json')
+    .end(function (res) {
+      console.log(res.text);
+      res.should.be.json;
+      res.should.have.status(200);
+      should.exist(res.body.response.token);
+
+
+      User.findOne({ userID: 'shirishk.87@gmail.com', }, function(err, user) {
+        user.hasToken(res.body.response.token).should.equal(true);
+        done();
+      });
+
+      // Save session cookie
+      userAgent.saveState(res);
+    });
+  });
+
+
   it("get advice", function(done) {
     request()
       .post(apiPath + '/organizations/' + state.organization.orgURL + '/advicerequest?code=' + state.organization.code)

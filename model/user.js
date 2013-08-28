@@ -7,6 +7,7 @@ var mongoose = require('mongoose')
   , errors = require('./errors').errors
   , async = require('async')
   , _ = require('lodash')
+  , TokenOptions = require('./tokenOptions')
 
 
 var OrganizationModel = require('./organization')
@@ -26,7 +27,7 @@ var userSchema = new Schema({
   emailConfirmed: { type: Boolean, default: false },
   emailVerified: { type: Boolean, default: false },
   emailVerificationHash: { type: String },
-  
+
   telephoneNumber: {type: String, index: {unique: false}},
   telephoneVerifyDate: {type: Date},
   telephoneNumberVerifyAttemptCount: {type: Number},
@@ -50,9 +51,7 @@ var userSchema = new Schema({
   joined: { type: Date, default: Date.now },
   modifiedDate: { type: Date, index: { unique: false } },
 
-  displayName: String, 
-  
-  token: { type: String },
+  displayName: String,
 
   activeSessionIDs: [ {type: String, index: {unique: true}} ],
 
@@ -71,17 +70,20 @@ var userSchema = new Schema({
 });
 
 
+TokenOptions.addToSchema(userSchema, { schemaKey: 'userID' });
+
+
 userSchema.virtual('usesPasswordAuth').get(function(){
   return !!(this.password && this.password.length > 0)
 });
- 
+
 userSchema.methods.checkPassword = function(userPwd, callback){
   bcrypt.compare(userPwd, this.password, callback);
 }
 
 userSchema.methods.getUserOrg = function(orgId) {
   return _.first(this.organizations, function(oId) {
-    return (oId.toString() === orgId.toString()); 
+    return (oId.toString() === orgId.toString());
   });
 }
 
@@ -156,7 +158,7 @@ userSchema.statics.register = function(newUserAttrs, callback){
       newUser = new User();
       newUser.userID = newUser.email = newUserAttrs.email;
       newUser.organizations.push(org._id);
-      
+
       newUser.emailConfirmed = true;
       newUser.emailVerified = false;
       newUser.emailVerificationHash = uuid.v1();
@@ -181,7 +183,7 @@ userSchema.statics.register = function(newUserAttrs, callback){
         return next(null, newUser);
       });
     },
-    
+
     // create orguser and roles
     function(newUser, next) {
 
@@ -211,7 +213,7 @@ userSchema.statics.findUserAll = function(lookupQuery, selectFields, callback){
 
 
 userSchema.statics.updatePassword = function(lookup, newPassword, callback){
-  
+
   var self = this;
 
   this.generatePasswordHash(newPassword, function(err, passwordHash){
@@ -220,7 +222,7 @@ userSchema.statics.updatePassword = function(lookup, newPassword, callback){
     updates.recoverPasswordHash = uuid.v1();
     updates.lastUpdated = new Date();
 
-    self.update(lookup, { 
+    self.update(lookup, {
         $set: updates
     }, function(err, rowsAffected){
         if(err) return callback(err);
@@ -238,7 +240,7 @@ userSchema.statics.updateEmail = function(usesPasswordAuth, lookup, email, callb
   updates.emailVerificationHash = uuid.v1();
   updates.lastUpdated = new Date();
 
-  this.update(lookup, { 
+  this.update(lookup, {
       $set: updates
   }, function(err, rowsAffected){
       if(err) return callback(err);
@@ -289,7 +291,7 @@ userSchema.statics.getUser = function(lookup, fields, callback){
 }
 
 userSchema.statics.getAuthenticated = function(email, password, callback){
-  this.getUser({ 'userID': email }, 
+  this.getUser({ 'userID': email },
     function(err, user){
       if(err && err.message && err.id === 'USER_NOT_FOUND'){
         return callback(err); // reject
