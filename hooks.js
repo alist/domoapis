@@ -1,5 +1,6 @@
 var errorHandler = require('./lib/errorHandler')
   , mailer = require('./lib/mailer')
+  , messenger = require('./lib/messenger')
   , routes = require('./lib/routes')
   , responseExt = require('./lib/responseExt').ResponseExt
   , routeParams = require('./lib/routeParams')
@@ -16,6 +17,7 @@ module.exports.registerHooks = function(appLoader) {
   appLoader.once('postConfigHook', function(app) {
     console.log('ENV:', appLoader.config.env);
     mailer.init(appLoader.config.mail);
+    messenger.init(appLoader.config.messenger);
     configValidator();
   });
 

@@ -3,6 +3,7 @@ var AdviceRequestModel = require("../model/advicerequest").AdviceRequest
   , OrgUserModel = require('../model/orguser').OrgUser
   , ShortUrlModel = require('../model/shorturl').ShortUrl
   , mailer = require('../lib/mailer')
+  , messenger = require('../lib/messenger')
   , Utils = require('../lib/utils')
   , Validator = require('validator').Validator
   , _ = require('lodash')
@@ -39,7 +40,7 @@ AdviceRequestController.prototype.getInfo = function(req, res) {
 
 AdviceRequestController.prototype.newAdviceRequest = function(req, res) {
 
-  var org = req.extras.organization;
+  var org = req.extras.organization.toObject();
 
   var newAdviceRequestAttrs = req.body;
   // TODO: Add validations here
@@ -79,11 +80,33 @@ AdviceRequestController.prototype.newAdviceRequest = function(req, res) {
       // write response
       res.ext.data({ advicerequest: advicerequest }).render();
 
-      // full url for supportees
+      // notify supportee if telNo was provided
+      if(!!advicerequest.telephoneNumber) {
+        advicerequest.accessURL = domain + advicerequest.accessURL;
+        notifySupporteeSMS(org, advicerequest);
+      }
+
+      // full url for supporters
       advicerequest.accessURL = domain + accessPath;
-      notifySupportersEmail(org.toObject(), advicerequest);
+      notifySupportersEmail(org, advicerequest);
     });
 
+  });
+
+}
+
+
+function notifySupporteeSMS(org, advicerequest) {
+
+  messenger.sendMessage({
+    to: advicerequest.telephoneNumber,
+    body: 'Thanks for using domo. Please use ' + advicerequest.accessURL + ' to track responses.'
+  }, function(err) {
+    if(err) {
+      console.log('notifySupporteeSMS', err);
+    } else {
+      console.log('notifySupporteeSMS', 'success');
+    }
   });
 
 }

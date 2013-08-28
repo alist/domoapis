@@ -96,12 +96,14 @@ module.exports.mail.defaults = {
 
 
 
-// module.exports.redis = {};
+module.exports.messenger = {};
 
-// module.exports.redis.defaults = {
-//   type: 'redis',
-//   redis: require('redis'),
-//   db: 0,
-//   port: 6379,
-//   host: '127.0.0.1'
-// }
+module.exports.messenger.defaults = {
+  service: {
+    sid: 'AC0b4236c52b08448aa4af6b365557d89a',
+    token: '9724f92d942bb0fae61e5c8bac118669'
+  },
+  options: {
+    from: '+14696434686'
+  }
+};
