@@ -4,6 +4,7 @@
   "scripts": {
     "start": "node app.js",
     "test": "node_modules/.bin/mocha --reporter spec --timeout 15000",
+    "test2": "node_modules/.bin/mocha --reporter spec --grep '^(?!LOAD)' --timeout 15000",
     "load": "mocha --reporter spec --grep '^LOAD' --timeout 15000",
     "http": "mocha --reporter spec --grep '^HTTP' --timeout 15000"
   },

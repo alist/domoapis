@@ -1,6 +1,7 @@
 var AdviceRequestModel = require("../model/advicerequest").AdviceRequest
   , Organization = require('../controller/organization').OrganizationController
   , OrgUserModel = require('../model/orguser').OrgUser
+  , ShortUrlModel = require('../model/shorturl').ShortUrl
   , mailer = require('../lib/mailer')
   , Utils = require('../lib/utils')
   , Validator = require('validator').Validator
@@ -50,22 +51,41 @@ AdviceRequestController.prototype.newAdviceRequest = function(req, res) {
       return res.ext.error(err).render();
     }
 
-    // write response
-    res.ext.data({ advicerequest: advicerequest.toObject() }).render();
-
-    advicerequest = advicerequest.toObject();
-
     // for now
-    advicerequest.accessURL = Utils.getDomainFromRequest(req)
-                                + Config.getConfig().app.api.path
-                                + '/organizations/' + org.orgURL
-                                + '/advicerequest/' + advicerequest._id
-                                + '?code=' + org.code
-                                + '&token=' + advicerequest.accessToken;
+    var domain = Utils.getDomainFromRequest(req);
+    var accessPath = Config.getConfig().app.api.path
+                      + '/organizations/' + org.orgURL
+                      + '/advicerequest/' + advicerequest._id
+                      + '?code=' + org.code
+                      + '&token=' + advicerequest.accessToken;
 
-    notifySupportersEmail(org.toObject(), advicerequest);
+    ShortUrlModel.shorten(accessPath, function(err, shorturl) {
+      if(shorturl) {
+        // use short url
+        advicerequest.accessURL = '/x/' + shorturl.shortURICode;
+
+        // update doc with short url
+        advicerequest.save(function(err) {
+          if(err)   console.log(err);
+        });
+
+      } else {
+        // something went wrong; use full url
+        advicerequest.accessURL = accessPath;
+      }
+
+      advicerequest = advicerequest.toObject();
+
+      // write response
+      res.ext.data({ advicerequest: advicerequest }).render();
+
+      // full url for supportees
+      advicerequest.accessURL = domain + accessPath;
+      notifySupportersEmail(org.toObject(), advicerequest);
+    });
 
   });
+
 }
 
 

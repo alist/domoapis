@@ -20,6 +20,7 @@ var userAgent = new Helpers.UserAgent(app);
 var request = userAgent.request;
 
 var state = {};
+var apiPath = config.app.api.path;
 
 var print = function(name, obj){
   if(arguments.length == 1){
@@ -65,7 +66,7 @@ describe("HTTP: Register new user", function() {
   it("register new supporter", function(done) {
     request()
       .post('/register')
-      .send({ 
+      .send({
         email: 'shirishk.87@gmail.com',
         password: 'sa123',
         skills: 'fake empathy',
@@ -89,7 +90,7 @@ describe("HTTP: Register new user", function() {
             state.orguser = orguser;
             done();
           });
-          
+
         });
     });
   });
@@ -102,7 +103,7 @@ describe("HTTP: Register new user", function() {
 
     request()
       .get(approvalLink)
-      .send({ 
+      .send({
         email: 'shirishk.87@gmail.com',
         password: 'sa123',
         skills: 'fake empathy',
@@ -115,6 +116,23 @@ describe("HTTP: Register new user", function() {
         res.should.have.status(200);
         should.exist(res.body.response.accApproved);
         res.body.response.accApproved.should.equal(true);
+        done();
+    });
+  });
+
+
+  it("get advice", function(done) {
+    request()
+      .post(apiPath + '/organizations/' + state.organization.orgURL + '/advicerequest?code=' + state.organization.code)
+      .send({
+        adviceRequest: 'I need help with this'
+      })
+      .set('Accept', 'application/json')
+      .end(function (res) {
+        res.should.be.json;
+        res.should.have.status(200);
+        should.exist(res.body.response.advicerequest._id);
+        should.exist(res.body.response.advicerequest.accessURL);
         done();
     });
   });

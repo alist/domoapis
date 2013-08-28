@@ -1,8 +1,8 @@
 var mongoose = require('mongoose')
   , Schema = mongoose.Schema
   , uuid = require('node-uuid')
-  , _ = require('lodash')
   , errors = require('./errors').errors
+  , _ = require('lodash')
 
 
 var ResponseSchema = new Schema({
@@ -34,7 +34,6 @@ var adviceRequestSchema = new Schema({
   responses: [ResponseSchema]
 });
 
-var schemaAttrs = _.keys(adviceRequestSchema.paths);
 
 
 adviceRequestSchema.statics.getByAccessURL = function(accessURL, callback) {
@@ -49,7 +48,7 @@ adviceRequestSchema.statics.getByAccessURL = function(accessURL, callback) {
 adviceRequestSchema.statics.new = function(adviceRequestAttrs, callback){
   var adviceRequest = new AdviceRequest();
   adviceRequest = _.merge(adviceRequest, _.pick(adviceRequestAttrs, [ 'organization', 'telephoneNumber', 'adviceRequest' ]));
-  adviceRequest.accessToken = uuid.v4();
+  adviceRequest.accessToken = uuid.v4().replace(/\-/g, '');
   // adviceRequest.accessURL = shorturl-code
   adviceRequest.save(function(err){
     if(err){
