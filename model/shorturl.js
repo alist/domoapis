@@ -10,8 +10,8 @@ var shorturlSchema = new Schema({
   shortURICode:     { type: String, required: true, unique: true, index: true },
   isCustomCode:     { type: Boolean },
   redirectCount:    { type: Number, default: 0 },
-  redirects:        [ { accessDate: Date, userinfo: {} } ],
-  creatorUserInfo:  {}
+  redirects:        [ { accessDate: Date, userInfo: Schema.Types.Mixed } ],
+  creatorUserInfo:  Schema.Types.Mixed
 });
 
 
