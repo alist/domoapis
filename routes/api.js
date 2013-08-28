@@ -1,11 +1,12 @@
- var apiConfig = require("../configLoader").getConfig().app.api
-  , OrganizationController = require('../controller/organization').OrganizationController
+var OrganizationController = require('../controller/organization').OrganizationController
   , OrgUserController = require('../controller/orguser').OrgUserController
   , AdviceRequestController = require('../controller/advicerequest').AdviceRequestController
 
 
 
 module.exports.public = function(app){
+  var apiConfig = require("../configLoader").getConfig().app.api
+
   app.get(apiConfig.path + '/organizations', OrganizationController.getAll.bind(OrganizationController));
 
   // TODO: make private

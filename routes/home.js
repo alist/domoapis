@@ -3,23 +3,23 @@
    , _ = require('lodash')
 
 
-module.exports.index = function(req, res) {
-
-  if(_.first(req.flash('accApproved')) === true) {
-    res.ext.data({ accApproved: true, roles: req.flash('roles').join(', ') });
-    return res.ext.view('supporterApprovalStatus.jade').render();
-  }
-
-  if(req.user) {
-    res.ext.data({ user: req.user });
-    return res.ext.view('userIndex.jade').render();
-  }
-
-  return res.ext.view('index.jade').render();
-};
-
-
 module.exports.public = function(app) {
+
+  // homepage
+  app.get('/', function(req, res) {
+    if(_.first(req.flash('accApproved')) === true) {
+      res.ext.data({ accApproved: true, roles: req.flash('roles').join(', ') });
+      return res.ext.view('supporterApprovalStatus.jade').render();
+    }
+
+    if(req.user) {
+      res.ext.data({ user: req.user });
+      return res.ext.view('userIndex.jade').render();
+    }
+
+    return res.ext.view('index.jade').render();
+  });
+
 
   app.get('/login', function(req, res){
     return res.ext.view('login.jade').render();

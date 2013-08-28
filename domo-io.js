@@ -1,3 +1,4 @@
+
 var Config = require('./configLoader')
   , util = require('util')
   , path = require('path')
@@ -9,7 +10,7 @@ var Config = require('./configLoader')
   , auth = require('./auth')
   , mailer = require('./lib/mailer')
   , messenger = require('./lib/messenger')
-  , routes = require('./routes/routes')
+  , routeLoader = require('./routes/routeLoader')
   , responseExt = require('./lib/responseExt').ResponseExt
   , routeParams = require('./lib/routeParams')
   , partials = require('./lib/partials')
@@ -60,7 +61,7 @@ function setupApp(done) {
     responseExt(app);
     routeParams(app);
     partials(app);
-    routes(app);
+    routeLoader.init(app);
 
     app.use(app.router);
 
@@ -74,7 +75,6 @@ function setupApp(done) {
     done();
 
   });
-
 }
 
 
@@ -138,7 +138,7 @@ async.parallel([
 
   var port = config.app.env.port;
   app.listen(port, function(){
-      console.log('Express server listening on port ' + port);
+    console.log('Express server listening on port ' + port);
   });
 
 });
