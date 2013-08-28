@@ -5,11 +5,16 @@ var _ = require('lodash')
   , errors = require('./errors').errors
 
 
+var options = module.exports.options = {
+  secret: 'unpr3d1ct@bl3str1ngF0ll0ws-owkcfjefoe93msl4',
+  timeStep: 7 * 24 * 60 * 60,
+  schemaKey: '_id'
+};
+
 
 module.exports.addToSchema = function(schema, opts) {
 
-  var defaults = Config.getConfig().app.api.tokenOptions;
-  opts = _.defaults(opts || {}, defaults);
+  opts = _.defaults(opts || {}, options);
 
   schema.add({
     tokens: [

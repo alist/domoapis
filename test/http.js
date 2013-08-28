@@ -127,7 +127,6 @@ describe("HTTP: Register new user", function() {
     .send({ username: 'shirishk.87@gmail.com', password: 'sa123' })
     .set('Accept', 'application/json')
     .end(function (res) {
-      console.log(res.text);
       res.should.be.json;
       res.should.have.status(200);
       should.exist(res.body.response.token);
