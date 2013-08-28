@@ -29,3 +29,7 @@ module.exports.public = function(app){
   app.get(apiConfig.path + '/organizations/:organization/advicerequest/:advicerequest', AdviceRequestController.getInfo.bind(AdviceRequestController));
 
 }
+
+/*module.exports.private = function(app){
+  app.
+}*/
