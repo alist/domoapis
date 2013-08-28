@@ -100,10 +100,10 @@ module.exports.messenger = {};
 
 module.exports.messenger.defaults = {
   service: {
-    sid: 'AC0b4236c52b08448aa4af6b365557d89a',
-    token: '9724f92d942bb0fae61e5c8bac118669'
+    sid: 'AC3b723c31db8d97180127711305f40755',
+    token: 'f04fefd0272893b7ad0d664ec00d5737'
   },
   options: {
-    from: '+14696434686'
+    from: '+16468074202'
   }
 };

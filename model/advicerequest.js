@@ -4,6 +4,7 @@ var mongoose = require('mongoose')
   , errors = require('./errors').errors
   , _ = require('lodash')
 
+var validSupportAreas = module.exports.validSupportAreas = [ 'career', 'mental-health' ];
 
 var ResponseSchema = new Schema({
   // responseId: { type: String, required: true, unique: true, index: true }, // every subdoc will have an autogen _id. Use that
@@ -29,6 +30,7 @@ var adviceRequestSchema = new Schema({
   createdOn: {type: Date, default: Date.now},
   lastNotificationDate: {type: Date, index: {unique: false}},
   notificationInterval: {type: Number},
+  supportArea: { type: String, enum: validSupportAreas },
   //authToken: {type: String},
   adviceRequest: {type: String, required: true},
   responses: [ResponseSchema]
@@ -47,7 +49,7 @@ adviceRequestSchema.statics.getByAccessURL = function(accessURL, callback) {
 
 adviceRequestSchema.statics.new = function(adviceRequestAttrs, callback){
   var adviceRequest = new AdviceRequest();
-  adviceRequest = _.merge(adviceRequest, _.pick(adviceRequestAttrs, [ 'organization', 'telephoneNumber', 'adviceRequest' ]));
+  adviceRequest = _.merge(adviceRequest, _.pick(adviceRequestAttrs, [ 'organization', 'telephoneNumber', 'supportArea', 'adviceRequest' ]));
   adviceRequest.accessToken = uuid.v4().replace(/\-/g, '');
   // adviceRequest.accessURL = shorturl-code
   adviceRequest.save(function(err){
