@@ -33,7 +33,7 @@ AdviceRequestController.prototype.getInfo = function(req, res) {
       return res.ext.error(errors['ADVICEREQUEST_NOT_FOUND']().m).render();
     }
 
-    res.ext.data(advicerequest.toObject()).render();
+    res.ext.data({ advicerequest: advicerequest.toObject() }).render();
   });
 }
 
@@ -95,6 +95,14 @@ AdviceRequestController.prototype.newAdviceRequest = function(req, res) {
 
 }
 
+
+AdviceRequestController.prototype.newAdvice = function(req, res) {
+  res.ext.data({ user: req.user }).render();
+}
+
+AdviceRequestController.prototype.listAdvice = function(req, res) {
+  res.ext.data({ user: req.user }).render();
+}
 
 function notifySupporteeSMS(org, advicerequest) {
 

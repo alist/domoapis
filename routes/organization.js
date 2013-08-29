@@ -3,10 +3,6 @@ var OrganizationController = require('../controller/organization').OrganizationC
 
 
 module.exports.private = function(app) {
-    app.get('/:organization/giveadvice', OrganizationController.giveAdvice.bind(OrganizationController));
-}
-
-module.exports.verif = function(app) {
   app.all('/:organization*', function(req, res, next){
       if(!req.extras || !req.extras.organization) {
           // not an org route. someone else handles this
@@ -22,7 +18,10 @@ module.exports.verif = function(app) {
       req.flash('redirTo', req.path);
       return res.ext.redirect('/login');
   });
+
+  app.get('/:organization/giveadvice', OrganizationController.giveAdvice.bind(OrganizationController));
 }
+
 
 module.exports.public = function(app) {
   app.get('/:organization/getadvice', OrganizationController.getAdvice.bind(OrganizationController));

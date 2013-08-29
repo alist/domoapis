@@ -133,7 +133,12 @@ describe("HTTP: Register new user", function() {
 
 
       User.findOne({ userID: 'shirishk.87@gmail.com', }, function(err, user) {
-        user.hasToken(res.body.response.token).should.equal(true);
+        var tokenParts = res.body.response.token.split('|');
+        var userId = tokenParts.shift();
+        var token = tokenParts.join('');
+
+        user.hasToken(token).should.equal(true);
+        state.token = res.body.response.token;
         done();
       });
 
@@ -142,10 +147,52 @@ describe("HTTP: Register new user", function() {
     });
   });
 
-
-  it("get advice", function(done) {
+  it("check org code", function(done) {
     request()
-      .post(apiPath + '/organizations/' + state.organization.orgURL + '/advicerequest?code=' + state.organization.code)
+      .get(apiPath + '/organizations/' + state.organization.orgURL + '/codecheck?code=' + state.organization.code)
+      .set('Accept', 'application/json')
+      .end(function (res) {
+        res.should.be.json;
+        res.should.have.status(200);
+        should.exist(res.body.response.organization._id);
+        done();
+    });
+  });
+
+  it("check org code: invalid orgcode", function(done) {
+    request()
+      .get(apiPath
+            + '/organizations/' + state.organization.orgURL
+            + '/codecheck?code=' + state.organization.code + 'duh')
+      .set('Accept', 'application/json')
+      .end(function (res) {
+        res.should.be.json;
+        res.should.have.status(400);
+        done();
+    });
+  });
+
+  it("new advicerequest: invalid orgcode", function(done) {
+    request()
+      .post(apiPath
+              + '/organizations/' + state.organization.orgURL
+              + '/advicerequest?code=' + state.organization.code + 'duh')
+      .send({
+        adviceRequest: 'I need help with this'
+      })
+      .set('Accept', 'application/json')
+      .end(function (res) {
+        res.should.be.json;
+        res.should.have.status(400);
+        done();
+    });
+  });
+
+  it("new advicerequest", function(done) {
+    request()
+      .post(apiPath
+              + '/organizations/' + state.organization.orgURL
+              + '/advicerequest?code=' + state.organization.code)
       .send({
         adviceRequest: 'I need help with this'
       })
@@ -155,6 +202,46 @@ describe("HTTP: Register new user", function() {
         res.should.have.status(200);
         should.exist(res.body.response.advicerequest._id);
         should.exist(res.body.response.advicerequest.accessURL);
+        state.advicerequest = res.body.response.advicerequest;
+        done();
+    });
+  });
+
+
+  it("get advicerequest", function(done) {
+    request()
+      .get(apiPath
+            + '/organizations/' + state.organization.orgURL
+            + '/advicerequest/' + state.advicerequest._id
+            + '?code=' + state.organization.code
+            + '&token=' + state.advicerequest.accessToken)
+      .set('Accept', 'application/json')
+      .end(function (res) {
+        res.should.be.json;
+        res.should.have.status(200);
+        should.exist(res.body.response.advicerequest._id);
+        should.exist(res.body.response.advicerequest.accessURL);
+        done();
+    });
+  });
+
+
+  it("give advice", function(done) {
+
+    var advicerequest = state.advicerequest;
+    request()
+      .post(apiPath
+              + '/organizations/' + state.organization.orgURL
+              + '/advicerequest/' + advicerequest._id
+              + '/advice'
+              + '?token=' + encodeURIComponent(state.token))
+      .send({
+        advice: 'Here\'s what you need to do.'
+      })
+      .set('Accept', 'application/json')
+      .end(function (res) {
+        res.should.be.json;
+        res.should.have.status(200);
         done();
     });
   });
