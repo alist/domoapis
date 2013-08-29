@@ -8,6 +8,7 @@ var Validator = require('validator').Validator
   , jade = require('jade')
   , path = require('path')
   , async = require('async')
+  , errors = require('../model/errors').errors
 
 
 
@@ -105,12 +106,12 @@ UserController.prototype.auth = function(req, email, password, done){
     function(err, user){
       if(err) return done(null, false, { message: err });
 
-      if(~(req.headers.accept || '').indexOf('json')) {
+      if(req.accepts('json')) {
         // api client
         var clientId = req.query.clientId;
 
         user.getToken(!!clientId ? clientId : 'api', function(err, user, token) {
-          user.activeToken = token;
+          user.activeToken = user._id + '|' + token;
           done(null, user);
         });
         return;
@@ -118,6 +119,51 @@ UserController.prototype.auth = function(req, email, password, done){
 
       done(null, user);
     });
+}
+
+
+UserController.prototype.validateToken = function(req, res, next){
+
+  var tokenAtts = _.pick(req.query || {}, [ 'token' ]);
+
+  if(!tokenAtts.token){
+    tokenAtts.token = req.header('x-token');
+  }
+
+  var response = res.ext;
+
+  var validator = new Validator();
+  validator.check(tokenAtts.token, 'Invalid token.').notEmpty().len(64);
+
+  if(validator.hasError()) {
+    return response.error(validator.getErrors()).render();
+  }
+
+  var tokenParts = tokenAtts.token.split('|');
+  var userId = tokenParts.shift();
+  var token = tokenParts.join('');
+
+  UserModel.findById(userId, function(err, user) {
+    if(err) {
+      return response.error(err).render();
+    }
+
+    if(!user) {
+      return response.error(errors['USER_NOT_FOUND']()).render();
+    }
+
+    if(!user.hasToken(token)) {
+      return response.error(errors['TOKEN_INVALID']()).render();
+    }
+
+    req.logIn(user, function(err) {
+      if (err){
+        return response.error(err).render();
+      }
+      next();
+    });
+
+  });
 }
 
 

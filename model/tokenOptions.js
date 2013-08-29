@@ -47,6 +47,8 @@ module.exports.addToSchema = function(schema, opts) {
     var tokenKey = getTokenKey(this, service);
     var serviceToken = { service: service };
 
+    var self = this;
+
     if(this.tokens.length) {
         var fetchedToken = _.findWhere(this.tokens, { service: service });
         if(!!fetchedToken) {
@@ -54,7 +56,7 @@ module.exports.addToSchema = function(schema, opts) {
             var tokenStatus = Auth.verify(tokenKey, new Buffer(serviceToken));
 
             if(tokenStatus === Auth.VALID) {
-                return callback(null, this, serviceToken.token);
+                return callback(null, self, serviceToken.token);
             }
         }
     }
@@ -64,14 +66,14 @@ module.exports.addToSchema = function(schema, opts) {
     this.tokens.push(serviceToken);
 
     if(!shouldSave) {
-      return callback(null, this, serviceToken.token);
+      return callback(null, self, serviceToken.token);
     }
 
     this.save(function(err) {
         if(err) {
             return callback(err);
         }
-        return callback(null, this, serviceToken.token);
+        return callback(null, self, serviceToken.token);
     });
   }
 
