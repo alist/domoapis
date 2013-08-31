@@ -108,7 +108,7 @@ AdviceRequestController.prototype.newAdvice = function(req, res) {
   console.log(req.user._id);
   console.log(org._id);
 
-  var orguser = req.extras.orgusers[org._id];
+  var orguser = req.extras.orguser;
   if(!orguser) {
     return res.ext.error(errors['USER_NOT_FOUND']()).render();
   }

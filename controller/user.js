@@ -138,19 +138,13 @@ UserController.prototype.validateSession = function(req, res, next) {
     return res.ext.redirect('/login');
   }
 
-  // load all orguser identities of this user into req.orgusers hash
-  OrgUserModel.find({ userId: req.user._id }, function(err, orgusers) {
+  // load orguser identity of this user for this org req.extras.orguser hash
+  OrgUserModel.findOne({ userId: req.user._id, orgId: req.extras.organization._id }, function(err, orguser) {
     if(err) {
       return response.error(err).render();
     }
 
-    req.extras.orgusers = {};
-
-    if(orgusers && orgusers.length) {
-      orgusers.forEach(function(val) {
-        req.extras.orgusers[val.orgId] = val;
-      });
-    }
+    req.extras.orguser = orguser || {};
 
     // continues the request, sending it to the next matching route
     return next();
@@ -172,7 +166,7 @@ UserController.prototype.validateToken = function(req, res, next){
   var response = res.ext;
 
   var validator = new Validator();
-  validator.check(tokenAtts.token, 'Invalid token.').notEmpty().len(64);
+  validator.check(tokenAtts.token, 'Missing token').notEmpty().len(64);
 
   if(validator.hasError()) {
     return response.error(validator.getErrors()).render();
@@ -193,12 +187,12 @@ UserController.prototype.validateToken = function(req, res, next){
     }
 
     if(!user) {
-      return response.error(errors['USER_NOT_FOUND']()).render();
+      return response.code(response.STATUS.NOT_FOUND).error(errors['USER_NOT_FOUND']()).render();
     }
     //console.log(token);
     if(!user.hasToken(token)) {
       console.log("invalid token yo");
-      return response.error(errors['TOKEN_INVALID']()).render();
+      return response.code(response.STATUS.UNAUTHORIZED).error(errors['TOKEN_INVALID']()).render();
     }
 
     req.logIn(user, function(err) {

@@ -31,7 +31,15 @@ module.exports.public = function(app) {
   app.post('/login',
     passport.authenticate('local'),
     function(req, res) {
-      res.ext.data({ token: req.user.activeToken }).redirect('/');
+
+      res.ext.data({ token: req.user.activeToken });
+
+      var redirTo = req.flash('redirTo');
+      if(redirTo.length) {
+        return res.ext.redirect(redirTo.shift());
+      }
+
+      res.ext.redirect('/');
     });
 
   app.get('/logout', function(req, res){
