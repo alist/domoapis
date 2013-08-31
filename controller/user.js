@@ -125,7 +125,7 @@ UserController.prototype.auth = function(req, email, password, done){
 UserController.prototype.validateToken = function(req, res, next){
 
   //var tokenAtts = require('mongoose').Types.ObjectId;
-  
+
   var tokenAtts = _.pick(req.query || {}, [ 'token' ]);
 
   if(!tokenAtts.token){
@@ -145,7 +145,7 @@ UserController.prototype.validateToken = function(req, res, next){
   var tokenParts = tokenAtts.token.split('|');
   var userId = tokenParts.shift();
   var token = tokenParts.join('');
-  
+
   console.log(token);
   console.log(userId);
 
@@ -159,7 +159,7 @@ UserController.prototype.validateToken = function(req, res, next){
     }
     //console.log(token);
     if(!user.hasToken(token)) {
-      console.log("invalid token yo");    
+      console.log("invalid token yo");
       return response.error(errors['TOKEN_INVALID']()).render();
     }
 
@@ -167,7 +167,23 @@ UserController.prototype.validateToken = function(req, res, next){
       if (err){
         return response.error(err).render();
       }
-      next();
+
+      // load all orguser identities of this user into req.orgusers hash
+      OrgUserModel.find({ userId: user._id }, function(err, orgusers) {
+        if(err) {
+          return response.error(err).render();
+        }
+
+        req.orgusers = {};
+
+        if(orgusers && orgusers.length) {
+          orgusers.forEach(function(val) {
+            req.orgusers[val.orgId] = val;
+          });
+        }
+
+        next();
+      });
     });
 
   });
