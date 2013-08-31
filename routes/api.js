@@ -3,12 +3,17 @@ var OrganizationController = require('../controller/organization').OrganizationC
   , OrgUserController = require('../controller/orguser').OrgUserController
   , AdviceRequestController = require('../controller/advicerequest').AdviceRequestController
   , UserController = require('../controller/user').UserController
-  , Config = require("../configLoader")
+  , Config = require('../configLoader')
+  , passport = require('passport')
 
 
 
 module.exports.public = function(app) {
   var apiConfig = Config.getConfig().app.api;
+
+  app.post(apiConfig.path + '/user/session', passport.authenticate('local', { session: false }), function(req, res) {
+    res.ext.data({ token: req.extras.token }).render();
+  });
 
   app.get(apiConfig.path + '/organizations', OrganizationController.getAll.bind(OrganizationController));
   app.get(apiConfig.path + '/organizations/:organization', OrganizationController.getInfo.bind(OrganizationController));

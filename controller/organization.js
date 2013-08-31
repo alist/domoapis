@@ -90,7 +90,9 @@ OrganizationController.prototype.codeCheck = function(req, res) {
 
 
 OrganizationController.prototype.admin = function(req, res) {
-  res.ext.view('admin/index').render();
+  req.user.getToken(req.extras.clientId, true, true, function(err, user, token) {
+    res.ext.data({ user: req.user, token: token }).view('admin/index').render();
+  });
 }
 
 

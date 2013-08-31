@@ -8,7 +8,8 @@ var _ = require('lodash')
 var options = module.exports.options = {
   secret: 'unpr3d1ct@bl3str1ngF0ll0ws-owkcfjefoe93msl4',
   timeStep: 7 * 24 * 60 * 60,
-  schemaKey: '_id'
+  schemaKey: '_id',
+  transformToken: null
 };
 
 
@@ -36,13 +37,23 @@ module.exports.addToSchema = function(schema, opts) {
   }
 
 
-  schema.methods.getToken = function(service, shouldSave, callback) {
+  schema.methods.getToken = function(service, shouldSave, shouldTransformToken, callback) {
 
     if(typeof shouldSave === 'function') {
       // fn(service, callback)
       callback = shouldSave;
       shouldSave = true;
+      transformToken = false;
     }
+
+    if(typeof transformToken === 'function') {
+      // fn(service, shouldSave, callback)
+      callback = transformToken;
+      transformToken = false;
+    }
+
+    var fnTransform = opts.transformToken;
+    fnTransform = (shouldTransformToken && typeof fnTransform === 'function') ? fnTransform.bind(this) : _.identity;
 
     var tokenKey = getTokenKey(this, service);
     var serviceToken = { service: service };
@@ -50,15 +61,15 @@ module.exports.addToSchema = function(schema, opts) {
     var self = this;
 
     if(this.tokens.length) {
-        var fetchedToken = _.findWhere(this.tokens, { service: service });
-        if(!!fetchedToken) {
-            serviceToken = fetchedToken;
-            var tokenStatus = Auth.verify(tokenKey, new Buffer(serviceToken));
+      var fetchedToken = _.findWhere(this.tokens, { service: service });
+      if(!!fetchedToken) {
+        serviceToken = fetchedToken;
+        var tokenStatus = Auth.verify(tokenKey, new Buffer(serviceToken));
 
-            if(tokenStatus === Auth.VALID) {
-                return callback(null, self, serviceToken.token);
-            }
+        if(tokenStatus === Auth.VALID) {
+          return callback(null, self, fnTransform(serviceToken.token));
         }
+      }
     }
 
     delete serviceToken._id
@@ -66,14 +77,14 @@ module.exports.addToSchema = function(schema, opts) {
     this.tokens.push(serviceToken);
 
     if(!shouldSave) {
-      return callback(null, self, serviceToken.token);
+      return callback(null, self, fnTransform(serviceToken.token));
     }
 
     this.save(function(err) {
-        if(err) {
-            return callback(err);
-        }
-        return callback(null, self, serviceToken.token);
+      if(err) {
+        return callback(err);
+      }
+      return callback(null, self, fnTransform(serviceToken.token));
     });
   }
 

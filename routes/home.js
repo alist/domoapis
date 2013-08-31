@@ -32,7 +32,7 @@ module.exports.public = function(app) {
     passport.authenticate('local'),
     function(req, res) {
 
-      res.ext.data({ token: req.user.activeToken });
+      res.ext.data({ token: req.extras.token });
 
       var redirTo = req.flash('redirTo');
       if(redirTo.length) {

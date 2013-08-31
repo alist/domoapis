@@ -121,7 +121,7 @@ describe("HTTP: Register new user", function() {
   });
 
 
-  it("should login successfully", function(done) {
+  it("should login successfully: website", function(done) {
     request()
     .post('/login?clientId=phone')
     .send({ username: 'shirishk.87@gmail.com', password: 'sa123' })
@@ -146,6 +146,31 @@ describe("HTTP: Register new user", function() {
       userAgent.saveState(res);
     });
   });
+
+
+  it("should login successfully: api", function(done) {
+    request()
+    .post(apiPath + '/user/session')
+    .send({ username: 'shirishk.87@gmail.com', password: 'sa123' })
+    .set('Accept', 'application/json')
+    .end(function (res) {
+      res.should.be.json;
+      res.should.have.status(200);
+      should.exist(res.body.response.token);
+
+
+      User.findOne({ userID: 'shirishk.87@gmail.com', }, function(err, user) {
+        var tokenParts = res.body.response.token.split('|');
+        var userId = tokenParts.shift();
+        var token = tokenParts.join('');
+
+        user.hasToken(token).should.equal(true);
+        state.token = res.body.response.token;
+        done();
+      });
+    });
+  });
+
 
   it("check org code", function(done) {
     request()
@@ -256,7 +281,7 @@ describe("HTTP: Register new user", function() {
               + '/advicerequest/' + advicerequest._id
               + '/advice')
       .send({
-        advice: 'Here\'s what you need to do too.'
+        advice: 'Here\'s what you also need to do.'
       })
       .set('Authorization', 'Basic ' + new Buffer(state.token).toString('base64'))
       .set('Accept', 'application/json')

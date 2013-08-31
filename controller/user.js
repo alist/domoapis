@@ -106,22 +106,21 @@ UserController.prototype.auth = function(req, email, password, done){
     return done(null, false, { message: validator.getErrors().join(' ') });
   }
 
+  var self = this;
+
   return UserModel.getAuthenticated(email, password,
     function(err, user){
       if(err) return done(null, false, { message: err });
 
-      if(req.accepts('json')) {
-        // api client
-        var clientId = req.query.clientId;
-
-        user.getToken(!!clientId ? clientId : 'api', function(err, user, token) {
-          user.activeToken = user._id + '|' + token;
-          done(null, user);
-        });
-        return;
+      if(!req.accepts('json').length) {
+        return done(null, user);
       }
 
-      done(null, user);
+      self.addClientIdToExtras(req);
+      user.getToken(req.extras.clientId, true, true, function(err, user, token) {
+        self.addTokenToExtras(req, user, token);
+        done(err, user);
+      });
     });
 }
 
@@ -138,6 +137,8 @@ UserController.prototype.validateSession = function(req, res, next) {
     return res.ext.redirect('/login');
   }
 
+  var self = this;
+
   // load orguser identity of this user for this org req.extras.orguser hash
   OrgUserModel.findOne({ userId: req.user._id, orgId: req.extras.organization._id }, function(err, orguser) {
     if(err) {
@@ -145,6 +146,7 @@ UserController.prototype.validateSession = function(req, res, next) {
     }
 
     req.extras.orguser = orguser || {};
+    self.addClientIdToExtras(req);
 
     // continues the request, sending it to the next matching route
     return next();
@@ -191,7 +193,7 @@ UserController.prototype.validateToken = function(req, res, next){
     if(!user) {
       return response.code(response.STATUS.NOT_FOUND).error(errors['USER_NOT_FOUND']()).render();
     }
-    //console.log(token);
+
     if(!user.hasToken(token)) {
       return response.code(response.STATUS.UNAUTHORIZED).error(errors['TOKEN_INVALID']()).render();
     }
@@ -289,6 +291,20 @@ UserController.prototype.findUserById = function(userId, callback){
       if(err) return callback(err);
       return callback(null, user);
     });
+}
+
+
+UserController.prototype.addTokenToExtras = function(req, user, token) {
+  req.extras = req.extras || {};
+  req.extras.token = token;
+  return req.extras.token;
+}
+
+
+UserController.prototype.addClientIdToExtras = function(req) {
+  req.extras = req.extras || {};
+  req.extras.clientId = (!!req.query.clientId) ? req.query.clientId : 'api';
+  return req.extras.clientId;
 }
 
 

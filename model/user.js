@@ -70,7 +70,11 @@ var userSchema = new Schema({
 });
 
 
-TokenOptions.addToSchema(userSchema, { schemaKey: 'userID' });
+var transformToken = function(token) {
+  return this._id + '|' + token;
+}
+
+TokenOptions.addToSchema(userSchema, { schemaKey: 'userID', transformToken: transformToken });
 
 
 userSchema.virtual('usesPasswordAuth').get(function(){
