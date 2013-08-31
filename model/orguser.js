@@ -207,10 +207,15 @@ orgUserSchema.methods.removeRoleDocs = function(roles, callback) {
 
 
 orgUserSchema.statics.get = function(userId, orgId, callback) {
+  console.log('got to orguser select');
+  console.log(userId);
+  console.log(orgId);
   this.findOne({ userId: userId, orgId: orgId }, function(err, orguser) {
     if(!orguser) {
       return callback(errors['USER_NOT_FOUND']());
     }
+    console.log(orguser._id);
+    console.log('exiting orguser select');
     return callback(err, orguser);
   });
 }

@@ -124,9 +124,12 @@ UserController.prototype.auth = function(req, email, password, done){
 
 UserController.prototype.validateToken = function(req, res, next){
 
+  //var tokenAtts = require('mongoose').Types.ObjectId;
+  
   var tokenAtts = _.pick(req.query || {}, [ 'token' ]);
 
   if(!tokenAtts.token){
+    console.log("attempting to cast to token from header");
     tokenAtts.token = req.header('x-token');
   }
 
@@ -142,6 +145,9 @@ UserController.prototype.validateToken = function(req, res, next){
   var tokenParts = tokenAtts.token.split('|');
   var userId = tokenParts.shift();
   var token = tokenParts.join('');
+  
+  console.log(token);
+  console.log(userId);
 
   UserModel.findById(userId, function(err, user) {
     if(err) {
@@ -151,8 +157,9 @@ UserController.prototype.validateToken = function(req, res, next){
     if(!user) {
       return response.error(errors['USER_NOT_FOUND']()).render();
     }
-
+    //console.log(token);
     if(!user.hasToken(token)) {
+      console.log("invalid token yo");    
       return response.error(errors['TOKEN_INVALID']()).render();
     }
 

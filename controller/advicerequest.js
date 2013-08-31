@@ -97,7 +97,45 @@ AdviceRequestController.prototype.newAdviceRequest = function(req, res) {
 
 
 AdviceRequestController.prototype.newAdvice = function(req, res) {
-  res.ext.data({ user: req.user }).render();
+  //res.ext.data({ user: req.user }).render();
+  
+  var org = req.extras.organization.toObject();  //link to org user
+
+  var newAdviceAttrs = req.body
+   ,  advicerequestId = req.params.advicerequest;
+  
+  console.log(advicerequestId);
+  console.log(req.user._id);
+  console.log(org._id);
+  
+  OrgUserModel.get(req.user._id, org._id, function(err, supporter) {
+    console.log(supporter._id);
+
+  
+  AdviceRequestModel.findById(advicerequestId, function(err, adviceRequest) {
+    if(err) {
+      return res.ext.error(err).render();
+    }
+
+    if(!adviceRequest) {
+      return res.ext.error(errors['ADVICEREQUEST_NOT_FOUND']().m).render();
+    }
+
+    //call advice request model to store advice in array
+    AdviceRequestModel.newAdvice(advicerequestId, supporter, newAdviceAttrs), function(err, adviceRequest){
+      if(err) {
+        return res.ext.error(err).render();
+      }
+
+      if(!adviceRequest) {
+        return res.ext.error(errors['ADVICEREQUEST_NOT_FOUND']().m).render();
+      }
+      console.log('back to newAdvice in controller');
+      console.log(adviceRequest);
+    }
+  });    
+  //////
+  });
 }
 
 AdviceRequestController.prototype.listAdvice = function(req, res) {

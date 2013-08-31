@@ -8,6 +8,7 @@ var validSupportAreas = module.exports.validSupportAreas = [ 'career', 'mental-h
 
 var ResponseSchema = new Schema({
   // responseId: { type: String, required: true, unique: true, index: true }, // every subdoc will have an autogen _id. Use that
+  //adviceId: { type: Schema.ObjectId, required: true, unique: true, index: true },
   adviceResponse: {type: String},
   adviceGiver: { type: Schema.Types.ObjectId, ref: 'orguser', required: true },
   modifiedDate: {type: Date},
@@ -58,7 +59,52 @@ adviceRequestSchema.statics.new = function(adviceRequestAttrs, callback){
     }
     return callback(null, adviceRequest);
   });
-}
+};
+
+
+adviceRequestSchema.statics.newAdvice = function(advicerequestId, supporter, newAdviceAttrs, callback){
+  
+  if (!newAdviceAttrs.advice){
+    console.log('no advice received');
+    return callback("no advice provided");
+  }
+  else{
+    console.log('in the new Advice controller with a new advice passed in');
+    console.log(newAdviceAttrs.advice);
+  }
+  
+  
+  var updates = {
+    $push: {
+      redirects: {
+          adviceResponse: newAdviceAttrs.advice,
+          adviceGiver: supporter,
+          modifiedDate: new Date(),
+          helpful: newAdviceAttrs.helpful,
+          status: 'Created',
+          thankyou: newAdviceAttrs.thankyou
+      }
+    },
+    //$inc: {
+    //  redirectCount: 1
+    //},
+    //$set: {
+      //modifiedDate: new Date()
+    //}
+  };  
+  
+  AdviceRequest.findOneAndUpdate({ _id: advicerequestId }, updates, function(err, AdviceRequest) {
+    if (!AdviceRequest) {
+      console.log("Lookup for advice request " + advicerequestId + " failed w. error " + err);
+      return callback("no advice request found");
+    } else {
+      console.log('find was successful');
+      return AdviceRequest;
+      //return callback(err, AdviceRequest);
+    }
+  });  
+  //return callback (null, AdviceRequest);
+};
 
 
 var AdviceRequest = module.exports.AdviceRequest = mongoose.model('advicerequest', adviceRequestSchema, 'advicerequest');
