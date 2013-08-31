@@ -62,8 +62,8 @@ adviceRequestSchema.statics.new = function(adviceRequestAttrs, callback){
 };
 
 
-adviceRequestSchema.statics.newAdvice = function(advicerequestId, supporter, newAdviceAttrs, callback){
-  
+adviceRequestSchema.statics.newAdvice = function(advicerequestId, supporterId, newAdviceAttrs, callback){
+
   if (!newAdviceAttrs.advice){
     console.log('no advice received');
     return callback("no advice provided");
@@ -72,38 +72,30 @@ adviceRequestSchema.statics.newAdvice = function(advicerequestId, supporter, new
     console.log('in the new Advice controller with a new advice passed in');
     console.log(newAdviceAttrs.advice);
   }
-  
-  
+
+
   var updates = {
     $push: {
-      redirects: {
-          adviceResponse: newAdviceAttrs.advice,
-          adviceGiver: supporter,
-          modifiedDate: new Date(),
-          helpful: newAdviceAttrs.helpful,
-          status: 'Created',
-          thankyou: newAdviceAttrs.thankyou
+      responses: {
+        adviceResponse: newAdviceAttrs.advice,
+        adviceGiver: supporterId,
+        modifiedDate: new Date(),
+        helpful: newAdviceAttrs.helpful,
+        status: 'Created',
+        thankyou: newAdviceAttrs.thankyou
       }
-    },
-    //$inc: {
-    //  redirectCount: 1
-    //},
-    //$set: {
-      //modifiedDate: new Date()
-    //}
-  };  
-  
+    }
+  };
+
   AdviceRequest.findOneAndUpdate({ _id: advicerequestId }, updates, function(err, AdviceRequest) {
     if (!AdviceRequest) {
       console.log("Lookup for advice request " + advicerequestId + " failed w. error " + err);
       return callback("no advice request found");
     } else {
       console.log('find was successful');
-      return AdviceRequest;
-      //return callback(err, AdviceRequest);
+      return callback(err, AdviceRequest);
     }
-  });  
-  //return callback (null, AdviceRequest);
+  });
 };
 
 

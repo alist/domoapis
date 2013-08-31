@@ -98,49 +98,46 @@ AdviceRequestController.prototype.newAdviceRequest = function(req, res) {
 
 AdviceRequestController.prototype.newAdvice = function(req, res) {
   //res.ext.data({ user: req.user }).render();
-  
+
   var org = req.extras.organization.toObject();  //link to org user
 
   var newAdviceAttrs = req.body
    ,  advicerequestId = req.params.advicerequest;
-  
+
   console.log(advicerequestId);
   console.log(req.user._id);
   console.log(org._id);
-  
-  OrgUserModel.get(req.user._id, org._id, function(err, supporter) {
-    console.log(supporter._id);
 
-  
-  AdviceRequestModel.findById(advicerequestId, function(err, adviceRequest) {
+  var orguser = req.orgusers[org._id];
+  if(!orguser) {
+    return res.ext.error(errors['USER_NOT_FOUND']()).render();
+  }
+
+  if(!orguser.hasRole('supporter')) {
+    return res.ext.error(errors['NOT_AUTHORIZED'('not a supporter')]).render();
+  }
+
+  AdviceRequestModel.newAdvice(advicerequestId, orguser._id, newAdviceAttrs, function(err, advicerequest){
     if(err) {
       return res.ext.error(err).render();
     }
 
-    if(!adviceRequest) {
-      return res.ext.error(errors['ADVICEREQUEST_NOT_FOUND']().m).render();
+    if(!advicerequest) {
+      return res.ext.error(errors['ADVICEREQUEST_NOT_FOUND']()).render();
     }
 
-    //call advice request model to store advice in array
-    AdviceRequestModel.newAdvice(advicerequestId, supporter, newAdviceAttrs), function(err, adviceRequest){
-      if(err) {
-        return res.ext.error(err).render();
-      }
-
-      if(!adviceRequest) {
-        return res.ext.error(errors['ADVICEREQUEST_NOT_FOUND']().m).render();
-      }
-      console.log('back to newAdvice in controller');
-      console.log(adviceRequest);
-    }
-  });    
-  //////
+    console.log('back to newAdvice in controller');
+    console.log(advicerequest);
+    return res.ext.data({ advicerequest: advicerequest }).render();
   });
+
 }
+
 
 AdviceRequestController.prototype.listAdvice = function(req, res) {
   res.ext.data({ user: req.user }).render();
 }
+
 
 function notifySupporteeSMS(org, advicerequest) {
 
