@@ -3,23 +3,11 @@ var OrganizationController = require('../controller/organization').OrganizationC
 
 
 module.exports.private = function(app) {
-  app.all('/:organization*', function(req, res, next){
-      if(!req.extras || !req.extras.organization) {
-          // not an org route. someone else handles this
-          return next();
-      }
-
-      if (req.isAuthenticated()) {
-          // continues the request, sending it to the next matching route
-          return next();
-      }
-
-      req.flash('error', 'You need to login to perform this action.');
-      req.flash('redirTo', req.path);
-      return res.ext.redirect('/login');
-  });
+  app.all('/:organization*', UserController.validateSession.bind(UserController));
 
   app.get('/:organization/giveadvice', OrganizationController.giveAdvice.bind(OrganizationController));
+
+  app.get('/:organization/admin', OrganizationController.admin.bind(OrganizationController));
 }
 
 
@@ -28,9 +16,5 @@ module.exports.public = function(app) {
   app.get('/:organization', OrganizationController.getInfo.bind(OrganizationController));
   app.get('/:organization/register', UserController.getRegister.bind(UserController));
   app.post('/:organization/register', UserController.register.bind(UserController));
-
-  app.get('/:organization/admin', function(req, res, next) {
-    res.ext.view('admin/index').render();
-  });
 };
 

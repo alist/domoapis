@@ -18,6 +18,10 @@ var UserController = function() {
 
 UserController.prototype.getRegister = function(req, res){
 
+  if(req.isAuthenticated()) {
+    return res.ext.redirect('/');
+  }
+
   res.ext.view('register')
     .viewData({ apiOrgUrl: Config.getConfig().app.api.path + "/organizations?src=typeahead" })
 
@@ -122,6 +126,38 @@ UserController.prototype.auth = function(req, email, password, done){
 }
 
 
+UserController.prototype.validateSession = function(req, res, next) {
+  if(!req.extras || !req.extras.organization) {
+    // not an org route. someone else handles this
+    return next();
+  }
+
+  if(!req.isAuthenticated()) {
+    req.flash('error', 'You need to login to perform this action.');
+    req.flash('redirTo', req.path);
+    return res.ext.redirect('/login');
+  }
+
+  // load all orguser identities of this user into req.orgusers hash
+  OrgUserModel.find({ userId: req.user._id }, function(err, orgusers) {
+    if(err) {
+      return response.error(err).render();
+    }
+
+    req.orgusers = {};
+
+    if(orgusers && orgusers.length) {
+      orgusers.forEach(function(val) {
+        req.orgusers[val.orgId] = val;
+      });
+    }
+
+    // continues the request, sending it to the next matching route
+    return next();
+  });
+}
+
+
 UserController.prototype.validateToken = function(req, res, next){
 
   //var tokenAtts = require('mongoose').Types.ObjectId;
@@ -149,6 +185,8 @@ UserController.prototype.validateToken = function(req, res, next){
   console.log(token);
   console.log(userId);
 
+  var self = this;
+
   UserModel.findById(userId, function(err, user) {
     if(err) {
       return response.error(err).render();
@@ -167,23 +205,7 @@ UserController.prototype.validateToken = function(req, res, next){
       if (err){
         return response.error(err).render();
       }
-
-      // load all orguser identities of this user into req.orgusers hash
-      OrgUserModel.find({ userId: user._id }, function(err, orgusers) {
-        if(err) {
-          return response.error(err).render();
-        }
-
-        req.orgusers = {};
-
-        if(orgusers && orgusers.length) {
-          orgusers.forEach(function(val) {
-            req.orgusers[val.orgId] = val;
-          });
-        }
-
-        next();
-      });
+      return self.validateSession(req, res, next);
     });
 
   });

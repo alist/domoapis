@@ -22,6 +22,9 @@ module.exports.public = function(app) {
 
 
   app.get('/login', function(req, res){
+    if(req.isAuthenticated()) {
+      return res.ext.redirect('/');
+    }
     return res.ext.view('login.jade').render();
   });
 
