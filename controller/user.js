@@ -144,11 +144,11 @@ UserController.prototype.validateSession = function(req, res, next) {
       return response.error(err).render();
     }
 
-    req.orgusers = {};
+    req.extras.orgusers = {};
 
     if(orgusers && orgusers.length) {
       orgusers.forEach(function(val) {
-        req.orgusers[val.orgId] = val;
+        req.extras.orgusers[val.orgId] = val;
       });
     }
 
