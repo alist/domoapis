@@ -246,4 +246,25 @@ describe("HTTP: Register new user", function() {
     });
   });
 
+
+  it("give advice: basic auth", function(done) {
+
+    var advicerequest = state.advicerequest;
+    request()
+      .post(apiPath
+              + '/organizations/' + state.organization.orgURL
+              + '/advicerequest/' + advicerequest._id
+              + '/advice')
+      .send({
+        advice: 'Here\'s what you need to do too.'
+      })
+      .set('Authorization', 'Basic ' + new Buffer(state.token).toString('base64'))
+      .set('Accept', 'application/json')
+      .end(function (res) {
+        res.should.be.json;
+        res.should.have.status(200);
+        done();
+    });
+  });
+
 });

@@ -154,30 +154,32 @@ UserController.prototype.validateSession = function(req, res, next) {
 
 UserController.prototype.validateToken = function(req, res, next){
 
-  //var tokenAtts = require('mongoose').Types.ObjectId;
+  var tokenAttrs = _.pick(req.query || {}, [ 'token' ]);
 
-  var tokenAtts = _.pick(req.query || {}, [ 'token' ]);
+  if(!tokenAttrs.token) {
+    // test for custom header
+    tokenAttrs.token = req.header('x-token');
+  }
 
-  if(!tokenAtts.token){
-    console.log("attempting to cast to token from header");
-    tokenAtts.token = req.header('x-token');
+  if(!tokenAttrs.token) {
+    // test for basic auth
+    var header = req.header('authorization') || '';
+    var token = header.split(/\s+/).pop() || '';
+    tokenAttrs.token = new Buffer(token, 'base64').toString();
   }
 
   var response = res.ext;
 
   var validator = new Validator();
-  validator.check(tokenAtts.token, 'Missing token').notEmpty().len(64);
+  validator.check(tokenAttrs.token, 'Missing token').notEmpty().len(64);
 
   if(validator.hasError()) {
     return response.error(validator.getErrors()).render();
   }
 
-  var tokenParts = tokenAtts.token.split('|');
+  var tokenParts = tokenAttrs.token.split('|');
   var userId = tokenParts.shift();
   var token = tokenParts.join('');
-
-  console.log(token);
-  console.log(userId);
 
   var self = this;
 
@@ -191,7 +193,6 @@ UserController.prototype.validateToken = function(req, res, next){
     }
     //console.log(token);
     if(!user.hasToken(token)) {
-      console.log("invalid token yo");
       return response.code(response.STATUS.UNAUTHORIZED).error(errors['TOKEN_INVALID']()).render();
     }
 
