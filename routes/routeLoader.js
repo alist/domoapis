@@ -31,4 +31,9 @@ module.exports.init = function(app){
       }
     });
   });
+
+  // catch-all last route
+  app.all('*', function(req, res) {
+    res.redirect('/');
+  });
 };
