@@ -11,7 +11,11 @@ var OrganizationController = require('../controller/organization').OrganizationC
 module.exports.public = function(app) {
   var apiConfig = Config.getConfig().app.api;
 
-  //app.get(apiConfig.path + '/register', UserController.getRegister.bind(UserController));
+  app.all(apiConfig.path + '/*', function(req, res, next) {
+    req.extras.isAPI = true;
+    next();
+  });
+
   app.post(apiConfig.path + '/register', UserController.register.bind(UserController));
 
   app.post(

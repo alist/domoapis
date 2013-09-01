@@ -312,21 +312,17 @@ UserController.prototype.findUserById = function(userId, callback){
 
 
 UserController.prototype.addTokenToExtras = function(req, user, token) {
-  req.extras = req.extras || {};
-  req.extras.token = token;
-  return req.extras.token;
+  return req.extras.token = token;
 }
 
 
 UserController.prototype.addClientIdToExtras = function(req) {
-  req.extras = req.extras || {};
-  req.extras.clientId = getClientId(req);
-  return req.extras.clientId;
+  return req.extras.clientId = getClientId(req);
 }
 
 
 function getClientId(req) {
-  return (!!req.query.clientId) ? req.query.clientId : 'api';
+  return (!!req.query.clientId) ? req.query.clientId : (req.extras.isAPI ? 'api' : 'web');
 }
 
 module.exports.UserController = new UserController();

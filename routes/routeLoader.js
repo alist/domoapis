@@ -24,6 +24,12 @@ var routeTypeLoadOrder = module.exports.routeTypeLoadOrder = [
 
 
 module.exports.init = function(app){
+
+  app.all('*', function(req, res, next) {
+    req.extras = req.extras || {};
+    next();
+  });
+
   routeTypeLoadOrder.forEach(function(routeType) {
     routeLoadOrder.forEach(function(route) {
       if(typeof route[routeType] === 'function'){
