@@ -11,7 +11,7 @@ var OrganizationController = require('../controller/organization').OrganizationC
 module.exports.public = function(app) {
   var apiConfig = Config.getConfig().app.api;
   
-  app.get(apiConfig.path + '/register', UserController.getRegister.bind(UserController));
+  //app.get(apiConfig.path + '/register', UserController.getRegister.bind(UserController));
   app.post(apiConfig.path + '/register', UserController.register.bind(UserController)); 
 
   app.post(apiConfig.path + '/user/session', passport.authenticate('local', { session: false }), function(req, res) {
