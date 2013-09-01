@@ -127,12 +127,91 @@ AdviceRequestController.prototype.newAdvice = function(req, res) {
     }
 
     console.log('back to newAdvice in controller');
-    console.log(advicerequest);
+    //console.log(advicerequest);
     return res.ext.data({ advicerequest: advicerequest }).render();
   });
 
 }
 
+
+AdviceRequestController.prototype.listAdvice = function(req, res) {
+  res.ext.data({ user: req.user }).render();
+}
+
+
+function notifySupporteeSMS(org, advicerequest) {
+
+  messenger.sendMessage({
+    to: advicerequest.telephoneNumber,
+    body: 'Thanks for using domo. Please use ' + advicerequest.accessURL + ' to track responses.'
+  }, function(err) {
+    if(err) {
+      console.log('notifySupporteeSMS', err);
+    } else {
+      console.log('notifySupporteeSMS', 'success');
+    }
+  });
+
+}
+
+/////////////////////////
+AdviceRequestController.prototype.setAdviceHelpful = function(req, res) {
+  //res.ext.data({ user: req.user }).render();
+
+  var newAdviceAttrs = req.body
+   ,  advicerequestId = req.params.advicerequest
+   ,  adviceId = req.params.advice
+   ,  accessToken = req.query.token;
+
+  console.log(advicerequestId);
+  //console.log(req.user._id);
+  console.log(adviceId);
+  console.log(accessToken);
+ 
+  AdviceRequestModel.setAdviceHelpful(advicerequestId, adviceId, accessToken, newAdviceAttrs, function(err, advicerequest){
+    if(err) {
+      return res.ext.error(err).render();
+    }
+
+    if(!advicerequest) {
+      return res.ext.error(errors['ADVICEREQUEST_NOT_FOUND']()).render();
+    }
+
+    console.log('back to newAdvice in controller');
+    //console.log(advicerequest);
+    return res.ext.data({ advicerequest: advicerequest }).render();
+  });
+}
+
+
+AdviceRequestController.prototype.setAdviceThankyou = function(req, res) {
+  //res.ext.data({ user: req.user }).render();
+
+  var newAdviceAttrs = req.body
+   ,  advicerequestId = req.params.advicerequest
+   ,  adviceId = req.params.advice
+   ,  accessToken = req.query.token;
+
+  console.log(advicerequestId);
+  //console.log(req.user._id);
+  console.log(adviceId);
+  console.log(accessToken);
+ 
+  AdviceRequestModel.setAdviceThankyou(advicerequestId, adviceId, accessToken, newAdviceAttrs, function(err, advicerequest){
+    if(err) {
+      return res.ext.error(err).render();
+    }
+
+    if(!advicerequest) {
+      return res.ext.error(errors['ADVICEREQUEST_NOT_FOUND']()).render();
+    }
+
+    console.log('back to newAdvice in controller');
+    //console.log(advicerequest);
+    return res.ext.data({ advicerequest: advicerequest }).render();
+  });
+}
+////////////////////////
 
 AdviceRequestController.prototype.listAdvice = function(req, res) {
   res.ext.data({ user: req.user }).render();

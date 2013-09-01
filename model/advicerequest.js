@@ -99,4 +99,74 @@ adviceRequestSchema.statics.newAdvice = function(advicerequestId, supporterId, n
 };
 
 
+adviceRequestSchema.statics.setAdviceHelpful = function(advicerequestId, adviceId, accessToken, newAdviceAttrs, callback){
+
+  if (!newAdviceAttrs.helpful){
+    console.log('no advice helpful update received');
+    return callback("no advice helpful update provided");
+  }
+  else{
+    console.log('in the Advice model for advice helpful update with an advice passed in');
+    console.log(advicerequestId);
+    console.log(adviceId);
+    console.log(accessToken);
+    console.log(newAdviceAttrs.helpful);
+  }
+
+//arrayname.$.fieldname
+  var updates = {
+    $set: {
+      "responses.$.modifiedDate": new Date(),
+      "responses.$.helpful": newAdviceAttrs.helpful,
+      "responses.$.status": 'Helpful set'
+    }
+  };
+
+  AdviceRequest.findOneAndUpdate({ "_id": advicerequestId, "accessToken": accessToken, "responses._id": adviceId }, updates, function(err, AdviceRequest) {
+    if (!AdviceRequest) {
+      console.log("Lookup for advice request " + advicerequestId + " failed w. error " + err);
+      return callback("no advice request found");
+    } else {
+      console.log('find was successful. Should have updated helpful flag');
+      return callback(err, AdviceRequest);
+    }
+  });
+};
+
+
+adviceRequestSchema.statics.setAdviceThankyou = function(advicerequestId, adviceId, accessToken, newAdviceAttrs, callback){
+
+  if (!newAdviceAttrs.thankyou){
+    console.log('no advice thank you update received');
+    return callback("no advice thank you update provided");
+  }
+  else{
+    console.log('in the new Advice controller for advice thank you update with a new advice passed in');
+    console.log(advicerequestId);
+    console.log(adviceId);
+    console.log(accessToken);
+    console.log(newAdviceAttrs.helpful);
+  }
+
+//arrayname.$.fieldname
+  var updates = {
+    $set: {
+      "responses.$.modifiedDate": new Date(),
+      "responses.$.thankyou": newAdviceAttrs.thankyou,
+      "responses.$.status": 'Thankyou set'
+    }
+  };
+
+  AdviceRequest.findOneAndUpdate({ "_id": advicerequestId, accessToken: accessToken, "responses._id": adviceId }, updates, function(err, AdviceRequest) {
+    if (!AdviceRequest) {
+      console.log("Lookup for advice request " + advicerequestId + " failed w. error " + err);
+      return callback("no advice request found");
+    } else {
+      console.log('find was successful. Should have updated thankyou flag');
+      return callback(err, AdviceRequest);
+    }
+  });
+};
+
+
 var AdviceRequest = module.exports.AdviceRequest = mongoose.model('advicerequest', adviceRequestSchema, 'advicerequest');
