@@ -96,6 +96,21 @@ UserController.prototype.register = function(req, res){
   });
 }
 
+// post-login
+UserController.prototype.newSession = function(req, res) {
+  var user = req.user.asJSON();
+  user.token = req.extras.token;
+
+  res.ext.data({ user: user });
+
+  var redirTo = req.flash('redirTo');
+  if(redirTo.length) {
+    return res.ext.redirect(redirTo.shift());
+  }
+
+  res.ext.redirect('/');
+}
+
 
 UserController.prototype.auth = function(req, email, password, done){
   var validator = new Validator();
@@ -282,8 +297,10 @@ UserController.prototype.approveAccount = function(req, res){
 
 
 UserController.prototype.logout = function(req, res){
-
+  req.logout();
+  res.redirect('/');
 }
+
 
 UserController.prototype.findUserById = function(userId, callback){
   UserModel.getUser({ 'userID': userId },

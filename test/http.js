@@ -55,7 +55,6 @@ describe("HTTP: Register new user", function() {
     };
 
     Organization.new(newOrgAttrs, function(err, newOrg){
-      // console.log(newOrg);
       should.not.exist(err);
       should.exist(newOrg);
       state.organization = newOrg;
@@ -129,16 +128,16 @@ describe("HTTP: Register new user", function() {
     .end(function (res) {
       res.should.be.json;
       res.should.have.status(200);
-      should.exist(res.body.response.token);
+      should.exist(res.body.response.user._id);
+      should.exist(res.body.response.user.token);
 
+      var tokenParts = res.body.response.user.token.split('|');
+      var userId = tokenParts.shift();
+      var token = tokenParts.join('');
 
       User.findOne({ userID: 'shirishk.87@gmail.com', }, function(err, user) {
-        var tokenParts = res.body.response.token.split('|');
-        var userId = tokenParts.shift();
-        var token = tokenParts.join('');
-
         user.hasToken(token).should.equal(true);
-        state.token = res.body.response.token;
+        state.token = res.body.response.user.token;
         done();
       });
 
@@ -156,18 +155,19 @@ describe("HTTP: Register new user", function() {
     .end(function (res) {
       res.should.be.json;
       res.should.have.status(200);
-      should.exist(res.body.response.token);
+      should.exist(res.body.response.user._id);
+      should.exist(res.body.response.user.token);
 
+      var tokenParts = res.body.response.user.token.split('|');
+      var userId = tokenParts.shift();
+      var token = tokenParts.join('');
 
       User.findOne({ userID: 'shirishk.87@gmail.com', }, function(err, user) {
-        var tokenParts = res.body.response.token.split('|');
-        var userId = tokenParts.shift();
-        var token = tokenParts.join('');
-
         user.hasToken(token).should.equal(true);
-        state.token = res.body.response.token;
+        state.token = res.body.response.user.token;
         done();
       });
+
     });
   });
 
@@ -180,20 +180,22 @@ describe("HTTP: Register new user", function() {
     .end(function (res) {
       res.should.be.json;
       res.should.have.status(200);
-      should.exist(res.body.response.token);
+      should.exist(res.body.response.user._id);
+      should.exist(res.body.response.user.token);
 
+      var tokenParts = res.body.response.user.token.split('|');
+      var userId = tokenParts.shift();
+      var token = tokenParts.join('');
 
       User.findOne({ userID: 'shirishk.87@gmail.com', }, function(err, user) {
-        var tokenParts = res.body.response.token.split('|');
-        var userId = tokenParts.shift();
-        var token = tokenParts.join('');
         user.tokens.length.should.equal(2); // (1) phone  (2) api
         user.hasToken(token).should.equal(true);
-        state.token = res.body.response.token;
+        state.token = res.body.response.user.token;
         done();
       });
     });
   });
+
 
   it("check org code", function(done) {
     request()
