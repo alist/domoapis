@@ -209,7 +209,7 @@ UserController.prototype.validateToken = function(req, res, next){
       return response.code(response.STATUS.NOT_FOUND).error(errors['USER_NOT_FOUND']()).render();
     }
 
-    if(!user.hasToken(token)) {
+    if(!user.isTokenValid(getClientId(req), token)) {
       return response.code(response.STATUS.UNAUTHORIZED).error(errors['TOKEN_INVALID']()).render();
     }
 
@@ -320,9 +320,13 @@ UserController.prototype.addTokenToExtras = function(req, user, token) {
 
 UserController.prototype.addClientIdToExtras = function(req) {
   req.extras = req.extras || {};
-  req.extras.clientId = (!!req.query.clientId) ? req.query.clientId : 'api';
+  req.extras.clientId = getClientId(req);
   return req.extras.clientId;
 }
 
+
+function getClientId(req) {
+  return (!!req.query.clientId) ? req.query.clientId : 'api';
+}
 
 module.exports.UserController = new UserController();

@@ -33,13 +33,12 @@ module.exports.addToSchema = function(schema, opts) {
     return service + '|' + model[opts.schemaKey];
   }
 
-
-  schema.methods.genToken = function(service) {
-    return Auth.generate(getTokenKey(this, service));
+  var checkToken = function(tokenKey, token) {
+    return Auth.verify(tokenKey, token) === Auth.VALID;
   }
 
-  schema.methods.checkToken = function(tokenKey, token) {
-    return Auth.verify(tokenKey, token) === Auth.VALID;
+  var genToken = function(tokenKey) {
+    return Auth.generate(tokenKey);
   }
 
 
@@ -65,7 +64,7 @@ module.exports.addToSchema = function(schema, opts) {
 
     if(this.tokens.length) {
       var fetchedToken = _.findWhere(this.tokens, { service: service });
-      if(fetchedToken && this.checkToken(tokenKey, fetchedToken.token)) {
+      if(fetchedToken && checkToken(tokenKey, fetchedToken.token)) {
         return callback(null, this, fnTransform(fetchedToken.token));
       }
     }
@@ -73,7 +72,7 @@ module.exports.addToSchema = function(schema, opts) {
     var self = this;
 
     var serviceToken = { service: service };
-    serviceToken.token = this.genToken(service);
+    serviceToken.token = genToken(getTokenKey(this, service));
     this.tokens.push(serviceToken);
 
     if(!shouldSave) {
@@ -123,30 +122,27 @@ module.exports.addToSchema = function(schema, opts) {
     this.removeTokenByFilter({ service: service }, 'SERVICE_NOT_FOUND', callback);
   }
 
+
   schema.methods.removeToken = function(token, callback) {
     this.removeTokenByFilter({ token: token }, 'TOKEN_NOT_FOUND', callback);
   }
 
 
+  // token belongs to user?
   schema.methods.hasToken = function(token) {
     var fetchedToken = _.findWhere(this.tokens, { token: token });
     return !!fetchedToken;
   }
 
-
+  // token belongs to user for service?
   schema.methods.hasServiceToken = function(service, token) {
     var fetchedToken = _.findWhere(this.tokens, { service: service, token: token });
     return !!fetchedToken;
   }
 
-
-  schema.methods.verifyToken = function(service, token, callback) {
-    var tokenKey = getTokenKey(this, service);
-    var tokenStatus = Auth.verify(tokenKey, new Buffer(token));
-    if(tokenStatus === Auth.INVALID) {
-        return callback(errors['TOKEN_INVALID']());
-    }
-    return callback(null, tokenStatus);
+  // token belongs to user for service and is valid?
+  schema.methods.isTokenValid = function(service, token) {
+    return this.hasServiceToken(service, token) && checkToken(getTokenKey(this, service), token);
   }
 
 }
