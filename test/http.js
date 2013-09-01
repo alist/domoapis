@@ -172,6 +172,29 @@ describe("HTTP: Register new user", function() {
   });
 
 
+  it("should login successfully again: api", function(done) {
+    request()
+    .post(apiPath + '/user/session')
+    .send({ username: 'shirishk.87@gmail.com', password: 'sa123' })
+    .set('Accept', 'application/json')
+    .end(function (res) {
+      res.should.be.json;
+      res.should.have.status(200);
+      should.exist(res.body.response.token);
+
+
+      User.findOne({ userID: 'shirishk.87@gmail.com', }, function(err, user) {
+        var tokenParts = res.body.response.token.split('|');
+        var userId = tokenParts.shift();
+        var token = tokenParts.join('');
+        user.tokens.length.should.equal(2); // (1) phone  (2) api
+        user.hasToken(token).should.equal(true);
+        state.token = res.body.response.token;
+        done();
+      });
+    });
+  });
+
   it("check org code", function(done) {
     request()
       .get(apiPath + '/organizations/' + state.organization.orgURL + '/codecheck?code=' + state.organization.code)

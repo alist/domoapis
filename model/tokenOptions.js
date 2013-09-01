@@ -16,6 +16,8 @@ var options = module.exports.options = {
 module.exports.addToSchema = function(schema, opts) {
 
   opts = _.defaults(opts || {}, options);
+  Auth.defaults.secret = opts.secret;
+  Auth.defaults.timeStep = opts.timeStep;
 
   schema.add({
     tokens: [
@@ -33,7 +35,11 @@ module.exports.addToSchema = function(schema, opts) {
 
 
   schema.methods.genToken = function(service) {
-    return Auth.generate(getTokenKey(this, service), { secret: opts.secret, timeStep: opts.timeStep });
+    return Auth.generate(getTokenKey(this, service));
+  }
+
+  schema.methods.checkToken = function(tokenKey, token) {
+    return Auth.verify(tokenKey, token) === Auth.VALID;
   }
 
 
@@ -56,23 +62,17 @@ module.exports.addToSchema = function(schema, opts) {
     fnTransform = (shouldTransformToken && typeof fnTransform === 'function') ? fnTransform.bind(this) : _.identity;
 
     var tokenKey = getTokenKey(this, service);
-    var serviceToken = { service: service };
-
-    var self = this;
 
     if(this.tokens.length) {
       var fetchedToken = _.findWhere(this.tokens, { service: service });
-      if(!!fetchedToken) {
-        serviceToken = fetchedToken;
-        var tokenStatus = Auth.verify(tokenKey, new Buffer(serviceToken));
-
-        if(tokenStatus === Auth.VALID) {
-          return callback(null, self, fnTransform(serviceToken.token));
-        }
+      if(fetchedToken && this.checkToken(tokenKey, fetchedToken.token)) {
+        return callback(null, this, fnTransform(fetchedToken.token));
       }
     }
 
-    delete serviceToken._id
+    var self = this;
+
+    var serviceToken = { service: service };
     serviceToken.token = this.genToken(service);
     this.tokens.push(serviceToken);
 
