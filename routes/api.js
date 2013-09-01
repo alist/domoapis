@@ -12,7 +12,9 @@ module.exports.public = function(app) {
   var apiConfig = Config.getConfig().app.api;
 
   app.all(apiConfig.path + '/*', function(req, res, next) {
-    req.extras.isAPI = true;
+    if(req.path.indexOf(apiConfig.path) === 0) {
+      req.extras.isAPI = true;
+    }
     next();
   });
 
