@@ -20,6 +20,7 @@ var userAgent = new Helpers.UserAgent(app);
 var request = userAgent.request;
 
 var state = {};
+var apiPath = config.app.api.path;
 
 var print = function(name, obj){
   if(arguments.length == 1){
@@ -54,7 +55,6 @@ describe("HTTP: Register new user", function() {
     };
 
     Organization.new(newOrgAttrs, function(err, newOrg){
-      // console.log(newOrg);
       should.not.exist(err);
       should.exist(newOrg);
       state.organization = newOrg;
@@ -65,7 +65,7 @@ describe("HTTP: Register new user", function() {
   it("register new supporter", function(done) {
     request()
       .post('/register')
-      .send({ 
+      .send({
         email: 'shirishk.87@gmail.com',
         password: 'sa123',
         skills: 'fake empathy',
@@ -89,7 +89,7 @@ describe("HTTP: Register new user", function() {
             state.orguser = orguser;
             done();
           });
-          
+
         });
     });
   });
@@ -102,7 +102,7 @@ describe("HTTP: Register new user", function() {
 
     request()
       .get(approvalLink)
-      .send({ 
+      .send({
         email: 'shirishk.87@gmail.com',
         password: 'sa123',
         skills: 'fake empathy',
@@ -115,6 +115,204 @@ describe("HTTP: Register new user", function() {
         res.should.have.status(200);
         should.exist(res.body.response.accApproved);
         res.body.response.accApproved.should.equal(true);
+        done();
+    });
+  });
+
+
+  it("should login successfully: website", function(done) {
+    request()
+    .post('/login?clientId=phone')
+    .send({ username: 'shirishk.87@gmail.com', password: 'sa123' })
+    .set('Accept', 'application/json')
+    .end(function (res) {
+      res.should.be.json;
+      res.should.have.status(200);
+      should.exist(res.body.response.user._id);
+      should.exist(res.body.response.user.token);
+
+      var tokenParts = res.body.response.user.token.split('|');
+      var userId = tokenParts.shift();
+      var token = tokenParts.join('');
+
+      User.findOne({ userID: 'shirishk.87@gmail.com', }, function(err, user) {
+        user.hasToken(token).should.equal(true);
+        state.token = res.body.response.user.token;
+        done();
+      });
+
+      // Save session cookie
+      userAgent.saveState(res);
+    });
+  });
+
+
+  it("should login successfully: api", function(done) {
+    request()
+    .post(apiPath + '/user/session')
+    .send({ username: 'shirishk.87@gmail.com', password: 'sa123' })
+    .set('Accept', 'application/json')
+    .end(function (res) {
+      res.should.be.json;
+      res.should.have.status(200);
+      should.exist(res.body.response.user._id);
+      should.exist(res.body.response.user.token);
+
+      var tokenParts = res.body.response.user.token.split('|');
+      var userId = tokenParts.shift();
+      var token = tokenParts.join('');
+
+      User.findOne({ userID: 'shirishk.87@gmail.com', }, function(err, user) {
+        user.hasToken(token).should.equal(true);
+        state.token = res.body.response.user.token;
+        done();
+      });
+
+    });
+  });
+
+
+  it("should login successfully again: api", function(done) {
+    request()
+    .post(apiPath + '/user/session')
+    .send({ username: 'shirishk.87@gmail.com', password: 'sa123' })
+    .set('Accept', 'application/json')
+    .end(function (res) {
+      res.should.be.json;
+      res.should.have.status(200);
+      should.exist(res.body.response.user._id);
+      should.exist(res.body.response.user.token);
+
+      var tokenParts = res.body.response.user.token.split('|');
+      var userId = tokenParts.shift();
+      var token = tokenParts.join('');
+
+      User.findOne({ userID: 'shirishk.87@gmail.com', }, function(err, user) {
+        user.tokens.length.should.equal(2); // (1) phone  (2) api
+        user.hasToken(token).should.equal(true);
+        state.token = res.body.response.user.token;
+        done();
+      });
+    });
+  });
+
+
+  it("check org code", function(done) {
+    request()
+      .get(apiPath + '/organizations/' + state.organization.orgURL + '/codecheck?code=' + state.organization.code)
+      .set('Accept', 'application/json')
+      .end(function (res) {
+        res.should.be.json;
+        res.should.have.status(200);
+        should.exist(res.body.response.organization._id);
+        done();
+    });
+  });
+
+  it("check org code: invalid orgcode", function(done) {
+    request()
+      .get(apiPath
+            + '/organizations/' + state.organization.orgURL
+            + '/codecheck?code=' + state.organization.code + 'duh')
+      .set('Accept', 'application/json')
+      .end(function (res) {
+        res.should.be.json;
+        res.should.have.status(400);
+        done();
+    });
+  });
+
+  it("new advicerequest: invalid orgcode", function(done) {
+    request()
+      .post(apiPath
+              + '/organizations/' + state.organization.orgURL
+              + '/advicerequest?code=' + state.organization.code + 'duh')
+      .send({
+        adviceRequest: 'I need help with this'
+      })
+      .set('Accept', 'application/json')
+      .end(function (res) {
+        res.should.be.json;
+        res.should.have.status(400);
+        done();
+    });
+  });
+
+  it("new advicerequest", function(done) {
+    request()
+      .post(apiPath
+              + '/organizations/' + state.organization.orgURL
+              + '/advicerequest?code=' + state.organization.code)
+      .send({
+        adviceRequest: 'I need help with this'
+      })
+      .set('Accept', 'application/json')
+      .end(function (res) {
+        res.should.be.json;
+        res.should.have.status(200);
+        should.exist(res.body.response.advicerequest._id);
+        should.exist(res.body.response.advicerequest.accessURL);
+        state.advicerequest = res.body.response.advicerequest;
+        done();
+    });
+  });
+
+
+  it("get advicerequest", function(done) {
+    request()
+      .get(apiPath
+            + '/organizations/' + state.organization.orgURL
+            + '/advicerequest/' + state.advicerequest._id
+            + '?code=' + state.organization.code
+            + '&token=' + state.advicerequest.accessToken)
+      .set('Accept', 'application/json')
+      .end(function (res) {
+        res.should.be.json;
+        res.should.have.status(200);
+        should.exist(res.body.response.advicerequest._id);
+        should.exist(res.body.response.advicerequest.accessURL);
+        done();
+    });
+  });
+
+
+  it("give advice", function(done) {
+
+    var advicerequest = state.advicerequest;
+    request()
+      .post(apiPath
+              + '/organizations/' + state.organization.orgURL
+              + '/advicerequest/' + advicerequest._id
+              + '/advice'
+              + '?token=' + encodeURIComponent(state.token))
+      .send({
+        advice: 'Here\'s what you need to do.'
+      })
+      .set('Accept', 'application/json')
+      .end(function (res) {
+        res.should.be.json;
+        res.should.have.status(200);
+        done();
+    });
+  });
+
+
+  it("give advice: basic auth", function(done) {
+
+    var advicerequest = state.advicerequest;
+    request()
+      .post(apiPath
+              + '/organizations/' + state.organization.orgURL
+              + '/advicerequest/' + advicerequest._id
+              + '/advice')
+      .send({
+        advice: 'Here\'s what you also need to do.'
+      })
+      .set('Authorization', 'Basic ' + new Buffer(state.token).toString('base64'))
+      .set('Accept', 'application/json')
+      .end(function (res) {
+        res.should.be.json;
+        res.should.have.status(200);
         done();
     });
   });

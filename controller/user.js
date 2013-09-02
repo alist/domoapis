@@ -8,6 +8,7 @@ var Validator = require('validator').Validator
   , jade = require('jade')
   , path = require('path')
   , async = require('async')
+  , errors = require('../model/errors').errors
 
 
 
@@ -16,6 +17,10 @@ var UserController = function() {
 
 
 UserController.prototype.getRegister = function(req, res){
+
+  if(req.isAuthenticated()) {
+    return res.ext.redirect('/');
+  }
 
   res.ext.view('register')
     .viewData({ apiOrgUrl: Config.getConfig().app.api.path + "/organizations?src=typeahead" })
@@ -41,7 +46,7 @@ UserController.prototype.register = function(req, res){
   validator.check(newUserAttrs.email, 'Invalid e-mail address').len(6, 64).isEmail();
   validator.check(newUserAttrs.password, 'Invalid password').len(5, 64);
   validator.check(newUserAttrs.orgId, 'Invalid organization').notEmpty();
-  
+
   var response = res.ext;
   response.errorView('register.jade');
   response.viewData({ apiOrgUrl: Config.getConfig().app.api.path + "/organizations?src=typeahead" })
@@ -85,14 +90,29 @@ UserController.prototype.register = function(req, res){
           console.log(err);
         }
       });
-      
+
       return response.data(user.toObject()).data(orguser.toObject()).redirect('/');
     });
   });
 }
 
+// post-login
+UserController.prototype.newSession = function(req, res) {
+  var user = req.user.asJSON();
+  user.token = req.extras.token;
 
-UserController.prototype.auth = function(email, password, done){
+  res.ext.data({ user: user });
+
+  var redirTo = req.flash('redirTo');
+  if(redirTo.length) {
+    return res.ext.redirect(redirTo.shift());
+  }
+
+  res.ext.redirect('/');
+}
+
+
+UserController.prototype.auth = function(req, email, password, done){
   var validator = new Validator();
   validator.check(email, 'Invalid e-mail address.').notEmpty().len(5, 64);
   validator.check(password, 'Invalid password.').notEmpty().len(5, 64);
@@ -100,13 +120,107 @@ UserController.prototype.auth = function(email, password, done){
   if(validator.hasError()){
     return done(null, false, { message: validator.getErrors().join(' ') });
   }
-  
+
+  var self = this;
+
   return UserModel.getAuthenticated(email, password,
     function(err, user){
       if(err) return done(null, false, { message: err });
-      //get user permissions? hnk07/23/13+
-      return done(null, user);
+
+      if(!req.accepts('json').length) {
+        return done(null, user);
+      }
+
+      self.addClientIdToExtras(req);
+      user.getToken(req.extras.clientId, true, true, function(err, user, token) {
+        self.addTokenToExtras(req, user, token);
+        done(err, user);
+      });
     });
+}
+
+
+UserController.prototype.validateSession = function(req, res, next) {
+  if(!req.extras || !req.extras.organization) {
+    // not an org route. someone else handles this
+    return next();
+  }
+
+  if(!req.isAuthenticated()) {
+    req.flash('error', 'You need to login to perform this action.');
+    req.flash('redirTo', req.path);
+    return res.ext.redirect('/login');
+  }
+
+  var self = this;
+
+  // load orguser identity of this user for this org req.extras.orguser hash
+  OrgUserModel.findOne({ userId: req.user._id, orgId: req.extras.organization._id }, function(err, orguser) {
+    if(err) {
+      return response.error(err).render();
+    }
+
+    req.extras.orguser = orguser || {};
+    self.addClientIdToExtras(req);
+
+    // continues the request, sending it to the next matching route
+    return next();
+  });
+}
+
+
+UserController.prototype.validateToken = function(req, res, next){
+
+  var tokenAttrs = _.pick(req.query || {}, [ 'token' ]);
+
+  if(!tokenAttrs.token) {
+    // test for custom header
+    tokenAttrs.token = req.header('x-token');
+  }
+
+  if(!tokenAttrs.token) {
+    // test for basic auth
+    var header = req.header('authorization') || '';
+    var token = header.split(/\s+/).pop() || '';
+    tokenAttrs.token = new Buffer(token, 'base64').toString();
+  }
+
+  var response = res.ext;
+
+  var validator = new Validator();
+  validator.check(tokenAttrs.token, 'Missing token').notEmpty().len(64);
+
+  if(validator.hasError()) {
+    return response.error(validator.getErrors()).render();
+  }
+
+  var tokenParts = tokenAttrs.token.split('|');
+  var userId = tokenParts.shift();
+  var token = tokenParts.join('');
+
+  var self = this;
+
+  UserModel.findById(userId, function(err, user) {
+    if(err) {
+      return response.error(err).render();
+    }
+
+    if(!user) {
+      return response.code(response.STATUS.NOT_FOUND).error(errors['USER_NOT_FOUND']()).render();
+    }
+
+    if(!user.isTokenValid(getClientId(req), token)) {
+      return response.code(response.STATUS.UNAUTHORIZED).error(errors['TOKEN_INVALID']()).render();
+    }
+
+    req.logIn(user, function(err) {
+      if (err){
+        return response.error(err).render();
+      }
+      return self.validateSession(req, res, next);
+    });
+
+  });
 }
 
 
@@ -146,7 +260,7 @@ UserController.prototype.sendApprovalEmail = function(req, data, callback){
 
       mailer.sendMessage(parcel, next);
     }
-  ], callback); 
+  ], callback);
 }
 
 
@@ -157,7 +271,7 @@ UserController.prototype.approveAccount = function(req, res){
     orgId: req.params.orgId,
     token: req.query.token
   };
-  
+
   var validator = new Validator();
   validator.check(approvalAttrs.userId).notEmpty().len(6, 64);
   validator.check(approvalAttrs.orgId).notEmpty().len(6, 64);
@@ -184,8 +298,10 @@ UserController.prototype.approveAccount = function(req, res){
 
 
 UserController.prototype.logout = function(req, res){
-
+  req.logout();
+  res.redirect('/');
 }
+
 
 UserController.prototype.findUserById = function(userId, callback){
   UserModel.getUser({ 'userID': userId },
@@ -195,5 +311,19 @@ UserController.prototype.findUserById = function(userId, callback){
     });
 }
 
+
+UserController.prototype.addTokenToExtras = function(req, user, token) {
+  return req.extras.token = token;
+}
+
+
+UserController.prototype.addClientIdToExtras = function(req) {
+  return req.extras.clientId = getClientId(req);
+}
+
+
+function getClientId(req) {
+  return (!!req.query.clientId) ? req.query.clientId : (req.extras.isAPI ? 'api' : 'web');
+}
 
 module.exports.UserController = new UserController();

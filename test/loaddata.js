@@ -37,6 +37,9 @@ describe("LOAD_DATA: -- Clearing DB --", function() {
 });
 
 function genRandomCode(o) {
+  if(o.code) {
+    return o;
+  }
   o.code = o.orgURL.substring(0, 4);
   if(o.code.length < 4) {
     o.code = o.code + Math.random().toString(36).substring(2, 6 - o.code.length);
@@ -144,7 +147,7 @@ describe("LOAD_DATA", function() {
         err ? stats.failed++ : stats.success++;
         next(err);
       });
-      
+
     }, function(err) {
       console.log('Success: ' + stats.success + ' | Failed: ' + stats.failed);
       done();

@@ -7,7 +7,8 @@ block viewVars
 block scripts
   script.
     var organization='!{organization.orgURL}';
-    
+    var token = '!{token}';
+
   script(src='/components/typeahead.js/dist/typeahead.min.js')
   script(src='/components/angular/angular.min.js')
   script(src='/components/angular-resource/angular-resource.min.js')
@@ -16,7 +17,7 @@ block scripts
   script(src='/js/admin/services/adminServices.js')
   script(src='/js/admin/filters/adminFilters.js')
   script(src='/js/admin/directives/adminDirectives.js')
-  
+
 block styles
   link(rel='stylesheet', href='/css/typeahead.bootstrap.css')
 

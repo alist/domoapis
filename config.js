@@ -86,9 +86,15 @@ module.exports.mail.defaults = {
   adminEmails: [ 'shirishk.87@gmail.com', 'harishnk@gmail.com' ]
 }
 
-module.exports.redis = {};
 
-module.exports.redis.defaults = {
-  host: '127.0.0.1',
-  port: 6379
-}
+module.exports.messenger = {};
+
+module.exports.messenger.defaults = {
+  service: {
+    sid: 'AC0b4236c52b08448aa4af6b365557d89a',
+    token: '9724f92d942bb0fae61e5c8bac118669'
+  },
+  options: {
+    from: '+14696434686'
+  }
+};

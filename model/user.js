@@ -7,6 +7,7 @@ var mongoose = require('mongoose')
   , errors = require('./errors').errors
   , async = require('async')
   , _ = require('lodash')
+  , TokenOptions = require('./tokenOptions')
 
 
 var OrganizationModel = require('./organization')
@@ -14,10 +15,20 @@ var OrganizationModel = require('./organization')
   , OrgUserModel = require('./orguser')
   , OrgUser = OrgUserModel.OrgUser
 
-
-exports.userLoginURLBase = "https://oh.domo.io/urllogin?token=";
-
 var SALT_WORK_FACTOR = 10;
+
+
+module.exports.userLoginURLBase = "https://oh.domo.io/urllogin?token=";
+
+module.exports.publicAtrrs = [
+  '_id',
+  'userID',
+  'email',
+  'joined',
+  'profile',
+  'organizations',
+  'displayName'
+];
 
 
 var userSchema = new Schema({
@@ -26,7 +37,7 @@ var userSchema = new Schema({
   emailConfirmed: { type: Boolean, default: false },
   emailVerified: { type: Boolean, default: false },
   emailVerificationHash: { type: String },
-  
+
   telephoneNumber: {type: String, index: {unique: false}},
   telephoneVerifyDate: {type: Date},
   telephoneNumberVerifyAttemptCount: {type: Number},
@@ -50,9 +61,7 @@ var userSchema = new Schema({
   joined: { type: Date, default: Date.now },
   modifiedDate: { type: Date, index: { unique: false } },
 
-  displayName: String, 
-  
-  token: { type: String },
+  displayName: String,
 
   activeSessionIDs: [ {type: String, index: {unique: true}} ],
 
@@ -71,17 +80,24 @@ var userSchema = new Schema({
 });
 
 
+var transformToken = function(token) {
+  return this._id + '|' + token;
+}
+
+TokenOptions.addToSchema(userSchema, { schemaKey: 'userID', transformToken: transformToken });
+
+
 userSchema.virtual('usesPasswordAuth').get(function(){
   return !!(this.password && this.password.length > 0)
 });
- 
+
 userSchema.methods.checkPassword = function(userPwd, callback){
   bcrypt.compare(userPwd, this.password, callback);
 }
 
 userSchema.methods.getUserOrg = function(orgId) {
   return _.first(this.organizations, function(oId) {
-    return (oId.toString() === orgId.toString()); 
+    return (oId.toString() === orgId.toString());
   });
 }
 
@@ -94,6 +110,11 @@ userSchema.methods.getMailRecipient = function() {
     sendTo = this.email;
   }
   return sendTo;
+}
+
+
+userSchema.methods.asJSON = function() {
+  return _.pick(this.toObject(), module.exports.publicAtrrs);
 }
 
 
@@ -156,7 +177,7 @@ userSchema.statics.register = function(newUserAttrs, callback){
       newUser = new User();
       newUser.userID = newUser.email = newUserAttrs.email;
       newUser.organizations.push(org._id);
-      
+
       newUser.emailConfirmed = true;
       newUser.emailVerified = false;
       newUser.emailVerificationHash = uuid.v1();
@@ -181,7 +202,7 @@ userSchema.statics.register = function(newUserAttrs, callback){
         return next(null, newUser);
       });
     },
-    
+
     // create orguser and roles
     function(newUser, next) {
 
@@ -211,7 +232,7 @@ userSchema.statics.findUserAll = function(lookupQuery, selectFields, callback){
 
 
 userSchema.statics.updatePassword = function(lookup, newPassword, callback){
-  
+
   var self = this;
 
   this.generatePasswordHash(newPassword, function(err, passwordHash){
@@ -220,7 +241,7 @@ userSchema.statics.updatePassword = function(lookup, newPassword, callback){
     updates.recoverPasswordHash = uuid.v1();
     updates.lastUpdated = new Date();
 
-    self.update(lookup, { 
+    self.update(lookup, {
         $set: updates
     }, function(err, rowsAffected){
         if(err) return callback(err);
@@ -238,7 +259,7 @@ userSchema.statics.updateEmail = function(usesPasswordAuth, lookup, email, callb
   updates.emailVerificationHash = uuid.v1();
   updates.lastUpdated = new Date();
 
-  this.update(lookup, { 
+  this.update(lookup, {
       $set: updates
   }, function(err, rowsAffected){
       if(err) return callback(err);
@@ -280,16 +301,12 @@ userSchema.statics.getUser = function(lookup, fields, callback){
       return callback(errors['INVALID_ARG']("Unable to fetch user for the given query: " + lookup));
   }
 
-  // if(!lookupQuery.userType) {
-  //     // Fetch user of a specific type
-  //     lookupQuery.userType = this.userType;
-  // }
-  // console.log('lookupQuery', lookupQuery)
   return this.findUserAll(lookupQuery, selectFields, callback);
 }
 
+
 userSchema.statics.getAuthenticated = function(email, password, callback){
-  this.getUser({ 'userID': email }, 
+  this.getUser({ 'userID': email },
     function(err, user){
       if(err && err.message && err.id === 'USER_NOT_FOUND'){
         return callback(err); // reject
@@ -305,212 +322,5 @@ userSchema.statics.getAuthenticated = function(email, password, callback){
 }
 
 
-var genCode = function(length, salt) {
-  var current_date, hash, random;
-  current_date = (new Date()).valueOf().toString();
-  random = Math.random().toString();
-  hash = crypto.createHash('sha1').update(current_date + random + salt).digest('base64');
-  hash = hash.replace(/\//g, '');
-  if (length > hash.length) {
-    return hash;
-  } else {
-    return hash.substr(0, length);
-  }
-};
-
-exports.getUserWithToken = function(token, callback) {
-  if (!token) {
-    callback("no token provided for this user");
-    return;
-  }
-  return User.findOne({
-    token: token
-  }, {}, function(err, user) {
-    if (!err || !user) {
-      return callback("no user found for token: " + token);
-    } else {
-      return callback(null, user);
-    }
-  });
-};
-
-// exports.authCurrentUserWithIDAndTokenForSession = function(userID, fbAToken, sessionToken, callback) {
-//   var _this = this;
-//   if (!sessionToken) {
-//     callback("no sessionToken included for userID user lookup");
-//     return;
-//   }
-//   return User.findOne({
-//     activeSessionIDs: sessionToken
-//   }, {}, function(err, user) {
-//     if ((err != null) || (user != null) === false) {
-//       if ((userID != null) === false && (fbAToken != null) === false) {
-//         callback("invalid session- and no re-auth route possible");
-//         return;
-//       }
-//       return authUserWithFacebookOfIDAndToken(userID, fbAToken, function(err, fbUserID, fbResponse) {
-//         var imgURI, userInfo, _ref;
-//         if ((err != null) || ((fbUserID !== userID) && (userID != null) === true)) {
-//           return callback("could not find user with pre-id " + userID + " with fbID " + fbUserID + " with error " + err);
-//         } else {
-//           if ((userID != null) === false) {
-//             console.log("using recursion to determine if fbUserID exists, now that we know it's " + fbUserID);
-//             return authCurrentUserWithIDAndTokenForSession(fbUserID, fbAToken, sessionToken, callback);
-//           } else {
-//             imgURI = "https://graph.facebook.com/" + fbUserID + "/picture?type=large&return_ssl_resources=1";
-//             userInfo = {
-//               userID: fbUserID,
-//               facebookID: fbUserID,
-//               fbAccessToken: fbAToken,
-//               imageURI: imgURI,
-//               userDisplayName: fbResponse.name,
-//               modifiedDate: new Date()
-//             };
-//             userInfo.metroAreaDisplayName = (_ref = fbResponse.location) != null ? _ref.name : void 0;
-//             console.log("create the user! with info " + userInfo);
-//             return User.update({
-//               userID: fbUserID
-//             }, {
-//               $set: userInfo,
-//               $push: {
-//                 activeSessionIDs: sessionToken
-//               }
-//             }, {
-//               upsert: 1
-//             }, function(err) {
-//               if (err != null) {
-//                 return callback("error for user save " + err + " with info " + userInfo);
-//               } else {
-//                 console.log("saved new user with info " + userInfo + ", using recursion for auth");
-//                 return authCurrentUserWithIDAndTokenForSession(fbUserID, fbAToken, sessionToken, callback);
-//               }
-//             });
-//           }
-//         }
-//       });
-//     } else {
-//       return callback(null, user);
-//     }
-//   });
-// };
-
-// exports.authUserWithFacebookOfIDAndToken = function(fbID, fbToken, callback) {
-//   var requestURL;
-//   if ((fbToken != null) === false) {
-//     callback("missing token for fb req");
-//     return;
-//   }
-//   requestURL = "https://graph.facebook.com/me?access_token=" + fbToken;
-//   return request(requestURL, function(error, response, body) {
-//     var resObjects;
-//     if ((error != null) || response.statusCode !== 200) {
-//       callback("fbreq err " + error + " with code " + response.statusCode);
-//       return;
-//     }
-//     resObjects = JSON.parse(body);
-//     if ((resObjects != null ? resObjects.id : void 0) !== fbID) {
-//       console.log("fbreq mismatched fbID from req " + fbID + " from server " + (resObjects != null ? resObjects.id : void 0));
-//     }
-//     if (((resObjects != null ? resObjects.id : void 0) != null) === false) {
-//       return callback("no fbID returned for token " + fbToken);
-//     } else {
-//       return callback(null, resObjects.id, resObjects);
-//     }
-//   });
-// };
-
-exports.getUserWithID = function(userID, callback) {
-  var _this = this;
-  return User.findOne({
-    userID: userID
-  }, {
-    fbAccessToken: 0,
-    facebookID: 0
-  }, function(err, user) {
-    var userInfo;
-    if (!err || !user) {
-      return callback("could not find user of id " + userID + " with error " + err);
-    } else {
-      userInfo = {
-        imageURI: user.imageURI,
-        userID: user.userID.toString(),
-        metroAreaDisplayName: user.metroAreaDisplayName,
-        userDisplayName: user.userDisplayName,
-        ratingCount: user.ratingCount
-      };
-      return callback(null, user, userInfo);
-    }
-  });
-};
-
-exports.allUsersWithPermission = function(permission, callback) {
-  var _this = this;
-  return User.find({
-    permissions: permission
-  }, {}, function(err, users) {
-    return callback(err, users);
-  });
-};
-
-exports.allUsers = function(callback) {
-  var _this = this;
-  return User.find({}, {}, function(err, users) {
-    return callback(err, users);
-  });
-};
-
-exports.newUser = function(displayName, permissions, telephoneNumber, callback) {
-  var user, userProperties,
-    _this = this;
-  userProperties = {
-    "displayName": displayName,
-    "modifiedDate": new Date,
-    "notificationInterval": 21600000,
-    "overIntervalMessageAllowanceCount": 40,
-    "permissions": permissions,
-    "telephoneNumber": telephoneNumber,
-    "token": genCode(20, displayName),
-    "userID": genCode(10, displayName)
-  };
-  user = new User(userProperties);
-  return user.save(function(err) {
-    if (err != null) {
-      console.log(user, err);
-      return callback("failed creating user w/ err " + err);
-    } else {
-      return callback(null, user);
-    }
-  });
-};
-
-exports.updateUserWithID = function(userID, displayName, permissions, phoneNumber, callback) {
-  var _this = this;
-  return exports.getUserWithID(userID, function(err, user, info) {
-    var numberChanged;
-    if (displayName != null) {
-      user.displayName = displayName;
-    }
-    if (permissions != null) {
-      user.permissions = permissions;
-    }
-    numberChanged = false;
-    if (phoneNumber != null) {
-      if (user.telephoneNumber !== phoneNumber) {
-        user.telephoneNumber = phoneNumber;
-        numberChanged = true;
-      }
-    }
-    return user.save(function(err) {
-      var message;
-      callback(err, user);
-      // if (numberChanged) {
-      //   message = "you're activated! Login with https://oh.domo.io/urllogin/" + user.token;
-      //   return comsModel.processMessageToRecipientForSMS(message, user.telephoneNumber, comsModel.sendSMS, function(err, recp) {
-      //     return console.log("sent sms to activator userID: " + userID + " w/ err " + err);
-      //   });
-      // }
-    });
-  });
-};
 
 var User = module.exports.User = mongoose.model('user', userSchema, 'user');
