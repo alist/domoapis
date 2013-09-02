@@ -20,6 +20,15 @@ var validRoles = module.exports.validRoles = [ 'supportee', 'supporter', 'module
 
 var adminRoles = module.exports.adminRoles = [ 'moduleadmin', 'admin', 'adopter' ];
 
+module.exports.publicAtrrs = [
+  '_id',
+  'orgId',
+  'email',
+  'joined',
+  'heldRoleAttrs',
+  'accApproved'
+];
+
 
 var orgUserSchema = new Schema({
   userId:                 { type: Schema.Types.ObjectId, ref: 'user', required: true },
@@ -40,7 +49,7 @@ _.each(validRoles, function(r) {
 // dynamically constructs below schema from validRoles
 // roles: {
 //   supportee:    { type: Schema.Types.ObjectId, ref: 'supportee' },
-//   supporter:    { type: Schema.Types.ObjectId, ref: 'supporter' }, 
+//   supporter:    { type: Schema.Types.ObjectId, ref: 'supporter' },
 //   moduleadmin:  { type: Schema.Types.ObjectId, ref: 'moduleadmin' },
 //   admin:        { type: Schema.Types.ObjectId, ref: 'admin' },
 //   adopter:      { type: Schema.Types.ObjectId, ref: 'adopter' }
@@ -275,6 +284,11 @@ orgUserSchema.statics.approveAccount = function(approvalAttrs, callback){
 }
 
 
+orgUserSchema.methods.asJSON = function() {
+  return _.pick(this.toObject(), module.exports.publicAtrrs);
+}
+
+
 var getUserRoleModel = module.exports.getUserRoleModel = function(role) {
   var model = mongoose.model(role);
   if(!model) {
@@ -374,7 +388,7 @@ function addRolesToUser(orguser, userRoleAttrs, callback) {
       if(!_.isEmpty(subDocs)) {
         return removeDocs(subDocs, callback);
       }
-      
+
       return callback(err);
     });
 }

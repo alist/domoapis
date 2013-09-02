@@ -91,7 +91,7 @@ UserController.prototype.register = function(req, res){
         }
       });
 
-      return response.data(user.toObject()).data(orguser.toObject()).redirect('/');
+      return response.data({ user: user.asJSON() }).data({ orguser: orguser.asJSON() }).redirect('/');
     });
   });
 }

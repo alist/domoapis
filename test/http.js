@@ -68,7 +68,7 @@ describe("HTTP: Register new user", function() {
       .send({
         email: 'shirishk.87@gmail.com',
         password: 'sa123',
-        skills: 'fake empathy',
+        skills: 'empathy',
         orgId: state.organization.id,
         org: state.organization.name
       })
@@ -76,9 +76,9 @@ describe("HTTP: Register new user", function() {
       .end(function (res) {
         res.should.be.json;
         res.should.have.status(200);
-        should.exist(res.body.response.userID);
+        should.exist(res.body.response.user.userID);
 
-        User.findOne({ userID: res.body.response.userID }, function(err, user) {
+        User.findOne({ userID: res.body.response.user.userID }, function(err, user) {
           should.not.exist(err);
           should.exist(user);
           state.user = user;
@@ -102,13 +102,6 @@ describe("HTTP: Register new user", function() {
 
     request()
       .get(approvalLink)
-      .send({
-        email: 'shirishk.87@gmail.com',
-        password: 'sa123',
-        skills: 'fake empathy',
-        orgId: state.organization.id,
-        org: state.organization.name
-      })
       .set('Accept', 'application/json')
       .end(function (res) {
         res.should.be.json;
@@ -292,6 +285,9 @@ describe("HTTP: Register new user", function() {
       .end(function (res) {
         res.should.be.json;
         res.should.have.status(200);
+        should.exist(res.body.response.advicerequest.responses)
+        res.body.response.advicerequest.responses.length.should.equal(1);
+        state.advice = res.body.response.advicerequest.responses[0];
         done();
     });
   });
@@ -313,8 +309,49 @@ describe("HTTP: Register new user", function() {
       .end(function (res) {
         res.should.be.json;
         res.should.have.status(200);
+        should.exist(res.body.response.advicerequest.responses)
+        res.body.response.advicerequest.responses.length.should.equal(2);
         done();
     });
   });
 
+  it("advicerequest: mark advice helpful", function(done) {
+    request()
+      .post(apiPath
+              + '/organizations/' + state.organization.orgURL
+              + '/advicerequest/' + state.advicerequest._id
+              + '/advice/' + state.advice._id
+              + '/advicehelpful'
+              + '?code=' + state.organization.code
+              + '&token=' + state.advicerequest.accessToken)
+      .send({ helpful: 1 })
+      .set('Accept', 'application/json')
+      .end(function (res) {
+        res.should.be.json;
+        res.should.have.status(200);
+        should.exist(res.body.response.advicerequest._id);
+        should.exist(res.body.response.advicerequest.accessURL);
+        done();
+    });
+  });
+
+  it("advicerequest: mark advice thankyou", function(done) {
+    request()
+      .post(apiPath
+              + '/organizations/' + state.organization.orgURL
+              + '/advicerequest/' + state.advicerequest._id
+              + '/advice/' + state.advice._id
+              + '/advicethankyou'
+              + '?code=' + state.organization.code
+              + '&token=' + state.advicerequest.accessToken)
+      .send({ thankyou: 1 })
+      .set('Accept', 'application/json')
+      .end(function (res) {
+        res.should.be.json;
+        res.should.have.status(200);
+        should.exist(res.body.response.advicerequest._id);
+        should.exist(res.body.response.advicerequest.accessURL);
+        done();
+    });
+  });
 });
