@@ -23,21 +23,24 @@ OrganizationController.prototype.getAll = function(req, res) {
     lookup.displayName = new RegExp(req.query.q, 'i');
   }
 
-  OrganizationModel.find(lookup, { displayName: 1 }).select('id displayName').sort({ displayName: 'asc' }).limit(15).exec(function(err, orgs) {
-    if(err) {
-      if(isTypeahead) {
-        return res.json([]);
+  OrganizationModel
+    .find(lookup, { displayName: 1 })
+    .select('id displayName orgURL').sort({ displayName: 'asc' })
+    .exec(function(err, orgs) {
+      if(err) {
+        if(isTypeahead) {
+          return res.json([]);
+        }
+        return response.error(err).render();
       }
-      return response.error(err).render();
-    }
-    orgs = orgs || [];
+      orgs = orgs || [];
 
-    if(isTypeahead) {
-      return res.json(orgs);
-    }
+      if(isTypeahead) {
+        return res.json(orgs);
+      }
 
-    return response.data({ organizations: orgs }).json().render();
-  });
+      return response.data({ organizations: orgs }).json().render();
+    });
 }
 
 
