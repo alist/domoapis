@@ -82,9 +82,16 @@ Object.keys(module.exports.db).forEach(function(k){
 module.exports.mail = {};
 
 module.exports.mail.defaults = {
-  retry: 3,
-  adminEmails: [ 'shirishk.87@gmail.com', 'harishnk@gmail.com' ]
-}
+  host: "smtp.buggycoder.com",
+  port: 587,
+  secureConnection: false,
+  auth: {
+    user: "shirish@buggycoder.com",
+    pass: "VTkrZ(%7"
+  },
+  from: "\"Buggy Coder, Inc.\" <shirish@buggycoder.com>",
+  adminEmails: ['shirishk.87@gmail.com', 'harishnk@gmail.com']
+};
 
 
 module.exports.messenger = {};
