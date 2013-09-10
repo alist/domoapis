@@ -55,7 +55,6 @@ describe("HTTP: Register new user", function() {
     };
 
     Organization.new(newOrgAttrs, function(err, newOrg){
-      // console.log(newOrg);
       should.not.exist(err);
       should.exist(newOrg);
       state.organization = newOrg;
@@ -69,7 +68,7 @@ describe("HTTP: Register new user", function() {
       .send({
         email: 'shirishk.87@gmail.com',
         password: 'sa123',
-        skills: 'fake empathy',
+        skills: 'empathy',
         orgId: state.organization.id,
         org: state.organization.name
       })
@@ -77,9 +76,9 @@ describe("HTTP: Register new user", function() {
       .end(function (res) {
         res.should.be.json;
         res.should.have.status(200);
-        should.exist(res.body.response.userID);
+        should.exist(res.body.response.user.userID);
 
-        User.findOne({ userID: res.body.response.userID }, function(err, user) {
+        User.findOne({ userID: res.body.response.user.userID }, function(err, user) {
           should.not.exist(err);
           should.exist(user);
           state.user = user;
@@ -103,13 +102,6 @@ describe("HTTP: Register new user", function() {
 
     request()
       .get(approvalLink)
-      .send({
-        email: 'shirishk.87@gmail.com',
-        password: 'sa123',
-        skills: 'fake empathy',
-        orgId: state.organization.id,
-        org: state.organization.name
-      })
       .set('Accept', 'application/json')
       .end(function (res) {
         res.should.be.json;
@@ -129,16 +121,16 @@ describe("HTTP: Register new user", function() {
     .end(function (res) {
       res.should.be.json;
       res.should.have.status(200);
-      should.exist(res.body.response.token);
+      should.exist(res.body.response.user._id);
+      should.exist(res.body.response.user.token);
 
+      var tokenParts = res.body.response.user.token.split('|');
+      var userId = tokenParts.shift();
+      var token = tokenParts.join('');
 
       User.findOne({ userID: 'shirishk.87@gmail.com', }, function(err, user) {
-        var tokenParts = res.body.response.token.split('|');
-        var userId = tokenParts.shift();
-        var token = tokenParts.join('');
-
         user.hasToken(token).should.equal(true);
-        state.token = res.body.response.token;
+        state.token = res.body.response.user.token;
         done();
       });
 
@@ -156,16 +148,42 @@ describe("HTTP: Register new user", function() {
     .end(function (res) {
       res.should.be.json;
       res.should.have.status(200);
-      should.exist(res.body.response.token);
+      should.exist(res.body.response.user._id);
+      should.exist(res.body.response.user.token);
 
+      var tokenParts = res.body.response.user.token.split('|');
+      var userId = tokenParts.shift();
+      var token = tokenParts.join('');
 
       User.findOne({ userID: 'shirishk.87@gmail.com', }, function(err, user) {
-        var tokenParts = res.body.response.token.split('|');
-        var userId = tokenParts.shift();
-        var token = tokenParts.join('');
-
         user.hasToken(token).should.equal(true);
-        state.token = res.body.response.token;
+        state.token = res.body.response.user.token;
+        done();
+      });
+
+    });
+  });
+
+
+  it("should login successfully again: api", function(done) {
+    request()
+    .post(apiPath + '/user/session')
+    .send({ username: 'shirishk.87@gmail.com', password: 'sa123' })
+    .set('Accept', 'application/json')
+    .end(function (res) {
+      res.should.be.json;
+      res.should.have.status(200);
+      should.exist(res.body.response.user._id);
+      should.exist(res.body.response.user.token);
+
+      var tokenParts = res.body.response.user.token.split('|');
+      var userId = tokenParts.shift();
+      var token = tokenParts.join('');
+
+      User.findOne({ userID: 'shirishk.87@gmail.com', }, function(err, user) {
+        user.tokens.length.should.equal(2); // (1) phone  (2) api
+        user.hasToken(token).should.equal(true);
+        state.token = res.body.response.user.token;
         done();
       });
     });
@@ -267,6 +285,9 @@ describe("HTTP: Register new user", function() {
       .end(function (res) {
         res.should.be.json;
         res.should.have.status(200);
+        should.exist(res.body.response.advicerequest.responses)
+        res.body.response.advicerequest.responses.length.should.equal(1);
+        state.advice = res.body.response.advicerequest.responses[0];
         done();
     });
   });
@@ -288,8 +309,49 @@ describe("HTTP: Register new user", function() {
       .end(function (res) {
         res.should.be.json;
         res.should.have.status(200);
+        should.exist(res.body.response.advicerequest.responses)
+        res.body.response.advicerequest.responses.length.should.equal(2);
         done();
     });
   });
 
+  it("advicerequest: mark advice helpful", function(done) {
+    request()
+      .post(apiPath
+              + '/organizations/' + state.organization.orgURL
+              + '/advicerequest/' + state.advicerequest._id
+              + '/advice/' + state.advice._id
+              + '/advicehelpful'
+              + '?code=' + state.organization.code
+              + '&token=' + state.advicerequest.accessToken)
+      .send({ helpful: 1 })
+      .set('Accept', 'application/json')
+      .end(function (res) {
+        res.should.be.json;
+        res.should.have.status(200);
+        should.exist(res.body.response.advicerequest._id);
+        should.exist(res.body.response.advicerequest.accessURL);
+        done();
+    });
+  });
+
+  it("advicerequest: mark advice thankyou", function(done) {
+    request()
+      .post(apiPath
+              + '/organizations/' + state.organization.orgURL
+              + '/advicerequest/' + state.advicerequest._id
+              + '/advice/' + state.advice._id
+              + '/advicethankyou'
+              + '?code=' + state.organization.code
+              + '&token=' + state.advicerequest.accessToken)
+      .send({ thankyou: 1 })
+      .set('Accept', 'application/json')
+      .end(function (res) {
+        res.should.be.json;
+        res.should.have.status(200);
+        should.exist(res.body.response.advicerequest._id);
+        should.exist(res.body.response.advicerequest.accessURL);
+        done();
+    });
+  });
 });

@@ -28,24 +28,13 @@ module.exports.public = function(app) {
     return res.ext.view('login.jade').render();
   });
 
-  app.post('/login',
+  app.post(
+    '/login',
     passport.authenticate('local'),
-    function(req, res) {
+    UserController.newSession.bind(UserController)
+  );
 
-      res.ext.data({ token: req.extras.token });
-
-      var redirTo = req.flash('redirTo');
-      if(redirTo.length) {
-        return res.ext.redirect(redirTo.shift());
-      }
-
-      res.ext.redirect('/');
-    });
-
-  app.get('/logout', function(req, res){
-    req.logout();
-    res.redirect('/');
-  });
+  app.get('/logout', UserController.logout.bind(UserController));
 
   app.get('/register', UserController.getRegister.bind(UserController));
   app.post('/register', UserController.register.bind(UserController));

@@ -91,9 +91,24 @@ UserController.prototype.register = function(req, res){
         }
       });
 
-      return response.data(user.toObject()).data(orguser.toObject()).redirect('/');
+      return response.data({ user: user.asJSON() }).data({ orguser: orguser.asJSON() }).redirect('/');
     });
   });
+}
+
+// post-login
+UserController.prototype.newSession = function(req, res) {
+  var user = req.user.asJSON();
+  user.token = req.extras.token;
+
+  res.ext.data({ user: user });
+
+  var redirTo = req.flash('redirTo');
+  if(redirTo.length) {
+    return res.ext.redirect(redirTo.shift());
+  }
+
+  res.ext.redirect('/');
 }
 
 
@@ -194,7 +209,7 @@ UserController.prototype.validateToken = function(req, res, next){
       return response.code(response.STATUS.NOT_FOUND).error(errors['USER_NOT_FOUND']()).render();
     }
 
-    if(!user.hasToken(token)) {
+    if(!user.isTokenValid(getClientId(req), token)) {
       return response.code(response.STATUS.UNAUTHORIZED).error(errors['TOKEN_INVALID']()).render();
     }
 
@@ -282,8 +297,10 @@ UserController.prototype.approveAccount = function(req, res){
 
 
 UserController.prototype.logout = function(req, res){
-
+  req.logout();
+  res.redirect('/');
 }
+
 
 UserController.prototype.findUserById = function(userId, callback){
   UserModel.getUser({ 'userID': userId },
@@ -295,17 +312,17 @@ UserController.prototype.findUserById = function(userId, callback){
 
 
 UserController.prototype.addTokenToExtras = function(req, user, token) {
-  req.extras = req.extras || {};
-  req.extras.token = token;
-  return req.extras.token;
+  return req.extras.token = token;
 }
 
 
 UserController.prototype.addClientIdToExtras = function(req) {
-  req.extras = req.extras || {};
-  req.extras.clientId = (!!req.query.clientId) ? req.query.clientId : 'api';
-  return req.extras.clientId;
+  return req.extras.clientId = getClientId(req);
 }
 
+
+function getClientId(req) {
+  return (!!req.query.clientId) ? req.query.clientId : (req.extras.isAPI ? 'api' : 'web');
+}
 
 module.exports.UserController = new UserController();
