@@ -12,7 +12,7 @@ module.exports.activeEnv = process.env.NODE_ENV || 'development';
 module.exports.app = {};
 
 module.exports.app.defaults = {
-  primaryhost: "domo-io.herokuapp.com",
+  primaryhost: "domoapis.herokuapp.com",
   env: {
     port: process.env.PORT || 3000,
     rootDir: __dirname
@@ -43,11 +43,11 @@ module.exports.app.production = {
 module.exports.db = {};
 
 module.exports.db.defaults = {
-  host: "ds031597.mongolab.com",
-  port: "31597",
-  user: "domo",
-  password: "c0mpl3xity",
-  db: "domo"
+  host: "domo-io.herokuapp.com",
+  port: "27627",
+  user: "domomain",
+  password: "CvB8KBKd3qH9db",
+  db: "heroku_app15761281"
 };
 
 module.exports.db.overrides = {
@@ -91,7 +91,7 @@ module.exports.mail.defaults = {
     pass: "VTkrZ(%7"
   },
   from: "\"Buggy Coder, Inc.\" <shirish@buggycoder.com>",
-  adminEmails: ['shirishk.87@gmail.com', 'harishnk@gmail.com']
+  adminEmails: ['shirishk.87@gmail.com', 'harish@domo.io', 'alex@domo.io']
 };
 
 
