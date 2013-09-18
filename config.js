@@ -43,11 +43,11 @@ module.exports.app.production = {
 module.exports.db = {};
 
 module.exports.db.defaults = {
-  host: "domo-io-staging.herokuapp.com",
-  port: "27627",
-  user: "domomain",
-  password: "CvB8KBKd3qH9db",
-  db: "heroku_app15761281"
+  host: "ds031597.mongolab.com",
+  port: "31597",
+  user: "domo",
+  password: "c0mpl3xity",
+  db: "domo"
 };
 
 module.exports.db.overrides = {
