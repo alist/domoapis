@@ -31,7 +31,7 @@ var adviceRequestSchema = new Schema({
   createdOn: {type: Date, default: Date.now},
   lastNotificationDate: {type: Date, index: {unique: false}},
   notificationInterval: {type: Number},
-  supportArea: {type: String, required: true}, //, enum: validSupportAreas },
+  supportArea: {type: String, required: false}, //, enum: validSupportAreas },
   //authToken: {type: String},
   adviceRequest: {type: String, required: true},
   responses: [ResponseSchema]
