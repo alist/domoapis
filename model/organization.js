@@ -10,6 +10,7 @@ var orgSchema = new Schema({
   usageDescription: { type: String, required: false },
   code:             { type: String, required: true },
   bannerURL:        { type: String },
+  supportAreas: [ { identifier: String, name: String } ],
   city:             { type: String },
   region:           { type: String }
 });

@@ -17,6 +17,7 @@ var supportRequestSessionSchema = new Schema({
 
   authToken: {type: String},
   accessToken: {type: String, index: {unique: true}},
+  supportAreas: [ { identifier: String, name: String } ],
   telephoneNumber: {type: String, index: {unique: false}},
   telephoneVerifyDate: {type: Date},
   telephoneNumberVerifyAttemptCount: {type: Number},

@@ -4,7 +4,7 @@ var mongoose = require('mongoose')
   , errors = require('./errors').errors
   , _ = require('lodash')
 
-var validSupportAreas = module.exports.validSupportAreas = [ 'career', 'mental-health' ];
+//var validSupportAreas = module.exports.validSupportAreas = [ 'career', 'mental-health' ];
 
 var ResponseSchema = new Schema({
   // responseId: { type: String, required: true, unique: true, index: true }, // every subdoc will have an autogen _id. Use that
@@ -31,7 +31,7 @@ var adviceRequestSchema = new Schema({
   createdOn: {type: Date, default: Date.now},
   lastNotificationDate: {type: Date, index: {unique: false}},
   notificationInterval: {type: Number},
-  supportArea: { type: String, enum: validSupportAreas },
+  supportArea: {type: String, required: true}, //, enum: validSupportAreas },
   //authToken: {type: String},
   adviceRequest: {type: String, required: true},
   responses: [ResponseSchema]

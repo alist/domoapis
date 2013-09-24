@@ -19,7 +19,7 @@ var moduleadminSchema = new Schema({
     status: String
   },*/
   
-  moduleAreas: [ { identifier: String, name: String } ],
+  supportAreas: [ { identifier: String, name: String } ],
   
   joinedInRoleDate: { type: Date, default: Date.now },
   modifiedDate: { type: Date, index: { unique: false } },

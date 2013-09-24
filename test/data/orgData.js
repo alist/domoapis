@@ -1,12 +1,12 @@
 module.exports.orgData = [
   {
     "id": "1",
-    "displayName": "Massachusetts Institute of Technology",
-    "orgURL": "mit",
-    "city": "Cambridge",
+    "displayName": "University of Colorado",
+    "orgURL": "colorado",
+    "city": "Colorado",
     "region": "MA",
-    "bannerURL": "/img/banners/mit.png",
-    "code": "mit5"
+    "bannerURL": "/img/banners/ucb.png",
+    "code": "ucb5"
   },
   {
     "id": "2",
@@ -33,8 +33,11 @@ module.exports.orgData = [
     "id": "5",
     "displayName": "Massachusetts Institute of Technology",
     "orgURL": "mit",
-    "city": "Pittsburgh",
-    "region": "PA"
+    "city": "Cambridge",
+    "region": "MA",
+    "bannerURL": "/img/banners/mit.png",
+    "supportAreas":['career', 'mental-health'],
+    "code": "mit5"
   },
   {
     "id": "6",
