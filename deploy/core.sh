@@ -7,11 +7,11 @@ log() {
 }
 
 setup(){
-  type forever >/dev/null 2>&1 || {
-    log "Setting up forever"
-    sudo npm install -g forever
+  type pm2 >/dev/null 2>&1 || {
+    log "Setting up pm2"
+    sudo npm install -g pm2
   }
-  
+
   if [ ! -e "${APP_ROOT}/logs" ]; then
     mkdir -p "${APP_ROOT}/logs"
     if (test $? -eq 0)
@@ -36,7 +36,7 @@ setup_db(){
 
 unload(){
   log "Unloading Server..."
-  forever stop "${APP_ROOT}/app.js"
+  pm2 stop "domo-refac"
 }
 
 
@@ -46,14 +46,14 @@ load(){
   export NODE_ENV='production'
   export PORT=4000
   export MONGODB_URI='mongodb://app1:swbo10a87@127.0.0.1:18001/domo'
-  forever start -m 20 --minUptime 5000 --spinSleepTime 2000 --pidFile "${APP_ROOT}/logs/pid" -l "${APP_ROOT}/logs/forever.log" --append -o "${APP_ROOT}/logs/out.log" -e "${APP_ROOT}/logs/err.log" "${APP_ROOT}/app.js"
+  pm2 start "${APP_ROOT}/app.js" --name "domo-refac" -i 4 -e "${APP_ROOT}/logs/err.log" -o "${APP_ROOT}/logs/out.log" -w
 }
 
 reload(){
   unload
   npm_install
   load
-  forever_list
+  pm2_list
 }
 
 
@@ -62,14 +62,14 @@ npm_install(){
   npm install
 }
 
-forever_list(){
-  log "Forever list..."
-  forever list
+pm2_list(){
+  log "pm2 list..."
+  pm2 list
 }
 
 
 if [ "$#" -eq 0 ]; then
-  echo "Please specify an action: [setup|setup_db|load|unload|reload|forever_list|npm_install]"
+  echo "Please specify an action: [setup|setup_db|load|unload|reload|pm2_list|npm_install]"
   exit
 fi
 
