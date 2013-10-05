@@ -50,7 +50,7 @@ adviceRequestSchema.statics.getByAccessURL = function(accessURL, callback) {
 
 adviceRequestSchema.statics.new = function(adviceRequestAttrs, callback){
   var adviceRequest = new AdviceRequest();
-  adviceRequest = _.merge(adviceRequest, _.pick(adviceRequestAttrs, [ 'organization', 'telephoneNumber', 'supportArea', 'adviceRequest' ]));
+  adviceRequest = _.merge(adviceRequest, _.pick(adviceRequestAttrs, [ 'organization', 'telephoneNumber', 'supportAreaIdentifier', 'adviceRequest' ]));
   adviceRequest.accessToken = uuid.v4().replace(/\-/g, '');
   // adviceRequest.accessURL = shorturl-code
   adviceRequest.save(function(err){
