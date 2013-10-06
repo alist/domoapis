@@ -37,6 +37,20 @@ AdviceRequestController.prototype.getInfo = function(req, res) {
   });
 }
 
+AdviceRequestController.prototype.getAll = function(req, res) {
+    AdviceRequestModel.findAll(function(err, advicerequests) {
+    if(err) {
+      return res.ext.error(err).render();
+    }
+
+    if(!advicerequests) {
+      return res.ext.error(errors['ADVICEREQUEST_NOT_FOUND']().m).render();
+    }
+
+    res.ext.data({ advicerequests: advicerequests }).render();
+  });
+}
+
 
 AdviceRequestController.prototype.newAdviceRequest = function(req, res) {
 

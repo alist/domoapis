@@ -48,6 +48,15 @@ adviceRequestSchema.statics.getByAccessURL = function(accessURL, callback) {
   });
 }
 
+adviceRequestSchema.statics.findAll = function(callback) { //(err,adviceRequests)
+  this.find(function(err, adviceRequests) {
+      if(!adviceRequests) {
+          return callback(errors['ADVICEREQUEST_NOT_FOUND']());
+      }
+      return callback(err, adviceRequests);
+  });
+}
+
 adviceRequestSchema.statics.new = function(adviceRequestAttrs, callback){
   var adviceRequest = new AdviceRequest();
   adviceRequest = _.merge(adviceRequest, _.pick(adviceRequestAttrs, [ 'organization', 'telephoneNumber', 'supportAreaIdentifier', 'adviceRequest' ]));

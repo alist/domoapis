@@ -2,6 +2,8 @@
   - var stylesheets = ['//cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/2.3.2/css/bootstrap.min.css', '/css/style.css']
 - if(typeof localScripts === 'undefined')
   - var localScripts = ['//cdnjs.cloudflare.com/ajax/libs/jquery/2.0.3/jquery.min.js', '//cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/2.3.2/js/bootstrap.min.js']
+- else
+  - var localScripts = localScripts.concat(['//cdnjs.cloudflare.com/ajax/libs/jquery/2.0.3/jquery.min.js', '//cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/2.3.2/js/bootstrap.min.js'])
 
 block viewVars
 

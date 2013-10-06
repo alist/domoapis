@@ -43,7 +43,6 @@ OrganizationController.prototype.getAll = function(req, res) {
     });
 }
 
-
 OrganizationController.prototype.giveAdvice = function(req, res) {
   OrgUserModel.get(req.user._id, req.extras.organization._id, function(err, orguser) {
     if(err) {

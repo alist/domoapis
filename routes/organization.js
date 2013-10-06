@@ -1,4 +1,5 @@
 var OrganizationController = require('../controller/organization').OrganizationController
+  , AdviceRequestController = require('../controller/adviceRequest').AdviceRequestController
   , UserController = require('../controller/user').UserController
 
 
@@ -8,6 +9,8 @@ module.exports.private = function(app) {
   app.get('/:organization/giveadvice', OrganizationController.giveAdvice.bind(OrganizationController));
 
   app.get('/:organization/admin', OrganizationController.admin.bind(OrganizationController));
+
+  app.get('/:organization/advicerequest', AdviceRequestController.getAll.bind(AdviceRequestController));
 }
 
 
