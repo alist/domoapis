@@ -22,6 +22,11 @@ block body
       h3 Give Advice
       p Hell, yeah.
 
-    div(ng-controller="adviceRequestController")
-      li(ng-repeat="todo in responseData")
-        span(class="done-{{todo._id}}"){{todo.adviceRequest}} 
+     div(ng-controller="adviceRequestController")
+        div(ng-repeat="request in responseData")
+          li.span6
+            div.thumbnail
+              div.caption
+                a(href= "/giveadvice/{{request._id}}")
+                  h5.darkGreenLabel {{request.createdOn.toString()}}
+                  p.giveAdviceAdviceRequest {{request.adviceRequest}}

@@ -4,5 +4,10 @@ angular.module('adviceRequest',['ngResource']).
         return $resource('/mit/adviceRequest', {},{
             get: {method: 'GET', isArray:false}
         });
-    });
+    }).
+  config(function($routeProvider) {
+    $routeProvider.
+      when('*', {controller:adviceRequestController, templateUrl:'/partials/adviceRequestListingPartial.html'});
+      //.when('/edit/:projectId', {controller:EditCtrl, templateUrl:'detail.html'}) 
+  });
  
