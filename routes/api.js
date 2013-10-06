@@ -17,13 +17,6 @@ module.exports.public = function(app) {
     }
     next();
   });
-  
-  /*
-  app.all('*',function(req, res, next) {
-    console.log(req.body);
-    next();
-  });
- */
 
   app.post(apiConfig.path + '/register', UserController.register.bind(UserController));
 
@@ -60,7 +53,7 @@ module.exports.verif = function(app) {
 
 module.exports.private = function(app) {
   var apiConfig = Config.getConfig().app.api;
-
+  //app.get(apiConfig.path + '/organizations/:organization/domosapienadvicerequest/:advicerequest', AdviceRequestController.getInfo.bind(AdviceRequestController)); //hnk hack+
   app.get(apiConfig.path + '/organizations/:organization/advicerequest/:advicerequest/advice/:advice', AdviceRequestController.listAdvice.bind(AdviceRequestController));
   app.get(apiConfig.path + '/organizations/:organization/advicerequest/:advicerequest/advice', AdviceRequestController.listAdvice.bind(AdviceRequestController));
   app.post(apiConfig.path + '/organizations/:organization/advicerequest/:advicerequest/advice', AdviceRequestController.newAdvice.bind(AdviceRequestController));

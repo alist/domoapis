@@ -18,7 +18,6 @@ var AdviceRequestModel = require("../model/advicerequest").AdviceRequest
 var AdviceRequestController = function(){
 };
 
-
 AdviceRequestController.prototype.getInfo = function(req, res) {
   var advicerequestId = req.params.advicerequest;
   var accessToken = req.query.token;

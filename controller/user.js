@@ -184,7 +184,6 @@ UserController.prototype.validateToken = function(req, res, next){
     var token = header.split(/\s+/).pop() || '';
     tokenAttrs.token = new Buffer(token, 'base64').toString();
   }
-
   var response = res.ext;
 
   var validator = new Validator();
@@ -196,8 +195,9 @@ UserController.prototype.validateToken = function(req, res, next){
 
   var tokenParts = tokenAttrs.token.split('|');
   var userId = tokenParts.shift();
+  console.log("userid: ", userId);
   var token = tokenParts.join('');
-
+  console.log("token", token);
   var self = this;
 
   UserModel.findById(userId, function(err, user) {
@@ -210,7 +210,8 @@ UserController.prototype.validateToken = function(req, res, next){
     }
 
     if(!user.isTokenValid(getClientId(req), token)) {
-      return response.code(response.STATUS.UNAUTHORIZED).error(errors['TOKEN_INVALID']()).render();
+      console.log(userId);
+      return response.code(response.STATUS.UNAUTHORIZED).error(errors['TOKEN_INVALID']()).render(); //missing token? 
     }
 
     req.logIn(user, function(err) {
