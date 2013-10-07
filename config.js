@@ -63,11 +63,7 @@ module.exports.db.development = {
 };
 
 module.exports.db.test = {
-  host: "ds059887.mongolab.com",
-  port: "59887",
-  user: "test",
-  password: "c0mpl3xity",
-  db: "domo_test"
+  dbUri: process.env.MONGODB_URI
 };
 
 // Generate dbUri for all envs
@@ -105,3 +101,15 @@ module.exports.messenger.defaults = {
     from: '+14696434686'
   }
 };
+
+
+module.exports.push = {};
+
+module.exports.push.defaults = {
+  gateway: "gateway.sandbox.push.apple.com",
+
+  feedbackOptions: {
+    batchFeedback: true,
+    interval: 300
+  }
+}
