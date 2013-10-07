@@ -30,7 +30,8 @@
     "jade": "~0.34.1",
     "async": "~0.2.9",
     "twilio": "~1.1.4",
-    "token": "0.0.0"
+    "token": "0.0.0",
+    "apn": "~1.4.1"
   },
   "devDependencies": {
     "chai": "1.6.0",

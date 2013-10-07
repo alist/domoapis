@@ -8,6 +8,7 @@ var Config = require('./configLoader')
   , async = require('async')
   , errorHandler = require('./lib/errorHandler')
   , auth = require('./auth')
+  , pushManager = require('./modules/push/app')
   , mailer = require('./lib/mailer')
   , messenger = require('./lib/messenger')
   , routeLoader = require('./routes/routeLoader')
@@ -59,6 +60,8 @@ function setupApp(done) {
 
     app.disable('x-powered-by');
     responseExt(app);
+
+    app.use('/push', pushManager.init(config));
     routeParams(app);
     partials(app);
     routeLoader.init(app);

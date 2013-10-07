@@ -355,3 +355,65 @@ describe("HTTP: Register new user", function() {
     });
   });
 });
+
+
+
+describe("HTTP: Push Notifications", function() {
+
+  it("push index", function(done) {
+    request()
+      .get('/push/index'
+              + '?token=' + encodeURIComponent(state.token))
+      .set('Accept', 'application/json')
+      .end(function (res) {
+        res.should.be.json;
+        console.log(res.body)
+        res.should.have.status(200);
+        done();
+    });
+  });
+
+
+  it("push register", function(done) {
+    request()
+      .post('/push/register'
+              + '?token=' + encodeURIComponent(state.token))
+      .send({ userId: state.user._id, deviceType: 'ios', deviceToken: 'ID0NTHAV3AD3V1C3T0K3N' })
+      .set('Accept', 'application/json')
+      .end(function (res) {
+        res.should.be.json;
+        console.log(res.body)
+        res.should.have.status(200);
+        done();
+    });
+  });
+
+  it("push devicetoken", function(done) {
+    request()
+      .post('/push/devicetoken'
+              + '?token=' + encodeURIComponent(state.token))
+      .send({ thankyou: 1 })
+      .set('Accept', 'application/json')
+      .end(function (res) {
+        res.should.be.json;
+        console.log(res.body)
+        res.should.have.status(200);
+        done();
+    });
+  });
+
+  it("push event", function(done) {
+    request()
+      .post('/push/event'
+              + '?token=' + encodeURIComponent(state.token))
+      .send({ thankyou: 1 })
+      .set('Accept', 'application/json')
+      .end(function (res) {
+        res.should.be.json;
+        console.log(res.body)
+        res.should.have.status(200);
+
+        done();
+    });
+  });
+});
