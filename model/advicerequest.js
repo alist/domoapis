@@ -34,6 +34,7 @@ var adviceRequestSchema = new Schema({
   supportArea: { type: String, enum: validSupportAreas },
   //authToken: {type: String},
   adviceRequest: {type: String, required: true},
+  subscriberId: { type: String },
   responses: [ResponseSchema]
 });
 
@@ -52,6 +53,11 @@ adviceRequestSchema.statics.new = function(adviceRequestAttrs, callback){
   var adviceRequest = new AdviceRequest();
   adviceRequest = _.merge(adviceRequest, _.pick(adviceRequestAttrs, [ 'organization', 'telephoneNumber', 'supportArea', 'adviceRequest' ]));
   adviceRequest.accessToken = uuid.v4().replace(/\-/g, '');
+
+  if(!!adviceRequestAttrs.subscriberId) {
+    adviceRequest.subscriberId = adviceRequestAttrs.subscriberId;
+  }
+
   // adviceRequest.accessURL = shorturl-code
   adviceRequest.save(function(err){
     if(err){
@@ -73,17 +79,18 @@ adviceRequestSchema.statics.newAdvice = function(advicerequestId, supporterId, n
     console.log(newAdviceAttrs.advice);
   }
 
+  var newAdviceUpdate = {
+    adviceResponse: newAdviceAttrs.advice,
+    adviceGiver: supporterId,
+    modifiedDate: new Date(),
+    helpful: newAdviceAttrs.helpful,
+    status: 'Created',
+    thankyou: newAdviceAttrs.thankyou
+  };
 
   var updates = {
     $push: {
-      responses: {
-        adviceResponse: newAdviceAttrs.advice,
-        adviceGiver: supporterId,
-        modifiedDate: new Date(),
-        helpful: newAdviceAttrs.helpful,
-        status: 'Created',
-        thankyou: newAdviceAttrs.thankyou
-      }
+      responses: newAdviceUpdate
     }
   };
 
@@ -93,7 +100,7 @@ adviceRequestSchema.statics.newAdvice = function(advicerequestId, supporterId, n
       return callback("no advice request found");
     } else {
       console.log('find was successful');
-      return callback(err, AdviceRequest);
+      return callback(err, AdviceRequest, newAdviceUpdate);
     }
   });
 };

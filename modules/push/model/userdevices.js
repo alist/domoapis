@@ -20,7 +20,7 @@ var userDeviceSchema = new Schema({
 
 userDeviceSchema.statics.register = function(newDeviceAttrs, callback) {
   var newUserDevice = new UserDevice();
-  newUserDevice.subscriberId = newDeviceAttrs.subscriberId || uuid.v1().replace(/-/g, '');
+  newUserDevice.subscriberId = newDeviceAttrs.subscriberId || uuid.v1().replace(/\-/g, '');
   newUserDevice.devices.push({
     deviceId: uuid.v1().replace(/-/g, ''),
     deviceType: newDeviceAttrs.deviceType,
