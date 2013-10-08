@@ -27,13 +27,17 @@ PushController.prototype.index = function(req, res, next) {
 PushController.prototype.register = function(req, res, next) {
 
   var newDeviceAttrs = _.pick(req.body, [ 'deviceType', 'deviceToken', 'deviceMeta' ]);
-  newDeviceAttrs.userId = req.user._id;
+  newDeviceAttrs.subscriberId = (!!req.user && !!req.user._id) ? req.user._id : null;
 
   UserDevice.register(newDeviceAttrs, function(err, newDevice) {
     if(err) {
       return res.ext.error(err).render();
     }
-    res.ext.data(_.findWhere(newDevice.toObject().devices, { deviceToken: newDeviceAttrs.deviceToken })).render();
+
+    res.ext
+      .data(_.findWhere(newDevice.toObject().devices, { deviceToken: newDeviceAttrs.deviceToken }))
+      .data({ subscriberId: newDevice.subscriberId })
+      .render();
   });
 
 }
@@ -41,8 +45,7 @@ PushController.prototype.register = function(req, res, next) {
 
 PushController.prototype.devicetoken = function(req, res, next) {
 
-  var updateDeviceAttrs = _.pick(req.body, [ 'deviceId', 'deviceToken' ]);
-  updateDeviceAttrs.userId = req.user._id;
+  var updateDeviceAttrs = _.pick(req.body, [ 'subscriberId', 'deviceId', 'deviceToken' ]);
 
   UserDevice.updateToken(updateDeviceAttrs, function(err, updatedDevice) {
     if(err) {
@@ -60,7 +63,7 @@ PushController.prototype.event = function(req, res, next) {
     return res.ext.error('Bad request').render();
   }
 
-  var pushAttrs = _.pick(req.body, [ 'userId', 'payload', 'alert', 'options' ]);
+  var pushAttrs = _.pick(req.body, [ 'subscriberId', 'payload', 'alert', 'options' ]);
   this.sendMessage(pushAttrs, function(err, devices) {
     if(err) {
       return res.ext.error(err).render();
@@ -74,13 +77,13 @@ PushController.prototype.event = function(req, res, next) {
 
 PushController.prototype.sendMessage = function(pushAttrs, callback) {
   var self = this;
-  UserDevice.findOne({ userId: pushAttrs.userId }, function(err, userDevice) {
+  UserDevice.findOne({ subscriberId: pushAttrs.subscriberId }, function(err, userDevice) {
     if(err) {
       return callback(err);
     }
 
     if(!userDevice) {
-      return callback('user not found');
+      return callback('user device not found');
     }
 
     userDevice = userDevice.toObject();

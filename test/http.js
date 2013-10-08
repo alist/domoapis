@@ -363,19 +363,6 @@ describe("HTTP: Push Notifications", function() {
   var dummyDeviceToken = 'NE66489F304DC75B8D6E8200DFF8A456E8DAEACEC428B427E9518741C92C6660';
   var dummyDeviceToken2 = 'FE66489F304DC75B8D6E8200DFF8A456E8DAEACEC428B427E9518741C92C6660';
 
-  it("push index", function(done) {
-    request()
-      .get('/push/index'
-              + '?token=' + encodeURIComponent(state.token))
-      .set('Accept', 'application/json')
-      .end(function (res) {
-        res.should.be.json;
-        console.log(res.body)
-        res.should.have.status(200);
-        done();
-    });
-  });
-
 
   it("push register", function(done) {
     request()
@@ -385,9 +372,11 @@ describe("HTTP: Push Notifications", function() {
       .set('Accept', 'application/json')
       .end(function (res) {
         res.should.be.json;
-        // print('register', res.body);
+        print('register', res.body);
         res.should.have.status(200);
+        should.exist(res.body.response.subscriberId);
         res.body.response.deviceToken.should.equal(dummyDeviceToken);
+        state.subscriberId = res.body.response.subscriberId;
         state.deviceId = res.body.response.deviceId;
         done();
     });
@@ -397,7 +386,7 @@ describe("HTTP: Push Notifications", function() {
     request()
       .post('/push/devicetoken'
               + '?token=' + encodeURIComponent(state.token))
-      .send({ deviceId: state.deviceId, deviceToken: dummyDeviceToken2 })
+      .send({ subscriberId: state.subscriberId, deviceId: state.deviceId, deviceToken: dummyDeviceToken2 })
       .set('Accept', 'application/json')
       .end(function (res) {
         res.should.be.json;
@@ -412,11 +401,11 @@ describe("HTTP: Push Notifications", function() {
     request()
       .post('/push/event'
               + '?secret=' + encodeURIComponent(config.push.serverSecret))
-      .send({ userId: state.user._id, payload: { data1: '1', data2: '2' }, alert: 'You have a new message', options: { badge: 1 } })
+      .send({ subscriberId: state.subscriberId, payload: { data1: '1', data2: '2' }, alert: 'You have a new message', options: { badge: 1 } })
       .set('Accept', 'application/json')
       .end(function (res) {
         res.should.be.json;
-        // print('event', res.body)
+        print('event', res.body)
         res.should.have.status(200);
         done();
     });

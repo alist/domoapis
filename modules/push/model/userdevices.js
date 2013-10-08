@@ -6,7 +6,7 @@ var mongoose = require('mongoose')
 
 
 var userDeviceSchema = new Schema({
-  userId:  { type: Schema.Types.ObjectId, ref: 'user', required: true,  index: { unique: true } },
+  subscriberId:  { type: String, required: true,  index: { unique: true } },
   devices: [
     {
       deviceId:       { type: String },
@@ -20,9 +20,9 @@ var userDeviceSchema = new Schema({
 
 userDeviceSchema.statics.register = function(newDeviceAttrs, callback) {
   var newUserDevice = new UserDevice();
-  newUserDevice.userId = newDeviceAttrs.userId;
+  newUserDevice.subscriberId = newDeviceAttrs.subscriberId || uuid.v1().replace(/-/g, '');
   newUserDevice.devices.push({
-    deviceId: uuid.v4().replace(/-/g, ''),
+    deviceId: uuid.v1().replace(/-/g, ''),
     deviceType: newDeviceAttrs.deviceType,
     deviceToken: newDeviceAttrs.deviceToken,
     deviceMeta: newDeviceAttrs.deviceMeta
@@ -30,6 +30,7 @@ userDeviceSchema.statics.register = function(newDeviceAttrs, callback) {
 
   newUserDevice.save(function(err) {
     if(err){
+      console.log(err)
       return callback(errors['DB_FAIL'](err));
     }
 
@@ -41,7 +42,7 @@ userDeviceSchema.statics.register = function(newDeviceAttrs, callback) {
 userDeviceSchema.statics.updateToken = function(updateAttrs, callback) {
   UserDevice.findOneAndUpdate(
     {
-      'userId': updateAttrs.userId,
+      'subscriberId': updateAttrs.subscriberId,
       'devices.deviceId': updateAttrs.deviceId
     },
     {
@@ -55,7 +56,7 @@ userDeviceSchema.statics.updateToken = function(updateAttrs, callback) {
       }
 
       if(!userDevice) {
-        return callback(errors['USER_NOT_FOUND'](err));
+        return callback(errors['USER_DEVICE_NOT_FOUND'](err));
       }
 
       return callback(null, userDevice);

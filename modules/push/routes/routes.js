@@ -26,6 +26,8 @@ PushRoutes.prototype.public = function() {
 
   app.get('/index', PushController.index.bind(PushController));
   app.post('/event', PushController.event.bind(PushController));
+  app.post('/register', PushController.register.bind(PushController));
+  app.post('/devicetoken', PushController.devicetoken.bind(PushController));
 }
 
 
@@ -38,11 +40,6 @@ PushRoutes.prototype.verif = function() {
 
 
 PushRoutes.prototype.private = function() {
-  var app = this.app;
-  var PushController = this.PushController;
-
-  app.post('/register', PushController.register.bind(PushController));
-  app.post('/devicetoken', PushController.devicetoken.bind(PushController));
 }
 
 
