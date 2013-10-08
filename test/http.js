@@ -360,6 +360,9 @@ describe("HTTP: Register new user", function() {
 
 describe("HTTP: Push Notifications", function() {
 
+  var dummyDeviceToken = 'NE66489F304DC75B8D6E8200DFF8A456E8DAEACEC428B427E9518741C92C6660';
+  var dummyDeviceToken2 = 'FE66489F304DC75B8D6E8200DFF8A456E8DAEACEC428B427E9518741C92C6660';
+
   it("push index", function(done) {
     request()
       .get('/push/index'
@@ -378,12 +381,14 @@ describe("HTTP: Push Notifications", function() {
     request()
       .post('/push/register'
               + '?token=' + encodeURIComponent(state.token))
-      .send({ userId: state.user._id, deviceType: 'ios', deviceToken: 'ID0NTHAV3AD3V1C3T0K3N' })
+      .send({ deviceType: 'ios', deviceMeta: { model: 'iPhone5S' }, deviceToken: dummyDeviceToken })
       .set('Accept', 'application/json')
       .end(function (res) {
         res.should.be.json;
-        console.log(res.body)
+        // print('register', res.body);
         res.should.have.status(200);
+        res.body.response.deviceToken.should.equal(dummyDeviceToken);
+        state.deviceId = res.body.response.deviceId;
         done();
     });
   });
@@ -392,12 +397,13 @@ describe("HTTP: Push Notifications", function() {
     request()
       .post('/push/devicetoken'
               + '?token=' + encodeURIComponent(state.token))
-      .send({ thankyou: 1 })
+      .send({ deviceId: state.deviceId, deviceToken: dummyDeviceToken2 })
       .set('Accept', 'application/json')
       .end(function (res) {
         res.should.be.json;
-        console.log(res.body)
+        // print('devicetoken', res.body);
         res.should.have.status(200);
+        res.body.response.deviceToken.should.equal(dummyDeviceToken2);
         done();
     });
   });
@@ -405,14 +411,13 @@ describe("HTTP: Push Notifications", function() {
   it("push event", function(done) {
     request()
       .post('/push/event'
-              + '?token=' + encodeURIComponent(state.token))
-      .send({ thankyou: 1 })
+              + '?secret=' + encodeURIComponent(config.push.serverSecret))
+      .send({ userId: state.user._id, payload: { data1: '1', data2: '2' }, alert: 'You have a new message', options: { badge: 1 } })
       .set('Accept', 'application/json')
       .end(function (res) {
         res.should.be.json;
-        console.log(res.body)
+        // print('event', res.body)
         res.should.have.status(200);
-
         done();
     });
   });

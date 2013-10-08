@@ -1,9 +1,23 @@
 
-var PushController = require('../controller/push').PushController
-  , Config = require('../../../configLoader')
-  , UserDevices = require('../model/userdevices').UserDevices
+var PushRoutes = function() {
+}
 
-module.exports.public = function(app) {
+
+PushRoutes.prototype.init = function(app, PushController) {
+  this.app = app;
+  this.PushController = PushController;
+
+  this.public(app, PushController);
+  this.verif(app, PushController);
+  this.private(app, PushController);
+  return this;
+}
+
+
+PushRoutes.prototype.public = function() {
+  var app = this.app;
+  var PushController = this.PushController;
+
   app.all('*', function(req, res, next) {
     req.extras = req.extras || {};
     req.extras.isAPI = true;
@@ -11,22 +25,25 @@ module.exports.public = function(app) {
   });
 
   app.get('/index', PushController.index.bind(PushController));
+  app.post('/event', PushController.event.bind(PushController));
 }
 
 
-module.exports.verif = function(app) {
+PushRoutes.prototype.verif = function() {
+  var app = this.app;
+  var PushController = this.PushController;
+
   app.all('/*', PushController.auth.bind(PushController));
 }
 
 
-module.exports.private = function(app) {
+PushRoutes.prototype.private = function() {
+  var app = this.app;
+  var PushController = this.PushController;
+
   app.post('/register', PushController.register.bind(PushController));
   app.post('/devicetoken', PushController.devicetoken.bind(PushController));
-  app.post('/event', PushController.event.bind(PushController));
 }
 
-module.exports.load = function(app) {
-  module.exports.public(app);
-  module.exports.verif(app);
-  module.exports.private(app);
-}
+
+module.exports = new PushRoutes();
