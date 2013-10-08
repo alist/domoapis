@@ -1,5 +1,5 @@
 var OrganizationController = require('../controller/organization').OrganizationController
-  , AdviceRequestController = require('../controller/adviceRequest').AdviceRequestController
+  , AdviceRequestController = require('../controller/advicerequest').AdviceRequestController
   , UserController = require('../controller/user').UserController
 
 
