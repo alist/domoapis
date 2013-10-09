@@ -1,9 +1,11 @@
 
 var UserController = require('../../../controller/user').UserController
+  , OrganizationController = require('../../../controller/organization').OrganizationController
   , IOSPushService = require('../lib/iosPushService')
   , UserDevice = require('../model/userdevices').UserDevice
   , Config = require('../../../configLoader')
   , _ = require('lodash')
+  , Validator = require('validator').Validator
 
 
 var PushController = function() {
@@ -26,20 +28,41 @@ PushController.prototype.index = function(req, res, next) {
 
 PushController.prototype.register = function(req, res, next) {
 
-  var newDeviceAttrs = _.pick(req.body, [ 'deviceType', 'deviceToken', 'deviceMeta' ]);
+  var attrs = [ 'deviceType', 'deviceToken', 'deviceMeta' ];
+  var newDeviceAttrs = _.pick(req.body, attrs);
   newDeviceAttrs.subscriberId = (!!req.user && !!req.user._id) ? req.user._id : null;
 
-  UserDevice.register(newDeviceAttrs, function(err, newDevice) {
-    if(err) {
-      return res.ext.error(err).render();
-    }
+  var validator = new Validator();
+  validator.check(req.query.token, 'Invalid token').notEmpty();
 
-    res.ext
-      .data(_.findWhere(newDevice.toObject().devices, { deviceToken: newDeviceAttrs.deviceToken }))
-      .data({ subscriberId: newDevice.subscriberId })
-      .render();
+  attrs.forEach(function(a) {
+    validator.check(newDeviceAttrs[a], 'Invalid ' + a).notEmpty();
   });
 
+  if(validator.hasError()){
+    return res.ext.error(validator.getErrors()).render();
+  }
+
+  var tokenParts = req.query.token.split('|');
+  var orgURL = tokenParts.shift();
+  var orgCode = tokenParts.join('');
+
+  OrganizationController.getByOrgUrl(orgURL, function(err, org) {
+    if(err || !org || orgCode !== org.code){
+      return res.ext.error('Invalid token').render();
+    }
+
+    UserDevice.register(newDeviceAttrs, function(err, newDevice) {
+      if(err) {
+        return res.ext.error(err).render();
+      }
+
+      res.ext
+        .data(_.findWhere(newDevice.toObject().devices, { deviceToken: newDeviceAttrs.deviceToken }))
+        .data({ subscriberId: newDevice.subscriberId })
+        .render();
+    });
+  });
 }
 
 
