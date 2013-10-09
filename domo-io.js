@@ -60,8 +60,7 @@ function setupApp(done) {
 
     app.disable('x-powered-by');
     responseExt(app);
-
-    app.use('/push', pushManager.init(config));
+    app.use(config.app.api.path + '/push', pushManager.init(config));
     routeParams(app);
     partials(app);
     routeLoader.init(app);

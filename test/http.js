@@ -366,7 +366,8 @@ describe("HTTP: Push Notifications", function() {
 
   it("push register", function(done) {
     request()
-      .post('/push/register'
+      .post(apiPath
+              + '/push/register'
               + '?token=' + encodeURIComponent(state.organization.orgURL + '|' + state.organization.code))
       .send({ deviceType: 'ios', deviceMeta: { model: 'iPhone5S' }, deviceToken: dummyDeviceToken })
       .set('Accept', 'application/json')
@@ -430,7 +431,8 @@ describe("HTTP: Push Notifications", function() {
 
   it("push devicetoken update", function(done) {
     request()
-      .post('/push/devicetoken')
+      .post(apiPath
+              + '/push/devicetoken')
       .send({ subscriberId: state.subscriberId, deviceId: state.deviceId, deviceToken: dummyDeviceToken2 })
       .set('Accept', 'application/json')
       .end(function (res) {
@@ -445,7 +447,8 @@ describe("HTTP: Push Notifications", function() {
 
   it("push event", function(done) {
     request()
-      .post('/push/event'
+      .post(apiPath
+              + '/push/event'
               + '?secret=' + encodeURIComponent(config.push.serverSecret))
       .send({ subscriberId: state.subscriberId, payload: { data1: '1', data2: '2' }, alert: 'You have a new message', options: { badge: 1 } })
       .set('Accept', 'application/json')

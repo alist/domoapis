@@ -47,6 +47,13 @@ PushController.prototype.register = function(req, res, next) {
   var orgURL = tokenParts.shift();
   var orgCode = tokenParts.join('');
 
+  validator.check(orgURL, 'Invalid token').notEmpty();
+  validator.check(orgCode, 'Invalid token').notEmpty();
+
+  if(validator.hasError()){
+    return res.ext.error(validator.getErrors()).render();
+  }
+
   OrganizationController.getByOrgUrl(orgURL, function(err, org) {
     if(err || !org || orgCode !== org.code){
       return res.ext.error('Invalid token').render();
@@ -68,7 +75,17 @@ PushController.prototype.register = function(req, res, next) {
 
 PushController.prototype.devicetoken = function(req, res, next) {
 
-  var updateDeviceAttrs = _.pick(req.body, [ 'subscriberId', 'deviceId', 'deviceToken' ]);
+  var attrs = [ 'subscriberId', 'deviceId', 'deviceToken' ];
+  var updateDeviceAttrs = _.pick(req.body, attrs);
+
+  var validator = new Validator();
+  attrs.forEach(function(a) {
+    validator.check(updateDeviceAttrs[a], 'Invalid ' + a).notEmpty();
+  });
+
+  if(validator.hasError()){
+    return res.ext.error(validator.getErrors()).render();
+  }
 
   UserDevice.updateToken(updateDeviceAttrs, function(err, updatedDevice) {
     if(err) {
@@ -87,6 +104,15 @@ PushController.prototype.event = function(req, res, next) {
   }
 
   var pushAttrs = _.pick(req.body, [ 'subscriberId', 'payload', 'alert', 'options' ]);
+  var validator = new Validator();
+  [ 'subscriberId', 'payload', 'alert' ].forEach(function(a) {
+    validator.check(pushAttrs[a], 'Invalid ' + a).notEmpty();
+  });
+
+  if(validator.hasError()){
+    return res.ext.error(validator.getErrors()).render();
+  }
+
   this.sendMessage(pushAttrs, function(err, devices) {
     if(err) {
       return res.ext.error(err).render();
