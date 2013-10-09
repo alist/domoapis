@@ -9,9 +9,9 @@ var userDeviceSchema = new Schema({
   subscriberId:  { type: String, required: true,  index: { unique: true } },
   devices: [
     {
-      deviceId:       { type: String },
-      deviceType:     { type: String },
-      deviceToken:    { type: String },
+      deviceId:       { type: String, required: true },
+      deviceType:     { type: String, required: true },
+      deviceToken:    { type: String, required: true },
       deviceMeta:     { type: Schema.Types.Mixed }
     }
   ]
