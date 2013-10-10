@@ -253,6 +253,7 @@ UserController.prototype.sendApprovalEmail = function(req, data, callback){
     // mail
     function(html, next) {
       var parcel = {
+        title: 'Account activation for ' + data.user.email,
         to: adminEmails,
         subject: 'Domo: Account Approval Request',
         html: html

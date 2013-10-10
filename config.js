@@ -63,11 +63,7 @@ module.exports.db.development = {
 };
 
 module.exports.db.test = {
-  host: "ds059887.mongolab.com",
-  port: "59887",
-  user: "test",
-  password: "c0mpl3xity",
-  db: "domo_test"
+  dbUri: process.env.MONGODB_URI
 };
 
 // Generate dbUri for all envs
@@ -77,7 +73,6 @@ Object.keys(module.exports.db).forEach(function(k){
     c.dbUri = "mongodb://" + c.user + ":" + c.password + "@" + c.host + ":" + c.port + "/" + c.db;
   }
 });
-
 
 
 module.exports.mail = {};
@@ -95,7 +90,6 @@ module.exports.mail.defaults = {
 };
 
 
-
 module.exports.messenger = {};
 
 module.exports.messenger.defaults = {
@@ -107,3 +101,17 @@ module.exports.messenger.defaults = {
     from: '+14696434686'
   }
 };
+
+
+module.exports.push = {};
+
+module.exports.push.defaults = {
+  gateway: "gateway.sandbox.push.apple.com",
+  cert: require('path').resolve(__dirname) + '/modules/push/cert/dev.p12',
+  feedbackOptions: {
+    address: 'feedback.sandbox.push.apple.com',
+    batchFeedback: true,
+    interval: 300
+  },
+  serverSecret: 'T0K3nF0rS3rV3r'
+}

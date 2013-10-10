@@ -1,5 +1,6 @@
 var AdviceRequestModel = require("../model/advicerequest").AdviceRequest
   , Organization = require('../controller/organization').OrganizationController
+  , PushController = require('../modules/push/controller/push')
   , OrgUserModel = require('../model/orguser').OrgUser
   , ShortUrlModel = require('../model/shorturl').ShortUrl
   , mailer = require('../lib/mailer')
@@ -130,7 +131,7 @@ AdviceRequestController.prototype.newAdvice = function(req, res) {
     return res.ext.error(errors['NOT_AUTHORIZED'('not a supporter')]).render();
   }
 
-  AdviceRequestModel.newAdvice(advicerequestId, orguser._id, newAdviceAttrs, function(err, advicerequest){
+  AdviceRequestModel.newAdvice(advicerequestId, orguser._id, newAdviceAttrs, function(err, advicerequest, newAdvice){
     if(err) {
       return res.ext.error(err).render();
     }
@@ -141,7 +142,11 @@ AdviceRequestController.prototype.newAdvice = function(req, res) {
 
     console.log('back to newAdvice in controller');
     //console.log(advicerequest);
-    return res.ext.data({ advicerequest: advicerequest }).render();
+    res.ext.data({ advicerequest: advicerequest }).render();
+
+    if(!!advicerequest.subscriberId) {
+      notifySupporteePush(advicerequest, newAdvice);
+    }
   });
 
 }
@@ -152,22 +157,6 @@ AdviceRequestController.prototype.listAdvice = function(req, res) {
 }
 
 
-function notifySupporteeSMS(org, advicerequest) {
-
-  messenger.sendMessage({
-    to: advicerequest.telephoneNumber,
-    body: 'Thanks for using domo. Please use ' + advicerequest.accessURL + ' to track responses.'
-  }, function(err) {
-    if(err) {
-      console.log('notifySupporteeSMS', err);
-    } else {
-      console.log('notifySupporteeSMS', 'success');
-    }
-  });
-
-}
-
-/////////////////////////
 AdviceRequestController.prototype.setAdviceHelpful = function(req, res) {
   //res.ext.data({ user: req.user }).render();
 
@@ -180,7 +169,7 @@ AdviceRequestController.prototype.setAdviceHelpful = function(req, res) {
   //console.log(req.user._id);
   console.log(adviceId);
   console.log(accessToken);
- 
+
   AdviceRequestModel.setAdviceHelpful(advicerequestId, adviceId, accessToken, newAdviceAttrs, function(err, advicerequest){
     if(err) {
       return res.ext.error(err).render();
@@ -209,7 +198,7 @@ AdviceRequestController.prototype.setAdviceThankyou = function(req, res) {
   //console.log(req.user._id);
   console.log(adviceId);
   console.log(accessToken);
- 
+
   AdviceRequestModel.setAdviceThankyou(advicerequestId, adviceId, accessToken, newAdviceAttrs, function(err, advicerequest){
     if(err) {
       return res.ext.error(err).render();
@@ -232,7 +221,6 @@ AdviceRequestController.prototype.listAdvice = function(req, res) {
 
 
 function notifySupporteeSMS(org, advicerequest) {
-
   messenger.sendMessage({
     to: advicerequest.telephoneNumber,
     body: 'Thanks for using domo. Please use ' + advicerequest.accessURL + ' to track responses.'
@@ -244,6 +232,25 @@ function notifySupporteeSMS(org, advicerequest) {
     }
   });
 
+}
+
+
+function notifySupporteePush(advicerequest, newAdvice) {
+
+  newAdvice = _.pick(newAdvice, [ 'adviceResponse', 'adviceGiver', 'modifiedDate' ]);
+  var message = newAdvice.adviceResponse;
+
+  if(message.length > 25) {
+    message = message.substring(0, 25) + '...';
+  }
+
+  PushController.sendMessage({
+    subscriberId: advicerequest.subscriberId,
+    payload: { newAdvice: newAdvice },
+    alert: 'New advice: ' + message
+  }, function(err, devices) {
+    console.log(err, devices); // do something here
+  });
 }
 
 

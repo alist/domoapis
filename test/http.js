@@ -355,3 +355,108 @@ describe("HTTP: Register new user", function() {
     });
   });
 });
+
+
+
+describe("HTTP: Push Notifications", function() {
+
+  var dummyDeviceToken = 'EE66489F304DC75B8D6E8200DFF8A456E8DAEACEC428B427E9518741C92C6660';
+  var dummyDeviceToken2 = 'FE66489F304DC75B8D6E8200DFF8A456E8DAEACEC428B427E9518741C92C6660';
+
+
+  it("push register", function(done) {
+    request()
+      .post(apiPath
+              + '/push/register'
+              + '?token=' + encodeURIComponent(state.organization.orgURL + '|' + state.organization.code))
+      .send({ deviceType: 'ios', deviceMeta: { model: 'iPhone5S' }, deviceToken: dummyDeviceToken })
+      .set('Accept', 'application/json')
+      .end(function (res) {
+        res.should.be.json;
+        // print('register', res.body);
+        res.should.have.status(200);
+        should.exist(res.body.response.subscriberId);
+        res.body.response.deviceToken.should.equal(dummyDeviceToken);
+        state.subscriberId = res.body.response.subscriberId;
+        state.deviceId = res.body.response.deviceId;
+        done();
+    });
+  });
+
+
+  it("new advicerequest with subscriberId", function(done) {
+    request()
+      .post(apiPath
+              + '/organizations/' + state.organization.orgURL
+              + '/advicerequest?code=' + state.organization.code)
+      .send({
+        adviceRequest: 'I need help with this',
+        subscriberId: state.subscriberId
+      })
+      .set('Accept', 'application/json')
+      .end(function (res) {
+        res.should.be.json;
+        res.should.have.status(200);
+        should.exist(res.body.response.advicerequest._id);
+        should.exist(res.body.response.advicerequest.accessURL);
+        should.exist(res.body.response.advicerequest.subscriberId);
+        state.advicerequest = res.body.response.advicerequest;
+        done();
+    });
+  });
+
+  it("give advice", function(done) {
+
+    var advicerequest = state.advicerequest;
+    request()
+      .post(apiPath
+              + '/organizations/' + state.organization.orgURL
+              + '/advicerequest/' + advicerequest._id
+              + '/advice'
+              + '?token=' + encodeURIComponent(state.token))
+      .send({
+        advice: 'Here\'s what you need to do.'
+      })
+      .set('Accept', 'application/json')
+      .end(function (res) {
+        res.should.be.json;
+        res.should.have.status(200);
+        should.exist(res.body.response.advicerequest.responses)
+        res.body.response.advicerequest.responses.length.should.equal(1);
+        state.advice = res.body.response.advicerequest.responses[0];
+        done();
+    });
+  });
+
+
+  it("push devicetoken update", function(done) {
+    request()
+      .post(apiPath
+              + '/push/devicetoken')
+      .send({ subscriberId: state.subscriberId, deviceId: state.deviceId, deviceToken: dummyDeviceToken2 })
+      .set('Accept', 'application/json')
+      .end(function (res) {
+        res.should.be.json;
+        // print('devicetoken', res.body);
+        res.should.have.status(200);
+        res.body.response.deviceToken.should.equal(dummyDeviceToken2);
+        done();
+    });
+  });
+
+
+  it("push event", function(done) {
+    request()
+      .post(apiPath
+              + '/push/event'
+              + '?secret=' + encodeURIComponent(config.push.serverSecret))
+      .send({ subscriberId: state.subscriberId, payload: { data1: '1', data2: '2' }, alert: 'You have a new message', options: { badge: 1 } })
+      .set('Accept', 'application/json')
+      .end(function (res) {
+        res.should.be.json;
+        // print('event', res.body);
+        res.should.have.status(200);
+        done();
+    });
+  });
+});
