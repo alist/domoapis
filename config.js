@@ -106,12 +106,17 @@ module.exports.messenger.defaults = {
 module.exports.push = {};
 
 module.exports.push.defaults = {
-  gateway: "gateway.sandbox.push.apple.com",
-  cert: require('path').resolve(__dirname) + '/modules/push/cert/dev.p12',
-  feedbackOptions: {
-    address: 'feedback.sandbox.push.apple.com',
-    batchFeedback: true,
-    interval: 300
+  serverSecret: 'T0K3nF0rS3rV3r',
+  ios: {
+    gateway: "gateway.sandbox.push.apple.com",
+    cert: require('path').resolve(__dirname) + '/modules/push/cert/dev.p12',
+    feedbackOptions: {
+      address: 'feedback.sandbox.push.apple.com',
+      batchFeedback: true,
+      interval: 300
+    }
   },
-  serverSecret: 'T0K3nF0rS3rV3r'
+  android: {
+    key: 'AIzaSyA2MhdNcCwOP17IoWNB2Ndsv67jPbvlloE'
+  }
 }
