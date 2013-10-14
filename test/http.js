@@ -362,9 +362,10 @@ describe("HTTP: Push Notifications", function() {
 
   var dummyDeviceToken = 'EE66489F304DC75B8D6E8200DFF8A456E8DAEACEC428B427E9518741C92C6660';
   var dummyDeviceToken2 = 'FE66489F304DC75B8D6E8200DFF8A456E8DAEACEC428B427E9518741C92C6660';
+  var androidDeviceToken = 'APA91bFfMKF8Vz0JQHpbrXt4tZHlzdfkoq6fWpN-PXwramA9OUGjQaHk0sdrap9Ak23kWP8DKm2RErdhR-GYCqi0ZTs2C9Te9swqKBla-RMAuiNpy_NpQenpD7WLcNOuCJOFsd3YlBPO6JAk24g3uoYdHe78wKTXNw';
 
 
-  it("push register", function(done) {
+  it("push register: ios", function(done) {
     request()
       .post(apiPath
               + '/push/register'
@@ -383,6 +384,24 @@ describe("HTTP: Push Notifications", function() {
     });
   });
 
+  // it("push register: android", function(done) {
+  //   request()
+  //     .post(apiPath
+  //             + '/push/register'
+  //             + '?token=' + encodeURIComponent(state.organization.orgURL + '|' + state.organization.code))
+  //     .send({ deviceType: 'android', deviceMeta: { model: 'XperiaZ' },deviceToken: androidDeviceToken })
+  //     .set('Accept', 'application/json')
+  //     .end(function (res) {
+  //       res.should.be.json;
+  //       print('register', res.body);
+  //       res.should.have.status(200);
+  //       should.exist(res.body.response.subscriberId);
+  //       res.body.response.deviceToken.should.equal(androidDeviceToken);
+  //       state.subscriberId = res.body.response.subscriberId;
+  //       state.deviceId = res.body.response.deviceId;
+  //       done();
+  //   });
+  // });
 
   it("new advicerequest with subscriberId", function(done) {
     request()
@@ -454,7 +473,7 @@ describe("HTTP: Push Notifications", function() {
       .set('Accept', 'application/json')
       .end(function (res) {
         res.should.be.json;
-        // print('event', res.body);
+        print('event', res.body);
         res.should.have.status(200);
         done();
     });

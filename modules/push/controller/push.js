@@ -2,6 +2,7 @@
 var UserController = require('../../../controller/user').UserController
   , OrganizationController = require('../../../controller/organization').OrganizationController
   , IOSPushService = require('../lib/iosPushService')
+  , AndroidPushService = require('../lib/androidPushService')
   , UserDevice = require('../model/userdevices').UserDevice
   , Config = require('../../../configLoader')
   , _ = require('lodash')
@@ -13,7 +14,8 @@ var PushController = function() {
 
 PushController.prototype.init = function() {
   var config = Config.getConfig();
-  this.iosPushService = IOSPushService.init(config.push);
+  this.iosPushService = IOSPushService.init(config.push.ios);
+  this.androidPushService = AndroidPushService.init(config.push.android);
   return this;
 }
 
@@ -140,7 +142,13 @@ PushController.prototype.sendMessage = function(pushAttrs, callback) {
     var devices = [];
     var status;
     _.each(userDevice.devices, function(device) {
-      status = self.iosPushService.sendMessage(device.deviceToken, pushAttrs.payload || {}, pushAttrs.alert, pushAttrs.options || {});
+
+      if(device.deviceType === 'ios') {
+        status = self.iosPushService.sendMessage(device.deviceToken, pushAttrs.payload || {}, pushAttrs.alert, pushAttrs.options || {});
+      } else if(device.deviceType === 'android') {
+        status = self.androidPushService.sendMessage(device.deviceToken, pushAttrs.payload || {}, pushAttrs.alert, pushAttrs.options || {});
+      }
+
       devices.push({
         deviceId: device.deviceId,
         status: (status === true) ? 'success' : status

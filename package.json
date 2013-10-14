@@ -31,7 +31,8 @@
     "async": "~0.2.9",
     "twilio": "~1.1.4",
     "token": "0.0.0",
-    "apn": "~1.4.1"
+    "apn": "~1.4.1",
+    "node-gcm": "~0.9.6"
   },
   "devDependencies": {
     "chai": "1.6.0",
