@@ -157,7 +157,7 @@ AdviceRequestController.prototype.newAdvice = function(req, res) {
   }
 
   if(!orguser.hasRole('supporter')) {
-    return res.ext.error(errors['NOT_AUTHORIZED']()).render();
+    return res.ext.error(errors['NOT_AUTHORISED']()).render();
   }
 
   AdviceRequestModel.newAdvice(advicerequestId, orguser._id, newAdviceAttrs, function(err, advicerequest, newAdvice){
