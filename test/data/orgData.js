@@ -5,7 +5,7 @@ module.exports.orgData = [
     "orgURL": "mit",
     "city": "Cambridge",
     "region": "MA",
-    "bannerURL": "/img/banners/mit.png",
+    "bannerURL": "/img/banners/mit.jpg",
     "code": "mit9"
   },
   {

@@ -51,7 +51,7 @@ describe("HTTP: Register new user", function() {
       "code": "mitl",
       "city": "Cambridge",
       "region": "MA",
-      "bannerURL": "/img/banners/mit.png"
+      "bannerURL": "/img/banners/mit.jpg"
     };
 
     Organization.new(newOrgAttrs, function(err, newOrg){

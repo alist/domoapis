@@ -47,7 +47,7 @@ describe("DBTEST: Test User Model", function() {
       "code": "mitl",
       "city": "Cambridge",
       "region": "MA",
-      "bannerURL": "/img/banners/mit.png"
+      "bannerURL": "/img/banners/mit.jpg"
     };
 
     Organization.new(newOrgAttrs, function(err, newOrg){
@@ -157,7 +157,7 @@ describe("DBTEST: Test User Model", function() {
     OrgUser.get(state.user._id, state.organization._id, function(err, orguser){
       should.not.exist(err);
       should.exist(orguser);
-      
+
       orguser.removeRoles([ 'moduleadmin' ], function(err, ou){
         // print(user.toObject());
         should.not.exist(err);
