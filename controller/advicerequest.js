@@ -39,6 +39,48 @@ AdviceRequestController.prototype.getInfo = function(req, res) {
 }
 
 
+AdviceRequestController.prototype.getInfoForList = function(req, res) {
+
+  var advicerequestList = req.body;
+
+  if(!_.isArray(advicerequestList))  {
+    return res.ext.error('Expected array').render();
+  }
+
+  var lookup = {
+    $or: []
+  };
+
+  _.map(advicerequestList, function(ar) {
+
+    if(_.isEmpty(ar.advicerequestId) || _.isEmpty(ar.token)) {
+      return;
+    }
+
+    lookup.$or.push({
+      _id: ar.advicerequestId,
+      accessToken: ar.token
+    });
+  });
+
+  if(lookup.$or.length === 0) {
+    return res.ext.error('Invalid request data').render();
+  }
+
+  AdviceRequestModel.find(lookup).sort('-modifiedDate').exec(function(err, advicerequests) {
+    if(err) {
+      return res.ext.error(err).render();
+    }
+
+    if(!advicerequests) {
+      return res.ext.error(errors['ADVICEREQUEST_NOT_FOUND']().m).render();
+    }
+
+    res.ext.data({ advicerequests: advicerequests }).render();
+  });
+}
+
+
 AdviceRequestController.prototype.newAdviceRequest = function(req, res) {
 
   var org = req.extras.organization.toObject();

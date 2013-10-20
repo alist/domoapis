@@ -24,7 +24,7 @@ AndroidPushService.prototype.sendMessage = function(devicetoken, payload, alert,
   });
 
   this.gcmService.send(message, [ devicetoken ], (opts.retries || 3), function (err, result) {
-    console.log(err, result);
+    console.log("devicetoken: " + devicetoken, err + " | " + JSON.stringify(result));
   });
 
   return true;

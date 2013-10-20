@@ -6,7 +6,7 @@ module.exports.orgData = [
     "city": "Cambridge",
     "region": "MA",
     "bannerURL": "/img/banners/mit.png",
-    "code": "mit5"
+    "code": "mit9"
   },
   {
     "id": "2",
