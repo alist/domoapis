@@ -26,6 +26,8 @@ module.exports.public = function(app) {
     UserController.newSession.bind(UserController)
   );
 
+  app.post(apiConfig.path + '/app/updates', AdviceRequestController.getInfoForList.bind(AdviceRequestController)); 
+
   app.get(apiConfig.path + '/organizations', OrganizationController.getAll.bind(OrganizationController));
   app.get(apiConfig.path + '/organizations/:organization', OrganizationController.getInfo.bind(OrganizationController));
 
@@ -40,6 +42,8 @@ module.exports.public = function(app) {
 
   app.get(apiConfig.path + '/organizations/:organization/advicerequest/:advicerequest', AdviceRequestController.getInfo.bind(AdviceRequestController));
   app.post(apiConfig.path + '/organizations/:organization/advicerequest', AdviceRequestController.newAdviceRequest.bind(AdviceRequestController));
+
+  app.post(apiConfig.path + '/organizations/:organization/advicerequest/getall', AdviceRequestController.getInfoForList.bind(AdviceRequestController)); //hnk+
 
 }
 

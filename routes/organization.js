@@ -10,7 +10,7 @@ module.exports.private = function(app) {
 
   app.get('/:organization/admin', OrganizationController.admin.bind(OrganizationController));
 
-  app.get('/:organization/advicerequest', AdviceRequestController.getAll.bind(AdviceRequestController));
+  //app.get('/:organization/advicerequest', AdviceRequestController.getAll.bind(AdviceRequestController));
 }
 
 

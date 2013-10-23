@@ -37,6 +37,86 @@ AdviceRequestController.prototype.getInfo = function(req, res) {
   });
 }
 
+//get info +{
+AdviceRequestController.prototype.getInfoForList = function(req, res) {
+
+  var advicerequestList = req.body;
+
+  if(!_.isArray(advicerequestList))  {
+    return res.ext.error('Expected array').render();
+  }
+
+  var lookup = {
+    $or: []
+  };
+
+  _.map(advicerequestList, function(ar) {
+
+    if(_.isEmpty(ar.adviceRequestId) || _.isEmpty(ar.accessToken)) {
+      return;
+    }
+
+    lookup.$or.push({
+      _id: ar.adviceRequestId,
+      accessToken: ar.accessToken
+    });
+  });
+
+  if(lookup.$or.length === 0) {
+    return res.ext.error('Invalid request data').render();
+  }
+
+  AdviceRequestModel.find(lookup).sort('-modifiedDate').exec(function(err, advicerequests) {
+    if(err) {
+      return res.ext.error(err).render();
+    }
+
+    if(!advicerequests) {
+      return res.ext.error(errors['ADVICEREQUEST_NOT_FOUND']().m).render();
+    }
+
+    res.ext.data({ advicerequests: advicerequests }).render();
+  });
+}
+//get info +}
+
+/*
+///hnk+{
+AdviceRequestController.prototype.getAllInfo = function(req, res) {
+  var adviceRequests = req.extras.adviceRequests.asJSON();
+  var lookup = {};
+  var adviceRequestsTemp = req.extras.adviceRequests;
+
+  console.log("hit the service");
+
+  function Iterator(o, lookup){
+    var k = Object.keys(o);
+    console.log(k);
+    return{
+      next:function(){
+        return k.shift();
+      }
+    }
+  }
+
+  Iterator(JSON.parse(adviceRequests), lookup);
+  //var accessToken = req.query.token;
+  // TODO: Add validations here
+
+  AdviceRequestModel.find({query}, accessToken: advicerequests.accessToken , function(err, advicerequest) {
+    if(err) {
+      return res.ext.error(err).render();
+    }
+
+    if(!advicerequest) {
+      return res.ext.error(errors['ADVICEREQUEST_NOT_FOUND']().m).render();
+    }
+
+    res.ext.data({ advicerequest: advicerequest.toObject() }).render();
+  });
+}
+///hnk+}
+
 AdviceRequestController.prototype.getAll = function(req, res) {
     AdviceRequestModel.findAll(function(err, advicerequests) {
     if(err) {
@@ -49,7 +129,7 @@ AdviceRequestController.prototype.getAll = function(req, res) {
 
     res.ext.data({ advicerequests: advicerequests }).render();
   });
-}
+}*/
 
 
 AdviceRequestController.prototype.newAdviceRequest = function(req, res) {
