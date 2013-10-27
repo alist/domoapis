@@ -140,7 +140,7 @@ AdviceRequestController.prototype.newAdviceRequest = function(req, res) {
   // TODO: Add validations here
 
   newAdviceRequestAttrs.organization = org._id;
-  newAdviceRequestAttrs.requeststatus = "PRES";  ///why does this not work? 
+  newAdviceRequestAttrs.reqstatus = "PRES";  ///why does this not work? 
 
   AdviceRequestModel.new(newAdviceRequestAttrs, function(err, advicerequest) {
     if(err) {

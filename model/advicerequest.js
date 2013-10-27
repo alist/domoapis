@@ -23,7 +23,7 @@ var adviceRequestSchema = new Schema({
   accessURL: {type: String},
   accessToken: {type: String, index: {unique: true}},
   telephoneNumber: {type: String, index: {unique: false}},
-  requeststatus: {type: String},
+  reqstatus: {type: String},
   //telephoneVerifyDate: {type: Date},
   //telephoneNumberVerifyAttemptCount: {type: Number},
   //telelphoneVerifyCode: {type: String},
@@ -61,7 +61,7 @@ adviceRequestSchema.statics.findAll = function(callback) { //(err,adviceRequests
 
 adviceRequestSchema.statics.new = function(adviceRequestAttrs, callback){
   var adviceRequest = new AdviceRequest();
-  adviceRequest = _.merge(adviceRequest, _.pick(adviceRequestAttrs, [ 'organization', 'telephoneNumber', 'supportAreaIdentifier', 'adviceRequest' ]));
+  adviceRequest = _.merge(adviceRequest, _.pick(adviceRequestAttrs, [ 'organization', 'telephoneNumber', 'supportAreaIdentifier', 'adviceRequest', 'reqstatus' ]));
   adviceRequest.accessToken = uuid.v4().replace(/\-/g, '');
 
   if(!!adviceRequestAttrs.subscriberId) {
