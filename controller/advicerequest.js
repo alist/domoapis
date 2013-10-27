@@ -40,7 +40,7 @@ AdviceRequestController.prototype.getInfo = function(req, res) {
 //get info +{
 AdviceRequestController.prototype.getInfoForList = function(req, res) {
 
-  var advicerequestList = req.body;
+  var advicerequestList = req.body.adviceRequestList;
 
   if(!_.isArray(advicerequestList))  {
     return res.ext.error('Expected array').render();
@@ -140,6 +140,7 @@ AdviceRequestController.prototype.newAdviceRequest = function(req, res) {
   // TODO: Add validations here
 
   newAdviceRequestAttrs.organization = org._id;
+  newAdviceRequestAttrs.requeststatus = "PRES";  ///why does this not work? 
 
   AdviceRequestModel.new(newAdviceRequestAttrs, function(err, advicerequest) {
     if(err) {
