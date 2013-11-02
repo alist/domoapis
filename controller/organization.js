@@ -57,6 +57,8 @@ OrganizationController.prototype.giveAdvice = function(req, res) {
   });
 }
 
+
+//going forward perhaps we'd like to pass the current version of the adviceRequest so that non-js & slow web connected devices can utilize
 OrganizationController.prototype.giveAdviceDetail = function(req, res) {
   var advicerequestId = req.params.advicerequestId;
 
@@ -69,7 +71,7 @@ OrganizationController.prototype.giveAdviceDetail = function(req, res) {
       return res.ext.view('supporterApprovalPending.jade').render();
     }
     
-    return res.ext.data({ organization: req.extras.organization, advicerequestId: advicerequestId }).view('giveadviceDetail.jade').render();
+    return res.ext.data({ organization: req.extras.organization, advicerequestId: advicerequestId }).view('giveadvicedetail.jade').render();
   });
 }
 
