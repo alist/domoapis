@@ -1,0 +1,31 @@
+extends layout
+
+block viewVars
+  - title = 'Give Advice'
+  - hideToolbar = false
+  -var ngApp = 'adviceRequestDetail'
+
+block scripts
+  script(src='/components/angular/angular.min.js')
+  script(src='/components/angular-resource/angular-resource.min.js')
+
+  script.
+    advicerequestId="#{advicerequestId}";
+  
+  script(src='/js/adviceRequestDetail/controllers/adviceRequestDetailController.js')
+  script(src='/js/adviceRequestDetail/services/adviceRequestDetailServices.js')
+
+block body
+
+  .content-index.container-fluid
+    section#home
+      h3 Give Advice?
+      p Hell, yeah.
+
+     div(ng-controller="adviceRequestDetailController")
+       li.span6
+         div.thumbnail
+           div.caption
+             a(href= "./giveadvice/{{advicerequest._id}}")
+               h5.darkGreenLabel {{advicerequest.createdOn.toString()}}
+               p.giveAdviceAdviceRequest {{advicerequest.adviceRequest}}

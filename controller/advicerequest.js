@@ -37,6 +37,30 @@ AdviceRequestController.prototype.getInfo = function(req, res) {
   });
 }
 
+
+//AHL
+//for giveAdvice async load detail on website 
+//security is given by ensuring advice request's organization (objectRef) == orguser.orgID 
+AdviceRequestController.prototype.getAdvicerequestDetail = function(req, res) {
+  var advicerequestId = req.params.advicerequestId;
+  
+  currentUserOrgId = req.extras.orguser.orgId;
+
+  AdviceRequestModel.findOne({ _id: advicerequestId, organization: currentUserOrgId }, function(err, advicerequest) {
+    if(err) {
+      return res.ext.error(err).render();
+    }
+
+    if(!advicerequest) {
+      return res.ext.error(errors['ADVICEREQUEST_NOT_FOUND']().m).render();
+    }
+
+    res.ext.data({ advicerequest: advicerequest.toObject() }).render();
+  });
+}
+
+
+
 //get info +{
 AdviceRequestController.prototype.getInfoForList = function(req, res) {
 

@@ -1,7 +1,7 @@
 angular.module('adviceRequest',['ngResource']).
     factory('ARequests', function($resource){
     	console.log("adviceRequest.js");
-        return $resource('/mit/adviceRequest', {},{
+        return $resource('./adviceRequest', {},{
             get: {method: 'GET', isArray:false}
         });
     }).

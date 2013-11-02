@@ -57,6 +57,22 @@ OrganizationController.prototype.giveAdvice = function(req, res) {
   });
 }
 
+OrganizationController.prototype.giveAdviceDetail = function(req, res) {
+  var advicerequestId = req.params.advicerequestId;
+
+  OrgUserModel.get(req.user._id, req.extras.organization._id, function(err, orguser) {
+    if(err) {
+      return res.ext.errorView('error.jade').error(err).render();
+    }
+
+    if(!orguser.accApproved) {
+      return res.ext.view('supporterApprovalPending.jade').render();
+    }
+    
+    return res.ext.data({ organization: req.extras.organization, advicerequestId: advicerequestId }).view('giveadviceDetail.jade').render();
+  });
+}
+
 OrganizationController.prototype.getAdvice = function(req, res) {
   return res.ext.view('getadvice.jade').render();
 }
