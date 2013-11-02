@@ -116,7 +116,9 @@ AdviceRequestController.prototype.getAllInfo = function(req, res) {
   });
 }
 ///hnk+}
+*/
 
+//HACK - AHL needs this 
 AdviceRequestController.prototype.getAll = function(req, res) {
     AdviceRequestModel.findAll(function(err, advicerequests) {
     if(err) {
@@ -129,7 +131,7 @@ AdviceRequestController.prototype.getAll = function(req, res) {
 
     res.ext.data({ advicerequests: advicerequests }).render();
   });
-}*/
+}
 
 
 AdviceRequestController.prototype.newAdviceRequest = function(req, res) {

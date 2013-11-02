@@ -17,6 +17,13 @@ module.exports.public = function(app) {
     }
     next();
   });
+  
+  //verbose
+  //here we'll print everything coming in
+  app.all(apiConfig.path + '/*', function(req, res, next) {
+    console.log(req.body);
+    next();
+  });
 
   app.post(apiConfig.path + '/register', UserController.register.bind(UserController));
 

@@ -11,10 +11,10 @@ function adviceRequestController($scope, ARequests) {
 
 	window.adviceRequestScope = $scope;
 
-   $scope.spices = $scope.stateData; 
-   					[{"name":"pasilla", "spiciness":"mild"},
+  /* $scope.spices = [{"name":"pasilla", "spiciness":"mild"},
                   {"name":"jalapeno", "spiceiness":"hot hot hot!"},
                   {"name":"habanero", "spiceness":"LAVA HOT!!"}];
  
    $scope.spice = "habanero";
+   */ //who cares?
 }
