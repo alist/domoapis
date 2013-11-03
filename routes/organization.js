@@ -8,6 +8,13 @@ module.exports.private = function(app) {
 
   app.get('/:organization/giveadvice', OrganizationController.giveAdvice.bind(OrganizationController));
   
+  /* //unfortunately this just doesn't trigger
+  app.get('/:organization/giveadvice/', function(req, res, next) {
+    console.log('whas realla?')    
+    res.redirect('/:organization/giveadvice');
+  });
+  */
+
   app.get('/:organization/giveadvice/:advicerequestId', OrganizationController.giveAdviceDetail.bind(OrganizationController));
 
   app.get('/:organization/admin', OrganizationController.admin.bind(OrganizationController));

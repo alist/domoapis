@@ -61,6 +61,13 @@ OrganizationController.prototype.giveAdvice = function(req, res) {
 //going forward perhaps we'd like to pass the current version of the adviceRequest so that non-js & slow web connected devices can utilize
 OrganizationController.prototype.giveAdviceDetail = function(req, res) {
   var advicerequestId = req.params.advicerequestId;
+  if (typeof advicerequestId == undefined || advicerequestId.length == 0 || advicerequestId == "adviceRequest"){
+    console.log("here:",advicerequestId,".");
+    //how to redirect errors, I don't know...
+    console.log('whas?')
+    return res.redirect('/mit');
+  }
+    
 
   OrgUserModel.get(req.user._id, req.extras.organization._id, function(err, orguser) {
     if(err) {

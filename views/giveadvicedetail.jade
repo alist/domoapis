@@ -17,15 +17,29 @@ block scripts
 
 block body
 
-  .content-index.container-fluid
+  .content-index.container-fluid(ng-controller="adviceRequestDetailController")
     section#home
-      h3 Give Advice?
+      a(href='../giveadvice')
+        h3 Give Advice?
       p Hell, yeah.
 
-     div(ng-controller="adviceRequestDetailController")
-       li.span6
-         div.thumbnail
-           div.caption
-             a(href= "./giveadvice/{{advicerequest._id}}")
-               h5.darkGreenLabel {{advicerequest.createdOn.toString()}}
-               p.giveAdviceAdviceRequest {{advicerequest.adviceRequest}}
+    div.row-fluid.adviceRow
+      li.span12
+        div.caption
+          //if helpful, say
+          //if pending approval, say, give approval url
+          //if flagged, say
+          h4.text-success SupporterDisplayName
+          h5.grayLabel {{advicerequest.createdOn.toString()}}
+          p.adviceRequestText {{advicerequest.adviceRequest}}
+    div(ng-repeat="response in advicerequest.responses")
+      div.row-fluid.adviceRow.adviceResponseRow
+        li.span12
+          div.caption
+            //if helpful, say
+            //if pending approval, say, give approval url
+            //if flagged, say
+            h4.text-success {{response.adviceGiverDisplayName}}
+            h5.grayLabel {{response.modifiedDate.toString()}}
+            p.adviceRequestText {{response.adviceResponse}}
+
