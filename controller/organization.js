@@ -60,6 +60,7 @@ OrganizationController.prototype.giveAdvice = function(req, res) {
 
 //going forward perhaps we'd like to pass the current version of the adviceRequest so that non-js & slow web connected devices can utilize
 OrganizationController.prototype.giveAdviceDetail = function(req, res) {
+  console.log(req.params);
   var advicerequestId = req.params.advicerequestId;
   if (typeof advicerequestId == undefined || advicerequestId.length == 0 || advicerequestId == "adviceRequest"){
     console.log("here:",advicerequestId,".");
