@@ -253,6 +253,7 @@ AdviceRequestController.prototype.newAdvice = function(req, res) {
     res.ext.data({ advicerequest: advicerequest }).render();
 
     if(!!advicerequest.subscriberId) {
+      console.log("Notifying subscriber via push w. id: ",advicerequest.subscriberId);
       notifySupporteePush(advicerequest, newAdvice);
     }
   });
@@ -354,7 +355,7 @@ function notifySupporteePush(advicerequest, newAdvice) {
 
   PushController.sendMessage({
     subscriberId: advicerequest.subscriberId,
-    payload: { newAdvice: newAdvice },
+    payload: { newAdviceForRequest: advicerequest._id },
     alert: 'New advice: ' + message
   }, function(err, devices) {
     console.log(err, devices); // do something here

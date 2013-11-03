@@ -52,7 +52,7 @@ adviceRequestSchema.statics.getByAccessURL = function(accessURL, callback) {
 }
 
 adviceRequestSchema.statics.findAll = function(callback) { //(err,adviceRequests)
-  this.find(function(err, adviceRequests) {
+  this.find().sort({'createdOn': -1}).execFind(function(err, adviceRequests) {
       if(!adviceRequests) {
           return callback(errors['ADVICEREQUEST_NOT_FOUND']());
       }
