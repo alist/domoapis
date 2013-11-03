@@ -37,7 +37,8 @@ var orgUserSchema = new Schema({
   joined:                 { type: Date, default: Date.now },
   heldRoleAttrs:          { type: Schema.Types.Mixed },
   accApproved:            { type: Boolean, default: true },
-  accApprovalHash:        { type: String }
+  accApprovalHash:        { type: String },
+  displayName:            { type: String }
 });
 
 

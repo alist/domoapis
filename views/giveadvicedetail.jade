@@ -11,11 +11,64 @@ block scripts
 
   script.
     advicerequestId="#{advicerequestId}";
+    successLabelText="Thank you for supporting!!"
   
   script(src='/js/adviceRequestDetail/controllers/adviceRequestDetailController.js')
   script(src='/js/adviceRequestDetail/services/adviceRequestDetailServices.js')
 
 block body
+
+  script.
+    window.submitPressed = function(){
+      advice = $('#adviceTextArea').val()
+      checkBoxChecked = $('#guidlinesAcceptedBox').is(":checked")
+   
+      errorAction = function() {
+        $("#submitButton").removeClass('disabled');
+        $('#submitStatus').removeClass('hidden');
+        return $('#submitStatus').text("Sorry there was an error. Copy your text and let domo@domo.io know if it keeps up!");
+      };
+       
+      if ((typeof advice !== "undefined" && advice !== null ? advice.length : void 0) > 0 && checkBoxChecked === true) {
+        $('#submitstatus').addClass('hidden');
+        $("#submitButton").addClass('disabled');
+        submissionURL = "../advicerequest/" + advicerequestId + "/advice";
+        console.log(submissionURL)
+        $.post(submissionURL, { advice: advice }, function(response) {
+          console.log(response);
+          var _ref;
+          if ((typeof response !== "undefined" && response !== null ? (_ref = response.meta) != null ? _ref.status : void 0 : void 0) !== "success") {
+            return errorAction();
+
+          } else {
+            
+            //load resource and clear the response box
+            window.adviceRequestScope.loadResource()
+            $('#submitStatus').text(successLabelText)
+            $('#submitStatus').removeClass('hidden');
+
+            setTimeout(function(){
+              $('#adviceTextArea').val('');
+              $('#guidlinesAcceptedBox').prop('checked', false);
+              $("#submitButton").removeClass('disabled');
+            },3000);
+            
+
+          }
+
+        }).error(errorAction);
+      } else {
+        
+        $('#submitStatus').removeClass('hidden');
+        if ((typeof advice !== "undefined" && advice !== null ? advice.length : void 0) > 0 && checkBoxChecked !== true) {
+          $('#submitStatus').text("please checkout those guidlines :)!");
+        } else {
+          $('#submitStatus').text("your advice, please!");
+        }
+      }
+       
+
+    };
 
   .content-index.container-fluid(ng-controller="adviceRequestDetailController")
     section#home
@@ -32,14 +85,29 @@ block body
           h4.text-success SupporterDisplayName
           h5.grayLabel {{advicerequest.createdOn.toString()}}
           p.adviceRequestText {{advicerequest.adviceRequest}}
-    div(ng-repeat="response in advicerequest.responses")
-      div.row-fluid.adviceRow.adviceResponseRow
+    div.row-fluid.adviceRow.adviceResponseRow(ng-repeat="response in advicerequest.responses")
+      li.span12
+        div.caption
+          //if helpful, say
+          //if pending approval, say, give approval url
+          //if flagged, say
+          h4.text-success {{response.adviceGiverDisplayName}}
+          h5.grayLabel {{response.modifiedDate.toString()}}
+          p.adviceRequestText {{response.adviceResponse}}
+    
+    div.row-fluid#giveAdviceBox
+      ul.thumbnails
         li.span12
-          div.caption
-            //if helpful, say
-            //if pending approval, say, give approval url
-            //if flagged, say
-            h4.text-success {{response.adviceGiverDisplayName}}
-            h5.grayLabel {{response.modifiedDate.toString()}}
-            p.adviceRequestText {{response.adviceResponse}}
+          - var displayName = (typeof orguser.displayName === undefined ? 'Set your displayName' : orguser.displayName)
+          h4.text-success= displayName
+    
+          form(method='GET', id='adviceResponse', action="#", onsubmit= "window.submitPressed.apply(); return false;")
+            textarea.input-block-level#adviceTextArea(rows= "3", placeholder= "your response")
+            div.controls-row
+              label.checkbox.span6
+                input#guidlinesAcceptedBox(type='checkbox')
+                to the best of my ability, this adheres to the 
+                a(href="/supporters") advice-giving guidlines.
 
+              input.btn.btn-success.right#submitButton(type= 'submit') Submit
+            h4.text-warning.hidden#submitStatus= successLabelText

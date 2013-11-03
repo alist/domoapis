@@ -222,8 +222,9 @@ AdviceRequestController.prototype.newAdvice = function(req, res) {
 
   var org = req.extras.organization.toObject();  //link to org user
 
-  var newAdviceAttrs = req.body
-   ,  advicerequestId = req.params.advicerequest;
+  newAdviceAttrs = req.body
+  newAdviceAttrs.adviceGiverDisplayName = ((typeof req.extras.orguser == undefined || typeof req.extras.orguser.displayName == undefined) ? "Anonymous" : req.extras.orguser.displayName) 
+  advicerequestId = req.params.advicerequest;
 
   console.log(advicerequestId);
   console.log(req.user._id);

@@ -2,10 +2,14 @@
 
 function adviceRequestDetailController($scope, ADetailRequests) {
     $scope.advicerequest = null
-    ADetailRequests.get({},function(u, getResponseHeaders){
-        $scope.advicerequest = u.response.advicerequest;
-    });
 
+    $scope.loadResource = function() {
+      ADetailRequests.get({},function(u, getResponseHeaders){
+          $scope.advicerequest = u.response.advicerequest;
+      });
+    }
+
+    $scope.loadResource()
 
 	window.adviceRequestScope = $scope;
 

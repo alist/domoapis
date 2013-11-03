@@ -93,6 +93,7 @@ adviceRequestSchema.statics.newAdvice = function(advicerequestId, supporterId, n
   var newAdviceUpdate = {
     adviceResponse: newAdviceAttrs.advice,
     adviceGiver: supporterId,
+    adviceGiverDisplayName: newAdviceAttrs.adviceGiverDisplayName,
     modifiedDate: new Date(),
     helpful: newAdviceAttrs.helpful,
     status: 'Created',

@@ -1,10 +1,18 @@
 angular.module('adviceRequestDetail',['ngResource']).
     factory('ADetailRequests', function($resource){
-        requestPath = "../adviceRequest/" + window.advicerequestId;
-        return $resource(requestPath, {},{
-            get: {method: 'GET', isArray:false}
+        resourceRequestPath = "../adviceRequest/" + window.advicerequestId;
+        window.resourceRequestPath = resourceRequestPath
+        return $resource(resourceRequestPath, {},{
+            get: 
+              {
+                method: 'GET', 
+                isArray:false,
+                cache: true
+
+              }
         });
     }).
+
   config(function($routeProvider) {
     $routeProvider.
       when('*', {controller:adviceRequestDetailController, templateUrl:'/partials/adviceRequestListingPartial.html'});
