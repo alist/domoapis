@@ -46,6 +46,7 @@ block body
             window.adviceRequestScope.loadResource()
             $('#submitStatus').text(successLabelText)
             $('#submitStatus').removeClass('hidden');
+            $('#hellyeah').text('Hell yeah!')
 
             setTimeout(function(){
               $('#adviceTextArea').val('');
@@ -74,7 +75,7 @@ block body
     section#home
       a(href='../giveadvice')
         h3 Give Advice?
-      p Hell, yeah.
+      p#hellyeah Hell yeah.
 
     div.row-fluid.adviceRow
       li.span12
