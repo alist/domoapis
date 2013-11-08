@@ -60,6 +60,15 @@ adviceRequestSchema.statics.findAll = function(callback) { //(err,adviceRequests
   });
 }
 
+adviceRequestSchema.statics.findAllByOrg = function(orgId, callback) { //(err,adviceRequests)
+  this.find( { organization: orgId } ).sort({'createdOn': -1}).execFind(function(err, adviceRequests) {
+      if(!adviceRequests) {
+          return callback(errors['ADVICEREQUEST_NOT_FOUND']());
+      }
+      return callback(err, adviceRequests);
+  });
+}
+
 adviceRequestSchema.statics.new = function(adviceRequestAttrs, callback){
   var adviceRequest = new AdviceRequest();
   adviceRequest = _.merge(adviceRequest, _.pick(adviceRequestAttrs, [ 'organization', 'telephoneNumber', 'supportAreaIdentifier', 'adviceRequest', 'reqstatus' ]));

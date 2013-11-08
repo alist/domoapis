@@ -144,7 +144,7 @@ AdviceRequestController.prototype.getAllInfo = function(req, res) {
 
 //HACK - AHL needs this 
 AdviceRequestController.prototype.getAll = function(req, res) {
-    AdviceRequestModel.findAll(function(err, advicerequests) {
+    AdviceRequestModel.findAllByOrg(req.extras.organization._id, function(err, advicerequests) {
     if(err) {
       return res.ext.error(err).render();
     }
