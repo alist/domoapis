@@ -174,12 +174,21 @@ AdviceRequestController.prototype.newAdviceRequest = function(req, res) {
     }
 
     // for now
+
+
+    //hard code the domain (FOR NOW)
+    /*
     var domain = Utils.getDomainFromRequest(req);
     var accessPath = Config.getConfig().app.api.path
                       + '/organizations/' + org.orgURL
                       + '/advicerequest/' + advicerequest._id
                       + '?code=' + org.code
                       + '&token=' + advicerequest.accessToken;
+    */
+    var domain = 'http://beta.domo.io/'
+    var accessPath = org.orgURL
+                     + '/giveadvice/' + advicerequest._id;
+
 
     ShortUrlModel.shorten(accessPath, function(err, shorturl) {
       if(shorturl) {
