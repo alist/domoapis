@@ -46,7 +46,7 @@ block body
             window.adviceRequestScope.loadResource()
             $('#submitStatus').text(successLabelText)
             $('#submitStatus').removeClass('hidden');
-            $('#hellyeah').text('Hell yeah!')
+            $('#hellyeah').text('Oh yeah!')
 
             setTimeout(function(){
               $('#adviceTextArea').val('');
@@ -83,7 +83,7 @@ block body
           //if helpful, say
           //if pending approval, say, give approval url
           //if flagged, say
-          h4.text-success SupporterDisplayName
+          //h4.text-success SupporterDisplayName
           h5.grayLabel {{advicerequest.createdOn.toString()}}
           p.adviceRequestText {{advicerequest.adviceRequest}}
     div.row-fluid.adviceRow.adviceResponseRow(ng-repeat="response in advicerequest.responses")
