@@ -177,9 +177,9 @@ AdviceRequestController.prototype.newAdviceRequest = function(req, res) {
 
 
     //hard code the domain (FOR NOW)
-    /*
-    var domain = Utils.getDomainFromRequest(req);
-    var accessPath = Config.getConfig().app.api.path
+    
+    //var domain = Utils.getDomainFromRequest(req);
+    /*var accessPath = Config.getConfig().app.api.path
                       + '/organizations/' + org.orgURL
                       + '/advicerequest/' + advicerequest._id
                       + '?code=' + org.code
