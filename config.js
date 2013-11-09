@@ -120,3 +120,19 @@ module.exports.push.defaults = {
     key: 'AIzaSyA2MhdNcCwOP17IoWNB2Ndsv67jPbvlloE'
   }
 }
+
+module.exports.push.production = {
+  serverSecret: 'T0K3nF0rS3rV3r',
+  ios: {
+    gateway: "gateway.push.apple.com",
+    cert: require('path').resolve(__dirname) + '/modules/push/cert/prod.p12',
+    feedbackOptions: {
+      address: 'feedback.push.apple.com',
+      batchFeedback: true,
+      interval: 300
+    }
+  },
+  android: {
+    key: 'AIzaSyA2MhdNcCwOP17IoWNB2Ndsv67jPbvlloE'
+  }
+}
