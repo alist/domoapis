@@ -20,6 +20,12 @@ module.exports.public = function(app) {
     return res.ext.view('index.jade').render();
   });
 
+  // privacyandterms
+  app.get('/privacyandterms', function(req, res) {
+
+    return res.ext.view('privacyandterms.jade').render();
+  });
+
 
   app.get('/login', function(req, res){
     if(req.isAuthenticated()) {
