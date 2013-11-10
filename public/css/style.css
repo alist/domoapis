@@ -52,6 +52,9 @@ a:hover {
 a:active {
   top: 1px;
 }
+i {
+  font-weight: lighter;
+}
 h1 {
   line-height: 1.2;
   font-weight: normal;
@@ -106,9 +109,6 @@ section#apps .page-header {
 }
 .header {
   height: 60px;
-  background: -webkit-gradient(linear, left top, left bottom, color-stop(0, #fff), color-stop(0.49, #f9f9f9), color-stop(0.51, #f2f2f2), color-stop(1, #f8f8f8));
-  background: -webkit-linear-gradient(top, #fff 0%, #f9f9f9 49%, #f2f2f2 51%, #f8f8f8 100%);
-  background: -moz-linear-gradient(top, #fff 0%, #f9f9f9 49%, #f2f2f2 51%, #f8f8f8 100%);
   background: linear-gradient(top, #fff 0%, #f9f9f9 49%, #f2f2f2 51%, #f8f8f8 100%);
   border-bottom-color: #cecece;
   border-bottom-style: solid;
@@ -138,8 +138,6 @@ section#apps .page-header {
   height: 100%;
   max-width: 1400px;
   margin: auto;
-  -webkit-background-size: cover;
-  -moz-background-size: cover;
   background-size: cover;
   background-position: center 0px;
   background-repeat: no-repeat;
@@ -151,8 +149,6 @@ section#apps .page-header {
 }
 .contentHeader {
   background-image: url("/img/domo-website-home-header-bg.png");
-  -webkit-background-size: contain;
-  -moz-background-size: contain;
   background-size: contain;
   width: 100%;
   height: 0;
@@ -164,8 +160,6 @@ section#apps .page-header {
   border-top-color: #ebebeb;
   border-top-style: solid;
   border-top-width: 0px;
-  -webkit-box-shadow: inset 0px -2px 3px #aaa;
-  -moz-box-shadow: inset 0px -2px 3px #aaa;
   box-shadow: inset 0px -2px 3px #aaa;
 }
 @media (max-width:800px) {
@@ -210,9 +204,7 @@ section#apps .page-header {
   border-bottom-color: #e1e1e1;
   border-bottom-style: solid;
   border-bottom-width: 1px;
-  -webkit-box-shadow: 3px 3px 3px rgba(0,0,0,0.06);
-  -moz-box-shadow: 3px 3px 3px rgba(0,0,0,0.06);
-  box-shadow: 3px 3px 3px rgba(0,0,0,0.06);
+  box-shadow: 3px 3px 3px rgba(0,0,0,0.055);
   margin-bottom: 20px;
 }
 .content h1,
@@ -220,8 +212,6 @@ section#apps .page-header {
   text-transform: capitalize;
 }
 .content-index {
-  -webkit-box-shadow: none;
-  -moz-box-shadow: none;
   box-shadow: none;
 }
 .homeHeader {
@@ -234,11 +224,9 @@ section#apps .page-header {
   float: left;
   padding: 5px 14px 5px 14px;
   color: #c09853;
-  text-shadow: 0 1px 0 rgba(255,255,255,0.50);
+  text-shadow: 0 1px 0 rgba(255,255,255,0.5);
   background-color: #fcf8e3;
   border: 1px solid #fbeed5;
-  -webkit-border-radius: 4px;
-  -moz-border-radius: 4px;
   -webkit-border-radius: 4px;
   -moz-border-radius: 4px;
   border-radius: 4px;
@@ -293,11 +281,8 @@ section#apps .page-header {
   position: absolute;
   background-position: center;
   opacity: 0;
-  filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=0);
   width: 100%;
   height: 100%;
-  -webkit-border-radius: 50%;
-  -moz-border-radius: 50%;
   border-radius: 50%;
 }
 #betaEmailUserIcon {
@@ -319,7 +304,7 @@ section#apps .page-header {
   text-align: center;
 }
 #loveit {
-  background-color: rgba(200,200,200,0.10);
+  background-color: rgba(200,200,200,0.1);
   padding: 10px;
 }
 .loveitHeader {
@@ -328,6 +313,7 @@ section#apps .page-header {
 }
 .loveitReason {
   font-size: 14pt;
+  margin-bottom: 14px;
 }
 .helpfulLabel {
   float: right;
@@ -518,8 +504,6 @@ section#apps .page-header {
 }
 #content-supporters #i2-s {
   background-image: url("/img/domo-logo-green-supporters.png");
-  -webkit-background-size: cover;
-  -moz-background-size: cover;
   background-size: cover;
   background-repeat: no-repeat;
   height: 400px;
@@ -585,8 +569,6 @@ section#apps .page-header {
   padding: 3px 4px 2px;
 }
 .thumbnail {
-  -webkit-box-shadow: 3px 3px 3px rgba(0,0,0,0.06);
-  -moz-box-shadow: 3px 3px 3px rgba(0,0,0,0.06);
-  box-shadow: 3px 3px 3px rgba(0,0,0,0.06);
+  box-shadow: 3px 3px 3px rgba(0,0,0,0.055);
   overflow: hidden;
 }
