@@ -1,5 +1,5 @@
 // set environment here (or shell env will be used)
-var env = 'test'; //process.env.NODE_ENV;
+var env = 'production'; //process.env.NODE_ENV;
 
 // set attribs for new organization
 var newOrganization =  {
