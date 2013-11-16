@@ -1,5 +1,5 @@
 // set environment here (or shell env will be used)
-var env = 'production'; //process.env.NODE_ENV;
+var env = 'test'; //process.env.NODE_ENV;
 
 // set attribs for new organization
 var newOrganization =  {
@@ -83,3 +83,6 @@ function newOrg(config, newOrganization) {
 
 	});
 }
+=======
+}
+>>>>>>> 0888c9d2959f839c02963a6d2d6d09e5ea31b82e

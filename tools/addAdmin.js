@@ -98,3 +98,6 @@ function newUser(config, newU) {
         });
     });
 }
+=======
+}
+>>>>>>> 0888c9d2959f839c02963a6d2d6d09e5ea31b82e

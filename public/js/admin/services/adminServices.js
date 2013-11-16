@@ -5,7 +5,7 @@
 
 angular.module('domo.services', ['ngResource']).
   factory('User', function($resource){
-    return $resource('/api/v1/organizations/:organization/users/:userId?token=' + token, null, {
+    return $resource('/api/v1/organizations/:organization/users/:userId?token=' + encodeURIComponent(token) + '&clientId=web', null, {
       query: {
         method: 'GET',
         transformRequest: function(data, headersGetter) {
@@ -15,7 +15,7 @@ angular.module('domo.services', ['ngResource']).
     });
   }).
   factory('UserRole', function($resource){
-    return $resource('/api/v1/organizations/:organization/users/:userId/roles/:role?token=' + token, null, {
+    return $resource('/api/v1/organizations/:organization/users/:userId/roles/:role?token=' + encodeURIComponent(token) + '&clientId=web', null, {
       query: { method: 'GET' },
     });
   }).

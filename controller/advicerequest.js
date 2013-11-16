@@ -66,6 +66,7 @@ AdviceRequestController.prototype.getInfoForList = function(req, res) {
 
   var advicerequestList = req.body.adviceRequestList;
 
+
   if(!_.isArray(advicerequestList))  {
     return res.ext.error('Expected array').render();
   }
@@ -77,12 +78,15 @@ AdviceRequestController.prototype.getInfoForList = function(req, res) {
   _.map(advicerequestList, function(ar) {
 
     if(_.isEmpty(ar.adviceRequestId) || _.isEmpty(ar.accessToken)) {
+
       return;
     }
 
     lookup.$or.push({
+
       _id: ar.adviceRequestId,
       accessToken: ar.accessToken
+
     });
   });
 
@@ -245,7 +249,7 @@ AdviceRequestController.prototype.newAdvice = function(req, res) {
   }
 
   if(!orguser.hasRole('supporter')) {
-    return res.ext.error(errors['NOT_AUTHORIZED'('not a supporter')]).render();
+    return res.ext.error(errors['NOT_AUTHORISED']()).render();
   }
 
   AdviceRequestModel.newAdvice(advicerequestId, orguser._id, newAdviceAttrs, function(err, advicerequest, newAdvice){
