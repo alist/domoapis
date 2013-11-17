@@ -94,7 +94,8 @@ AdviceRequestController.prototype.getInfoForList = function(req, res) {
     return res.ext.error('Invalid request data').render();
   }
 
-  AdviceRequestModel.find(lookup).sort('-modifiedDate').exec(function(err, advicerequests) {
+  //AdviceRequestModel.find(lookup).sort({lastResponseDate: -1, modifiedDate: -1}).exec(function(err, advicerequests) {
+  AdviceRequestModel.find(lookup).sort({lastResponseDate: -1, modifiedDate: -1}).exec(function(err, advicerequests) {  
     if(err) {
       return res.ext.error(err).render();
     }
