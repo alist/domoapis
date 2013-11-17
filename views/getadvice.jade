@@ -15,7 +15,7 @@ block body
       if code?.length > 0
         console.log "submitting good code #{code}"
         window.setupSubmitting()
-        $.get("/api/v1/organizations/mit/codecheck", { code: code, html: true }, (response)=>
+        $.get("/api/v1/organizations/#{window.orgURL}/codecheck", { code: code, html: true }, (response)=>
           console.log response
           if response?.meta?.status != "success"
             window.setupFailedSubmit()
