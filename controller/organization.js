@@ -5,6 +5,10 @@ var OrganizationModel = require("../model/organization").Organization
   , _ = require('lodash')
   , errors = require('../model/errors').errors
   , async = require('async')
+  , Config = require('../configLoader')
+  , jade = require('jade')
+  , path = require('path')
+
 
 
 var OrganizationController = function() {
@@ -114,7 +118,20 @@ OrganizationController.prototype.validateCode = function(req, res, next) {
 
 OrganizationController.prototype.codeCheck = function(req, res) {
   // code is already checked; write organization object as response
-  return res.ext.data({ organization: req.extras.organization }).render();
+  res.ext.data({ organization: req.extras.organization });
+
+  if (req.query.html !== 'true') {
+    return res.ext.render();
+  }
+
+  var config = Config.getConfig();
+  var tmplPath = path.join(config.app.env.rootDir, 'views', 'includes', 'getadviceForm.jade');
+  jade.renderFile(tmplPath, {}, function (err, html) {
+    if (html) {
+      res.ext.data({ html: html });
+    }
+    return res.ext.render();
+  });
 }
 
 

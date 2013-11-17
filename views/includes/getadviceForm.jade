@@ -17,6 +17,7 @@ script(type="text/javascript").
     advice = $('#adviceTextArea').val()
     adviceContact = $('#adviceContactInput').val()
     checkBoxChecked = $('#skipContactBox').is(":checked")
+    code = $('#organizationCodeInput').val()
     
     errorAction = () ->
       $("#submitButton").removeClass('disabled')
@@ -26,12 +27,13 @@ script(type="text/javascript").
     if (adviceContact?.length >0 || checkBoxChecked == true) && advice?.length > 0 && advice != adviceDefaultText
       $('#submitStatus').addClass('hidden')
       $("#submitButton").addClass('disabled')
-      $.post("/getadvice", {adviceRequest: advice, adviceContact: adviceContact}, (response)=>
+      $.post("/api/v1/organizations/mit/advicerequest?code=" + encodeURIComponent(code), {adviceRequest: advice, adviceContact: adviceContact}, (response)=>
         console.log response
-        if response?.status != "success"
+        if response?.meta?.status != "success"
           errorAction()
         else
-          adviceURL = "https://oh.domo.io/viewadvice/#{response.adviceInfo.accessToken}/#{response.adviceInfo.authToken}"
+          adviceRequest = response.response.advicerequest
+          adviceURL = "https://oh.domo.io/viewadvice/#{adviceRequest._id}?token=#{adviceRequest.accessToken}&code=" + encodeURIComponent(code)
           $('#adviceURL').attr('href', adviceURL)
           $('#adviceURL').text(adviceURL)
           $('#thankYouText').fadeIn('fast')

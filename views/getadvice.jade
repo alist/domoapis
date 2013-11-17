@@ -15,12 +15,12 @@ block body
       if code?.length > 0
         console.log "submitting good code #{code}"
         window.setupSubmitting()
-        $.get("/apiv1/organization/getAdviceFormInfo", {orgCode: code, orgURL: window.orgURL}, (response)=>
+        $.get("/api/v1/organizations/mit/codecheck", { code: code, html: true }, (response)=>
           console.log response
-          if response?.status != "success"
+          if response?.meta?.status != "success"
             window.setupFailedSubmit()
           else
-            newDom = $(response?.html)
+            newDom = $(response?.response?.html)
             $('#codeInputDiv').before newDom
             window.setupSubmitSuccess()
         ).error(window.setupFailedSubmit)
@@ -57,3 +57,19 @@ block body
         h4#submitStatus.text-warning.hidden Ooops, that's not the code!
         p.lead
           | It's on the flyers! Check with someone your organization if you've misplaced it!
+
+      #thankYouText.hidden
+        h1.text-success
+          | Thanks for trusting Domo!
+          small  We'll get back to you within a few hours 
+        h3
+          | If you need help NOW, you should call
+          b  911
+          | .
+        br
+        h4
+          | Here's a URL to copy if you ever want to visit your advice page before/without getting an SMS from us. If you didn't leave a phone #, you'll need this:
+          br 
+          br 
+          a#adviceURL(href= '/s', target: '_blank') Your advice URL.
+
