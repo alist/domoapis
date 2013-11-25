@@ -37,6 +37,7 @@ var adviceRequestSchema = new Schema({
   //authToken: {type: String},
   adviceRequest: {type: String, required: true},
   subscriberId: { type: String },
+  lastResponseDate: {type: Date},
   responses: [ResponseSchema]
 });
 
@@ -112,10 +113,13 @@ adviceRequestSchema.statics.newAdvice = function(advicerequestId, supporterId, n
   var updates = {
     $push: {
       responses: newAdviceUpdate
+    },
+    $set: {
+      lastResponseDate: new Date()
     }
   };
 
-  AdviceRequest.findOneAndUpdate({ _id: advicerequestId }, updates, function(err, AdviceRequest) {
+  AdviceRequest.findOneAndUpdate({ _id: advicerequestId }, updates, { upsert: true }, function(err, AdviceRequest) {
     if (!AdviceRequest) {
       console.log("Lookup for advice request " + advicerequestId + " failed w. error " + err);
       return callback("no advice request found");

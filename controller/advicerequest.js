@@ -66,6 +66,7 @@ AdviceRequestController.prototype.getInfoForList = function(req, res) {
 
   var advicerequestList = req.body.adviceRequestList;
 
+
   if(!_.isArray(advicerequestList))  {
     return res.ext.error('Expected array').render();
   }
@@ -77,12 +78,15 @@ AdviceRequestController.prototype.getInfoForList = function(req, res) {
   _.map(advicerequestList, function(ar) {
 
     if(_.isEmpty(ar.adviceRequestId) || _.isEmpty(ar.accessToken)) {
+
       return;
     }
 
     lookup.$or.push({
+
       _id: ar.adviceRequestId,
       accessToken: ar.accessToken
+
     });
   });
 
@@ -90,7 +94,8 @@ AdviceRequestController.prototype.getInfoForList = function(req, res) {
     return res.ext.error('Invalid request data').render();
   }
 
-  AdviceRequestModel.find(lookup).sort('-modifiedDate').exec(function(err, advicerequests) {
+  //AdviceRequestModel.find(lookup).sort({lastResponseDate: -1, modifiedDate: -1}).exec(function(err, advicerequests) {
+  AdviceRequestModel.find(lookup).sort({lastResponseDate: -1, modifiedDate: -1}).exec(function(err, advicerequests) {  
     if(err) {
       return res.ext.error(err).render();
     }
@@ -177,9 +182,9 @@ AdviceRequestController.prototype.newAdviceRequest = function(req, res) {
 
 
     //hard code the domain (FOR NOW)
-    /*
-    var domain = Utils.getDomainFromRequest(req);
-    var accessPath = Config.getConfig().app.api.path
+    
+    //var domain = Utils.getDomainFromRequest(req);
+    /*var accessPath = Config.getConfig().app.api.path
                       + '/organizations/' + org.orgURL
                       + '/advicerequest/' + advicerequest._id
                       + '?code=' + org.code
@@ -245,7 +250,7 @@ AdviceRequestController.prototype.newAdvice = function(req, res) {
   }
 
   if(!orguser.hasRole('supporter')) {
-    return res.ext.error(errors['NOT_AUTHORIZED'('not a supporter')]).render();
+    return res.ext.error(errors['NOT_AUTHORISED']()).render();
   }
 
   AdviceRequestModel.newAdvice(advicerequestId, orguser._id, newAdviceAttrs, function(err, advicerequest, newAdvice){

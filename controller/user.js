@@ -211,6 +211,8 @@ UserController.prototype.validateToken = function(req, res, next){
 
     if(!user.isTokenValid(getClientId(req), token)) {
       console.log(userId);
+      console.log(token);
+      console.log(getClientId(req));
       return response.code(response.STATUS.UNAUTHORIZED).error(errors['TOKEN_INVALID']()).render(); //missing token? 
     }
 

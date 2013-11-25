@@ -11,7 +11,7 @@ function connectDb(callback){
   var uristring = Config.getConfig().db.dbUri;
 
   mongoose.connect(uristring, function(err, res) {
-    if(err){ 
+    if(err){
       console.log('ERROR connecting to: ' + uristring + '. ' + err);
       return callback(err);
     }
@@ -28,7 +28,7 @@ connectDb(function(err){
       return;
     }
     console.log('Connected');
-    
+
     var total = orgData.length;
     var existingItems = 0, newItems = 0;
     var checkDone = function(){
@@ -38,14 +38,14 @@ connectDb(function(err){
             process.exit(0);
         }
     }
-    
+
     orgData.forEach(function(o){
        OrganizationModel.getById(o.id, function(err, org){
            if(err && err.id !== 'ORG_NOT_FOUND'){
                console.log(err);
                return checkDone();
            }
-           
+
            if(!!org){
                existingItems++;
                return checkDone();
@@ -55,7 +55,7 @@ connectDb(function(err){
            if(o.code.length < 4) {
             o.code = o.code + Math.random().toString(36).substring(2, 6 - o.code.length);
            }
-           
+
            newItems++;
            OrganizationModel.new(o, function(err, newOrg){
                if(err){
@@ -63,8 +63,8 @@ connectDb(function(err){
                }
                return checkDone();
            });
-            
+
        });
     });
-    
+
 });

@@ -51,7 +51,7 @@ describe("HTTP: Register new user", function() {
       "code": "mitl",
       "city": "Cambridge",
       "region": "MA",
-      "bannerURL": "/img/banners/mit.png"
+      "bannerURL": "/img/banners/mit.jpg"
     };
 
     Organization.new(newOrgAttrs, function(err, newOrg){
@@ -419,14 +419,14 @@ describe("HTTP: Push Notifications", function() {
         should.exist(res.body.response.advicerequest._id);
         should.exist(res.body.response.advicerequest.accessURL);
         should.exist(res.body.response.advicerequest.subscriberId);
-        state.advicerequest = res.body.response.advicerequest;
+        state.advicerequest2 = res.body.response.advicerequest;
         done();
     });
   });
 
   it("give advice", function(done) {
 
-    var advicerequest = state.advicerequest;
+    var advicerequest = state.advicerequest2;
     request()
       .post(apiPath
               + '/organizations/' + state.organization.orgURL
@@ -475,6 +475,27 @@ describe("HTTP: Push Notifications", function() {
         res.should.be.json;
         print('event', res.body);
         res.should.have.status(200);
+        done();
+    });
+  });
+
+
+  it("fetch updates", function(done) {
+    request()
+      .post(apiPath
+              + '/app/updates')
+      .send([
+        { advicerequestId: state.advicerequest._id, token: state.advicerequest.accessToken },
+        { advicerequestId: state.advicerequest2._id, token: state.advicerequest2.accessToken }
+      ])
+      .set('Accept', 'application/json')
+      .end(function (res) {
+        res.should.be.json;
+        // print('fetch updates', res.body);
+        res.should.have.status(200);
+        res.body.response.advicerequests.should.length(2);
+        res.body.response.advicerequests[1]._id.should.equal(state.advicerequest._id);
+        res.body.response.advicerequests[0]._id.should.equal(state.advicerequest2._id);
         done();
     });
   });
