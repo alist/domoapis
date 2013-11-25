@@ -8,7 +8,7 @@ module.exports.private = function(app) {
 
   app.get('/:organization/giveadvice', OrganizationController.giveAdvice.bind(OrganizationController));
   
-  /* //unfortunately this just doesn't trigger
+  /* //unfortunately this just doesn't trigger (the slash following /giveadvice)
   app.get('/:organization/giveadvice/', function(req, res, next) {
     console.log('whas realla?')    
     res.redirect('/:organization/giveadvice');
