@@ -52,6 +52,9 @@ a:hover {
 a:active {
   top: 1px;
 }
+i {
+  font-weight: lighter;
+}
 h1 {
   line-height: 1.2;
   font-weight: normal;
@@ -310,6 +313,7 @@ section#apps .page-header {
 }
 .loveitReason {
   font-size: 14pt;
+  margin-bottom: 14px;
 }
 .helpfulLabel {
   float: right;

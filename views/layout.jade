@@ -1,11 +1,18 @@
-- if(typeof stylesheets === 'undefined')
-  - var stylesheets = ['//cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/2.3.2/css/bootstrap.min.css', '/css/style.css']
-- if(typeof localScripts === 'undefined')
-  - var localScripts = ['//cdnjs.cloudflare.com/ajax/libs/jquery/2.0.3/jquery.min.js', '//cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/2.3.2/js/bootstrap.min.js']
-- else
-  - var localScripts = localScripts.concat(['//cdnjs.cloudflare.com/ajax/libs/jquery/2.0.3/jquery.min.js', '//cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/2.3.2/js/bootstrap.min.js'])
-
 block viewVars
+
+//- now we do stylesheets 
+- var standardStylesheets = ['/css/bootstrap.min.css', '/css/style.css']
+- if(typeof stylesheets === 'undefined')
+  - var stylesheets = standardStylesheets
+- else 
+  - var stylesheets = localScripts.concat(standardStylesheets)
+
+- var standardScripts = ['//cdnjs.cloudflare.com/ajax/libs/jquery/2.0.3/jquery.min.js', '//cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/2.3.2/js/bootstrap.min.js']
+- if(typeof localScripts === 'undefined')
+  - var localScripts = standardScripts
+- else
+  - var localScripts = localScripts.concat(standardScripts)
+
 
 - if(typeof title === 'undefined')
   - var title = "Domo"
@@ -51,6 +58,16 @@ html(ng-app=ngApp)
       block footer
 
 
+
+
+    //- googlz analytiks lolz //
+    script.
+      (function(b,o,i,l,e,r){b.GoogleAnalyticsObject=l;b[l]||(b[l]=
+      function(){(b[l].q=b[l].q||[]).push(arguments)});b[l].l=+new Date;
+      e=o.createElement(i);r=o.getElementsByTagName(i)[0];
+      e.src='//www.google-analytics.com/analytics.js';
+      r.parentNode.insertBefore(e,r)}(window,document,'script','ga'));
+      ga('create','UA-45561788-1','domo.io');ga('send','pageview'); 
 
 
     block scripts

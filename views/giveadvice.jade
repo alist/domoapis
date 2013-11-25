@@ -5,12 +5,7 @@ block viewVars
   - hideToolbar = false
   -var ngApp = 'adviceRequest'
 
-block scripts
-  script(src='/components/angular/angular.min.js')
-  script(src='/components/angular-resource/angular-resource.min.js')
-
-  script(src='/js/adviceRequest/controllers/adviceRequestController.js')
-  script(src='/js/adviceRequest/services/adviceRequestServices.js')
+  -var localScripts = ['/components/angular/angular.min.js', '/components/angular-resource/angular-resource.min.js','/js/adviceRequest/controllers/adviceRequestController.js','/js/adviceRequest/services/adviceRequestServices.js'];
 
 block body
 
