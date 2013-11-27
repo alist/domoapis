@@ -6,7 +6,8 @@
     "test": "node_modules/.bin/mocha --reporter spec --timeout 15000",
     "test2": "node_modules/.bin/mocha --reporter spec --grep '^(?!LOAD)' --timeout 15000",
     "load": "mocha --reporter spec --grep '^LOAD' --timeout 15000",
-    "http": "mocha --reporter spec --grep '^HTTP' --timeout 15000"
+    "http": "mocha --reporter spec --grep '^HTTP' --timeout 15000",
+    "push": "git push heroku master; git push github master"
   },
   "engines": {
     "node": "0.10.x"

@@ -14,7 +14,7 @@ module.exports.public = function(app) {
 
     if(req.user) {
       res.ext.data({ user: req.user });
-      return res.ext.view('userIndex.jade').render();
+      return res.ext.view('supporterprofile.jade').render();
     }
 
     return res.ext.view('index.jade').render();

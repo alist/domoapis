@@ -575,25 +575,3 @@ section#apps .page-header {
   box-shadow: 3px 3px 3px rgba(0,0,0,0.055);
   overflow: hidden;
 }
-
-#main {
-  padding: 19px 29px 29px;
-  margin: 0 auto 20px;
-  background-color: #fff;
-  border: 1px solid #e5e5e5;
-  -webkit-border-radius: 5px;
-     -moz-border-radius: 5px;
-          border-radius: 5px;
-  -webkit-box-shadow: 0 1px 2px rgba(0,0,0,.05);
-     -moz-box-shadow: 0 1px 2px rgba(0,0,0,.05);
-          box-shadow: 0 1px 2px rgba(0,0,0,.05);
-}
-
-.table tbody tr:hover td {
-  background-color: transparent;
-}
-
-.table-striped > tbody > tr:hover {
-  cursor: pointer;
-  background-color: #E2E2E2;
-}
