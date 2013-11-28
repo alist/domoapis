@@ -111,6 +111,13 @@ UserController.prototype.newSession = function(req, res) {
   res.ext.redirect('/');
 }
 
+UserController.prototype.populateOrgs = function(req, res, callback) {
+
+  UserModel.findOne({ _id: req.user._id}).populate('organizations').exec(function(err, user_json){
+    return callback(user_json)
+  })
+}
+
 
 UserController.prototype.auth = function(req, email, password, done){
   var validator = new Validator();

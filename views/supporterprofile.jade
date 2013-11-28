@@ -4,6 +4,14 @@ link(rel='stylesheet', href='/css/supporterprofile.css')
   .intro.
     Hey !{user.email}!
 
-  .ctrl-box
+  .orgs
+    | You are currently a part of the following organizations:
+    br
+    each org in user.organizations
+      a(href='/#{org.orgURL}') 
+        .org
+          !{org.displayName}
+          .banner
+            img(src="#{org.bannerURL}")
 
 pre !{user}

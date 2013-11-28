@@ -13,11 +13,16 @@ module.exports.public = function(app) {
     }
 
     if(req.user) {
-      res.ext.data({ user: req.user });
-      return res.ext.view('supporterprofile.jade').render();
+      UserController.populateOrgs(req,res,function(user_json){
+        console.log('msg')
+        req.user = user_json
+        res.ext.data({ user: req.user });
+        return res.ext.view('supporterprofile.jade').render();
+      })
     }
-
-    return res.ext.view('index.jade').render();
+    else{
+      return res.ext.view('index.jade').render();
+    }
   });
 
   // privacyandterms

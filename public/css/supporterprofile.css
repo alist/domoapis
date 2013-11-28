@@ -1,5 +1,22 @@
 body {
+  height: 100%;
+  font-family: 'Helvetica-Light', 'Arimo', 'Helvetica Neue';
+  background-color: #f0f0f0;
   background-image: url("/img/patternsquare_green.png");
+  background-repeat: repeat;
+}
+a {
+  position: relative;
+  text-decoration: none;
+}
+a:hover {
+  color: dGreen;
+}
+a:active {
+  top: 1px;
+}
+a:visited {
+  color: Green;
 }
 .main {
   position: fixed;
@@ -8,8 +25,26 @@ body {
   left: 50px;
   right: 50px;
   background-color: #fff;
+  padding-right: 50px;
+  padding-left: 50px;
+  padding-top: 10px;
 }
 .main .intro {
   text-align: center;
   font-size: 18pt;
+  color: Green;
+}
+.main .org {
+  overflow: hidden;
+  font-size: 14pt;
+  width: 100%;
+  height: 50px;
+  line-height: 50px;
+  background-color: #eee;
+}
+.main .org:hover {
+  background-color: #ddd;
+}
+.main .org .banner {
+  display: none;
 }
