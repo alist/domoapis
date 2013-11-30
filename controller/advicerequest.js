@@ -253,7 +253,7 @@ AdviceRequestController.prototype.newAdvice = function(req, res) {
     return res.ext.error(errors['NOT_AUTHORISED']()).render();
   }
 
-  AdviceRequestModel.newAdvice(advicerequestId, orguser._id, newAdviceAttrs, function(err, advicerequest, newAdvice){
+  AdviceRequestModel.newAdvice(req,advicerequestId, orguser._id, newAdviceAttrs, function(err, advicerequest, newAdvice){
     if(err) {
       return res.ext.error(err).render();
     }

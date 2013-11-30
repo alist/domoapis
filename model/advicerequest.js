@@ -4,6 +4,8 @@ var mongoose = require('mongoose')
   , errors = require('./errors').errors
   , _ = require('lodash')
 
+var OrgUserModel = require('./orguser').OrgUser
+
 //var validSupportAreas = module.exports.validSupportAreas = [ 'career', 'mental-health' ];
 
 var ResponseSchema = new Schema({
@@ -38,6 +40,7 @@ var adviceRequestSchema = new Schema({
   adviceRequest: {type: String, required: true},
   subscriberId: { type: String },
   lastResponseDate: {type: Date},
+  assignedSupporters : [ {type: Schema.Types.ObjectId, ref: 'orguser'} ],
   responses: [ResponseSchema]
 });
 
@@ -89,7 +92,7 @@ adviceRequestSchema.statics.new = function(adviceRequestAttrs, callback){
 };
 
 
-adviceRequestSchema.statics.newAdvice = function(advicerequestId, supporterId, newAdviceAttrs, callback){
+adviceRequestSchema.statics.newAdvice = function(req,advicerequestId, supporterId, newAdviceAttrs, callback){
 
   if (!newAdviceAttrs.advice){
     console.log('no advice received');
@@ -109,6 +112,25 @@ adviceRequestSchema.statics.newAdvice = function(advicerequestId, supporterId, n
     status: 'Created',
     thankyou: newAdviceAttrs.thankyou
   };
+
+  //this is where we will determine the assigned supporter
+  //there are no inset skills in advice requests right now, so we will just go by time and organization
+
+  OrgUserModel.find({orgId : req.extras.organization._id}).exec(function(err,orgusers){
+    console.log(err)
+    console.log(orgusers)
+  })
+
+
+  //
+
+  /*
+    add to updates:
+
+    $push: {
+      assignedSupporters: supporterId
+    },
+  */
 
   var updates = {
     $push: {

@@ -6,6 +6,7 @@ block viewVars
 block body
   include includes/toolbar
   link(rel='stylesheet', href='/css/orgprofile.css')
+
   //- 
   //business' image here
   .organizationHeader
@@ -18,8 +19,8 @@ block body
       p.hello
         | Welcome to your support dashboard !{orguser.email}
       br
-      p.left
-        | You currently have X assigned advice requests:
+      div.left
+        b You currently have X assigned advice requests:
       br
       br
       div.left
@@ -40,8 +41,131 @@ block body
                       a(href="#{adv.accessURL}") !{adv.adviceRequest}
                     td
                       a(href="#{adv.accessURL}") !{adv.lastResponseDate}
+
+    .availability
+      b
+        p.left You are currently assigned to the following timeslots for support:
+      br
+
+      table.table.table-condensed.timetable
+        thead
+          tr
+            td
+              | Start Time
+            td
+              | End Time
+            td
+              | Day of the Week
+        tbody.timetablebody
+          tr.timetablerow
+            td
+              div.input-append.bootstrap-timepicker.left
+                input.timepicker1(type="text").input-small
+                span.add-on
+                  i.icon-time
+            td
+              div.input-append.bootstrap-timepicker.left
+                input.timepicker1(type="text").input-small
+                span.add-on
+                  i.icon-time
+            td
+              div.btn-group
+                div.dropdown.dropdown-toggle.btn(data-toggle="dropdown") Day <b class="caret"></b>
+                ul.dropdown-menu
+                  li 
+                    | Sunday
+                  li 
+                    | Monday
+                  li 
+                    | Tuesday
+                  li 
+                    | Wednesday
+                  li 
+                    | Thursday
+                  li 
+                    | Friday
+                  li 
+                    | Saturday
+            td
+              i.icon-remove-sign
+      hr
+      div.right.btn.btn-success.savetime
+        | Save
+      div.right.btn.btn-default.addtime
+        | Add New Time
+
+      script(type='text/javascript').
+        $('.timepicker1').each(function(){
+          $(this).timepicker('setTime', '12:00 AM');
+        })
+
+        $('.icon-remove-sign').click(function(){
+          $(this).parent().parent().remove()
+        })
+
+        $(".dropdown-menu li").click(function(){
+          $('.dropdown-toggle').html($(this).text() + ' <b class="caret"></b>').val($(this).text())
+        })
+
+        $(".addtime").click(function(){
+          $('.timetablerowclone').last().clone().appendTo('.timetablebody');
+
+          $('.timetablebody .timetablerowclone .timepicker1').each(function(){
+            $(this).timepicker('setTime', '12:00 AM');
+          })
+
+          $('.timetablebody .timetablerowclone').each(function(){
+            $(this).removeClass('timetablerowclone').addClass('timetablerow')
+          })
+
+          $('.icon-remove-sign').unbind('click')
+          $('.icon-remove-sign').click(function(){
+            $(this).parent().parent().remove()
+          })
+
+          $(".dropdown-menu li").unbind('click')
+          $(".dropdown-menu li").click(function(){
+            $(this).parent().parent().find('.dropdown-toggle').html($(this).text() + ' <b class="caret"></b>').val($(this).text())
+          })
+        })
+
       br
       br
 
+      div.hidden
+        table
+          tbody
+            tr.timetablerowclone
+              td
+                div.input-append.bootstrap-timepicker.left
+                  input.timepicker1(type="text").input-small
+                  span.add-on
+                    i.icon-time
+              td
+                div.input-append.bootstrap-timepicker.left
+                  input.timepicker1(type="text").input-small
+                  span.add-on
+                    i.icon-time
+              td
+                div.btn-group
+                  div.dropdown.dropdown-toggle.btn(data-toggle="dropdown") Day <b class="caret"></b>
+                  ul.dropdown-menu
+                    li 
+                      | Sunday
+                    li 
+                      | Monday
+                    li 
+                      | Tuesday
+                    li 
+                      | Wednesday
+                    li 
+                      | Thursday
+                    li 
+                      | Friday
+                    li 
+                      | Saturday
+              td
+                i.icon-remove-sign
       p
         #{orguser}
+
