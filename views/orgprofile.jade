@@ -1,0 +1,47 @@
+extends layout
+
+block viewVars
+  -var title = organization.displayName
+
+block body
+  include includes/toolbar
+  link(rel='stylesheet', href='/css/orgprofile.css')
+  //- 
+  //business' image here
+  .organizationHeader
+    .organizationBG(style=" background-image: url( #{organization.bannerURL} );")
+
+  .content.container-fluid
+    section#index-about
+      h1
+        a(href="/#{organization.orgURL}") !{organization.displayName}
+      p.hello
+        | Welcome to your support dashboard !{orguser.email}
+      br
+      p.left
+        | You currently have X assigned advice requests:
+      br
+      br
+      div.left
+        b You have given advice !{orguser.advcount} time(s) in the past:
+
+        .advGiven
+          table.table.table-condensed.table-hover
+            thead
+              tr
+                td
+                  | Advice request
+                td
+                  | Last Response Date
+            tbody
+              each adv in orguser.adviceGiven
+                  tr(onclick="document.location = '#{adv.accessURL}'").advr
+                    td
+                      a(href="#{adv.accessURL}") !{adv.adviceRequest}
+                    td
+                      a(href="#{adv.accessURL}") !{adv.lastResponseDate}
+      br
+      br
+
+      p
+        #{orguser}

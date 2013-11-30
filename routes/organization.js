@@ -7,6 +7,7 @@ module.exports.private = function(app) {
   app.all('/:organization*', UserController.validateSession.bind(UserController));
 
   app.get('/:organization/giveadvice', OrganizationController.giveAdvice.bind(OrganizationController));
+  app.get('/:organization/requests', OrganizationController.requests.bind(OrganizationController));
   
   /* //unfortunately this just doesn't trigger (the slash following /giveadvice)
   app.get('/:organization/giveadvice/', function(req, res, next) {

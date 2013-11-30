@@ -1,6 +1,7 @@
 var OrganizationModel = require("../model/organization").Organization
   , OrgUser = require('../model/orguser')
   , OrgUserModel = OrgUser.OrgUser
+  , AdviceRequestModel = require('../model/advicerequest').AdviceRequest
   , Validator = require('validator').Validator
   , _ = require('lodash')
   , errors = require('../model/errors').errors
@@ -48,6 +49,19 @@ OrganizationController.prototype.getAll = function(req, res) {
 }
 
 OrganizationController.prototype.giveAdvice = function(req, res) {
+
+  if(!req.extras.orguser)
+    return res.ext.view('orgprofile.jade').render();
+
+  AdviceRequestModel.find({'responses': { $elemMatch: { 'adviceGiver': req.extras.orguser._id} } }).exec(function(err, adv){
+    req.extras.orguser.adviceGiven = adv
+    req.extras.orguser.advcount = adv.length
+    res.ext.data({ organization: req.extras.organization, orguser: req.extras.orguser})
+    return res.ext.view('orgprofile.jade').render();
+  })
+}
+
+OrganizationController.prototype.requests = function(req, res) {
   OrgUserModel.get(req.user._id, req.extras.organization._id, function(err, orguser) {
     if(err) {
       return res.ext.errorView('error.jade').error(err).render();
