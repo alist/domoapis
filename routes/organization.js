@@ -24,6 +24,8 @@ module.exports.private = function(app) {
   app.get('/:organization/advicerequest', AdviceRequestController.getAll.bind(AdviceRequestController));
   app.get('/:organization/advicerequest/:advicerequestId', AdviceRequestController.getAdvicerequestDetail.bind(AdviceRequestController));
   app.post('/:organization/advicerequest/:advicerequest/advice', AdviceRequestController.newAdvice.bind(AdviceRequestController));
+
+  app.post('/:organization/savetimes', OrganizationController.saveTimes.bind(OrganizationController));
   
 }
 

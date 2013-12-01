@@ -38,7 +38,14 @@ var orgUserSchema = new Schema({
   heldRoleAttrs:          { type: Schema.Types.Mixed },
   accApproved:            { type: Boolean, default: true },
   accApprovalHash:        { type: String },
-  displayName:            { type: String }
+  displayName:            { type: String },
+  times:                  [{
+                             end: { type : String },
+                             begin: {type : String},
+                             endString: {type : String},
+                             beginString: {type : String},
+                             day: {type : String}
+                          }]
 });
 
 

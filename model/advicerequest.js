@@ -3,6 +3,7 @@ var mongoose = require('mongoose')
   , uuid = require('node-uuid')
   , errors = require('./errors').errors
   , _ = require('lodash')
+  , moment = require('../modules/moment.min')
 
 var OrgUserModel = require('./orguser').OrgUser
 
@@ -41,6 +42,7 @@ var adviceRequestSchema = new Schema({
   subscriberId: { type: String },
   lastResponseDate: {type: Date},
   assignedSupporters : [ {type: Schema.Types.ObjectId, ref: 'orguser'} ],
+  assignedSupportersCount : {type: Number},
   responses: [ResponseSchema]
 });
 
@@ -112,25 +114,6 @@ adviceRequestSchema.statics.newAdvice = function(req,advicerequestId, supporterI
     status: 'Created',
     thankyou: newAdviceAttrs.thankyou
   };
-
-  //this is where we will determine the assigned supporter
-  //there are no inset skills in advice requests right now, so we will just go by time and organization
-
-  OrgUserModel.find({orgId : req.extras.organization._id}).exec(function(err,orgusers){
-    console.log(err)
-    console.log(orgusers)
-  })
-
-
-  //
-
-  /*
-    add to updates:
-
-    $push: {
-      assignedSupporters: supporterId
-    },
-  */
 
   var updates = {
     $push: {

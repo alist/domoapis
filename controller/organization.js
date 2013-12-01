@@ -53,11 +53,46 @@ OrganizationController.prototype.giveAdvice = function(req, res) {
   if(!req.extras.orguser)
     return res.ext.view('orgprofile.jade').render();
 
-  AdviceRequestModel.find({'responses': { $elemMatch: { 'adviceGiver': req.extras.orguser._id} } }).exec(function(err, adv){
-    req.extras.orguser.adviceGiven = adv
-    req.extras.orguser.advcount = adv.length
+  async.series({
+    findAssigned : function(callback){
+      AdviceRequestModel.find({'assignedSupporters': { $all : req.extras.orguser._id } }).exec(function(err, adv){
+        req.extras.orguser.assignedAdviceRequests = adv
+        req.extras.orguser.assignedAdviceRequestsCount = adv.length
+        callback(null)
+      })
+    },
+
+    findAnswered : function(callback){
+      AdviceRequestModel.find({'responses': { $elemMatch: { 'adviceGiver': req.extras.orguser._id} } }).exec(function(err, adv){
+        req.extras.orguser.adviceGiven = adv
+        req.extras.orguser.advcount = adv.length
+        callback(null)
+      })
+    }
+
+  },function(err,cbs){
     res.ext.data({ organization: req.extras.organization, orguser: req.extras.orguser})
     return res.ext.view('orgprofile.jade').render();
+  })
+}
+
+OrganizationController.prototype.saveTimes = function(req, res) {
+  if(!req.body.times)
+    req.body.times = []
+
+  OrgUserModel.findById(req.extras.orguser._id).exec(function(err,orguser){
+    if(err)
+      return res.send(500,{err : 'db query error'})
+
+    console.log(orguser)
+    console.log(req.body.times)
+
+    orguser.times = req.body.times
+
+    orguser.save(function(err,saved){
+      if(!err)
+        return res.send(200,{msg : 'success'})
+    })
   })
 }
 

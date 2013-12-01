@@ -20,12 +20,28 @@ block body
         | Welcome to your support dashboard !{orguser.email}
       br
       div.left
-        b You currently have X assigned advice requests:
+        b You currently have !{orguser.assignedAdviceRequestsCount} assigned advice request(s):
+        br
+        .advAssigned
+          table.table.table-condensed.table-hover
+            thead
+              tr
+                td
+                  | Advice request
+                td
+                  | Created On
+            tbody
+              each adv in orguser.assignedAdviceRequests
+                  tr(onclick="document.location = '#{adv.accessURL}'").advr
+                    td
+                      a(href="#{adv.accessURL}") !{adv.adviceRequest}
+                    td
+                      a(href="#{adv.accessURL}") !{adv.createdOn}
       br
       br
       div.left
         b You have given advice !{orguser.advcount} time(s) in the past:
-
+        br
         .advGiven
           table.table.table-condensed.table-hover
             thead
@@ -57,37 +73,6 @@ block body
             td
               | Day of the Week
         tbody.timetablebody
-          tr.timetablerow
-            td
-              div.input-append.bootstrap-timepicker.left
-                input.timepicker1(type="text").input-small
-                span.add-on
-                  i.icon-time
-            td
-              div.input-append.bootstrap-timepicker.left
-                input.timepicker1(type="text").input-small
-                span.add-on
-                  i.icon-time
-            td
-              div.btn-group
-                div.dropdown.dropdown-toggle.btn(data-toggle="dropdown") Day <b class="caret"></b>
-                ul.dropdown-menu
-                  li 
-                    | Sunday
-                  li 
-                    | Monday
-                  li 
-                    | Tuesday
-                  li 
-                    | Wednesday
-                  li 
-                    | Thursday
-                  li 
-                    | Friday
-                  li 
-                    | Saturday
-            td
-              i.icon-remove-sign
       hr
       div.right.btn.btn-success.savetime
         | Save
@@ -129,6 +114,58 @@ block body
           })
         })
 
+        $('.savetime').click(function(){
+          var times = []
+
+          $('.timetablerow').each(function(){
+            var time = {}
+            var begin = $(this).find('.timepicker1').val()
+            var end = $(this).find('.timepicker1').eq(1).val()
+
+            time.beginString = begin
+            time.endString = end
+            time.begin = getMins(begin)
+            time.end = getMins(end)
+            time.day = $(this).find('.dropdown-toggle').val().toLowerCase().trim()
+            times.push(time)
+          })
+          
+          $.ajax({
+            type: 'POST',
+            url: '/mit/savetimes',
+            data: {times : times},
+            success: function(data) {
+              if(!data.err)
+                alert('Successfully Saved!')
+            },
+            error: function(jqXHR) {
+                return console.log(jqXHR.responseText)
+            }
+          })
+        })
+
+        function getMins(timeString){
+          timeString = timeString.toLowerCase()
+          tsArr = timeString.split(' ')
+          var hm = tsArr[0].split(':')
+
+          var mins = hm[1]
+          var hours
+          if(tsArr[1] == 'pm'){
+            if(hm[0] != '12')
+              hours = hm[0]*1 + 12
+            else
+              hours = 12
+          }
+          else{
+            if(hm[0] != '12')
+              hours = hm[0]*1
+            else
+              hours = 0
+          }
+          return parseInt(hours)*60 + parseInt(mins)
+        }
+
       br
       br
 
@@ -168,4 +205,28 @@ block body
                 i.icon-remove-sign
       p
         #{orguser}
+
+      script.
+        var times = !{JSON.stringify(orguser.times)};
+        times.forEach(function(e,i){
+          $('.timetablerowclone').last().clone().appendTo('.timetablebody');
+
+          $('.timetablebody .timetablerowclone .timepicker1').first().timepicker('setTime', e.beginString);
+          $('.timetablebody .timetablerowclone .timepicker1').eq(1).timepicker('setTime', e.endString);
+          $('.timetablebody .timetablerowclone .dropdown-toggle').html(e.day + ' <b class="caret"></b>').val($(this).text())
+
+          $('.timetablebody .timetablerowclone').each(function(){
+            $(this).removeClass('timetablerowclone').addClass('timetablerow')
+          })
+
+          $('.icon-remove-sign').unbind('click')
+          $('.icon-remove-sign').click(function(){
+            $(this).parent().parent().remove()
+          })
+
+          $(".dropdown-menu li").unbind('click')
+          $(".dropdown-menu li").click(function(){
+            $(this).parent().parent().find('.dropdown-toggle').html($(this).text() + ' <b class="caret"></b>').val($(this).text())
+          })
+        })
 

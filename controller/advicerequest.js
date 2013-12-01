@@ -13,6 +13,7 @@ var AdviceRequestModel = require("../model/advicerequest").AdviceRequest
   , jade = require('jade')
   , Config = require('../configLoader')
   , path = require('path')
+  , async = require('async')
 ///
 
 
@@ -162,6 +163,29 @@ AdviceRequestController.prototype.getAll = function(req, res) {
   });
 }
 
+//helper function
+function getMins(timeString){
+  timeString = timeString.toLowerCase()
+  tsArr = timeString.split(' ')
+  var hm = tsArr[0].split(':')
+
+  var mins = hm[1]
+  var hours
+  if(tsArr[1] == 'pm'){
+    if(hm[0] != '12')
+      hours = hm[0]*1 + 12
+    else
+      hours = 12
+  }
+  else{
+    if(hm[0] != '12')
+      hours = hm[0]*1
+    else
+      hours = 0
+  }
+  return parseInt(hours)*60 + parseInt(mins)
+}
+
 
 AdviceRequestController.prototype.newAdviceRequest = function(req, res) {
 
@@ -173,61 +197,101 @@ AdviceRequestController.prototype.newAdviceRequest = function(req, res) {
   newAdviceRequestAttrs.organization = org._id;
   newAdviceRequestAttrs.reqstatus = "PRES";  ///why does this not work? 
 
-  AdviceRequestModel.new(newAdviceRequestAttrs, function(err, advicerequest) {
-    if(err) {
-      return res.ext.error(err).render();
-    }
+  async.series({
+    findSupporters : function(callback){
 
-    // for now
+      OrgUserModel.find({orgId : req.extras.organization._id}).exec(function(err,orgusers){
+        if(err)
+          return callback('db query error occurred')
+
+        var now = moment()
+        var day = now.format('dddd').toLowerCase()
+        var minsToday = getMins(now.format('h:mm a'))
+        var availableSupporters = []
+
+        orgusers.forEach(function(orguser,i){
+          if(availableSupporters.length < 3){
+            var available = false
+            orguser.times.forEach(function(time,j){
+              if(time.day == day && time.begin <= minsToday && minsToday < time.end)
+                available = true
+            })
+            if(available)
+              availableSupporters.push(orguser._id)
+          }
+        })
+
+        newAdviceRequestAttrs.assignedSupporters = availableSupporters
+        newAdviceRequestAttrs.assignedSupportersCount = availableSupporters.length
+
+        callback(null)
+      })
+    },
+
+    newAdviceRequest : function(callback){
+
+      AdviceRequestModel.new(newAdviceRequestAttrs, function(err, advicerequest) {
+        if(err) {
+          return res.ext.error(err).render();
+        }
+        
+        advicerequest.assignedSupporters = newAdviceRequestAttrs.assignedSupporters
+        advicerequest.assignedSupportersCount = newAdviceRequestAttrs.assignedSupportersCount
+        // for now
 
 
-    //hard code the domain (FOR NOW)
-    
-    //var domain = Utils.getDomainFromRequest(req);
-    /*var accessPath = Config.getConfig().app.api.path
-                      + '/organizations/' + org.orgURL
-                      + '/advicerequest/' + advicerequest._id
-                      + '?code=' + org.code
-                      + '&token=' + advicerequest.accessToken;
-    */
-    var domain = 'http://domoapis.herokuapp.com/'
-    var accessPath = org.orgURL
-                     + '/giveadvice/' + advicerequest._id;
+        //hard code the domain (FOR NOW)
+        
+        //var domain = Utils.getDomainFromRequest(req);
+        /*var accessPath = Config.getConfig().app.api.path
+                          + '/organizations/' + org.orgURL
+                          + '/advicerequest/' + advicerequest._id
+                          + '?code=' + org.code
+                          + '&token=' + advicerequest.accessToken;
+        */
+        var domain = 'http://domoapis.herokuapp.com/'
+        var accessPath = org.orgURL
+                         + '/giveadvice/' + advicerequest._id;
 
 
-    ShortUrlModel.shorten(accessPath, function(err, shorturl) {
-      if(shorturl) {
-        // use short url
-        advicerequest.accessURL = '/x/' + shorturl.shortURICode;
+        ShortUrlModel.shorten(accessPath, function(err, shorturl) {
+          if(shorturl) {
+            // use short url
+            advicerequest.accessURL = '/x/' + shorturl.shortURICode;
 
-        // update doc with short url
-        advicerequest.save(function(err) {
-          if(err)   console.log(err);
+            // update doc with short url
+            advicerequest.save(function(err) {
+              if(err)   console.log(err);
+            });
+
+          } else {
+            // something went wrong; use full url
+            advicerequest.accessURL = accessPath;
+          }
+
+          advicerequest = advicerequest.toObject();
+
+          // write response
+          res.ext.data({ advicerequest: advicerequest }).render();
+
+          // notify supportee if telNo was provided
+          if(!!advicerequest.telephoneNumber) {
+            advicerequest.accessURL = domain + advicerequest.accessURL;
+            notifySupporteeSMS(org, advicerequest);
+          }
+
+          // full url for supporters
+          advicerequest.accessURL = domain + accessPath;
+          notifySupportersEmail(org, advicerequest);
+
+          callback(null)
         });
 
-      } else {
-        // something went wrong; use full url
-        advicerequest.accessURL = accessPath;
-      }
-
-      advicerequest = advicerequest.toObject();
-
-      // write response
-      res.ext.data({ advicerequest: advicerequest }).render();
-
-      // notify supportee if telNo was provided
-      if(!!advicerequest.telephoneNumber) {
-        advicerequest.accessURL = domain + advicerequest.accessURL;
-        notifySupporteeSMS(org, advicerequest);
-      }
-
-      // full url for supporters
-      advicerequest.accessURL = domain + accessPath;
-      notifySupportersEmail(org, advicerequest);
-    });
-
-  });
-
+      });
+    }
+  },function(err,ops){
+      console.log('success')
+    })
 }
 
 
