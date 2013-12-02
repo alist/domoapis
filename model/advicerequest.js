@@ -42,7 +42,7 @@ var adviceRequestSchema = new Schema({
   subscriberId: { type: String },
   lastResponseDate: {type: Date},
   assignedSupporters : [ {type: Schema.Types.ObjectId, ref: 'orguser'} ],
-  assignedSupportersCount : {type: Number},
+  assignedSupportersCount : {type: Number, default : 0},
   responses: [ResponseSchema]
 });
 

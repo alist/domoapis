@@ -186,6 +186,27 @@ function getMins(timeString){
   return parseInt(hours)*60 + parseInt(mins)
 }
 
+function shuffle(array) {
+  var currentIndex = array.length
+    , temporaryValue
+    , randomIndex
+    ;
+
+  // While there remain elements to shuffle...
+  while (0 !== currentIndex) {
+
+    // Pick a remaining element...
+    randomIndex = Math.floor(Math.random() * currentIndex);
+    currentIndex -= 1;
+
+    // And swap it with the current element.
+    temporaryValue = array[currentIndex];
+    array[currentIndex] = array[randomIndex];
+    array[randomIndex] = temporaryValue;
+  }
+
+  return array;
+}
 
 AdviceRequestController.prototype.newAdviceRequest = function(req, res) {
 
@@ -204,13 +225,15 @@ AdviceRequestController.prototype.newAdviceRequest = function(req, res) {
         if(err)
           return callback('db query error occurred')
 
+        orgusers = shuffle(orgusers)
+
         var now = moment()
         var day = now.format('dddd').toLowerCase()
         var minsToday = getMins(now.format('h:mm a'))
         var availableSupporters = []
 
         orgusers.forEach(function(orguser,i){
-          if(availableSupporters.length < 3){
+          if(availableSupporters.length < 5){
             var available = false
             orguser.times.forEach(function(time,j){
               if(time.day == day && time.begin <= minsToday && minsToday < time.end)
@@ -234,7 +257,7 @@ AdviceRequestController.prototype.newAdviceRequest = function(req, res) {
         if(err) {
           return res.ext.error(err).render();
         }
-        
+
         advicerequest.assignedSupporters = newAdviceRequestAttrs.assignedSupporters
         advicerequest.assignedSupportersCount = newAdviceRequestAttrs.assignedSupportersCount
         // for now
@@ -303,10 +326,6 @@ AdviceRequestController.prototype.newAdvice = function(req, res) {
   newAdviceAttrs = req.body
   newAdviceAttrs.adviceGiverDisplayName = ((typeof req.extras.orguser == undefined || typeof req.extras.orguser.displayName == undefined) ? "Anonymous" : req.extras.orguser.displayName) 
   advicerequestId = req.params.advicerequest;
-
-  console.log(advicerequestId);
-  console.log(req.user._id);
-  console.log(org._id);
 
   var orguser = req.extras.orguser;
   if(!orguser) {

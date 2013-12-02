@@ -17,6 +17,9 @@ var Config = require('./configLoader')
   , partials = require('./lib/partials')
   , Validator = require('validator').Validator
   , _ = require('lodash')
+  , cronJob = require('cron').CronJob;
+
+var CronController = require('./controller/cron')
 
 
 
@@ -97,6 +100,16 @@ function setupModules(done) {
   done();
 }
 
+function setupChronJobs(done){
+  console.log('!')
+
+  new cronJob('00 */8 * * * *', function(){
+      CronController.checkAssignments()
+  }, null, true)
+
+  done()
+}
+
 
 function setupDb(done) {
   // Connect to database
@@ -135,7 +148,8 @@ function configValidator() {
 async.parallel([
   setupDb,
   setupApp,
-  setupModules
+  setupModules,
+  setupChronJobs
 ], function(err) {
 
   var port = config.app.env.port;

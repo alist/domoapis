@@ -22,7 +22,11 @@ a {
   text-align: center;
 }
 .advGiven {
-  height: 100px;
+  height: 160px;
+  overflow: scroll;
+}
+.advAssigned {
+  height: 130px;
   overflow: scroll;
 }
 .advr {

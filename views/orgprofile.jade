@@ -49,14 +49,14 @@ block body
                 td
                   | Advice request
                 td
-                  | Last Response Date
+                  | Created On
             tbody
               each adv in orguser.adviceGiven
                   tr(onclick="document.location = '#{adv.accessURL}'").advr
                     td
                       a(href="#{adv.accessURL}") !{adv.adviceRequest}
                     td
-                      a(href="#{adv.accessURL}") !{adv.lastResponseDate}
+                      a(href="#{adv.accessURL}") !{adv.createdOn}
 
     .availability
       b
@@ -213,7 +213,7 @@ block body
 
           $('.timetablebody .timetablerowclone .timepicker1').first().timepicker('setTime', e.beginString);
           $('.timetablebody .timetablerowclone .timepicker1').eq(1).timepicker('setTime', e.endString);
-          $('.timetablebody .timetablerowclone .dropdown-toggle').html(e.day + ' <b class="caret"></b>').val($(this).text())
+          $('.timetablebody .timetablerowclone .dropdown-toggle').html(e.day + ' <b class="caret"></b>').val(e.day)
 
           $('.timetablebody .timetablerowclone').each(function(){
             $(this).removeClass('timetablerowclone').addClass('timetablerow')

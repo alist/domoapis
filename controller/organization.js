@@ -56,14 +56,27 @@ OrganizationController.prototype.giveAdvice = function(req, res) {
   async.series({
     findAssigned : function(callback){
       AdviceRequestModel.find({'assignedSupporters': { $all : req.extras.orguser._id } }).exec(function(err, adv){
-        req.extras.orguser.assignedAdviceRequests = adv
-        req.extras.orguser.assignedAdviceRequestsCount = adv.length
+        var advs = []
+
+        adv.forEach(function(ad,i){ //should only show if not responded yet
+          var open = true
+          ad.responses.forEach(function(resp,j){
+            if(resp.adviceGiver.toString() == req.extras.orguser._id.toString())
+              open = false
+          })
+
+          if(open)
+            advs.push(ad)
+        })
+
+        req.extras.orguser.assignedAdviceRequests = advs
+        req.extras.orguser.assignedAdviceRequestsCount = advs.length
         callback(null)
       })
     },
 
     findAnswered : function(callback){
-      AdviceRequestModel.find({'responses': { $elemMatch: { 'adviceGiver': req.extras.orguser._id} } }).exec(function(err, adv){
+      AdviceRequestModel.find({'responses': { $elemMatch: { 'adviceGiver': req.extras.orguser._id} } }).sort({createdOn: -1}).exec(function(err, adv){
         req.extras.orguser.adviceGiven = adv
         req.extras.orguser.advcount = adv.length
         callback(null)
@@ -83,9 +96,6 @@ OrganizationController.prototype.saveTimes = function(req, res) {
   OrgUserModel.findById(req.extras.orguser._id).exec(function(err,orguser){
     if(err)
       return res.send(500,{err : 'db query error'})
-
-    console.log(orguser)
-    console.log(req.body.times)
 
     orguser.times = req.body.times
 
