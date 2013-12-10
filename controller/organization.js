@@ -121,6 +121,19 @@ OrganizationController.prototype.requests = function(req, res) {
 }
 
 
+OrganizationController.prototype.viewAdvice = function(req, res, next) {
+  var advicerequestId = req.params.advicerequestId;
+  if (typeof advicerequestId != undefined || advicerequestId.length > 0 ){
+    if (advicerequestId.substr(0,2) == ":)"){
+      advicerequestId = advicerequestId.substr(2);
+      return res.ext.data({advicerequestId: advicerequestId }).view('adviceview.jade').render();
+    }
+  }
+
+  next();
+}
+
+
 //going forward perhaps we'd like to pass the current version of the adviceRequest so that non-js & slow web connected devices can utilize
 OrganizationController.prototype.giveAdviceDetail = function(req, res) {
   var advicerequestId = req.params.advicerequestId;
@@ -129,7 +142,7 @@ OrganizationController.prototype.giveAdviceDetail = function(req, res) {
     console.log("here:",advicerequestId,".");
     //how to redirect errors, I don't know...
     console.log('whas?')
-    return res.redirect('/mit');
+    return res.redirect('./');
   }
     
 

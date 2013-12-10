@@ -381,6 +381,13 @@ section#apps .page-header {
   text-align: center;
   width: 260px;
 }
+#adviceAuthCodeInput {
+  line-height: 40px;
+  height: 79px;
+  font-size: 35px;
+  text-align: center;
+  width: 260px;
+}
 #adviceContactInput {
   height: 30px;
   width: 95px;
