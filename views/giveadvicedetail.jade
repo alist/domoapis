@@ -48,11 +48,9 @@ block body
             $('#submitStatus').removeClass('hidden');
             $('#hellyeah').text('Oh yeah!')
 
-            setTimeout(function(){
-              $('#adviceTextArea').val('');
-              $('#guidlinesAcceptedBox').prop('checked', false);
-              $("#submitButton").removeClass('disabled');
-            },3000);
+            $('#adviceTextArea').val('');
+            $('#guidlinesAcceptedBox').prop('checked', false);
+            $("#submitButton").removeClass('disabled');
             
 
           }
@@ -74,8 +72,8 @@ block body
   .content-index.container-fluid(ng-controller="adviceRequestDetailController")
     section#home
       a(href='../giveadvice')
-        h3 Give Advice?
-      p#hellyeah Hell yeah.
+        h3 Give Advice
+      p#hellyeah 
 
     div.row-fluid.adviceRow
       li.span12
