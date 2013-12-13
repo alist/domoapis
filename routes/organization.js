@@ -17,7 +17,7 @@ module.exports.private = function(app) {
   });
   */
 
-  app.get('/:organization/giveadvice/:advicerequestId', OrganizationController.giveAdviceDetail.bind(OrganizationController));
+  app.get('/:organization/advice/:advicerequestId', OrganizationController.giveAdviceDetail.bind(OrganizationController));
   app.get('/:organization/admin', OrganizationController.admin.bind(OrganizationController));
 
   //should be an api call, but these are cookie auth'd
@@ -36,7 +36,7 @@ module.exports.public = function(app) {
   app.post('/:organization/register', UserController.register.bind(UserController));
 
   //view advice responses
-  app.get('/:organization/:advicerequestId', OrganizationController.viewAdvice.bind(OrganizationController));
-  //domo.io/mit/ghjkloiadghjkdlaoijuhygas
+  app.get('/:organization/advice/:advicerequestId', OrganizationController.viewAdvice.bind(OrganizationController));
+  //domo.io/mit/advice/ghjkloiadghjkdlaoijuhygas
 };
 
