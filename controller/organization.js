@@ -122,15 +122,26 @@ OrganizationController.prototype.requests = function(req, res) {
 
 
 OrganizationController.prototype.viewAdvice = function(req, res, next) {
+   if(req.user != undefined){ //if the user is logged-in anywhere, they see the response interface
+      // console.log(req.user.organizations.length, req.extras.organization._id.toString());
+      for (var i =0; i < req.user.organizations.length ; i++ ){
+        var userOrgId = req.user.organizations[i].toString();
+        if (userOrgId === req.extras.organization._id.toString()){
+          console.log("We force org-supporters to view advice a supporter in orgID: " + userOrgId);
+          //if a logged-in supporter for the current org, don't allow the advice-view mechanism of advice review!
+          next();
+          return;
+        }
+      }
+   }
+
   var advicerequestId = req.params.advicerequestId;
   if (typeof advicerequestId != undefined || advicerequestId.length > 0 ){
-    if (advicerequestId.substr(0,2) == ":)"){
-      advicerequestId = advicerequestId.substr(2);
       return res.ext.data({advicerequestId: advicerequestId }).view('adviceview.jade').render();
-    }
   }
 
   next();
+  return;
 }
 
 

@@ -34,9 +34,9 @@ block body
               each adv in orguser.assignedAdviceRequests
                   tr(onclick="document.location = '#{adv.accessURL}'").advr
                     td
-                      a(href="#{adv.accessURL}") !{adv.adviceRequest}
+                      a(href="./advice/#{adv._id}") !{adv.adviceRequest}
                     td
-                      a(href="#{adv.accessURL}") !{adv.createdOn}
+                      a(href="./advice/#{adv._id}") !{adv.createdOn}
       br
       br
       div.left
