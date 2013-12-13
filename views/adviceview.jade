@@ -2,9 +2,23 @@ extends layout
 
 block viewVars
   -var title = "View Advice - " + organization.displayName
+  -var ngApp = 'adviceRequestDetail'
+
+block scripts
+   script(src='/components/angular/angular.min.js')
+   script(src='/components/angular-resource/angular-resource.min.js')
+
+   script(src='/js/adviceRequestDetail/controllers/adviceRequestDetailController.js')
+   script(src='/js/adviceRequestDetail/services/adviceRequestDetailServices.js')
+
+
 block body
   script(type="text/javascript").
     window.orgURL= "#{organization.orgURL}"
+    window.advicerequestId= "#{advicerequestId}"
+    window.accessToken = "#{accessToken}"
+    window.orgAccessCode = "#{orgAccessCode}"
+
     noCodeText = "Please enter your auth code! Email domo@domo.io w/ your phone # to get a new one!"
     errorText = "Sorry there was an error. Let domo@domo.io know if it keeps up!"
     badCodeText = "Oops, bad auth code! Try again or email domo@domo.io w/ your phone # to get a new one!"
@@ -16,7 +30,12 @@ block body
         updateForAdviceRequest advice, false
 
     window.submitPressed = () ->
-      code = $('#codeInput').val()
+      code = $('#adviceAuthCodeInput').val()
+      window.accessToken = code
+
+      orgCode = $('#organizationCodeInput').val()
+      if code?.length > 0
+        window.orgAccessCode = orgCode
 
       errorAction = () ->
         $("#submitButton").removeClass('disabled')
@@ -26,16 +45,17 @@ block body
       if code?.length > 0
         $('#submitstatus').addClass('hidden')
         $("#submitButton").addClass('disabled')
-        $.post("/viewadvice/#{accessToken}", {authToken: code}, (response)=>
+        $.get("/api/v1/organizations/mit/advicerequest/#{window.advicerequestId}?code=#{orgAccessCode}&token=#{accessToken}", {}, (response)=>
           console.log response
-          if response?.status != "success" || response?.advice? == false
+          if response?.meta?.status != "success"
             errorAction()
             $('#submitStatus').text badCodeText
           else
-            $('#authCodeForm').addClass('hidden')
-            advice = response.advice
-            authToken = advice?.authToken
-            updateForAdviceRequest response.advice, true
+            advice = response.response.advicerequest
+            window.adviceRequestScope.advicerequest = advice
+            window.adviceRequestScope.$apply()
+            window.setupSubmitSuccess()
+
             ).error(errorAction)
       else
         $('#submitStatus').removeClass('hidden')
@@ -55,27 +75,8 @@ block body
     #need to replace these with angular.js
     window.setupSubmitSuccess = () ->
       $('#codeInputDiv').fadeOut()
-
-    drawAdviceRequestBox = (adviceRequest) ->
-     $('.page-header').after("""<div class="row-fluid adviceRow"><li class="span12"><div class="caption"><h4 class="grayLabel">#{adviceRequest.modifiedDate.toString()}</h4><p class="adviceRequestText">#{adviceRequest.adviceRequest} </p></div></li></div>""")
-  
-    drawResponseBox = (response) ->
-      $('.adviceRow').last().after("""<div class="row-fluid adviceRow adviceResponseRow"><li class="span12"><div class="caption"><h4 class="text-success">#{response.user.displayName}</h4><h5 class="grayLabel">#{response.modifiedDate.toString()}</h5><p class="adviceResponseText">#{response.adviceResponse}</p></div></li></div>""")
-      if response.helpful >= 1
-        $('.caption').last().prepend(helpfulLabel)
-      else
-        $('.caption').last().prepend(wasitHelpfulLabel)
-
-    updateForAdviceRequest = (adviceRequest, animate) ->
-      drawAdviceRequestBox adviceRequest
-      for response in adviceRequest.responses
-        drawResponseBox response
-      #was it helpful link
-      $('.wasitHelpfulLink').click  (e) =>
-        @window.helpfulPressed($(e.currentTarget))
-    
-      if animate == true
-        $('.adviceRow').hide().slideDown(400)
+      $('#codeInputDiv').addClass('hidden')
+      $('#adviceDisplay').removeClass('hidden')
 
   include includes/toolbar  
 
@@ -87,8 +88,32 @@ block body
     p.page-header Let's see what advice you got.
     #codeInputDiv
       form(method="GET", action="#",onsubmit='window.submitPressed.apply(); return false') 
+        p.codePrompt Please enter your organization's code
+        input#organizationCodeInput(type="text", placeholder="code!")
+        br
         p.codePrompt please enter your advice secret code
         input#adviceAuthCodeInput(type="text", placeholder="secret code!")
         br
         input#submitButton.btn.btn-large.btn-success(type= "submit", style= 'margin-top: 5px; width: 100px;')
       h4#submitStatus.text-warning.hidden Ooops, that's not the code!
+
+    #adviceDisplay.hidden.content-index.container-fluid(ng-controller="adviceRequestDetailController")
+      div.row-fluid.adviceRow
+        li.span12
+          div.caption
+            //if helpful, say
+            //if pending approval, say, give approval url
+            //if flagged, say
+            //h4.text-success SupporterDisplayName
+            h5.grayLabel {{advicerequest.createdOn.toString()}}
+            p.adviceRequestText {{advicerequest.adviceRequest}}
+      div.row-fluid.adviceRow.adviceResponseRow(ng-repeat="response in advicerequest.responses")
+        li.span12
+          div.caption
+            //if helpful, say
+            //if pending approval, say, give approval url
+            //if flagged, say
+            h4.text-success {{response.adviceGiverDisplayName}}
+            h5.grayLabel {{response.modifiedDate.toString()}}
+            p.adviceRequestText {{response.adviceResponse}}
+    
