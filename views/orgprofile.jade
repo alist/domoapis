@@ -32,11 +32,12 @@ block body
                   | Created On
             tbody
               each adv in orguser.assignedAdviceRequests
-                  tr(onclick="document.location = '#{adv.accessURL}'").advr
+                -var arRef = "./advice/" + adv._id;
+                  tr(onclick="document.location = '#{arRef}'").advr
                     td
-                      a(href="#{adv.accessURL}") !{adv.adviceRequest}
+                      a(href=arRef) !{adv.adviceRequest}
                     td
-                      a(href="#{adv.accessURL}") !{adv.createdOn}
+                      a(href=arRef) !{adv.createdOn}
       br
       br
       div.left
@@ -52,11 +53,12 @@ block body
                   | Created On
             tbody
               each adv in orguser.adviceGiven
-                  tr(onclick="document.location = '#{adv.accessURL}'").advr
+                -var arRef = "./advice/" + adv._id;
+                  tr(onclick="document.location = '#{arRef}'").advr
                     td
-                      a(href="#{adv.accessURL}") !{adv.adviceRequest}
+                      a(href=arRef) !{adv.adviceRequest}
                     td
-                      a(href="#{adv.accessURL}") !{adv.createdOn}
+                      a(href=arRef) !{adv.createdOn}
 
     .availability
       b

@@ -34,7 +34,8 @@
     "token": "0.0.0",
     "apn": "~1.4.1",
     "node-gcm": "~0.9.6",
-    "cron": "1.0.1"
+    "cron": "1.0.1",
+    "nib" : "1.0.x"
   },
   "devDependencies": {
     "chai": "1.6.0",

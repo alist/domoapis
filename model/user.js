@@ -66,7 +66,7 @@ var userSchema = new Schema({
   activeSessionIDs: [ {type: String, index: {unique: true}} ],
 
 
-  organizations: [
+  organizations: [ //should this ref org users?
     { type: Schema.Types.ObjectId, ref: 'organization' }
   ],
 

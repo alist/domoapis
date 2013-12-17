@@ -1,0 +1,119 @@
+extends layout
+
+block viewVars
+  -var title = "View Advice - " + organization.displayName
+  -var ngApp = 'adviceRequestDetail'
+
+block scripts
+   script(src='/components/angular/angular.min.js')
+   script(src='/components/angular-resource/angular-resource.min.js')
+
+   script(src='/js/adviceRequestDetail/controllers/adviceRequestDetailController.js')
+   script(src='/js/adviceRequestDetail/services/adviceRequestDetailServices.js')
+
+
+block body
+  script(type="text/javascript").
+    window.orgURL= "#{organization.orgURL}"
+    window.advicerequestId= "#{advicerequestId}"
+    window.accessToken = "#{accessToken}"
+    window.orgAccessCode = "#{orgAccessCode}"
+
+    noCodeText = "Please enter your auth code! Email domo@domo.io w/ your phone # to get a new one!"
+    errorText = "Sorry there was an error. Let domo@domo.io know if it keeps up!"
+    badCodeText = "Oops, bad auth code! Try again or email domo@domo.io w/ your phone # to get a new one!"
+  
+  :coffeescript
+    $(document).ready =>
+      if advice?
+        $('#authCodeForm').addClass('hidden')
+        updateForAdviceRequest advice, false
+
+    window.submitPressed = () ->
+      code = $('#adviceAuthCodeInput').val()
+      window.accessToken = code
+
+      orgCode = $('#organizationCodeInput').val()
+      if code?.length > 0
+        window.orgAccessCode = orgCode
+
+      errorAction = () ->
+        $("#submitButton").removeClass('disabled')
+        $('#submitStatus').removeClass('hidden')
+        $('#submitStatus').text errorText
+
+      if code?.length > 0
+        $('#submitstatus').addClass('hidden')
+        $("#submitButton").addClass('disabled')
+        $.get("/api/v1/organizations/mit/advicerequest/#{window.advicerequestId}?code=#{orgAccessCode}&token=#{accessToken}", {}, (response)=>
+          console.log response
+          if response?.meta?.status != "success"
+            errorAction()
+            $('#submitStatus').text badCodeText
+          else
+            advice = response.response.advicerequest
+            window.adviceRequestScope.advicerequest = advice
+            window.adviceRequestScope.$apply()
+            window.setupSubmitSuccess()
+
+            ).error(errorAction)
+      else
+        $('#submitStatus').removeClass('hidden')
+        $('#submitStatus').text noCodeText
+      return false
+
+    window.setupSubmitting = () ->
+      $('#submitButton').addClass('disabled')
+      $('#submitStatus').addClass('hidden')
+
+    window.setupFailedSubmit = () ->
+      $('#submitButton').removeClass('disabled')
+      $('#submitStatus').removeClass('hidden')
+      $('#submitStatus').text "Ooops, that's not the code!"
+    
+
+    #need to replace these with angular.js
+    window.setupSubmitSuccess = () ->
+      $('#codeInputDiv').fadeOut()
+      $('#codeInputDiv').addClass('hidden')
+      $('#adviceDisplay').removeClass('hidden')
+
+  include includes/toolbar  
+
+
+  .content.container-fluid
+    section#index-about
+      a(href="/#{organization.orgURL}")
+        h1= organization.displayName
+    p.page-header Let's see what advice you got.
+    #codeInputDiv
+      form(method="GET", action="#",onsubmit='window.submitPressed.apply(); return false') 
+        p.codePrompt Please enter your organization's code
+        input#organizationCodeInput(type="text", placeholder="code!")
+        br
+        p.codePrompt please enter your advice secret code
+        input#adviceAuthCodeInput(type="text", placeholder="secret code!")
+        br
+        input#submitButton.btn.btn-large.btn-success(type= "submit", style= 'margin-top: 5px; width: 100px;')
+      h4#submitStatus.text-warning.hidden Ooops, that's not the code!
+
+    #adviceDisplay.hidden.content-index.container-fluid(ng-controller="adviceRequestDetailController")
+      div.row-fluid.adviceRow
+        li.span12
+          div.caption
+            //if helpful, say
+            //if pending approval, say, give approval url
+            //if flagged, say
+            //h4.text-success SupporterDisplayName
+            h5.grayLabel {{advicerequest.createdOn.toString()}}
+            p.adviceRequestText {{advicerequest.adviceRequest}}
+      div.row-fluid.adviceRow.adviceResponseRow(ng-repeat="response in advicerequest.responses")
+        li.span12
+          div.caption
+            //if helpful, say
+            //if pending approval, say, give approval url
+            //if flagged, say
+            h4.text-success {{response.adviceGiverDisplayName}}
+            h5.grayLabel {{response.modifiedDate.toString()}}
+            p.adviceRequestText {{response.adviceResponse}}
+    
