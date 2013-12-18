@@ -41,20 +41,22 @@ block body
   .organizationHeader
     .organizationBG(style=" background-image: url( #{organization.bannerURL} );")
 
-  .content.container-fluid
+  .content.container-fluid.addClass('hidden')
       section#index-about
         a(href="/#{organization.orgURL}")
           h1= organization.displayName
-      
+  
+  .content.container-fluid    
       #codeInputDiv
         form(method="GET", action="#",onsubmit='window.submitPressed.apply(); return false') 
+          br
           p.codePrompt Please enter your organization's code
           input#organizationCodeInput(type="text", placeholder="code!")
           br
           input#submitButton.btn.btn-large.btn-success(type= "submit", style= 'margin-top: 5px; width: 100px;')
         h4#submitStatus.text-warning.hidden Ooops, that's not the code!
         p.lead
-          | It's on the flyers! Check with someone your organization if you've misplaced it!
+          | It's on the flyers! Check with someone your organization if you've misplaced it.
 
       #thankYouText.hidden
         h1.text-success
