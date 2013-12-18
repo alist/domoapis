@@ -77,15 +77,15 @@ script(type="text/javascript").
     form#adviceForm.span7.pull-right(method="GET", action="#",onsubmit='window.submitAdvicePressed.apply(); return false') 
       
       .right.row
-        h5.grayLabel.limitText.inline characters remaining: 
-        h5.limitText.grayLabel.inline#infiniteLimit '–'
       textarea#adviceTextArea.input-block-level(type:'textarea', rows:6, placeholder= defaultPlaceholderText)
-      div.controls-row.row-flexible
+      div.controls-row.row-flexible.addClass('hidden')
         input#adviceContactInput(type= "text", placeholder= "US phone #")
-        
+      
+      div.controls-row.row-flexible  
         input#submitButton.btn.btn-success.right(type= "submit", style= "margin-top: 5px;'", text= 'Submit')
+      div.controls-row.row-flexible.addClass('hidden')
         label.checkbox
-          input#skipContactBox(type= 'checkbox')
+          input#skipContactBox(type= 'checkbox',checked='checked')
           | no thanks, just give me a URL to check later
         h4.text-warning.hidden#submitStatus Thanks for using Domo!!
 
