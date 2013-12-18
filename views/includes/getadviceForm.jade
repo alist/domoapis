@@ -59,20 +59,22 @@ script(type="text/javascript").
 #getAdviceInputDiv
   h1 Get advice through Domo
   br
-  h4.supporterCount 12 MIT Supporters since May 16, 2013
-  legend Through this anonymous request, vetted peers will engage you with empathy and support.
+  legend Through your anonymous request vetted peers will provide you with support.
   .row-fluid
-    #howItWorks.span3.pull-left
+    #howItWorks.span5.pull-left
       h4 How it works:
       ol
         li You descibe what's up
+        li Choose the best category for your question
         li 
-          a(href: '/supporters') Supporter Domosapiens
-          |  respond at domo.io
-        li You get SMS alerts about your responses
-        li You're free to follow-up, but responses might be by different people.
+          a(href='./supporters', target="_blank") Supporters 
+          |   will respond at 
+          a(href='http://www.domo.io', target="_blank") domo.io
+        li You will get a unique URL to check your response
+        li You can let supporters know if they were helpful
+        li Feel free to follow-up, but responses might be by other people
 
-    form#adviceForm.span9.pull-right(method="GET", action="#",onsubmit='window.submitAdvicePressed.apply(); return false') 
+    form#adviceForm.span7.pull-right(method="GET", action="#",onsubmit='window.submitAdvicePressed.apply(); return false') 
       
       .right.row
         h5.grayLabel.limitText.inline characters remaining: 
