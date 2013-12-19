@@ -60,16 +60,15 @@ block body
 
       #thankYouText.hidden
         h1.text-success
-          | Thanks!
-          small  Depending on reasonable hours for volunteering, someone should get back to you in a few hours!
-        h3
-          | If you need help NOW, you should call
-          b  911
-          | .
+          | Thanks for trusting Domo!
+        br
+        p.mission
+          | You can find your advice through the URL that is listed below. Depending on the availability of supporters, you should receive advice within several hours.
         br
         h4
-          | Here's a URL to copy if you ever want to visit your advice page before/without getting an SMS from us. If you didn't leave a phone #, you'll need this:
-          br 
-          br 
-          a#adviceURL(href= '/s', target: '_blank') Your advice URL.
-
+          | In case of an emergency, please contact the appropriate emergency services or call
+          b  911
+          | .
+        br 
+        a#adviceURL(href='/s', target="_blank") Your advice URL
+      br
