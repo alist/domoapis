@@ -446,13 +446,15 @@ function notifySupporteePush(advicerequest, newAdvice) {
   newAdvice = _.pick(newAdvice, [ 'adviceResponse', 'adviceGiver', 'modifiedDate' ]);
   var message = newAdvice.adviceResponse;
 
-  if(message.length > 25) {
-    message = message.substring(0, 25) + '...';
+  if(message.length > 50) {
+    message = message.substring(0, 50) + '...';
   }
   
   //ALERT: it's 255 total chars, including all the {{:{}} mumbo jumbo!
   PushController.sendMessage({
     subscriberId: advicerequest.subscriberId,
+    sound: "default",
+    badge: "1",
     payload: { newAdviceForRequest: advicerequest._id },
     alert: 'New advice: ' + message
   }, function(err, devices) {
