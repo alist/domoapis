@@ -45,7 +45,7 @@ AdviceRequestController.prototype.getInfo = function(req, res) {
 AdviceRequestController.prototype.getAdvicerequestDetail = function(req, res) {
   var advicerequestId = req.params.advicerequestId;
   
-  currentUserOrgId = req.extras.orguser.orgId;
+  var currentUserOrgId = req.extras.orguser.orgId;
 
   AdviceRequestModel.findOne({ _id: advicerequestId, organization: currentUserOrgId }, function(err, advicerequest) {
     if(err) {
@@ -166,7 +166,7 @@ AdviceRequestController.prototype.getAll = function(req, res) {
 //helper function
 function getMins(timeString){
   timeString = timeString.toLowerCase()
-  tsArr = timeString.split(' ')
+  var tsArr = timeString.split(' ')
   var hm = tsArr[0].split(':')
 
   var mins = hm[1]
