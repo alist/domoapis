@@ -16,6 +16,7 @@ var ResponseSchema = new Schema({
   adviceGiver: { type: Schema.Types.ObjectId, ref: 'orguser', required: true },
   adviceGiverDisplayName: {type: String},
   modifiedDate: {type: Date},
+  createdOn: {type: Date},
   helpful: {type: Number},
   status: {type: String},
   thankyou: {type: Number}
@@ -110,6 +111,7 @@ adviceRequestSchema.statics.newAdvice = function(req,advicerequestId, supporterI
     adviceGiver: supporterId,
     adviceGiverDisplayName: newAdviceAttrs.adviceGiverDisplayName,
     modifiedDate: new Date(),
+    createdOn: new Date(),
     helpful: newAdviceAttrs.helpful,
     status: 'Created',
     thankyou: newAdviceAttrs.thankyou
@@ -120,7 +122,7 @@ adviceRequestSchema.statics.newAdvice = function(req,advicerequestId, supporterI
       responses: newAdviceUpdate
     },
     $set: {
-      lastResponseDate: new Date()
+      lastResponseDate: new Date() 
     }
   };
 
