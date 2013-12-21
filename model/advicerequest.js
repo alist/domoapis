@@ -29,16 +29,11 @@ var adviceRequestSchema = new Schema({
   accessToken: {type: String, index: {unique: true}},
   telephoneNumber: {type: String, index: {unique: false}},
   reqstatus: {type: String},
-  //telephoneVerifyDate: {type: Date},
-  //telephoneNumberVerifyAttemptCount: {type: Number},
-  //telelphoneVerifyCode: {type: String},
-  //messageCount: {type: Number}, //how many msgs they've received
-  //overIntervalMessageAllowanceCount: {type: Number}, //how many msgs allowed to be sent past the notification interval
+
   createdOn: {type: Date, default: Date.now},
   lastNotificationDate: {type: Date, index: {unique: false}},
   notificationInterval: {type: Number},
   supportAreaIdentifier: {type: String, required: false}, //, enum: validSupportAreas },
-  //authToken: {type: String},
   adviceRequest: {type: String, required: true},
   subscriberId: { type: String },
   lastResponseDate: {type: Date},
