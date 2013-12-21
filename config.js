@@ -38,6 +38,11 @@ module.exports.app.production = {
 };
 
 
+module.exports.cron = {};
+module.exports.cron.defaults = {
+  interval: '00 */8 * * * *'
+};
+
 
 
 module.exports.db = {};
