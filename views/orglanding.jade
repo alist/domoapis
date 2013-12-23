@@ -10,11 +10,9 @@ block body
   .organizationHeader
     .organizationBG(style=" background-image: url( #{organization.bannerURL} );")
 
-  .content.container-fluid.addClass('hidden')
+  .content.container-fluid
     section#index-about
       h1= organization.displayName
-  .content.container-fluid
-      br
       p.mission= organization.usageDescription
       br
 
