@@ -95,6 +95,18 @@ module.exports.mail.defaults = {
 };
 
 
+module.exports.mail.production = {
+  host: process.env.DOMO_MAIL_HOST,
+  port: parseInt(process.env.DOMO_MAIL_PORT || 587),
+  secureConnection: (process.env.DOMO_MAIL_SECURE === 'true'),
+  auth: {
+    user: process.env.DOMO_MAIL_USER,
+    pass: process.env.DOMO_MAIL_PASS
+  },
+  from: process.env.DOMO_MAIL_FROM
+};
+
+
 module.exports.messenger = {};
 
 module.exports.messenger.defaults = {
