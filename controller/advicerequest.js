@@ -272,7 +272,7 @@ AdviceRequestController.prototype.newAdviceRequest = function(req, res) {
                           + '?code=' + org.code
                           + '&token=' + advicerequest.accessToken;
         */
-        var domain = 'http://domoapis.herokuapp.com/'
+        var domain = 'https://oh.domo.io/'
         var accessPath = org.orgURL
                          + '/giveadvice/' + advicerequest._id;
 

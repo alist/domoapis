@@ -33,7 +33,7 @@ script(type="text/javascript").
           errorAction()
         else
           adviceRequest = response.response.advicerequest
-          adviceURL = "https://domoapis.herokuapp.com/#{window.orgURL}/advice/#{adviceRequest._id}?token=#{adviceRequest.accessToken}&code=" + encodeURIComponent(code)
+          adviceURL = "https://oh.domo.io/#{window.orgURL}/advice/#{adviceRequest._id}?token=#{adviceRequest.accessToken}&code=" + encodeURIComponent(code)
           $('#adviceURL').attr('href', adviceURL)
           $('#adviceURL').text(adviceURL)
           $('#thankYouText').fadeIn('fast')
