@@ -3,12 +3,13 @@ var env = 'test'; //process.env.NODE_ENV;
 
 // set attribs for new organization
 var newOrganization =  {
-	"displayName": "Massachusetts Institute of Technology",
-	"orgURL": "mit",
+	"displayName": "Alex List - ask me anything",
+  "usageDescription": "Hey! Alex uses Domo to accept feedback and give advice. code: ayylist",
+	"orgURL": "alistfakeo",
 	"city": "Cambridge",
 	"region": "MA",
-	"bannerURL": "/img/banners/mit.jpg",
-	"code": "mit9"
+	"bannerURL": "/img/banners/alist.jpg",
+	"code": "ayylisto"
 };
 
 // CODE
@@ -40,6 +41,7 @@ var print = function(name, obj){
 
 print('Using environment', configLoader.activeEnv);
 print('[ENSURE THIS IS AS DESIRED] Connecting to database', config.db.dbUri);
+print('Adding: ', newOrganization);
 
 print('\nExecuting in ' + opWait + ' secs\n');
 print('Press Ctrl+C to cancel\n');
@@ -62,12 +64,12 @@ function newOrg(config, newOrganization) {
 			throw err;
 		}
 
-		Organization.find({}).sort({ id: -1 }).limit(1).exec(function(err, docs) {
+		Organization.count(function(err, count) {
 			if(err) {
 				throw err;
 			}
 
-			newOrganization.id = (docs.length < 1) ? '1' : (+docs[0].id + 1);
+			newOrganization.id = count + 1
 
 			print('newOrganization.id', newOrganization.id);
 
@@ -83,6 +85,3 @@ function newOrg(config, newOrganization) {
 
 	});
 }
-=======
-}
->>>>>>> 0888c9d2959f839c02963a6d2d6d09e5ea31b82e

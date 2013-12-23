@@ -3,9 +3,9 @@ var env = 'test'; //process.env.NODE_ENV;
 
 // set attribs for new user
 var newU =   {
-    "email": "harish@domo.io",
-    "password": "letmein",
-    "orgId": 103, // the "id" field in the org object
+    "email": "alex@alist.im",
+    "password": "alexyouonlydomoonce",
+    "orgId": 104, // the "id" field in the org object
     "roles": {
       "supporter": {
          "supportAreas": [ 'career' ]
@@ -49,6 +49,7 @@ var print = function(name, obj){
 
 print('Using environment', configLoader.activeEnv);
 print('[ENSURE THIS IS AS DESIRED] Connecting to database', config.db.dbUri);
+print('Adding: ', newU);
 
 print('Executing in ' + opWait + ' secs\n');
 print('Press Ctrl+C to cancel\n');
@@ -98,6 +99,3 @@ function newUser(config, newU) {
         });
     });
 }
-=======
-}
->>>>>>> 0888c9d2959f839c02963a6d2d6d09e5ea31b82e
