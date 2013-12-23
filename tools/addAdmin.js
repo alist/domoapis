@@ -3,9 +3,9 @@ var env = 'test'; //process.env.NODE_ENV;
 
 // set attribs for new user
 var newU =   {
-    "email": "alexander.h.list@gmail.com",
-    "password": "youonlydomoonce",
-    "orgId": 1, // the "id" field in the org object
+    "email": "alex@alist.im",
+    "password": "alexyouonlydomoonce",
+    "orgId": 104, // the "id" field in the org object
     "roles": {
       "supporter": {
          "supportAreas": [ 'career' ]
@@ -18,7 +18,7 @@ var newU =   {
 
 // CODE
 
-var opWait = 5;
+var opWait = 10;
 
 var forcedEnv = env || ((typeof process.env.NODE_ENV !== 'undefined') ? process.env.NODE_ENV : 'test');
 
@@ -49,6 +49,7 @@ var print = function(name, obj){
 
 print('Using environment', configLoader.activeEnv);
 print('[ENSURE THIS IS AS DESIRED] Connecting to database', config.db.dbUri);
+print('Adding: ', newU);
 
 print('Executing in ' + opWait + ' secs\n');
 print('Press Ctrl+C to cancel\n');

@@ -14,7 +14,7 @@ var newOrganization =  {
 
 // CODE
 
-var opWait = 7;
+var opWait = 10;
 
 var forcedEnv = env || ((typeof process.env.NODE_ENV !== 'undefined') ? process.env.NODE_ENV : 'test');
 
