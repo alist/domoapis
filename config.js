@@ -83,15 +83,27 @@ Object.keys(module.exports.db).forEach(function(k){
 module.exports.mail = {};
 
 module.exports.mail.defaults = {
-  host: "smtp.buggycoder.com",
+  host: "smtp.live.com",
   port: 587,
   secureConnection: false,
   auth: {
-    user: "shirish@buggycoder.com",
-    pass: "VTkrZ(%7"
+    user: "domo-alerts@buggycoder.com",
+    pass: "C@llm3m@yb33"
   },
-  from: "\"Buggy Coder, Inc.\" <shirish@buggycoder.com>",
+  from: '"Domo Alerts" <domo-alerts@buggycoder.com>',
   adminEmails: ['shirishk.87@gmail.com', 'harish@domo.io', 'alex@domo.io']
+};
+
+
+module.exports.mail.production = {
+  host: process.env.DOMO_MAIL_HOST,
+  port: parseInt(process.env.DOMO_MAIL_PORT || 587),
+  secureConnection: (process.env.DOMO_MAIL_SECURE === 'true'),
+  auth: {
+    user: process.env.DOMO_MAIL_USER,
+    pass: process.env.DOMO_MAIL_PASS
+  },
+  from: process.env.DOMO_MAIL_FROM
 };
 
 
