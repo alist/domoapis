@@ -31,7 +31,7 @@ block body
       if email.indexOf('@') != -1 && email.substr(email.indexOf('@')+1).indexOf('.') != -1
         console.log "submitting good email #{email}"
         window.setupSubmitting()
-        $.post("/apiv1/inviterequest", {emailAddress: email}, (response)=>
+        $.post("https://domo-io-services.herokuapp.com/apiv1/inviterequest", {emailAddress: email}, (response)=>
           console.log response
           if response?.status != "success"
             window.setupFailedSubmit()
