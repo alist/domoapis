@@ -3,9 +3,9 @@ var env = 'test'; //process.env.NODE_ENV;
 
 // set attribs for new user
 var newU =   {
-    "email": "harish@domo.io",
-    "password": "letmein",
-    "orgId": 103, // the "id" field in the org object
+    "email": "alexander.h.list@gmail.com",
+    "password": "youonlydomoonce",
+    "orgId": 1, // the "id" field in the org object
     "roles": {
       "supporter": {
          "supportAreas": [ 'career' ]
@@ -18,7 +18,7 @@ var newU =   {
 
 // CODE
 
-var opWait = 10;
+var opWait = 5;
 
 var forcedEnv = env || ((typeof process.env.NODE_ENV !== 'undefined') ? process.env.NODE_ENV : 'test');
 
@@ -98,6 +98,3 @@ function newUser(config, newU) {
         });
     });
 }
-=======
-}
->>>>>>> 0888c9d2959f839c02963a6d2d6d09e5ea31b82e
