@@ -3,6 +3,7 @@ var OrganizationController = require('../controller/organization').OrganizationC
   , OrgUserController = require('../controller/orguser').OrgUserController
   , AdviceRequestController = require('../controller/advicerequest').AdviceRequestController
   , UserController = require('../controller/user').UserController
+  , InviteRequestController = require('../controller/inviterequest').InviteRequestController
   , Config = require('../configLoader')
   , passport = require('passport')
 
@@ -32,6 +33,9 @@ module.exports.public = function(app) {
     passport.authenticate('local', { session: false }),
     UserController.newSession.bind(UserController)
   );
+
+  //yay signups!
+  app.post(apiConfig.path + '/inviterequest', InviteRequestController.addEmailAddress.bind(OrganizationController));
 
   //app.post(apiConfig.path + '/app/updates', AdviceRequestController.getInfoForList.bind(AdviceRequestController)); //uncomment if needed
 
