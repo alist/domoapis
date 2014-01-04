@@ -454,8 +454,7 @@ function notifySupporteePush(advicerequest, newAdvice) {
     subscriberId: advicerequest.subscriberId,
     payload: { newAdviceForRequest: advicerequest._id},
     options: {sound: "default", badge: 1 },
-    //alert: 'New advice: ' + message //hnk-
-    alert: 'A Domosapien has responded to your advice request' //hnk+
+    alert: 'A Domosapien has responded to your advice with: ' + message
   }, function(err, devices) {
     console.log(err, devices); // do something here
   });
