@@ -134,7 +134,7 @@ block body
           
           $.ajax({
             type: 'POST',
-            url: '/mit/savetimes',
+            url: './savetimes',
             data: {times : times},
             success: function(data) {
               if(!data.err)
