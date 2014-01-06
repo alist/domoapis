@@ -3,13 +3,39 @@ var env = 'test'; //process.env.NODE_ENV;
 
 // set attribs for new organization
 var newOrganization =  {
-	"displayName": "Alex List - ask me anything",
-  "usageDescription": "Hey! Alex uses Domo to accept feedback and give advice. code: ayylist",
-	"orgURL": "alistfakeo",
+	"displayName": "Domo Support",
+  "usageDescription": "Use this organization to get support for Domo itself. Code: 'Domo'",
+	"orgURL": "support",
 	"city": "Cambridge",
 	"region": "MA",
-	"bannerURL": "/img/banners/alist.jpg",
-	"code": "ayylisto"
+	"bannerURL": "/img/banners/domoers.png",
+	"code": "Domo",
+  "supportAreas": [
+        {
+            "identifier": "career",
+            "name": "career concerns"
+        },
+        {
+            "identifier": "balance",
+            "name": "study-life balance"
+        },
+        {
+            "identifier": "family",
+            "name": "family matters"
+        },
+        {
+            "identifier": "spirituality",
+            "name": "spirituality/ religion"
+        },
+        {
+            "identifier": "funculture",
+            "name": "fun & culture"
+        },
+        {
+            "identifier": "otherconcerns",
+            "name": "other things"
+        }
+    ]
 };
 
 // CODE
