@@ -45,7 +45,11 @@ var orgUserSchema = new Schema({
                              endString: {type : String},
                              beginString: {type : String},
                              day: {type : String}
-                          }]
+                          }],
+  thanks:                 { type: Number, default: 0 },
+  helpfuls:               { type: Number, default: 0 },
+  assignedCount:          { type: Number, default: 0 },
+  adviceCount:            { type: Number, default: 0 }
 });
 
 

@@ -53,7 +53,7 @@ var checkAssignments = function(){
       },function(err,cbs){
         var updatedAdvr = []
 
-        var assigned = {}
+        var assigned = {} //add supporter to here so that they are assigned only once
 
         adviceRequests.forEach(function(adv,i){
           supporters.forEach(function(sup,j){
