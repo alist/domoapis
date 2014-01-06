@@ -101,9 +101,7 @@ function setupModules(done) {
 }
 
 function setupChronJobs(done){
-  console.log('!')
-
-  new cronJob('00 */8 * * * *', function(){
+  new cronJob(config.cron.interval, function(){
       CronController.checkAssignments()
   }, null, true)
 

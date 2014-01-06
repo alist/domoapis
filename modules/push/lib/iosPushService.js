@@ -84,6 +84,7 @@ IOSPushService.prototype.sendMessage = function(devicetoken, payload, alert, opt
     note.alert = alert;
     note.payload = payload;
 
+    console.log("options: " +opts);
     for(var k in opts) {
       note[k] = opts[k];
     }

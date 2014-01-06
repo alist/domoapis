@@ -1,6 +1,6 @@
 Welcome to Domo-io server!
 
-make sure to use 'npm update' as we don't include all modules in git here
+Please make sure to use 'npm update' as we don't include all modules in git here
 
 the following modules are .gitignore(d):
 bcrypt

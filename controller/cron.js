@@ -88,7 +88,7 @@ var checkAssignments = function(){
 //helper func
 function getMins(timeString){
   timeString = timeString.toLowerCase()
-  tsArr = timeString.split(' ')
+  var tsArr = timeString.split(' ')
   var hm = tsArr[0].split(':')
 
   var mins = hm[1]

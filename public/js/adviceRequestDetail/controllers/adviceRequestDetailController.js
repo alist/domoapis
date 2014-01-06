@@ -9,6 +9,14 @@ function adviceRequestDetailController($scope, ADetailRequests) {
       });
     }
 
+    $scope.$watch('advicerequest', function( newValue, oldValue ) {
+	        if ( newValue === oldValue ) {
+	            return;
+	        }
+
+	        $scope.advicerequest = newValue;
+	    });
+
     $scope.loadResource()
 
 	window.adviceRequestScope = $scope;

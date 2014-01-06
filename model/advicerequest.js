@@ -17,6 +17,7 @@ var ResponseSchema = new Schema({
   adviceGiverDisplayName: {type: String},
   modifiedDate: {type: Date},
   helpful: {type: Boolean},
+  createdOn: {type: Date},
   status: {type: String},
   thankyou: {type: Boolean}
 });
@@ -28,16 +29,11 @@ var adviceRequestSchema = new Schema({
   accessToken: {type: String, index: {unique: true}},
   telephoneNumber: {type: String, index: {unique: false}},
   reqstatus: {type: String},
-  //telephoneVerifyDate: {type: Date},
-  //telephoneNumberVerifyAttemptCount: {type: Number},
-  //telelphoneVerifyCode: {type: String},
-  //messageCount: {type: Number}, //how many msgs they've received
-  //overIntervalMessageAllowanceCount: {type: Number}, //how many msgs allowed to be sent past the notification interval
+
   createdOn: {type: Date, default: Date.now},
   lastNotificationDate: {type: Date, index: {unique: false}},
   notificationInterval: {type: Number},
   supportAreaIdentifier: {type: String, required: false}, //, enum: validSupportAreas },
-  //authToken: {type: String},
   adviceRequest: {type: String, required: true},
   subscriberId: { type: String },
   lastResponseDate: {type: Date},
@@ -110,6 +106,7 @@ adviceRequestSchema.statics.newAdvice = function(req,advicerequestId, supporterI
     adviceGiver: supporterId,
     adviceGiverDisplayName: newAdviceAttrs.adviceGiverDisplayName,
     modifiedDate: new Date(),
+    createdOn: new Date(),
     helpful: newAdviceAttrs.helpful,
     status: 'Created',
     thankyou: newAdviceAttrs.thankyou
@@ -120,7 +117,7 @@ adviceRequestSchema.statics.newAdvice = function(req,advicerequestId, supporterI
       responses: newAdviceUpdate
     },
     $set: {
-      lastResponseDate: new Date()
+      lastResponseDate: new Date() 
     }
   };
 

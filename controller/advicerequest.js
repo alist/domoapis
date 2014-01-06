@@ -45,7 +45,7 @@ AdviceRequestController.prototype.getInfo = function(req, res) {
 AdviceRequestController.prototype.getAdvicerequestDetail = function(req, res) {
   var advicerequestId = req.params.advicerequestId;
   
-  currentUserOrgId = req.extras.orguser.orgId;
+  var currentUserOrgId = req.extras.orguser.orgId;
 
   AdviceRequestModel.findOne({ _id: advicerequestId, organization: currentUserOrgId }, function(err, advicerequest) {
     if(err) {
@@ -166,7 +166,7 @@ AdviceRequestController.prototype.getAll = function(req, res) {
 //helper function
 function getMins(timeString){
   timeString = timeString.toLowerCase()
-  tsArr = timeString.split(' ')
+  var tsArr = timeString.split(' ')
   var hm = tsArr[0].split(':')
 
   var mins = hm[1]
@@ -272,7 +272,7 @@ AdviceRequestController.prototype.newAdviceRequest = function(req, res) {
                           + '?code=' + org.code
                           + '&token=' + advicerequest.accessToken;
         */
-        var domain = 'http://domoapis.herokuapp.com/'
+        var domain = 'https://oh.domo.io/'
         var accessPath = org.orgURL
                          + '/giveadvice/' + advicerequest._id;
 
@@ -323,9 +323,9 @@ AdviceRequestController.prototype.newAdvice = function(req, res) {
 
   var org = req.extras.organization.toObject();  //link to org user
 
-  newAdviceAttrs = req.body
-  newAdviceAttrs.adviceGiverDisplayName = ((typeof req.extras.orguser == undefined || typeof req.extras.orguser.displayName == undefined) ? "Anonymous" : req.extras.orguser.displayName) 
-  advicerequestId = req.params.advicerequest;
+  var newAdviceAttrs = req.body;
+  newAdviceAttrs.adviceGiverDisplayName = ((typeof req.extras.orguser == undefined || typeof req.extras.orguser.displayName == undefined) ? "Anonymous" : req.extras.orguser.displayName);
+  var advicerequestId = req.params.advicerequest;
 
   var orguser = req.extras.orguser;
   if(!orguser) {
@@ -446,15 +446,15 @@ function notifySupporteePush(advicerequest, newAdvice) {
   newAdvice = _.pick(newAdvice, [ 'adviceResponse', 'adviceGiver', 'modifiedDate' ]);
   var message = newAdvice.adviceResponse;
 
-  if(message.length > 25) {
-    message = message.substring(0, 25) + '...';
+  if(message.length > 50) {
+    message = message.substring(0, 50) + '...';
   }
-  
   //ALERT: it's 255 total chars, including all the {{:{}} mumbo jumbo!
   PushController.sendMessage({
     subscriberId: advicerequest.subscriberId,
-    payload: { newAdviceForRequest: advicerequest._id },
-    alert: 'New advice: ' + message
+    payload: { newAdviceForRequest: advicerequest._id},
+    options: {sound: "default", badge: 1 },
+    alert: 'A Domosapien has responded to your advice with: ' + message
   }, function(err, devices) {
     console.log(err, devices); // do something here
   });

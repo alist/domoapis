@@ -31,7 +31,7 @@ block body
       if email.indexOf('@') != -1 && email.substr(email.indexOf('@')+1).indexOf('.') != -1
         console.log "submitting good email #{email}"
         window.setupSubmitting()
-        $.post("/apiv1/inviterequest", {emailAddress: email}, (response)=>
+        $.post("/api/v1/inviterequest", {emailAddress: email}, (response)=>
           console.log response
           if response?.status != "success"
             window.setupFailedSubmit()
@@ -62,25 +62,18 @@ block body
   .content-index.container-fluid
 
     section#index-about
-      h1 Enabling Peer Support.
+      h1 Enabling Peer Support
       p.mission
-        | By allowing employees to seek anonymous support and advice from mentors at their company, 
-        i Domo for Business 
-        | improves employee satisfaction, reduces burnout and builds community. 
+        | By allowing individuals to seek anonymous support and advice from mentors in their organization, Domo improves well-being, reduces stress and builds community. 
       p.mission
-        i Domo for Good 
-        | enables non-profits and student groups to reduce barriers for those seeking and providing support.
-      #loveit
-          h3.loveitHeader Backed by experts:
-          p.loveitReason Domo's experts in management and mental health are available to talk through any situation where mentors need extra support.
-          h3.loveitHeader Insightful analytics:
-          p.loveitReason 
-            | Community analytics give 
-            i Domo for Business 
-            | organizations insights for continuous cultural improvements. 
-          
+      h3 Backed by experts
+      p.mission
+        | Domo’s experts in mental health and management are available to talk through any situation where mentors need extra support.
+      h3 Insightful analytics
+      p.mission
+        | Community analytics give organizations insights for continuous cultural improvements.  
         br
-
+        br
 
       #getAboardBeta.control-group
         form(method="GET", action="#",onsubmit='window.submitPressed.apply(); return false')
