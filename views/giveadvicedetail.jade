@@ -69,20 +69,6 @@ block body
 
     };
 
-    window.thanks = function(self){
-      if($(self).attr('src') == '/img/ty_act_s.png')
-        $(self).attr('src','/img/ty_deact_s.png')
-      else
-        $(self).attr('src','/img/ty_act_s.png')
-    }
-
-    window.helpful = function(self){
-      if($(self).attr('src') == '/img/helpful_act.png')
-        $(self).attr('src','/img/helpful_deact.png')
-      else
-        $(self).attr('src','/img/helpful_act.png')
-    }
-
   .content-index.container-fluid(ng-controller="adviceRequestDetailController")
     section#home
       a(href='../giveadvice')
@@ -106,9 +92,6 @@ block body
           //if flagged, say
           h4.text-success {{response.adviceGiverDisplayName}}
           h5.grayLabel.adv-btn {{response.modifiedDate.toString()}}
-          div.right
-            img.link(src="/img/ty_act_s.png", onclick="window.thanks(this)")
-            img.link(src="/img/helpful_act.png", onclick="window.helpful(this)")
           p.adviceRequestText {{response.adviceResponse}}
     
     div.row-fluid#giveAdviceBox

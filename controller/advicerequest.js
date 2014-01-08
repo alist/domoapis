@@ -369,7 +369,7 @@ AdviceRequestController.prototype.setAdviceHelpful = function(req, res) {
   var newAdviceAttrs = req.body
    ,  advicerequestId = req.params.advicerequest
    ,  adviceId = req.params.advice
-   ,  accessToken = req.query.token;
+   ,  accessToken = req.query.token || req.body.token;
 
   console.log(advicerequestId);
   //console.log(req.user._id);
@@ -394,11 +394,12 @@ AdviceRequestController.prototype.setAdviceHelpful = function(req, res) {
 
 AdviceRequestController.prototype.setAdviceThankyou = function(req, res) {
   //res.ext.data({ user: req.user }).render();
+  console.log(req.body)
 
   var newAdviceAttrs = req.body
    ,  advicerequestId = req.params.advicerequest
    ,  adviceId = req.params.advice
-   ,  accessToken = req.query.token;
+   ,  accessToken = req.query.token || req.body.token;
 
   console.log(advicerequestId);
   //console.log(req.user._id);

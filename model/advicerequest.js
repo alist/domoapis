@@ -16,10 +16,10 @@ var ResponseSchema = new Schema({
   adviceGiver: { type: Schema.Types.ObjectId, ref: 'orguser', required: true },
   adviceGiverDisplayName: {type: String},
   modifiedDate: {type: Date},
-  helpful: {type: Boolean},
+  helpful: {type: Boolean, default : false},
   createdOn: {type: Date},
   status: {type: String},
-  thankyou: {type: Boolean}
+  thankyou: {type: Boolean, default : false}
 });
 
 var adviceRequestSchema = new Schema({
