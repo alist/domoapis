@@ -11,7 +11,7 @@ block scripts
 
   script.
     advicerequestId="#{advicerequestId}";
-    successLabelText="Thank you for supporting!!"
+    successLabelText="Thanks for your support"
   
   script(src='/js/adviceRequestDetail/controllers/adviceRequestDetailController.js')
   script(src='/js/adviceRequestDetail/services/adviceRequestDetailServices.js')
@@ -46,7 +46,7 @@ block body
             window.adviceRequestScope.loadResource()
             $('#submitStatus').text(successLabelText)
             $('#submitStatus').removeClass('hidden');
-            $('#hellyeah').text('Oh yeah!')
+            $('#hellyeah').text('Thanks for your support')
 
             $('#adviceTextArea').val('');
             $('#guidlinesAcceptedBox').prop('checked', false);
@@ -60,9 +60,9 @@ block body
         
         $('#submitStatus').removeClass('hidden');
         if ((typeof advice !== "undefined" && advice !== null ? advice.length : void 0) > 0 && checkBoxChecked !== true) {
-          $('#submitStatus').text("please checkout those guidlines :)!");
+          $('#submitStatus').text("Please indicate that your advice is conform the Domo advice-giving guidelines by checking the checkbox");
         } else {
-          $('#submitStatus').text("your advice, please!");
+          $('#submitStatus').text("Please give your advice before clicking submit");
         }
       }
        
@@ -71,8 +71,8 @@ block body
 
   .content-index.container-fluid(ng-controller="adviceRequestDetailController")
     section#home
-      a(href='../giveadvice')
-        h3 Give Advice
+        h3.darkGreenLabel Give Advice / 
+         a.darkGreenLabel(href='../giveadvice') Back to Requests
       p#hellyeah 
 
     div.row-fluid.adviceRow
@@ -82,7 +82,7 @@ block body
           //if pending approval, say, give approval url
           //if flagged, say
           //h4.text-success SupporterDisplayName
-          h5.grayLabel {{advicerequest.createdOn.toString()}}
+          //h5.grayLabel {{advicerequest.createdOn.toString()}}
           p.adviceRequestText {{advicerequest.adviceRequest}}
     div.row-fluid.adviceRow.adviceResponseRow(ng-repeat="response in advicerequest.responses")
       li.span12
@@ -91,8 +91,8 @@ block body
           //if pending approval, say, give approval url
           //if flagged, say
           h4.text-success {{response.adviceGiverDisplayName}}
-          h5.grayLabel.adv-btn {{response.modifiedDate.toString()}}
-          p.adviceRequestText {{response.adviceResponse}}
+          //h5.grayLabel.adv-btn {{response.modifiedDate.toString()}}
+          p.grayLabel.adviceRequestText {{response.adviceResponse}}
     
     div.row-fluid#giveAdviceBox
       ul.thumbnails
@@ -101,12 +101,13 @@ block body
           h4.text-success= displayName
     
           form(method='GET', id='adviceResponse', action="#", onsubmit= "window.submitPressed.apply(); return false;")
-            textarea.input-block-level#adviceTextArea(rows= "3", placeholder= "your response")
+            textarea.input-block-level#adviceTextArea(rows= "3", placeholder= "You can type your response here...")
             div.controls-row
               label.checkbox.span6
                 input#guidlinesAcceptedBox(type='checkbox')
-                to the best of my ability, this adheres to the 
-                a(href="/supporters") advice-giving guidlines.
+                |This advice is in line with the Domo 
+                a(href='../supporters', target="_blank") advice-giving guidlines
+                |.
 
               input.btn.btn-success.right#submitButton(type= 'submit') Submit
             h4.text-warning.hidden#submitStatus= successLabelText
