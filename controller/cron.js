@@ -153,7 +153,7 @@ function emailRelevantSupporters(cb,supporterEmailHash, org, advicerequest){
       if(err) {
         //return console.log('Error notifying supporters:', err);
       }
-      cb_inner(null);
+      cb(null);
     });
 
   });  
