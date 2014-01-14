@@ -13,6 +13,7 @@ var AdviceRequestModel = require("../model/advicerequest").AdviceRequest
   , jade = require('jade')
   , Config = require('../configLoader')
   , path = require('path')
+  , moment = require('../modules/moment.min')
   , async = require('async')
 ///
 

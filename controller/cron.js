@@ -54,6 +54,7 @@ var checkAssignments = function(){
         },
 
         findAdviceRequests : function(cb){
+          console.log(supporters.length, Object.keys(supporterEmailHash).length)
           AdviceRequestModel.find({organization : org._id, assignedSupportersCount : {$lt : 3} }).exec(function(err,advRequests){
             if(err)
               return console.log('Error occurred updating assignments in cron job')
@@ -79,11 +80,15 @@ var checkAssignments = function(){
         })
         async.each(updatedAdvr,function(updadvr,cb_inner){
           updadvr.save(function(err,savedadvr){
-            if(err)
+            if(err){
               console.log(err) //don't break
-            console.log('About to email supporters')  
-            console.log(supporterEmailHash)
-            emailRelevantSupporters(cb_inner,supporterEmailHash,org,updadvr) //this is a hack //hnk+
+            }
+            else{
+              console.log('About to email supporters')  
+              console.log(supporterEmailHash)
+              console.log(savedadvr)
+              emailRelevantSupporters(cb_inner,supporterEmailHash,org,updadvr) //this is a hack //hnk+
+            }
           })
           //if (!err){
             // console.log('About to email supporters')
@@ -135,9 +140,12 @@ function emailRelevantSupporters(cb,supporterEmailHash, org, advicerequest){
   var mailTmplPath = path.join(config.app.env.rootDir, 'views', 'mailer', 'newAdviceRequest.jade')
   var mailer = require('../lib/mailer')
 
+  console.log('Entered email module')
+
   jade.renderFile(mailTmplPath, { org: org, advicerequest: advicerequest }, function(err, mailHtml) {
 
     // run upto 5 parallel tasks to send e-mail
+    console.log('Generating template....emailing')
     async.eachLimit(advicerequest.assignedSupporters, 5, function(assignedSupporter, next) {
 
       var email = supporterEmailHash[assignedSupporter.toString()]
