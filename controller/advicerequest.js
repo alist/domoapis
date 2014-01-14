@@ -305,7 +305,7 @@ AdviceRequestController.prototype.newAdviceRequest = function(req, res) {
 
           // full url for supporters
           advicerequest.accessURL = domain + accessPath;
-          notifySupportersEmail(org, advicerequest);
+          //notifySupportersEmail(org, advicerequest); //hnk cannot happen here anymore; must happen in cron.js
 
           callback(null)
         });

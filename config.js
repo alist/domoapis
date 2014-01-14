@@ -39,6 +39,9 @@ module.exports.app.production = {
 
 
 module.exports.cron = {};
+module.exports.cron.development = {
+  interval: '*/12 * * * * *'
+};
 module.exports.cron.defaults = {
   interval: '00 */8 * * * *'
 };

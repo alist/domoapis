@@ -101,9 +101,11 @@ function setupModules(done) {
 }
 
 function setupChronJobs(done){
-  if(!isProduction)
-    return done()
-  
+  // if(!isProduction){
+  //   console.log('not production, no cron jobs')
+  //   return done()
+  // }
+  console.log(config.cron.interval)
   new cronJob(config.cron.interval, function(){
       CronController.checkAssignments()
   }, null, true)

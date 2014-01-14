@@ -5,16 +5,27 @@ var OrganizationModel = require("../model/organization").Organization,
 	  OrgUserModel = require("../model/orguser").OrgUser,
     AdviceRequestModel = require("../model/advicerequest").AdviceRequest
 
+var jade = require('jade'),
+    Config = require('../configLoader'),
+    path = require('path')    
+
 var checkAssignments = function(){
 
 	OrganizationModel.find().exec(function(err,organizations){
 		if(err)
 			return console.log('Error occurred updating assignments in cron job')
-
     async.each(organizations,function(org,callback){
 
       var supporters = []
       var adviceRequests = []
+      var supporterEmailHash = {}
+
+      // //hnk+ cron.js emulates (sort of) the cron job functionality but we lose the ability to stream output ($HOME/bin/daily.job >> $HOME/tmp/out 2>&1) {
+      // var fs = require('fs'),
+      //     config = Config.init().getConfig(),
+      //     env = config.env;
+      // process.__defineGetter__('stderr', function() { return fs.createWriteStream(config.app.env.rootDir + '/assignments.error.log', {flags:'a'}) })  
+      // process.__defineGetter__('stdout', function() { return fs.createWriteStream(config.app.env.rootDir + '/assignments.access.log', {flags:'a'}) })  //hnk+}
 
       async.parallel({
         findSupporters : function(cb){
@@ -34,6 +45,7 @@ var checkAssignments = function(){
               })
               if(available)
                 supporters.push(orguser._id)
+                supporterEmailHash[orguser._id.toString()] = orguser.email //this is a hack; dont want to disturb the overall chi of the code//hnk+
             })
 
 
@@ -65,13 +77,22 @@ var checkAssignments = function(){
             }
           })
         })
-
         async.each(updatedAdvr,function(updadvr,cb_inner){
           updadvr.save(function(err,savedadvr){
             if(err)
               console.log(err) //don't break
-            cb_inner(null)
+            console.log('About to email supporters')  
+            console.log(supporterEmailHash)
+            emailRelevantSupporters(cb_inner,supporterEmailHash,org,updadvr) //this is a hack //hnk+
           })
+          //if (!err){
+            // console.log('About to email supporters')
+            //console.log(supporterEmailHash)
+            //emailRelevantSupporters(supporterEmailHash,org,updadvr) //this is a hack //hnk+
+          //}
+          //else{
+            //console.log(err)
+          //}
         },function(err){
           //all are now saved
           if(updatedAdvr.length > 0)
@@ -106,6 +127,36 @@ function getMins(timeString){
       hours = 0
   }
   return parseInt(hours)*60 + parseInt(mins)
+}
+
+function emailRelevantSupporters(cb,supporterEmailHash, org, advicerequest){
+  // build html for mail
+  var config = Config.getConfig()
+  var mailTmplPath = path.join(config.app.env.rootDir, 'views', 'mailer', 'newAdviceRequest.jade')
+  var mailer = require('../lib/mailer')
+
+  jade.renderFile(mailTmplPath, { org: org, advicerequest: advicerequest }, function(err, mailHtml) {
+
+    // run upto 5 parallel tasks to send e-mail
+    async.eachLimit(advicerequest.assignedSupporters, 5, function(assignedSupporter, next) {
+
+      var email = supporterEmailHash[assignedSupporter.toString()]
+      console.log('Sending message to supporter', email);
+
+      mailer.sendMessage({
+        to: email,
+        subject: 'Domo: New Advice Request',
+        html: mailHtml
+      }, next);
+
+    }, function(err) {
+      if(err) {
+        //return console.log('Error notifying supporters:', err);
+      }
+      cb_inner(null);
+    });
+
+  });  
 }
 
 exports.checkAssignments = checkAssignments
