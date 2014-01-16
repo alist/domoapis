@@ -94,7 +94,7 @@ OrganizationController.prototype.saveTimes = function(req, res) {
     req.body.times = []
 
   OrgUserModel.findById(req.extras.orguser._id).exec(function(err,orguser){
-    if(err)
+    if(err || !orguser)
       return res.send(500,{err : 'db query error'})
 
     orguser.times = req.body.times

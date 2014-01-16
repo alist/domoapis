@@ -21,6 +21,7 @@ block body
 
     window.thanks = function(self){
       var isThankyou = false
+      var adviceGiver = $(self).parents().eq(4).data('advgiver')
 
       if($(self).attr('src') == '/img/ty_act_s.png'){
         $(self).attr('src','/img/ty_deact_s.png')
@@ -32,7 +33,7 @@ block body
       $.ajax({
         type: 'POST',
         url: '../advicerequest/#{advicerequestId}/advice/' + $(self).parents().eq(4).data('advid') + '/advicethankyou',
-        data: {thankyou : isThankyou, token : window.accessToken},
+        data: {thankyou : isThankyou, token : window.accessToken, adviceGiver : adviceGiver},
         success: function(data) {
           console.log('thankyou successfully set to ' + isThankyou)
         },
@@ -44,6 +45,7 @@ block body
 
     window.helpful = function(self){
       var isHelpful = false
+      var adviceGiver = $(self).parents().eq(4).data('advgiver')
 
       if($(self).attr('src') == '/img/helpful_act.png'){
         $(self).attr('src','/img/helpful_deact.png')
@@ -55,7 +57,7 @@ block body
       $.ajax({
         type: 'POST',
         url: '../advicerequest/#{advicerequestId}/advice/' + $(self).parents().eq(4).data('advid') + '/advicehelpful',
-        data: {helpful : isHelpful, token : window.accessToken},
+        data: {helpful : isHelpful, token : window.accessToken, adviceGiver : adviceGiver},
         success: function(data) {
           console.log('Helpful successfully set to ' + isHelpful)
         },
@@ -73,9 +75,11 @@ block body
     var _this = this;
 
     $(document).ready(function() {
-      var qs = window.location.search.split('&')
-      $('#organizationCodeInput').val(qs[1].split('=')[1])
-      $('#adviceAuthCodeInput').val(qs[0].split('=')[1])
+      if(window.location.search){
+        var qs = window.location.search.split('&')
+        $('#organizationCodeInput').val(qs[1].split('=')[1])
+        $('#adviceAuthCodeInput').val(qs[0].split('=')[1])
+      }
 
       if (typeof advice !== "undefined" && advice !== null) {
         $('#authCodeForm').addClass('hidden');
@@ -175,7 +179,7 @@ block body
             //h4.text-success SupporterDisplayName
             h5.grayLabel {{advicerequest.createdOn.toString()}}
             p.adviceRequestText {{advicerequest.adviceRequest}}
-      div.row-fluid.adviceRow.adviceResponseRow(ng-repeat="response in advicerequest.responses", data-advid="{{response._id}}")
+      div.row-fluid.adviceRow.adviceResponseRow(ng-repeat="response in advicerequest.responses", data-advid="{{response._id}}", data-advgiver="{{response.adviceGiver}}")
         li.span12
           div.caption
             //if helpful, say

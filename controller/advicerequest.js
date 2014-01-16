@@ -369,26 +369,64 @@ AdviceRequestController.prototype.setAdviceHelpful = function(req, res) {
   var newAdviceAttrs = req.body
    ,  advicerequestId = req.params.advicerequest
    ,  adviceId = req.params.advice
-   ,  accessToken = req.query.token || req.body.token;
+   ,  accessToken = req.query.token || req.body.token
+   ,  adviceGiver = req.body.adviceGiver;
 
   console.log(advicerequestId);
   //console.log(req.user._id);
   console.log(adviceId);
   console.log(accessToken);
 
-  AdviceRequestModel.setAdviceHelpful(advicerequestId, adviceId, accessToken, newAdviceAttrs, function(err, advicerequest){
-    if(err) {
+  var advReq = {}
+  console.log(req.body)
+  async.series([
+
+    function(callback){
+      OrgUserModel.findById(adviceGiver).exec(function(err,orguser){
+        if(err)
+          return callback(err)
+        if(!orguser)
+          return callback('No OrgUser Found')
+        if(typeof orguser.helpfuls == 'undefined')
+          return callback('Could not update helpful count')
+
+        if(req.body.helpful && req.body.helpful == 'true')
+          orguser.helpfuls += 1
+        else
+          orguser.helpfuls -= 1
+
+        orguser.save(function(error){
+          if(error)
+            return callback(error)
+          console.log('user help count updated')
+          callback(null)
+        })
+
+      })
+    },
+    function(callback){
+      AdviceRequestModel.setAdviceHelpful(advicerequestId, adviceId, accessToken, newAdviceAttrs, function(err, advicerequest){
+        if(err) {
+          return callback(err)
+        }
+
+        if(!advicerequest) {
+          return callback(errors['ADVICEREQUEST_NOT_FOUND']())
+        }
+
+        console.log('back to newAdvice in controller');
+        //console.log(advicerequest);
+        advReq = advicerequest
+        callback(null)
+      })
+    }
+  ],function(err){
+    if(err)
       return res.ext.error(err).render();
-    }
 
-    if(!advicerequest) {
-      return res.ext.error(errors['ADVICEREQUEST_NOT_FOUND']()).render();
-    }
+    return res.ext.data({ advicerequest: advReq }).render();
+  })
 
-    console.log('back to newAdvice in controller');
-    //console.log(advicerequest);
-    return res.ext.data({ advicerequest: advicerequest }).render();
-  });
 }
 
 
@@ -399,26 +437,63 @@ AdviceRequestController.prototype.setAdviceThankyou = function(req, res) {
   var newAdviceAttrs = req.body
    ,  advicerequestId = req.params.advicerequest
    ,  adviceId = req.params.advice
-   ,  accessToken = req.query.token || req.body.token;
+   ,  accessToken = req.query.token || req.body.token
+   ,  adviceGiver = req.body.adviceGiver;
 
   console.log(advicerequestId);
   //console.log(req.user._id);
   console.log(adviceId);
   console.log(accessToken);
 
-  AdviceRequestModel.setAdviceThankyou(advicerequestId, adviceId, accessToken, newAdviceAttrs, function(err, advicerequest){
-    if(err) {
+  var advReq = {}
+
+  async.series([
+
+    function(callback){
+      OrgUserModel.findById(adviceGiver).exec(function(err,orguser){
+        if(err)
+          return callback(err)
+        if(!orguser)
+          return callback('No OrgUser Found')
+        if(typeof orguser.thanks == 'undefined')
+          return callback('Could not update thanks count')
+
+        if(req.body.thankyou && req.body.thankyou == 'true')
+          orguser.thanks += 1
+        else
+          orguser.thanks -= 1
+
+        orguser.save(function(error){
+          if(error)
+            return callback(error)
+          console.log('user thanks count updated')
+          callback(null)
+        })
+
+      })
+    },
+    function(callback){
+      AdviceRequestModel.setAdviceThankyou(advicerequestId, adviceId, accessToken, newAdviceAttrs, function(err, advicerequest){
+        if(err) {
+          return callback(err)
+        }
+
+        if(!advicerequest) {
+          return callback(errors['ADVICEREQUEST_NOT_FOUND']())
+        }
+
+        console.log('back to newAdvice in controller');
+        //console.log(advicerequest);
+        advReq = advicerequest
+        callback(null)
+      });
+    }
+  ],function(err){
+    if(err)
       return res.ext.error(err).render();
-    }
 
-    if(!advicerequest) {
-      return res.ext.error(errors['ADVICEREQUEST_NOT_FOUND']()).render();
-    }
-
-    console.log('back to newAdvice in controller');
-    //console.log(advicerequest);
-    return res.ext.data({ advicerequest: advicerequest }).render();
-  });
+    return res.ext.data({ advicerequest: advReq }).render();
+  })
 }
 ////////////////////////
 
