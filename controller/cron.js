@@ -68,39 +68,62 @@ var checkAssignments = function(){
 
         var assigned = {} //add supporter to here so that they are assigned only once
 
-        adviceRequests.forEach(function(adv,i){
-          supporters.forEach(function(sup,j){
-            if(adv.assignedSupporters.indexOf(sup.toString()) == -1 && adv.assignedSupportersCount < 5 && !assigned[sup]){
-              adv.assignedSupporters.push(sup)
-              adv.assignedSupportersCount += 1
-              updatedAdvr.push(adv)
-              assigned[sup] = 1
-            }
-          })
-        })
-        async.each(updatedAdvr,function(updadvr,cb_inner){
-          updadvr.save(function(err){
-            if(err){
-              console.log(err) //don't break
-            }
-            else{
-              console.log('About to email supporters')  
-              //console.log(supporterEmailHash)
-              emailRelevantSupporters(cb_inner,supporterEmailHash,org,updadvr.toJSON()) //this is a hack //hnk+
-            }
-          })
-          //if (!err){
-            // console.log('About to email supporters')
-            //console.log(supporterEmailHash)
-            //emailRelevantSupporters(supporterEmailHash,org,updadvr) //this is a hack //hnk+
-          //}
-          //else{
-            //console.log(err)
-          //}
-        },function(err){
-          //all are now saved
-          if(updatedAdvr.length > 0)
-            console.log(updatedAdvr.length + ' advice requests assigned in organization ' + org.displayName)
+        async.series([
+          function(cb_mid){
+            async.each(adviceRequests,function(adv,cb_inter){
+              async.each(supporters,function(sup,cb_inner){
+                if(adv.assignedSupporters.indexOf(sup.toString()) == -1 && adv.assignedSupportersCount < 5 && !assigned[sup]){
+                  adv.assignedSupporters.push(sup)
+                  adv.assignedSupportersCount += 1
+                  updatedAdvr.push(adv)
+                  assigned[sup] = 1
+                  OrgUserModel.findById(sup).exec(function(err,orguser){
+                    if(err)
+                      return console.log(err)
+                    orguser.assignedCount += 1
+                    orguser.save(function(err){
+                      if(err)
+                        console.log(err)
+                      cb_inner(null)
+                    })
+                  })
+                }
+              },function(){
+                cb_inter(null)
+              })
+            },function(){
+              cb_mid()
+            })
+          },
+
+          function(cb_mid){
+            async.each(updatedAdvr,function(updadvr,cb_inner){
+              updadvr.save(function(err){
+                if(err){
+                  console.log(err) //don't break
+                }
+                else{
+                  console.log('About to email supporters')  
+                  //console.log(supporterEmailHash)
+                  emailRelevantSupporters(cb_inner,supporterEmailHash,org,updadvr.toJSON()) //this is a hack //hnk+
+                }
+              })
+              //if (!err){
+                // console.log('About to email supporters')
+                //console.log(supporterEmailHash)
+                //emailRelevantSupporters(supporterEmailHash,org,updadvr) //this is a hack //hnk+
+              //}
+              //else{
+                //console.log(err)
+              //}
+            },function(err){
+              //all are now saved
+              if(updatedAdvr.length > 0)
+                console.log(updatedAdvr.length + ' advice requests assigned in organization ' + org.displayName)
+              cb_mid()
+            })
+          }
+        ],function(){
           callback(null)
         })
 		  })
