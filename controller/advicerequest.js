@@ -337,24 +337,47 @@ AdviceRequestController.prototype.newAdvice = function(req, res) {
     return res.ext.error(errors['NOT_AUTHORISED']()).render();
   }
 
-  AdviceRequestModel.newAdvice(req,advicerequestId, orguser._id, newAdviceAttrs, function(err, advicerequest, newAdvice){
-    if(err) {
-      return res.ext.error(err).render();
-    }
+  var advRequest = {}
 
-    if(!advicerequest) {
-      return res.ext.error(errors['ADVICEREQUEST_NOT_FOUND']()).render();
-    }
+  async.series([
+    function(callback){
+      OrgUserModel.findById(orguser._id).exec(function(err,orguser){
+        orguser.adviceCount += 1
+        orguser.save(function(err){
+          if(err)
+            return callback(err)
+          callback(null)
+        })
+      })
+    },
+    function(callback){
+      AdviceRequestModel.newAdvice(req,advicerequestId, orguser._id, newAdviceAttrs, function(err, advicerequest, newAdvice){
+        if(err) {
+          return callback(err)
+        }
 
-    console.log('back to newAdvice in controller');
-    //console.log(advicerequest);
-    res.ext.data({ advicerequest: advicerequest }).render();
+        if(!advicerequest) {
+          return callback(errors['ADVICEREQUEST_NOT_FOUND']())
+        }
 
-    if(!!advicerequest.subscriberId) {
-      console.log("Notifying subscriber via push w. id: ",advicerequest.subscriberId);
-      notifySupporteePush(advicerequest, newAdvice);
+        console.log('back to newAdvice in controller');
+        //console.log(advicerequest);
+
+        if(!!advicerequest.subscriberId) {
+          console.log("Notifying subscriber via push w. id: ",advicerequest.subscriberId);
+          notifySupporteePush(advicerequest, newAdvice);
+        }
+
+        advRequest = advicerequest
+        callback(null)
+      })
     }
-  });
+  ],function(err){
+    if(err)
+      res.ext.error(err).render();
+    else
+      res.ext.data({ advicerequest: advRequest }).render();
+  })
 
 }
 
