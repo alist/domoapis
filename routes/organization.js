@@ -21,7 +21,7 @@ module.exports.private = function(app) {
   app.get('/:organization/admin', OrganizationController.admin.bind(OrganizationController));
 
   //should be an api call, but these are cookie auth'd
-  // app.get('/:organization/advicerequest', advicerequesticeRequestController.getAll.bind(AdviceRequestController));// shouldn't dispaly all
+  app.get('/:organization/advicerequest', AdviceRequestController.getAll.bind(AdviceRequestController));// shouldn't dispaly all
   app.get('/:organization/advicerequest/:advicerequestId', AdviceRequestController.getAdvicerequestDetail.bind(AdviceRequestController));
   app.post('/:organization/advicerequest/:advicerequest/advice', AdviceRequestController.newAdvice.bind(AdviceRequestController)); //response
 
