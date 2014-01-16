@@ -13,6 +13,7 @@ var AdviceRequestModel = require("../model/advicerequest").AdviceRequest
   , jade = require('jade')
   , Config = require('../configLoader')
   , path = require('path')
+  , moment = require('../modules/moment.min')
   , async = require('async')
 ///
 
@@ -219,37 +220,37 @@ AdviceRequestController.prototype.newAdviceRequest = function(req, res) {
   newAdviceRequestAttrs.reqstatus = "PRES";  ///why does this not work? 
 
   async.series({
-    findSupporters : function(callback){
+    // findSupporters : function(callback){
 
-      OrgUserModel.find({orgId : req.extras.organization._id}).exec(function(err,orgusers){
-        if(err)
-          return callback('db query error occurred')
+    //   OrgUserModel.find({orgId : req.extras.organization._id}).exec(function(err,orgusers){
+    //     if(err)
+    //       return callback('db query error occurred')
 
-        orgusers = shuffle(orgusers)
+    //     orgusers = shuffle(orgusers)
 
-        var now = moment()
-        var day = now.format('dddd').toLowerCase()
-        var minsToday = getMins(now.format('h:mm a'))
-        var availableSupporters = []
+    //     var now = moment()
+    //     var day = now.format('dddd').toLowerCase()
+    //     var minsToday = getMins(now.format('h:mm a'))
+    //     var availableSupporters = []
 
-        orgusers.forEach(function(orguser,i){
-          if(availableSupporters.length < 5){
-            var available = false
-            orguser.times.forEach(function(time,j){
-              if(time.day == day && time.begin <= minsToday && minsToday < time.end)
-                available = true
-            })
-            if(available)
-              availableSupporters.push(orguser._id)
-          }
-        })
+    //     orgusers.forEach(function(orguser,i){
+    //       if(availableSupporters.length < 5){
+    //         var available = false
+    //         orguser.times.forEach(function(time,j){
+    //           if(time.day == day && time.begin <= minsToday && minsToday < time.end)
+    //             available = true
+    //         })
+    //         if(available)
+    //           availableSupporters.push(orguser._id)
+    //       }
+    //     })
 
-        newAdviceRequestAttrs.assignedSupporters = availableSupporters
-        newAdviceRequestAttrs.assignedSupportersCount = availableSupporters.length
+    //     newAdviceRequestAttrs.assignedSupporters = availableSupporters
+    //     newAdviceRequestAttrs.assignedSupportersCount = availableSupporters.length
 
-        callback(null)
-      })
-    },
+    //     callback(null)
+    //   })
+    // },
 
     newAdviceRequest : function(callback){
 
@@ -258,8 +259,8 @@ AdviceRequestController.prototype.newAdviceRequest = function(req, res) {
           return res.ext.error(err).render();
         }
 
-        advicerequest.assignedSupporters = newAdviceRequestAttrs.assignedSupporters
-        advicerequest.assignedSupportersCount = newAdviceRequestAttrs.assignedSupportersCount
+        // advicerequest.assignedSupporters = newAdviceRequestAttrs.assignedSupporters
+        // advicerequest.assignedSupportersCount = newAdviceRequestAttrs.assignedSupportersCount
         // for now
 
 
@@ -305,7 +306,7 @@ AdviceRequestController.prototype.newAdviceRequest = function(req, res) {
 
           // full url for supporters
           advicerequest.accessURL = domain + accessPath;
-          notifySupportersEmail(org, advicerequest);
+          //notifySupportersEmail(org, advicerequest); //hnk cannot happen here anymore; must happen in cron.js
 
           callback(null)
         });
@@ -369,7 +370,7 @@ AdviceRequestController.prototype.setAdviceHelpful = function(req, res) {
   var newAdviceAttrs = req.body
    ,  advicerequestId = req.params.advicerequest
    ,  adviceId = req.params.advice
-   ,  accessToken = req.query.token;
+   ,  accessToken = req.query.token || req.body.token;
 
   console.log(advicerequestId);
   //console.log(req.user._id);
@@ -394,11 +395,12 @@ AdviceRequestController.prototype.setAdviceHelpful = function(req, res) {
 
 AdviceRequestController.prototype.setAdviceThankyou = function(req, res) {
   //res.ext.data({ user: req.user }).render();
+  console.log(req.body)
 
   var newAdviceAttrs = req.body
    ,  advicerequestId = req.params.advicerequest
    ,  adviceId = req.params.advice
-   ,  accessToken = req.query.token;
+   ,  accessToken = req.query.token || req.body.token;
 
   console.log(advicerequestId);
   //console.log(req.user._id);

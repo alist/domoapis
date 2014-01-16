@@ -19,64 +19,132 @@ block body
     window.accessToken = "#{accessToken}"
     window.orgAccessCode = "#{orgAccessCode}"
 
+    window.thanks = function(self){
+      var isThankyou = false
+
+      if($(self).attr('src') == '/img/ty_act_s.png'){
+        $(self).attr('src','/img/ty_deact_s.png')
+        isThankyou = true
+      }
+      else
+        $(self).attr('src','/img/ty_act_s.png')
+
+      $.ajax({
+        type: 'POST',
+        url: '../advicerequest/#{advicerequestId}/advice/' + $(self).parents().eq(4).data('advid') + '/advicethankyou',
+        data: {thankyou : isThankyou, token : window.accessToken},
+        success: function(data) {
+          console.log('thankyou successfully set to ' + isThankyou)
+        },
+        error: function(jqXHR) {
+            return console.log(jqXHR.responseText)
+        }
+      })
+    }
+
+    window.helpful = function(self){
+      var isHelpful = false
+
+      if($(self).attr('src') == '/img/helpful_act.png'){
+        $(self).attr('src','/img/helpful_deact.png')
+        isHelpful = true
+      }
+      else
+        $(self).attr('src','/img/helpful_act.png')
+
+      $.ajax({
+        type: 'POST',
+        url: '../advicerequest/#{advicerequestId}/advice/' + $(self).parents().eq(4).data('advid') + '/advicehelpful',
+        data: {helpful : isHelpful, token : window.accessToken},
+        success: function(data) {
+          console.log('Helpful successfully set to ' + isHelpful)
+        },
+        error: function(jqXHR) {
+            return console.log(jqXHR.responseText)
+        }
+      })
+    }
+
     noCodeText = "Please enter your auth code! Email domo@domo.io w/ your phone # to get a new one!"
     errorText = "Sorry there was an error. Let domo@domo.io know if it keeps up!"
     badCodeText = "Oops, bad auth code! Try again or email domo@domo.io w/ your phone # to get a new one!"
   
-  :coffeescript
-    $(document).ready =>
-      if advice?
-        $('#authCodeForm').addClass('hidden')
-        updateForAdviceRequest advice, false
+  script.
+    var _this = this;
 
-    window.submitPressed = () ->
-      code = $('#adviceAuthCodeInput').val()
-      window.accessToken = code
+    $(document).ready(function() {
+      var qs = window.location.search.split('&')
+      $('#organizationCodeInput').val(qs[1].split('=')[1])
+      $('#adviceAuthCodeInput').val(qs[0].split('=')[1])
 
-      orgCode = $('#organizationCodeInput').val()
-      if code?.length > 0
-        window.orgAccessCode = orgCode
+      if (typeof advice !== "undefined" && advice !== null) {
+        $('#authCodeForm').addClass('hidden');
+        return updateForAdviceRequest(advice, false);
+      }
+    });
 
-      errorAction = () ->
-        $("#submitButton").removeClass('disabled')
-        $('#submitStatus').removeClass('hidden')
-        $('#submitStatus').text errorText
+    window.submitPressed = function() {
+      var code, errorAction, orgCode,
+        _this = this;
+      code = $('#adviceAuthCodeInput').val();
+      window.accessToken = code;
+      orgCode = $('#organizationCodeInput').val();
+      if ((code != null ? code.length : void 0) > 0) {
+        window.orgAccessCode = orgCode;
+      }
+      errorAction = function() {
+        $("#submitButton").removeClass('disabled');
+        $('#submitStatus').removeClass('hidden');
+        return $('#submitStatus').text(errorText);
+      };
+      if ((code != null ? code.length : void 0) > 0) {
+        $('#submitstatus').addClass('hidden');
+        $("#submitButton").addClass('disabled');
+        $.get("/api/v1/organizations/mit/advicerequest/" + window.advicerequestId + "?code=" + orgAccessCode + "&token=" + accessToken, {}, function(response) {
+          var advice, _ref;
+          console.log(response);
+          if ((response != null ? (_ref = response.meta) != null ? _ref.status : void 0 : void 0) !== "success") {
+            errorAction();
+            return $('#submitStatus').text(badCodeText);
+          } else {
+            advice = response.response.advicerequest;
+            window.adviceRequestScope.advicerequest = advice;
+            window.adviceRequestScope.$apply();
 
-      if code?.length > 0
-        $('#submitstatus').addClass('hidden')
-        $("#submitButton").addClass('disabled')
-        $.get("/api/v1/organizations/mit/advicerequest/#{window.advicerequestId}?code=#{orgAccessCode}&token=#{accessToken}", {}, (response)=>
-          console.log response
-          if response?.meta?.status != "success"
-            errorAction()
-            $('#submitStatus').text badCodeText
-          else
-            advice = response.response.advicerequest
-            window.adviceRequestScope.advicerequest = advice
-            window.adviceRequestScope.$apply()
-            window.setupSubmitSuccess()
+            for(var i = 0; i < response.response.advicerequest.responses.length; i++){
+              var resp = response.response.advicerequest.responses[i]
 
-            ).error(errorAction)
-      else
-        $('#submitStatus').removeClass('hidden')
-        $('#submitStatus').text noCodeText
-      return false
+              if(resp.thankyou)
+                $("div").find("[data-advid='" + resp._id + "']").find('.thankyou').attr('src', "/img/ty_deact_s.png")
+              if(resp.helpful)
+                $("div").find("[data-advid='" + resp._id + "']").find('.helpful').attr('src', "/img/helpful_deact.png")
+            }
+            return window.setupSubmitSuccess();
+          }
+        }).error(errorAction);
+      } else {
+        $('#submitStatus').removeClass('hidden');
+        $('#submitStatus').text(noCodeText);
+      }
+      return false;
+    };
 
-    window.setupSubmitting = () ->
-      $('#submitButton').addClass('disabled')
-      $('#submitStatus').addClass('hidden')
+    window.setupSubmitting = function() {
+      $('#submitButton').addClass('disabled');
+      return $('#submitStatus').addClass('hidden');
+    };
 
-    window.setupFailedSubmit = () ->
-      $('#submitButton').removeClass('disabled')
-      $('#submitStatus').removeClass('hidden')
-      $('#submitStatus').text "Ooops, that's not the code!"
-    
+    window.setupFailedSubmit = function() {
+      $('#submitButton').removeClass('disabled');
+      $('#submitStatus').removeClass('hidden');
+      return $('#submitStatus').text("Ooops, that's not the code!");
+    };
 
-    #need to replace these with angular.js
-    window.setupSubmitSuccess = () ->
-      $('#codeInputDiv').fadeOut()
-      $('#codeInputDiv').addClass('hidden')
-      $('#adviceDisplay').removeClass('hidden')
+    window.setupSubmitSuccess = function() {
+      $('#codeInputDiv').fadeOut();
+      $('#codeInputDiv').addClass('hidden');
+      return $('#adviceDisplay').removeClass('hidden');
+    };
 
   include includes/toolbar  
 
@@ -107,7 +175,7 @@ block body
             //h4.text-success SupporterDisplayName
             h5.grayLabel {{advicerequest.createdOn.toString()}}
             p.adviceRequestText {{advicerequest.adviceRequest}}
-      div.row-fluid.adviceRow.adviceResponseRow(ng-repeat="response in advicerequest.responses")
+      div.row-fluid.adviceRow.adviceResponseRow(ng-repeat="response in advicerequest.responses", data-advid="{{response._id}}")
         li.span12
           div.caption
             //if helpful, say
@@ -115,5 +183,8 @@ block body
             //if flagged, say
             h4.text-success {{response.adviceGiverDisplayName}}
             h5.grayLabel {{response.modifiedDate.toString()}}
+              div.right
+                img.thankyou.link(src="/img/ty_act_s.png", onclick="window.thanks(this)")
+                img.helpful.link(src="/img/helpful_act.png", onclick="window.helpful(this)")
             p.adviceRequestText {{response.adviceResponse}}
     

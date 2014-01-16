@@ -4,6 +4,9 @@ var OrganizationController = require('../controller/organization').OrganizationC
 
 
 module.exports.private = function(app) {
+  app.post('/:organization/advicerequest/:advicerequest/advice/:advice/advicehelpful', AdviceRequestController.setAdviceHelpful.bind(AdviceRequestController));
+  app.post('/:organization/advicerequest/:advicerequest/advice/:advice/advicethankyou', AdviceRequestController.setAdviceThankyou.bind(AdviceRequestController));
+  
   app.all('/:organization*', UserController.validateSession.bind(UserController));
 
   app.get('/:organization/giveadvice', OrganizationController.giveAdvice.bind(OrganizationController));

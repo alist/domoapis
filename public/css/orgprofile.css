@@ -48,3 +48,6 @@ a {
 .addtime {
   margin: 3px;
 }
+.table td {
+  max-width: 150px;
+}
