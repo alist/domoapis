@@ -117,8 +117,18 @@ block body
         })
 
         $('.savetime').click(function(){
-          var times = []
+          var complete = true
 
+          $('.timetablerow').each(function(){
+            if($(this).find('.dropdown-toggle').val().toLowerCase().trim() == "")
+              complete = false
+          })
+
+          if(!complete)
+            return alert('Please choose a day for your timeslot')
+
+          var times = []
+          var isValid = true
           $('.timetablerow').each(function(){
             var time = {}
             var begin = $(this).find('.timepicker1').val()
@@ -128,16 +138,28 @@ block body
             time.endString = end
             time.begin = getMins(begin)
             time.end = getMins(end)
+
+            if(time.end == 0){
+              time.end = 1439
+              time.endString = "11:59 PM"
+            }
+
+            if(time.end < time.begin)
+              isValid = false
+
             time.day = $(this).find('.dropdown-toggle').val().toLowerCase().trim()
             times.push(time)
           })
+
+          if(!isValid)
+            return alert('Your end time must be later than your start time on a given day!')
           
           $.ajax({
             type: 'POST',
             url: './savetimes',
             data: {times : times},
             success: function(data) {
-              if(!data.err)
+              if(data.msg && !data.err)
                 alert('Successfully Saved!')
             },
             error: function(jqXHR) {
@@ -205,8 +227,31 @@ block body
                       | Saturday
               td
                 i.icon-remove-sign
-      p
-        #{orguser.adviceGiven}
+
+      h4.left.
+        Statistics
+      div.stats.left
+        | Total advice requests assigned: 
+        !{orguser.assignedCount}
+        br
+        | Total advice given: 
+        !{orguser.adviceCount}
+        br
+        | Helpfuls received: 
+        !{orguser.helpfuls}
+        br
+        | Thank Yous received: 
+        !{orguser.thanks}
+        br
+        | Percent of assigned requests responded to: 
+        div.advpercent
+        br
+        | Percent of advice marked as helpful: 
+        div.helpfulpercent
+        br
+        | Percent of advice thanked: 
+        div.thankpercent
+
 
       script.
         var times = !{JSON.stringify(orguser.times)};
@@ -231,4 +276,10 @@ block body
             $(this).parent().parent().find('.dropdown-toggle').html($(this).text() + ' <b class="caret"></b>').val($(this).text())
           })
         })
+
+        var orguser = !{JSON.stringify(orguser)}
+        $('.advpercent').text(Math.round(orguser.adviceCount / orguser.assignedCount * 100) + '%')
+        $('.helpfulpercent').text(Math.round(orguser.helpfuls / orguser.adviceCount * 100) + '%')
+        $('.thankpercent').text(Math.round(orguser.thanks / orguser.adviceCount * 100) + '%')
+        console.log(orguser)
 

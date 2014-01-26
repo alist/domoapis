@@ -402,7 +402,6 @@ AdviceRequestController.prototype.setAdviceHelpful = function(req, res) {
   console.log(accessToken);
 
   var advReq = {}
-  console.log(req.body)
   async.series([
 
     function(callback){

@@ -20,8 +20,6 @@ var Config = require('./configLoader')
   , cronJob = require('cron').CronJob;
 
 var CronController = require('./controller/cron')
-var isProduction = (process.env.NODE_ENV === 'production')
-
 
 var config = Config.init().getConfig();
 var env = config.env;

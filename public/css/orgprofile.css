@@ -25,6 +25,11 @@ a {
   height: 160px;
   overflow: scroll;
 }
+.advpercent,
+.helpfulpercent,
+.thankpercent {
+  display: inline;
+}
 .advAssigned {
   height: 650px;
   overflow: scroll;

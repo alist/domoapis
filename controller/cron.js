@@ -1,5 +1,6 @@
 var async = require('async'),
-    moment = require('../modules/moment.min')
+    moment = require('../modules/moment.min'),
+    Config = require('../configLoader')
 
 var OrganizationModel = require("../model/organization").Organization,
 	  OrgUserModel = require("../model/orguser").OrgUser,
@@ -43,9 +44,10 @@ var checkAssignments = function(){
                 if(time.day == day && time.begin <= minsToday && minsToday < time.end)
                   available = true
               })
-              if(available)
+              if(available){
                 supporters.push(orguser._id)
                 supporterEmailHash[orguser._id.toString()] = orguser.email //this is a hack; dont want to disturb the overall chi of the code//hnk+
+              }
             })
 
 
@@ -71,12 +73,14 @@ var checkAssignments = function(){
         async.series([
           function(cb_mid){
             async.each(adviceRequests,function(adv,cb_inter){
+              var isChanged = false
               async.each(supporters,function(sup,cb_inner){
                 if(adv.assignedSupporters.indexOf(sup.toString()) == -1 && adv.assignedSupportersCount < 5 && !assigned[sup]){
+                  isChanged = true
                   adv.assignedSupporters.push(sup)
                   adv.assignedSupportersCount += 1
-                  updatedAdvr.push(adv)
                   assigned[sup] = 1
+
                   OrgUserModel.findById(sup).exec(function(err,orguser){
                     if(err)
                       return console.log(err)
@@ -89,6 +93,8 @@ var checkAssignments = function(){
                   })
                 }
               },function(){
+                if(isChanged)
+                  updatedAdvr.push(adv)
                 cb_inter(null)
               })
             },function(){
@@ -105,7 +111,8 @@ var checkAssignments = function(){
                 else{
                   console.log('About to email supporters')  
                   //console.log(supporterEmailHash)
-                  emailRelevantSupporters(cb_inner,supporterEmailHash,org,updadvr.toJSON()) //this is a hack //hnk+
+                  if(Config.env === 'production') //DON'T EMAIL IF NOT PRODUCTION (OTHERWISE USERS WILL GET DUPLICATE EMAILS)
+                    emailRelevantSupporters(cb_inner,supporterEmailHash,org,updadvr.toJSON()) //this is a hack //hnk+
                 }
               })
               //if (!err){
