@@ -82,6 +82,7 @@ block body
         | Save
       div.right.btn.btn-default.addtime
         | Add New Time
+      div.right.notification
 
       script(type='text/javascript').
         $('.timepicker1').each(function(){
@@ -97,11 +98,31 @@ block body
         })
 
         $(".addtime").click(function(){
+          var weekday=new Array(7);
+          weekday[0]="sunday";
+          weekday[1]="monday";
+          weekday[2]="tuesday";
+          weekday[3]="wednesday";
+          weekday[4]="thursday";
+          weekday[5]="friday";
+          weekday[6]="saturday";
+
+          var begin = currhour()
+          var end = currhour(true)
+          var day = weekday[(new Date()).getDay()]
+
+          if($('.timetablerow').length != 0){
+            console.log('...')
+            begin = $('.timetablerow').last().find('.timepicker1').val()
+            end = $('.timetablerow').last().find('.timepicker1').eq(1).val()
+            day = $('.timetablerow').last().find('.dropdown-toggle').val().toLowerCase().trim()
+          }
+
           $('.timetablerowclone').last().clone().appendTo('.timetablebody');
 
-          $('.timetablebody .timetablerowclone .timepicker1').each(function(){
-            $(this).timepicker('setTime', '12:00 AM');
-          })
+          $('.timetablebody .timetablerowclone .timepicker1').first().timepicker('setTime', begin)
+          $('.timetablebody .timetablerowclone .timepicker1').last().timepicker('setTime', end)
+          $('.timetablebody .timetablerowclone .dropdown-toggle').html(day + ' <b class="caret"></b>').val(day)
 
           $('.timetablebody .timetablerowclone').each(function(){
             $(this).removeClass('timetablerowclone').addClass('timetablerow')
@@ -161,8 +182,15 @@ block body
             url: './savetimes',
             data: {times : times},
             success: function(data) {
-              if(data.msg && !data.err)
-                alert('Successfully Saved!')
+              if(data.msg && !data.err){
+                $('.notification').text('Successfully saved!')
+                setTimeout(function(){
+                  $('.notification').fadeOut(function(){
+                    $('.notification').text('')
+                    $('.notification').show()
+                  })
+                },3000)
+              }
             },
             error: function(jqXHR) {
                 return console.log(jqXHR.responseText)
@@ -190,6 +218,21 @@ block body
               hours = 0
           }
           return parseInt(hours)*60 + parseInt(mins)
+        }
+
+        function currhour(nextHour){
+          var now = new Date()
+          var hour = now.getHours()
+          var ampm = "AM"
+          if(nextHour)
+            hour += 1
+          if(hour >= 12)
+            ampm = "PM"
+
+          if(hour > 12)
+            hour = Math.floor(hour % 12)
+
+          return hour + ':00' + ampm
         }
 
       br

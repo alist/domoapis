@@ -103,6 +103,10 @@ body {
   color: #2861aa;
   text-decoration: none;
 }
+.navbar-static-top {
+  width: 100%;
+  background-color: #fff;
+}
 .control-bar {
   line-height: 40px;
 }
