@@ -19,7 +19,7 @@ block body
       p.hello
         | Welcome to your support dashboard !{orguser.email}
       br
-      div.left
+      div.left.tbl
         b You currently have !{orguser.assignedAdviceRequestsCount} assigned advice request(s):
         br
         .advAssigned
@@ -38,9 +38,10 @@ block body
                       a(href=arRef) !{adv.adviceRequest}
                     td
                       a(href=arRef) !{adv.createdOn}
+      div.icon-chevron-down.expand.advas
       br
       br
-      div.left
+      div.left.tbl
         b You have given advice !{orguser.advcount} time(s) in the past:
         br
         .advGiven
@@ -59,6 +60,7 @@ block body
                       a(href=arRef) !{adv.adviceRequest}
                     td
                       a(href=arRef) !{adv.createdOn}
+      div.icon-chevron-down.expand.advgiven-exp
 
     .availability
       b
@@ -282,4 +284,30 @@ block body
         $('.helpfulpercent').text(Math.round(orguser.helpfuls / orguser.adviceCount * 100) + '%')
         $('.thankpercent').text(Math.round(orguser.thanks / orguser.adviceCount * 100) + '%')
         console.log(orguser)
+
+        $('.advas').click(function(){
+          if($('.advAssigned').height() == 160){
+            $('.advAssigned').height('100%')
+            $(this).removeClass('icon-chevron-down')
+            $(this).addClass('icon-chevron-up')
+          }
+          else{
+            $('.advAssigned').height(150)
+            $(this).removeClass('icon-chevron-up')
+            $(this).addClass('icon-chevron-down')
+          }
+        })
+
+        $('.advgiven-exp').click(function(){
+          if($('.advGiven').height() == 160){
+            $('.advGiven').height('100%')
+            $(this).removeClass('icon-chevron-down')
+            $(this).addClass('icon-chevron-up')
+          }
+          else{
+            $('.advGiven').height(150)
+            $(this).removeClass('icon-chevron-up')
+            $(this).addClass('icon-chevron-down')
+          }
+        })
 

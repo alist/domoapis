@@ -15,6 +15,9 @@ a {
 .right {
   text-align: right;
 }
+.tbl {
+  border-bottom: 1px solid #000;
+}
 .pastAdvice {
   background-color: #eee;
   height: 25px;
@@ -31,11 +34,16 @@ a {
   display: inline;
 }
 .advAssigned {
-  height: 650px;
+  height: 160px;
   overflow: scroll;
 }
 .advr {
   cursor: pointer;
+}
+.expand {
+  cursor: pointer;
+  color: #aaa;
+  font-size: 20pt;
 }
 .icon-remove-sign {
   color: #f00;
@@ -55,4 +63,8 @@ a {
 }
 .table td {
   max-width: 150px;
+}
+td {
+  white-space: nowrap;
+  overflow: hidden;
 }

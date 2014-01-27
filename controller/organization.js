@@ -69,6 +69,12 @@ OrganizationController.prototype.giveAdvice = function(req, res) {
             advs.push(ad)
         })
 
+        adv.sort(function(a,b){
+          a = new Date(a.createdOn)
+          b = new Date(b.createdOn)
+          return a<b?-1:a>b?1:0
+        })
+
         req.extras.orguser.assignedAdviceRequests = advs
         req.extras.orguser.assignedAdviceRequestsCount = advs.length
         callback(null)
@@ -77,6 +83,13 @@ OrganizationController.prototype.giveAdvice = function(req, res) {
 
     findAnswered : function(callback){
       AdviceRequestModel.find({'responses': { $elemMatch: { 'adviceGiver': req.extras.orguser._id} } }).sort({createdOn: -1}).exec(function(err, adv){
+        
+        adv.sort(function(a,b){
+          a = new Date(a.createdOn)
+          b = new Date(b.createdOn)
+          return a<b?-1:a>b?1:0
+        })
+        
         req.extras.orguser.adviceGiven = adv
         req.extras.orguser.advcount = adv.length
         callback(null)
