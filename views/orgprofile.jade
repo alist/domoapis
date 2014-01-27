@@ -273,29 +273,48 @@ block body
               td
                 i.icon-remove-sign
 
-      h4.left.
-        Statistics
-      div.stats.left
-        | Total advice requests assigned: 
-        !{orguser.assignedCount}
+      hr
+      div.left
+        b Statistics:
+      div.stats(style="width: 90%; margin: 0 auto;")
         br
-        | Total advice given: 
-        !{orguser.adviceCount}
-        br
-        | Helpfuls received: 
-        !{orguser.helpfuls}
-        br
-        | Thank Yous received: 
-        !{orguser.thanks}
-        br
-        | Percent of assigned requests responded to: 
-        div.advpercent
-        br
-        | Percent of advice marked as helpful: 
-        div.helpfulpercent
-        br
-        | Percent of advice thanked: 
-        div.thankpercent
+        table.table.table-condensed.table-hover
+          tbody
+            tr
+              td
+                |Total advice requests assigned:
+              td
+                !{orguser.assignedCount}
+            tr
+              td
+                |Total advice given:
+              td
+                !{orguser.adviceCount}
+            tr
+              td
+                | Helpfuls received: 
+              td
+                | !{orguser.helpfuls}
+            tr
+              td
+                | Thank Yous Received:
+              td
+                !{orguser.thanks}
+            tr
+              td
+                |Percent of assigned requests responded to: 
+              td
+                div.advpercent
+            tr
+              td
+                |Percent of advice marked as helpful: 
+              td
+                div.helpfulpercent
+            tr
+              td
+                |Percent of advice thanked: 
+              td
+                div.thankpercent
 
 
       script.
