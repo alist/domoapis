@@ -16,6 +16,8 @@ module.exports.public = function(app) {
       UserController.populateOrgs(req,res,function(user_json){
         console.log('msg')
         req.user = user_json
+        if(req.user.organizations.length == 1)
+          return res.redirect('/' + req.user.organizations[0].orgURL + '/giveadvice')
         res.ext.data({ user: req.user });
         return res.ext.view('supporterprofile.jade').render();
       })

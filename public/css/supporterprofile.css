@@ -37,15 +37,16 @@ a:visited {
 .main .org {
   overflow: hidden;
   padding: 5px;
+  padding-left: 0;
+  margin-top: 10px;
   margin-bottom: 1px;
   font-size: 14pt;
   width: 100%;
-  height: 50px;
-  line-height: 50px;
-  background-color: #eee;
+  height: 25px;
+  line-height: 25px;
 }
 .main .org:hover {
-  background-color: #ddd;
+  background-color: #eee;
 }
 .main .org .banner {
   display: none;
