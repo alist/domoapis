@@ -58,6 +58,12 @@ OrganizationController.prototype.giveAdvice = function(req, res) {
       AdviceRequestModel.find({'assignedSupporters': { $all : req.extras.orguser._id } }).exec(function(err, adv){
         var advs = []
 
+        adv.sort(function(a,b){
+          a = new Date(a.createdOn)
+          b = new Date(b.createdOn)
+          return a<b?-1:a>b?1:0
+        })
+
         adv.forEach(function(ad,i){ //should only show if not responded yet
           var open = true
           ad.responses.forEach(function(resp,j){
@@ -67,12 +73,6 @@ OrganizationController.prototype.giveAdvice = function(req, res) {
 
           if(open)
             advs.push(ad)
-        })
-
-        adv.sort(function(a,b){
-          a = new Date(a.createdOn)
-          b = new Date(b.createdOn)
-          return a<b?-1:a>b?1:0
         })
 
         req.extras.orguser.assignedAdviceRequests = advs
@@ -89,7 +89,7 @@ OrganizationController.prototype.giveAdvice = function(req, res) {
           b = new Date(b.createdOn)
           return a<b?-1:a>b?1:0
         })
-        
+
         req.extras.orguser.adviceGiven = adv
         req.extras.orguser.advcount = adv.length
         callback(null)

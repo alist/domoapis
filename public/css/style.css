@@ -113,6 +113,10 @@ body {
 .control-bar a {
   margin-left: 20px;
   font-size: 13pt;
+  color: #2b2b30;
+}
+.control-bar a:hover {
+  color: #00b147;
 }
 .control-bar-container {
   height: 40px;

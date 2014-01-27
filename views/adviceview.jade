@@ -25,10 +25,11 @@ block body
 
       if($(self).attr('src') == '/img/ty_act_s.png'){
         $(self).attr('src','/img/ty_deact_s.png')
+      }
+      else{
+        $(self).attr('src','/img/ty_act_s.png')
         isThankyou = true
       }
-      else
-        $(self).attr('src','/img/ty_act_s.png')
 
       $.ajax({
         type: 'POST',
@@ -49,10 +50,11 @@ block body
 
       if($(self).attr('src') == '/img/helpful_act.png'){
         $(self).attr('src','/img/helpful_deact.png')
+      }
+      else{
+        $(self).attr('src','/img/helpful_act.png')
         isHelpful = true
       }
-      else
-        $(self).attr('src','/img/helpful_act.png')
 
       $.ajax({
         type: 'POST',
@@ -119,9 +121,9 @@ block body
               var resp = response.response.advicerequest.responses[i]
 
               if(resp.thankyou)
-                $("div").find("[data-advid='" + resp._id + "']").find('.thankyou').attr('src', "/img/ty_deact_s.png")
+                $("div").find("[data-advid='" + resp._id + "']").find('.thankyou').attr('src', "/img/ty_act_s.png")
               if(resp.helpful)
-                $("div").find("[data-advid='" + resp._id + "']").find('.helpful').attr('src', "/img/helpful_deact.png")
+                $("div").find("[data-advid='" + resp._id + "']").find('.helpful').attr('src', "/img/helpful_act.png")
             }
             return window.setupSubmitSuccess();
           }
@@ -188,7 +190,7 @@ block body
             h4.text-success {{response.adviceGiverDisplayName}}
             h5.grayLabel {{response.modifiedDate.toString()}}
               div.right
-                img.thankyou.link(src="/img/ty_act_s.png", onclick="window.thanks(this)")
-                img.helpful.link(src="/img/helpful_act.png", onclick="window.helpful(this)")
+                img.thankyou.link(src="/img/ty_deact_s.png", onclick="window.thanks(this)")
+                img.helpful.link(src="/img/helpful_deact.png", onclick="window.helpful(this)")
             p.adviceRequestText {{response.adviceResponse}}
     
